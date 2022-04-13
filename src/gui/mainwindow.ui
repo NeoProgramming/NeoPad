@@ -1,0 +1,1500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Pavel Malakhov</author>
+ <comment>*********************************************************************
+*********************************************************************</comment>
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1096</width>
+    <height>672</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>NeoPad</string>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>24</width>
+    <height>24</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="__qt_central_widget"/>
+  <widget class="QToolBar" name="toolBarProject">
+   <property name="windowTitle">
+    <string>Project</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>24</width>
+     <height>24</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionProjectNew"/>
+   <addaction name="actionProjectOpen"/>
+   <addaction name="actionFileSave"/>
+   <addaction name="actionFileSaveAll"/>
+   <addaction name="actionFileReload"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarEdit">
+   <property name="windowTitle">
+    <string>Edit</string>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionEditUndo"/>
+   <addaction name="actionEditRedo"/>
+   <addaction name="separator"/>
+   <addaction name="actionEditCut"/>
+   <addaction name="actionEditCutText"/>
+   <addaction name="actionEditCopy"/>
+   <addaction name="actionEditCopyText"/>
+   <addaction name="actionEditPaste"/>
+   <addaction name="actionEditPasteText"/>
+   <addaction name="actionEditUntag"/>
+   <addaction name="actionEditUntable"/>
+   <addaction name="actionEditOutside"/>
+   <addaction name="actionEditInfo"/>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1096</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="helpMenu">
+    <property name="title">
+     <string>&amp;Help</string>
+    </property>
+    <addaction name="actionAboutNeopad"/>
+    <addaction name="actionAboutQt"/>
+   </widget>
+   <widget class="QMenu" name="fileMenu">
+    <property name="title">
+     <string>&amp;File</string>
+    </property>
+    <addaction name="actionFileSave"/>
+    <addaction name="actionFileSaveAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionClearDoc"/>
+    <addaction name="actionCorrectCssPath"/>
+   </widget>
+   <widget class="QMenu" name="viewMenu">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="actionZoomNormal"/>
+   </widget>
+   <widget class="QMenu" name="editMenu">
+    <property name="title">
+     <string>&amp;Edit</string>
+    </property>
+    <addaction name="separator"/>
+    <addaction name="actionEditUndo"/>
+    <addaction name="actionEditRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditCut"/>
+    <addaction name="actionEditCutText"/>
+    <addaction name="actionEditCopy"/>
+    <addaction name="actionEditCopyText"/>
+    <addaction name="actionEditPaste"/>
+    <addaction name="actionEditPasteText"/>
+    <addaction name="separator"/>
+    <addaction name="actionEditUntag"/>
+    <addaction name="actionEditOutside"/>
+    <addaction name="actionEditInfo"/>
+    <addaction name="actionEditUntable"/>
+   </widget>
+   <widget class="QMenu" name="menuProject">
+    <property name="title">
+     <string>&amp;Project</string>
+    </property>
+    <widget class="QMenu" name="menuGenerate_Contents">
+     <property name="title">
+      <string>Base 1</string>
+     </property>
+     <addaction name="actionGenContents1"/>
+     <addaction name="actionEditCss1"/>
+    </widget>
+    <widget class="QMenu" name="menuBase_2">
+     <property name="title">
+      <string>Base 2</string>
+     </property>
+     <addaction name="actionGenContents2"/>
+     <addaction name="actionEditCss2"/>
+    </widget>
+    <addaction name="actionQuickStart"/>
+    <addaction name="actionProjectNew"/>
+    <addaction name="actionProjectOpen"/>
+    <addaction name="actionProjectSave"/>
+    <addaction name="separator"/>
+    <addaction name="actionProjectProperties"/>
+    <addaction name="actionProjectStatistics"/>
+    <addaction name="separator"/>
+    <addaction name="actionCryptBase"/>
+    <addaction name="separator"/>
+    <addaction name="menuGenerate_Contents"/>
+    <addaction name="menuBase_2"/>
+    <addaction name="separator"/>
+    <addaction name="actionAppExit"/>
+    <addaction name="actionAppForceExit"/>
+   </widget>
+   <widget class="QMenu" name="menuFormat">
+    <property name="title">
+     <string>Span</string>
+    </property>
+    <addaction name="actionTextBold"/>
+    <addaction name="actionTextItalic"/>
+    <addaction name="actionTextUnderline"/>
+    <addaction name="actionTextStrike"/>
+    <addaction name="actionTextCode"/>
+    <addaction name="actionTextSubscript"/>
+    <addaction name="actionTextSuperscript"/>
+    <addaction name="actionTextMark"/>
+    <addaction name="actionTextStrong"/>
+    <addaction name="actionTextEm"/>
+    <addaction name="actionTextIns"/>
+    <addaction name="actionTextDel"/>
+    <addaction name="actionTextSamp"/>
+    <addaction name="actionTextVar"/>
+    <addaction name="actionTextKbd"/>
+    <addaction name="separator"/>
+    <addaction name="actionInsertHyperlink"/>
+   </widget>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionWindowClose"/>
+    <addaction name="actionWindowCloseAll"/>
+    <addaction name="actionWindowTile"/>
+    <addaction name="actionWindowHTile"/>
+    <addaction name="actionWindowVTile"/>
+    <addaction name="actionWindowCascade"/>
+    <addaction name="separator"/>
+    <addaction name="actionWindowNew"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionToolsSnippets"/>
+    <addaction name="separator"/>
+    <addaction name="actionToolsOptions"/>
+    <addaction name="actionEditConfig"/>
+    <addaction name="actionEditScript"/>
+    <addaction name="actionReloadScript"/>
+   </widget>
+   <widget class="QMenu" name="menuDiv">
+    <property name="title">
+     <string>Div</string>
+    </property>
+    <addaction name="actionParaH1"/>
+    <addaction name="actionParaH2"/>
+    <addaction name="actionParaH3"/>
+    <addaction name="actionParaH4"/>
+    <addaction name="actionParaH5"/>
+    <addaction name="actionParaH6"/>
+    <addaction name="separator"/>
+    <addaction name="actionParaDiv"/>
+    <addaction name="actionParaComment"/>
+    <addaction name="actionParaFeature"/>
+    <addaction name="actionParaImportant"/>
+    <addaction name="actionParaQuestion"/>
+    <addaction name="actionParaQuote"/>
+    <addaction name="actionParaSource"/>
+    <addaction name="actionParaPara"/>
+    <addaction name="actionParaAnn"/>
+    <addaction name="actionParaTerm"/>
+   </widget>
+   <widget class="QMenu" name="menuInsert_2">
+    <property name="title">
+     <string>Insert</string>
+    </property>
+    <addaction name="actionInsertTable"/>
+    <addaction name="actionInsertImage"/>
+    <addaction name="actionInsertHorzline"/>
+    <addaction name="actionInsertSymbol"/>
+    <addaction name="actionInsertDatetime"/>
+    <addaction name="actionInsertSnippet"/>
+    <addaction name="actionParaNumList"/>
+    <addaction name="actionParaMarkList"/>
+   </widget>
+   <addaction name="menuProject"/>
+   <addaction name="fileMenu"/>
+   <addaction name="editMenu"/>
+   <addaction name="menuFormat"/>
+   <addaction name="menuDiv"/>
+   <addaction name="menuInsert_2"/>
+   <addaction name="viewMenu"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuWindow"/>
+   <addaction name="helpMenu"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarText">
+   <property name="windowTitle">
+    <string>Format</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionTextBold"/>
+   <addaction name="actionTextItalic"/>
+   <addaction name="actionTextUnderline"/>
+   <addaction name="actionTextStrike"/>
+   <addaction name="actionTextCode"/>
+   <addaction name="actionTextSubscript"/>
+   <addaction name="actionTextSuperscript"/>
+   <addaction name="actionTextMark"/>
+   <addaction name="actionTextStrong"/>
+   <addaction name="actionTextEm"/>
+   <addaction name="actionTextIns"/>
+   <addaction name="actionTextDel"/>
+   <addaction name="actionTextSamp"/>
+   <addaction name="actionTextVar"/>
+   <addaction name="actionTextKbd"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarTree">
+   <property name="windowTitle">
+    <string>Tree</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>true</bool>
+   </attribute>
+   <addaction name="actionTreeMoveUp"/>
+   <addaction name="actionTreeMoveDown"/>
+   <addaction name="actionTreeMoveParent"/>
+   <addaction name="actionTreeMoveChild"/>
+   <addaction name="actionTreeAddChild"/>
+   <addaction name="actionTreeAddSibling"/>
+   <addaction name="actionTreeRemoveItem"/>
+   <addaction name="separator"/>
+   <addaction name="actionTreeSync"/>
+   <addaction name="actionToolsLink"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarInsert">
+   <property name="windowTitle">
+    <string>Insert</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionInsertHorzline"/>
+   <addaction name="actionParaNumList"/>
+   <addaction name="actionParaMarkList"/>
+   <addaction name="actionInsertImage"/>
+   <addaction name="actionInsertHyperlink"/>
+   <addaction name="actionInsertSnippet"/>
+   <addaction name="actionInsertSymbol"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarPara">
+   <property name="windowTitle">
+    <string>Styles</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionParaH1"/>
+   <addaction name="actionParaH2"/>
+   <addaction name="actionParaH3"/>
+   <addaction name="actionParaH4"/>
+   <addaction name="actionParaH5"/>
+   <addaction name="actionParaH6"/>
+   <addaction name="actionParaSource"/>
+   <addaction name="actionParaComment"/>
+   <addaction name="actionParaFeature"/>
+   <addaction name="actionParaImportant"/>
+   <addaction name="actionParaQuestion"/>
+   <addaction name="actionParaTerm"/>
+   <addaction name="actionParaQuote"/>
+   <addaction name="actionParaAnn"/>
+   <addaction name="actionParaNote"/>
+  </widget>
+  <action name="actionAppExit">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/app/images/app_exit.png</normaloff>:/app/images/app_exit.png</iconset>
+   </property>
+   <property name="text">
+    <string>E&amp;xit Application</string>
+   </property>
+   <property name="whatsThis">
+    <string>Exit Application</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::QuitRole</enum>
+   </property>
+  </action>
+  <action name="actionEditCopy">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-copy.png</normaloff>:/edit/images/edit-copy.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Copy</string>
+   </property>
+   <property name="whatsThis">
+    <string>Copy the selected text to the clipboard.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionAboutNeopad">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/app/images/app-about.png</normaloff>:/app/images/app-about.png</iconset>
+   </property>
+   <property name="text">
+    <string>About NeoPad</string>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::AboutRole</enum>
+   </property>
+  </action>
+  <action name="actionZoomIn">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/zoom/images/zoom-in.png</normaloff>:/zoom/images/zoom-in.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom &amp;in</string>
+   </property>
+   <property name="whatsThis">
+    <string>Zoom in on the document, i.e. increase the font size.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl++</string>
+   </property>
+  </action>
+  <action name="actionZoomOut">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/zoom/images/zoom-out.png</normaloff>:/zoom/images/zoom-out.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom &amp;out</string>
+   </property>
+   <property name="whatsThis">
+    <string>Zoom out on the document, i.e. decrease the font size.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+-</string>
+   </property>
+  </action>
+  <action name="actionNewWindow">
+   <property name="text">
+    <string>New Window</string>
+   </property>
+   <property name="whatsThis">
+    <string>Open a new window.</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionFileSaveAll">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/project/images/prj-save-all.png</normaloff>:/project/images/prj-save-all.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save all open files</string>
+   </property>
+   <property name="toolTip">
+    <string>Save All open files</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+S</string>
+   </property>
+  </action>
+  <action name="actionProjectProperties">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/project/images/prj-options.png</normaloff>:/project/images/prj-options.png</iconset>
+   </property>
+   <property name="text">
+    <string>Project Properties...</string>
+   </property>
+   <property name="toolTip">
+    <string>Options</string>
+   </property>
+  </action>
+  <action name="actionProjectNew">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/project/images/prj-new.png</normaloff>:/project/images/prj-new.png</iconset>
+   </property>
+   <property name="text">
+    <string>New</string>
+   </property>
+   <property name="toolTip">
+    <string>New project</string>
+   </property>
+  </action>
+  <action name="actionProjectOpen">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/project/images/prj-open.png</normaloff>:/project/images/prj-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+   <property name="toolTip">
+    <string>Open project</string>
+   </property>
+  </action>
+  <action name="actionFileSave">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/project/images/prj-save.png</normaloff>:/project/images/prj-save.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save project</string>
+   </property>
+  </action>
+  <action name="actionFileSaveAs">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/file/images/file-saveas.png</normaloff>:/file/images/file-saveas.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save As</string>
+   </property>
+  </action>
+  <action name="actionProjectPrinfPdf">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/file/images/file-exportpdf.png</normaloff>:/file/images/file-exportpdf.png</iconset>
+   </property>
+   <property name="text">
+    <string>Export PDF single file...</string>
+   </property>
+  </action>
+  <action name="actionEditUndo">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-undo.png</normaloff>:/edit/images/edit-undo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionEditRedo">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-redo.png</normaloff>:/edit/images/edit-redo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionEditPaste">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-paste.png</normaloff>:/edit/images/edit-paste.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste</string>
+   </property>
+  </action>
+  <action name="actionEditCut">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-cut.png</normaloff>:/edit/images/edit-cut.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cut</string>
+   </property>
+  </action>
+  <action name="actionTreeRemoveItem">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-delitem.png</normaloff>:/tree/images/tree-delitem.png</iconset>
+   </property>
+   <property name="text">
+    <string>Remove Item</string>
+   </property>
+  </action>
+  <action name="actionTextBold">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-bold.png</normaloff>:/text/images/text-bold.png</iconset>
+   </property>
+   <property name="text">
+    <string>Bold</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionTextItalic">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-italic.png</normaloff>:/text/images/text-italic.png</iconset>
+   </property>
+   <property name="text">
+    <string>Italic</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+I</string>
+   </property>
+  </action>
+  <action name="actionTextUnderline">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-underline.png</normaloff>:/text/images/text-underline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Underline</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionInsertHyperlink">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/insert/images/insert-hlink.png</normaloff>:/insert/images/insert-hlink.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hyperlink</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/app/images/app_settings.png</normaloff>:/app/images/app_settings.png</iconset>
+   </property>
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
+  <action name="actionInsertTable">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/insert/images/insert-table.png</normaloff>:/insert/images/insert-table.png</iconset>
+   </property>
+   <property name="text">
+    <string>New Table</string>
+   </property>
+  </action>
+  <action name="actionInsertImage">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/insert/images/insert-image.png</normaloff>:/insert/images/insert-image.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Image</string>
+   </property>
+  </action>
+  <action name="actionInsertRowAbove">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Row Above</string>
+   </property>
+  </action>
+  <action name="actionInsertRowBelow">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Row Below</string>
+   </property>
+  </action>
+  <action name="actionInsertColumnLeft">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Column Left</string>
+   </property>
+  </action>
+  <action name="actionInsertColumnRight">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Column Right</string>
+   </property>
+  </action>
+  <action name="actionDeleteTable">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Table</string>
+   </property>
+  </action>
+  <action name="actionDeleteRow">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Row</string>
+   </property>
+  </action>
+  <action name="actionDeleteColumn">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Column</string>
+   </property>
+  </action>
+  <action name="actionTableProperty">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Table Property...</string>
+   </property>
+  </action>
+  <action name="actionZoomNormal">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/zoom/images/zoom-normal.png</normaloff>:/zoom/images/zoom-normal.png</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom &amp;normal</string>
+   </property>
+   <property name="toolTip">
+    <string>Zoom normal</string>
+   </property>
+   <property name="whatsThis">
+    <string>Zoom out on the document, i.e. decrease the font size.</string>
+   </property>
+  </action>
+  <action name="actionTreeMoveUp">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-up.png</normaloff>:/tree/images/tree-up.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move Up</string>
+   </property>
+   <property name="toolTip">
+    <string>Move Up</string>
+   </property>
+  </action>
+  <action name="actionTreeMoveDown">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-down.png</normaloff>:/tree/images/tree-down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move Down</string>
+   </property>
+   <property name="toolTip">
+    <string>Move Up</string>
+   </property>
+  </action>
+  <action name="actionTreeMoveParent">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-left.png</normaloff>:/tree/images/tree-left.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move to Parent</string>
+   </property>
+   <property name="toolTip">
+    <string>Move to Parent</string>
+   </property>
+  </action>
+  <action name="actionTreeMoveChild">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-right.png</normaloff>:/tree/images/tree-right.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move to Child</string>
+   </property>
+   <property name="toolTip">
+    <string>Move to Child</string>
+   </property>
+  </action>
+  <action name="actionTextSubscript">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-subscript.png</normaloff>:/text/images/text-subscript.png</iconset>
+   </property>
+   <property name="text">
+    <string>Subscript</string>
+   </property>
+   <property name="toolTip">
+    <string>Subscript</string>
+   </property>
+  </action>
+  <action name="actionTextSuperscript">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-superscript.png</normaloff>:/text/images/text-superscript.png</iconset>
+   </property>
+   <property name="text">
+    <string>Superscript</string>
+   </property>
+   <property name="toolTip">
+    <string>Superscript</string>
+   </property>
+  </action>
+  <action name="actionTextStrong">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-strong.png</normaloff>:/text/images/text-strong.png</iconset>
+   </property>
+   <property name="text">
+    <string>Strong</string>
+   </property>
+   <property name="toolTip">
+    <string>Strong</string>
+   </property>
+  </action>
+  <action name="actionTextEm">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-em.png</normaloff>:/text/images/text-em.png</iconset>
+   </property>
+   <property name="text">
+    <string>Emphasis</string>
+   </property>
+   <property name="toolTip">
+    <string>Emphasis</string>
+   </property>
+  </action>
+  <action name="actionTextIns">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-ins.png</normaloff>:/text/images/text-ins.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ins</string>
+   </property>
+   <property name="toolTip">
+    <string>Ins</string>
+   </property>
+  </action>
+  <action name="actionTextDel">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-del.png</normaloff>:/text/images/text-del.png</iconset>
+   </property>
+   <property name="text">
+    <string>Del</string>
+   </property>
+   <property name="toolTip">
+    <string>Del</string>
+   </property>
+  </action>
+  <action name="actionTextSamp">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-samp.png</normaloff>:/text/images/text-samp.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sample</string>
+   </property>
+   <property name="toolTip">
+    <string>Sample</string>
+   </property>
+  </action>
+  <action name="actionTextVar">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-var.png</normaloff>:/text/images/text-var.png</iconset>
+   </property>
+   <property name="text">
+    <string>Var</string>
+   </property>
+   <property name="toolTip">
+    <string>Var</string>
+   </property>
+  </action>
+  <action name="actionTextKbd">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-kbd.png</normaloff>:/text/images/text-kbd.png</iconset>
+   </property>
+   <property name="text">
+    <string>Keyboard</string>
+   </property>
+   <property name="toolTip">
+    <string>Keyboard</string>
+   </property>
+  </action>
+  <action name="actionTextStrike">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-strike.png</normaloff>:/text/images/text-strike.png</iconset>
+   </property>
+   <property name="text">
+    <string>Strikethrough</string>
+   </property>
+   <property name="toolTip">
+    <string>Strikethrough</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionTextCode">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-code.png</normaloff>:/text/images/text-code.png</iconset>
+   </property>
+   <property name="text">
+    <string>Code</string>
+   </property>
+   <property name="toolTip">
+    <string>Code</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+U</string>
+   </property>
+  </action>
+  <action name="actionInsertHorzline">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/insert/images/insert-horzline.png</normaloff>:/insert/images/insert-horzline.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Horz Line</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert Horz Line</string>
+   </property>
+  </action>
+  <action name="actionInsertDatetime">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/insert/images/insert-datetime.png</normaloff>:/insert/images/insert-datetime.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Date &amp; time</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert Date &amp; time</string>
+   </property>
+  </action>
+  <action name="actionInsertSnippet">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/insert/images/insert-snippet.png</normaloff>:/insert/images/insert-snippet.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Snippet</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert Snippet</string>
+   </property>
+  </action>
+  <action name="actionParaNumList">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-ol.png</normaloff>:/text/images/text-ol.png</iconset>
+   </property>
+   <property name="text">
+    <string>Ordered list</string>
+   </property>
+   <property name="toolTip">
+    <string>Ordered list</string>
+   </property>
+  </action>
+  <action name="actionParaMarkList">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-ul.png</normaloff>:/text/images/text-ul.png</iconset>
+   </property>
+   <property name="text">
+    <string>Markered list</string>
+   </property>
+   <property name="toolTip">
+    <string>Markered list</string>
+   </property>
+  </action>
+  <action name="actionWindowClose">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionWindowCloseAll">
+   <property name="text">
+    <string>Close All</string>
+   </property>
+  </action>
+  <action name="actionWindowTile">
+   <property name="text">
+    <string>Tile</string>
+   </property>
+  </action>
+  <action name="actionWindowCascade">
+   <property name="text">
+    <string>Cascade</string>
+   </property>
+  </action>
+  <action name="actionWindowNew">
+   <property name="text">
+    <string>New</string>
+   </property>
+  </action>
+  <action name="actionQuickStart">
+   <property name="text">
+    <string>Quick Start</string>
+   </property>
+  </action>
+  <action name="actionParaH1">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-h1.png</normaloff>:/text/images/text-h1.png</iconset>
+   </property>
+   <property name="text">
+    <string>Heading 1</string>
+   </property>
+   <property name="toolTip">
+    <string>Heading 1</string>
+   </property>
+  </action>
+  <action name="actionParaH2">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-h2.png</normaloff>:/text/images/text-h2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Heading 2</string>
+   </property>
+   <property name="toolTip">
+    <string>Heading 2</string>
+   </property>
+  </action>
+  <action name="actionParaH3">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-h3.png</normaloff>:/text/images/text-h3.png</iconset>
+   </property>
+   <property name="text">
+    <string>Heading 3</string>
+   </property>
+   <property name="toolTip">
+    <string>Heading 3</string>
+   </property>
+  </action>
+  <action name="actionParaH4">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-h4.png</normaloff>:/text/images/text-h4.png</iconset>
+   </property>
+   <property name="text">
+    <string>Heading 4</string>
+   </property>
+   <property name="toolTip">
+    <string>Heading 4</string>
+   </property>
+  </action>
+  <action name="actionParaH5">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-h5.png</normaloff>:/text/images/text-h5.png</iconset>
+   </property>
+   <property name="text">
+    <string>Heading 5</string>
+   </property>
+   <property name="toolTip">
+    <string>Heading 5</string>
+   </property>
+  </action>
+  <action name="actionParaH6">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-h6.png</normaloff>:/text/images/text-h6.png</iconset>
+   </property>
+   <property name="text">
+    <string>Heading 6</string>
+   </property>
+   <property name="toolTip">
+    <string>Heading 6</string>
+   </property>
+  </action>
+  <action name="actionInsertSymbol">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/insert/images/insert-symbol.png</normaloff>:/insert/images/insert-symbol.png</iconset>
+   </property>
+   <property name="text">
+    <string>Insert Symbol</string>
+   </property>
+   <property name="toolTip">
+    <string>Insert Symbol</string>
+   </property>
+  </action>
+  <action name="actionTreeAddChild">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-addchild.png</normaloff>:/tree/images/tree-addchild.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add Child</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Child</string>
+   </property>
+  </action>
+  <action name="actionTreeAddSibling">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-addsibling.png</normaloff>:/tree/images/tree-addsibling.png</iconset>
+   </property>
+   <property name="text">
+    <string>Add Sibling</string>
+   </property>
+   <property name="toolTip">
+    <string>Add Sibling</string>
+   </property>
+  </action>
+  <action name="actionToolsStyles">
+   <property name="text">
+    <string>Edit CSS</string>
+   </property>
+  </action>
+  <action name="actionToolsSnippets">
+   <property name="text">
+    <string>Snippets</string>
+   </property>
+  </action>
+  <action name="actionToolsTemplates">
+   <property name="text">
+    <string>Templates</string>
+   </property>
+  </action>
+  <action name="actionToolsOptions">
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+  <action name="actionEditCopyText">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-copytext.png</normaloff>:/edit/images/edit-copytext.png</iconset>
+   </property>
+   <property name="text">
+    <string>Copy as Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy as Text</string>
+   </property>
+   <property name="whatsThis">
+    <string>Copy the selected text to the clipboard.</string>
+   </property>
+  </action>
+  <action name="actionEditCutText">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-cuttext.png</normaloff>:/edit/images/edit-cuttext.png</iconset>
+   </property>
+   <property name="text">
+    <string>Cut as Text</string>
+   </property>
+   <property name="toolTip">
+    <string>Cut as Text</string>
+   </property>
+   <property name="whatsThis">
+    <string>Copy the selected text to the clipboard.</string>
+   </property>
+  </action>
+  <action name="actionWindowHTile">
+   <property name="text">
+    <string>Tile Horizontally</string>
+   </property>
+  </action>
+  <action name="actionWindowVTile">
+   <property name="text">
+    <string>Tile vertically</string>
+   </property>
+  </action>
+  <action name="actionEditPasteText">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-pastetext.png</normaloff>:/edit/images/edit-pastetext.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste Text</string>
+   </property>
+  </action>
+  <action name="actionAppForceExit">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/app/images/app_forceexit.png</normaloff>:/app/images/app_forceexit.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit without commit changes</string>
+   </property>
+  </action>
+  <action name="actionEditConfig">
+   <property name="text">
+    <string>Edit config</string>
+   </property>
+  </action>
+  <action name="actionExportPdfFiles">
+   <property name="text">
+    <string>Export PDF files...</string>
+   </property>
+  </action>
+  <action name="actionClearDoc">
+   <property name="text">
+    <string>Clear doc</string>
+   </property>
+  </action>
+  <action name="actionParaComment">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-cmt.png</normaloff>:/text/images/text-cmt.png</iconset>
+   </property>
+   <property name="text">
+    <string>Commentary</string>
+   </property>
+   <property name="toolTip">
+    <string>Commentary</string>
+   </property>
+  </action>
+  <action name="actionParaFeature">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-feature.png</normaloff>:/text/images/text-feature.png</iconset>
+   </property>
+   <property name="text">
+    <string>Feature</string>
+   </property>
+   <property name="toolTip">
+    <string>Feature</string>
+   </property>
+  </action>
+  <action name="actionParaImportant">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-important.png</normaloff>:/text/images/text-important.png</iconset>
+   </property>
+   <property name="text">
+    <string>Important</string>
+   </property>
+   <property name="toolTip">
+    <string>Important</string>
+   </property>
+  </action>
+  <action name="actionParaQuestion">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-question.png</normaloff>:/text/images/text-question.png</iconset>
+   </property>
+   <property name="text">
+    <string>Question</string>
+   </property>
+   <property name="toolTip">
+    <string>Question</string>
+   </property>
+  </action>
+  <action name="actionParaQuote">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-quote.png</normaloff>:/text/images/text-quote.png</iconset>
+   </property>
+   <property name="text">
+    <string>Quote</string>
+   </property>
+   <property name="toolTip">
+    <string>Quote</string>
+   </property>
+  </action>
+  <action name="actionTextMark">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark.png</normaloff>:/text/images/text-mark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+B</string>
+   </property>
+  </action>
+  <action name="actionParaSource">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-source.png</normaloff>:/text/images/text-source.png</iconset>
+   </property>
+   <property name="text">
+    <string>Source</string>
+   </property>
+   <property name="toolTip">
+    <string>Source</string>
+   </property>
+  </action>
+  <action name="actionParaPara">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-para.png</normaloff>:/text/images/text-para.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paragraph</string>
+   </property>
+   <property name="toolTip">
+    <string>Paragraph</string>
+   </property>
+  </action>
+  <action name="actionEditUntag">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-untag.png</normaloff>:/edit/images/edit-untag.png</iconset>
+   </property>
+   <property name="text">
+    <string>Unwrap Tag</string>
+   </property>
+   <property name="toolTip">
+    <string>Unwrap Tag</string>
+   </property>
+  </action>
+  <action name="actionEditOutside">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-outside.png</normaloff>:/edit/images/edit-outside.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit from Tag</string>
+   </property>
+   <property name="toolTip">
+    <string>Exit from Tag</string>
+   </property>
+  </action>
+  <action name="actionReloadScript">
+   <property name="text">
+    <string>Reload neopad.js</string>
+   </property>
+  </action>
+  <action name="actionEditInfo">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-taginfo.png</normaloff>:/edit/images/edit-taginfo.png</iconset>
+   </property>
+   <property name="text">
+    <string>Tag info</string>
+   </property>
+   <property name="toolTip">
+    <string>Tag info</string>
+   </property>
+  </action>
+  <action name="actionFileReload">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/file/images/file-reload.png</normaloff>:/file/images/file-reload.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save As...</string>
+   </property>
+   <property name="toolTip">
+    <string>Save As</string>
+   </property>
+  </action>
+  <action name="actionParaAnn">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-ann.png</normaloff>:/text/images/text-ann.png</iconset>
+   </property>
+   <property name="text">
+    <string>Annotation</string>
+   </property>
+   <property name="toolTip">
+    <string>Annotation</string>
+   </property>
+  </action>
+  <action name="actionEditUntable">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-untable.png</normaloff>:/edit/images/edit-untable.png</iconset>
+   </property>
+   <property name="text">
+    <string>Table to text</string>
+   </property>
+   <property name="toolTip">
+    <string>Erase table tags</string>
+   </property>
+  </action>
+  <action name="actionCorrectCssPath">
+   <property name="text">
+    <string>Correct CSS path</string>
+   </property>
+  </action>
+  <action name="actionParaTerm">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-term.png</normaloff>:/text/images/text-term.png</iconset>
+   </property>
+   <property name="text">
+    <string>Terminal</string>
+   </property>
+   <property name="toolTip">
+    <string>Terminal</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionProjectSave">
+   <property name="text">
+    <string>Save all base</string>
+   </property>
+  </action>
+  <action name="actionTreeSync">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tree/images/tree-sync.png</normaloff>:/tree/images/tree-sync.png</iconset>
+   </property>
+   <property name="text">
+    <string>Sync</string>
+   </property>
+   <property name="toolTip">
+    <string>Sync</string>
+   </property>
+  </action>
+  <action name="actionEditScript">
+   <property name="text">
+    <string>Edit neopad.js</string>
+   </property>
+  </action>
+  <action name="actionParaNote">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-note.png</normaloff>:/text/images/text-note.png</iconset>
+   </property>
+   <property name="text">
+    <string>Note</string>
+   </property>
+   <property name="toolTip">
+    <string>Note</string>
+   </property>
+  </action>
+  <action name="actionToolsLink">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/file/images/file-link.png</normaloff>:/file/images/file-link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Link</string>
+   </property>
+   <property name="toolTip">
+    <string>Link</string>
+   </property>
+  </action>
+  <action name="actionProjectStatistics">
+   <property name="text">
+    <string>Project Statistics...</string>
+   </property>
+  </action>
+  <action name="actionGenContents1">
+   <property name="text">
+    <string>Generate Contents</string>
+   </property>
+  </action>
+  <action name="actionGenContents2">
+   <property name="text">
+    <string>Generate Contents</string>
+   </property>
+  </action>
+  <action name="actionEditCss1">
+   <property name="text">
+    <string>Edit CSS</string>
+   </property>
+  </action>
+  <action name="actionEditCss2">
+   <property name="text">
+    <string>Edit CSS</string>
+   </property>
+  </action>
+  <action name="actionParaDiv">
+   <property name="text">
+    <string>Div</string>
+   </property>
+  </action>
+  <action name="actionCryptBase">
+   <property name="text">
+    <string>Encrypt/decrypt...</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="../neopad.qrc"/>
+ </resources>
+ <connections/>
+</ui>

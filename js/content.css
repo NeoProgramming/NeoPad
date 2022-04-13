@@ -1,0 +1,185 @@
+H1 {
+	font-family: Verdana; 
+	font-size: 32px; 
+	text-indent: 0px; 
+	color: #7b7bc0";
+}
+
+TABLE, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+BODY { 
+	font-family: Verdana; 
+	/* background-color: #F2D39F; */
+	background-color: #F5F1D8;
+	margin: 5px; 
+	padding: 5px; 
+}
+
+P {
+	text-align: justify;
+}
+
+DIV {
+	text-align: justify;
+}
+
+PRE {
+	border: 1px groove; 
+	font-family: "Consolas","Inconsolata","Monospace","Lucida Console"; 
+	background-color: #FFFFC4; 
+	font-size: 12pt; 
+	padding: 7px;
+	white-space: pre;
+}
+
+H1 {
+	font-family: Verdana; 
+	font-weight: normal;
+	font-size: 32px;
+	color: #7b7bc0;
+}
+
+H3 {
+	color: #e86300;
+}
+
+ANN {
+	display:block;
+	font-family: Verdana; 
+	font-weight: normal;
+	color: #800080;
+	background-color: #FFFFFF;
+	border: 1px solid blue;
+	border-radius: 5px;
+	border-spacing: 5px;
+	margin: 5px;
+	padding: 5px; 
+}
+
+
+ABBR {
+	background-color: #00AAFF;
+}
+
+BLOCKQUOTE {
+	background-color: #AAFF99;
+}
+
+CODE {
+	background-color: #ffffa0;	
+	border: 1px solid #aaaaaa; 
+	padding: 2px;
+	border-radius: 3px;
+}
+
+EM {
+	text-decoration-color: blue;
+	text-decoration-style: wavy;
+	text-decoration-thickness: 3px;
+}
+
+
+COMMENT {
+	display:block;
+	font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: #008888; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid #008888;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+QUESTION {
+	display:block;
+	background-color: #00a000;
+	border: 1px groove; 
+	background: #C4FFFF; 
+	font-size: 12pt; 
+	padding:14px; 
+	text-indent: 0px;
+	word-wrap: break-word;
+}
+
+IMPORTANT {
+	display:block;
+	font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: red; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid red;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+FEATURE {
+	display:block;
+	font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: blue; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid blue;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+
+}
+
+/* old styles */
+
+.code {
+	font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	border: 1px groove; 
+	background: #FFFFC4; 
+	font-size: 12pt; 
+	padding:14px; 
+	white-space: pre;
+	text-indent: 0px;
+}
+
+.quote {
+	border: 1px groove; 
+	background: #C4FFFF; 
+	font-size: 12pt; 
+	padding:14px; 
+	text-indent: 0px;
+	word-wrap: break-word;
+}
+
+.comment {
+    font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: #008888; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid #008888;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+.error {
+    font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: red; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid red;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+.feature {
+    font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: blue; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid blue;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}

@@ -1,0 +1,123 @@
+<RCC>
+    <qresource prefix="/app">
+        <file>images/app-about.png</file>
+        <file>images/app-settings.png</file>
+    </qresource>
+    <qresource prefix="/insert">
+        <file>images/insert-snippet.png</file>
+        <file>images/insert-datetime.png</file>
+        <file>images/insert-horzline.png</file>
+        <file>images/insert-hlink.png</file>
+        <file>images/insert-image.png</file>
+        <file>images/insert-table.png</file>
+        <file>images/insert-symbol.png</file>
+    </qresource>
+    <qresource prefix="/zoom">
+        <file>images/zoom-normal.png</file>
+        <file>images/zoom-in.png</file>
+        <file>images/zoom-out.png</file>
+    </qresource>
+    <qresource prefix="/tree">
+        <file>images/tree-additem.png</file>
+        <file>images/tree-delitem.png</file>
+        <file>images/tree-down.png</file>
+        <file>images/tree-left.png</file>
+        <file>images/tree-right.png</file>
+        <file>images/tree-up.png</file>
+        <file>images/tree-addchild.png</file>
+        <file>images/tree-addsibling.png</file>
+        <file>images/tree-sync.png</file>
+    </qresource>
+    <qresource prefix="/edit">
+        <file>images/edit-mktext.png</file>
+        <file>images/edit-pastetext.png</file>
+        <file>images/edit-copy.png</file>
+        <file>images/edit-cut.png</file>
+        <file>images/edit-paste.png</file>
+        <file>images/edit-redo.png</file>
+        <file>images/edit-undo.png</file>
+        <file>images/edit-copytext.png</file>
+        <file>images/edit-cuttext.png</file>
+        <file>images/edit-clear.png</file>
+        <file>images/edit-untag.png</file>
+        <file>images/edit-untable.png</file>
+        <file>images/edit-outside.png</file>
+        <file>images/edit-taginfo.png</file>
+        <file>images/edit-erase.png</file>
+    </qresource>
+    <qresource prefix="/file">
+        <file>images/file-saveas.png</file>
+        <file>images/file-print.png</file>
+        <file>images/file-exportpdf.png</file>
+        <file>images/file-reload.png</file>
+        <file>images/file-link.png</file>
+    </qresource>
+    <qresource prefix="/msc">
+        <file>images/close.png</file>
+        <file>images/searchnext.png</file>
+        <file>images/searchprevious.png</file>
+    </qresource>
+    <qresource prefix="/project">
+        <file>images/prj-options.png</file>
+        <file>images/prj-new.png</file>
+        <file>images/prj-open.png</file>
+        <file>images/prj-save.png</file>
+        <file>images/prj-save-all.png</file>
+    </qresource>
+    <qresource prefix="/text">
+        <file>images/text-bold.png</file>
+        <file>images/text-italic.png</file>
+        <file>images/text-strike.png</file>
+        <file>images/text-underline.png</file>
+        <file>images/text-subscript.png</file>
+        <file>images/text-superscript.png</file>
+        <file>images/text-code.png</file>
+        <file>images/text-source.png</file>
+        <file>images/text-ul.png</file>
+        <file>images/text-ol.png</file>
+        <file>images/text-h1.png</file>
+        <file>images/text-h2.png</file>
+        <file>images/text-h3.png</file>
+        <file>images/text-h4.png</file>
+        <file>images/text-h5.png</file>
+        <file>images/text-h6.png</file>
+        <file>images/text-cmt.png</file>
+        <file>images/text-def.png</file>
+        <file>images/text-important.png</file>
+        <file>images/text-feature.png</file>
+        <file>images/text-mark.png</file>
+        <file>images/text-question.png</file>
+        <file>images/text-quote.png</file>
+        <file>images/text-ann.png</file>
+        <file>images/text-term.png</file>
+        <file>images/text-strong.png</file>
+        <file>images/text-em.png</file>
+        <file>images/text-ins.png</file>
+        <file>images/text-del.png</file>
+        <file>images/text-samp.png</file>
+        <file>images/text-var.png</file>
+        <file>images/text-kbd.png</file>
+        <file>images/text-para.png</file>
+        <file>images/text-note.png</file>
+    </qresource>
+    <qresource prefix="/treeicons">
+        <file>images/ti-folder25.png</file>
+        <file>images/ti-folder50.png</file>
+        <file>images/ti-folder75.png</file>
+        <file>images/ti-html.png</file>
+        <file>images/ti-underconstr.png</file>
+        <file>images/ti-unknown.png</file>
+        <file>images/ti-locked.png</file>
+        <file>images/ti-htmlx.png</file>
+    </qresource>
+    <qresource prefix="/langicons">
+        <file>images/li-none.png</file>
+        <file>images/li-ok.png</file>
+        <file>images/li-old.png</file>
+        <file>images/li-qok.png</file>
+        <file>images/li-qold.png</file>
+    </qresource>
+    <qresource prefix="/ani">
+        <file>images/skull.gif</file>
+    </qresource>
+</RCC>

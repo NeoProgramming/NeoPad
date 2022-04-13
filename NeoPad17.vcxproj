@@ -1,0 +1,485 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{25ADCEA7-E990-32B2-B333-F9E992E419AF}</ProjectGuid>
+    <RootNamespace>NeoPad</RootNamespace>
+    <Keyword>QtVS_v304</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.18362.0</WindowsTargetPlatformMinVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>release\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <IntermediateDirectory>build\.obj\</IntermediateDirectory>
+    <PrimaryOutput>NeoPad</PrimaryOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>debug\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <IntermediateDirectory>build\.obj\</IntermediateDirectory>
+    <PrimaryOutput>NeoPad</PrimaryOutput>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>debug\</OutDir>
+    <IntDir>build\.obj\</IntDir>
+    <TargetName>NeoPad</TargetName>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>release\</OutDir>
+    <IntDir>build\.obj\</IntDir>
+    <TargetName>NeoPad</TargetName>
+    <IgnoreImportLibrary>true</IgnoreImportLibrary>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <QtInstall>5.14.2_msvc2017_64</QtInstall>
+    <QtModules>core;network;gui;webkit;widgets;webkitwidgets</QtModules>
+  </PropertyGroup>
+  <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <QtInstall>5.14.2_msvc2017_64</QtInstall>
+    <QtModules>core;network;gui;webkit;widgets;webkitwidgets</QtModules>
+  </PropertyGroup>
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
+    <Import Project="$(QtMsBuild)\qt.props" />
+  </ImportGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;build\.moc;ui;/include;D:\Libs\OpenSSL-111m-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>build\.obj\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ObjectFileName>build\.obj\</ObjectFileName>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;NDEBUG;QT_NO_DEBUG;QT_WEBKIT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>
+      </ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>shell32.lib;mfuuid.lib;strmiids.lib;libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Libs\OpenSSL-111m-Win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkIncremental>false</LinkIncremental>
+      <OptimizeReferences>true</OptimizeReferences>
+      <OutputFile>$(OutDir)\NeoPad.exe</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;NDEBUG;QT_NO_DEBUG;QT_WEBKITWIDGETS_LIB;QT_WIDGETS_LIB;QT_WEBKIT_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <QtMoc>
+      <CompilerFlavor>msvc</CompilerFlavor>
+      <Include>./build/.moc/moc_predefs.h</Include>
+      <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
+      <DynamicSource>output</DynamicSource>
+      <QtMocDir>build\.moc</QtMocDir>
+      <QtMocFileName>moc_%(Filename).cpp</QtMocFileName>
+    </QtMoc>
+    <QtRcc>
+      <InitFuncName>neopad</InitFuncName>
+      <Compression>default</Compression>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+      <QtRccDir>build\.rcc</QtRccDir>
+      <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
+    </QtRcc>
+    <QtUic>
+      <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
+      <QtUicDir>ui</QtUicDir>
+      <QtUicFileName>ui_%(Filename).h</QtUicFileName>
+    </QtUic>
+    <PreBuildEvent>
+      <Message>updating build number...</Message>
+      <Command>./updateBuildNumber.bat</Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) D:\MySoft\_Outliners\NeoPad2x64\NeoPad.exe</Command>
+      <Message>copying release exe...</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;build\.moc;ui;/include;D:\Libs\OpenSSL-111m-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>build\.obj\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ObjectFileName>build\.obj\</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_WEBKIT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>shell32.lib;mfuuid.lib;strmiids.lib;libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\Libs\OpenSSL-111m-Win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <OutputFile>$(OutDir)\NeoPad.exe</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QT_WEBKITWIDGETS_LIB;QT_WIDGETS_LIB;QT_WEBKIT_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <QtMoc>
+      <CompilerFlavor>msvc</CompilerFlavor>
+      <Include>./build/.moc/moc_predefs.h</Include>
+      <ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription>
+      <DynamicSource>output</DynamicSource>
+      <QtMocDir>build\.moc</QtMocDir>
+      <QtMocFileName>moc_%(Filename).cpp</QtMocFileName>
+    </QtMoc>
+    <QtRcc>
+      <InitFuncName>neopad</InitFuncName>
+      <Compression>default</Compression>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+      <QtRccDir>build\.rcc</QtRccDir>
+      <QtRccFileName>qrc_%(Filename).cpp</QtRccFileName>
+    </QtRcc>
+    <QtUic>
+      <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
+      <QtUicDir>ui</QtUicDir>
+      <QtUicFileName>ui_%(Filename).h</QtUicFileName>
+    </QtUic>
+    <PreBuildEvent>
+      <Command>./updateBuildNumber.bat</Command>
+      <Message>updating build number...</Message>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\3rdparty\pugixml\pugixml.cpp" />
+    <ClCompile Include="src\core\Cryptor.cpp" />
+    <ClCompile Include="src\core\PrjItem.cpp" />
+    <ClCompile Include="src\core\PrjStat.cpp" />
+    <ClCompile Include="src\core\PrjTree.cpp" />
+    <ClCompile Include="src\core\Snippets.cpp" />
+    <ClCompile Include="src\core\Solution.cpp" />
+    <ClCompile Include="src\gui\htmllink.cpp" />
+    <ClCompile Include="src\gui\passworddlg.cpp" />
+    <ClCompile Include="src\service\cstr.cpp" />
+    <ClCompile Include="src\service\pugitools.cpp" />
+    <ClCompile Include="src\gui\existitemdlg.cpp" />
+    <ClCompile Include="src\service\fail.cpp" />
+    <ClCompile Include="src\gui\htmlimage.cpp" />
+    <ClCompile Include="src\gui\htmltable.cpp" />
+    <ClCompile Include="src\gui\imageproperty.cpp" />
+    <ClCompile Include="src\core\ini.cpp" />
+    <ClCompile Include="src\gui\itemproperty.cpp" />
+    <ClCompile Include="src\gui\linkproperty.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\gui\mainwindow.cpp" />
+    <ClCompile Include="src\gui\multieditdlg.cpp" />
+    <ClCompile Include="src\gui\newitemdlg.cpp" />
+    <ClCompile Include="src\gui\newprojectdlg.cpp" />
+    <ClCompile Include="src\service\numerator.cpp" />
+    <ClCompile Include="src\gui\prjpropsdlg.cpp" />
+    <ClCompile Include="src\gui\quickstartdlg.cpp" />
+    <ClCompile Include="src\gui\savealldlg.cpp" />
+    <ClCompile Include="src\gui\selectdocdlg.cpp" />
+    <ClCompile Include="src\gui\slnpanel.cpp" />
+    <ClCompile Include="src\gui\slntreewidget.cpp" />
+    <ClCompile Include="src\gui\snippetsdlg.cpp" />
+    <ClCompile Include="src\service\search.cpp" />
+    <ClCompile Include="src\service\sys.cpp" />
+    <ClCompile Include="src\gui\tablemenu.cpp" />
+    <ClCompile Include="src\gui\tableproperty.cpp" />
+    <ClCompile Include="src\service\tools.cpp" />
+    <ClCompile Include="src\gui\topicchooser.cpp" />
+    <ClCompile Include="src\gui\webeditview.cpp" />
+    <ClCompile Include="src\service\xini.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp" />
+    <ClInclude Include="src\3rdparty\pugixml\pugixml.hpp" />
+    <ClInclude Include="src\core\Cryptor.h" />
+    <ClInclude Include="src\core\PrjItem.h" />
+    <ClInclude Include="src\core\PrjStat.h" />
+    <ClInclude Include="src\core\PrjTree.h" />
+    <ClInclude Include="src\core\Snippets.h" />
+    <ClInclude Include="src\core\Solution.h" />
+    <ClInclude Include="src\gui\htmllink.h" />
+    <ClInclude Include="src\service\search.h" />
+    <ClInclude Include="src\service\xini.h" />
+    <QtMoc Include="src\gui\existitemdlg.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\passworddlg.h" />
+    <ClInclude Include="src\service\cstr.h" />
+    <ClInclude Include="src\service\fail.h" />
+    <ClInclude Include="src\gui\htmlimage.h" />
+    <ClInclude Include="src\gui\htmltable.h" />
+    <QtMoc Include="src\gui\imageproperty.h">
+    </QtMoc>
+    <ClInclude Include="src\core\ini.h" />
+    <QtMoc Include="src\gui\itemproperty.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\linkproperty.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\mainwindow.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\multieditdlg.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\newitemdlg.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\newprojectdlg.h">
+    </QtMoc>
+    <ClInclude Include="src\service\numerator.h" />
+    <QtMoc Include="src\gui\prjpropsdlg.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\quickstartdlg.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\savealldlg.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\selectdocdlg.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\slnpanel.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\slntreewidget.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\snippetsdlg.h">
+    </QtMoc>
+    <ClInclude Include="src\service\pugitools.h" />
+    <ClInclude Include="src\service\sys.h" />
+    <QtMoc Include="src\gui\tablemenu.h">
+    </QtMoc>
+    <QtMoc Include="src\gui\tableproperty.h">
+    </QtMoc>
+    <ClInclude Include="src\service\tools.h" />
+    <QtMoc Include="src\gui\topicchooser.h">
+    </QtMoc>
+    <ClInclude Include="src\core\vmbsrv.h" />
+    <QtMoc Include="src\gui\webeditview.h">
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="build\.moc\moc_predefs.h.cbt">
+      <FileType>Document</FileType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -O2 -MD -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;build\.moc\moc_predefs.h</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generate moc_predefs.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">build\.moc\moc_predefs.h;%(Outputs)</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -Zi -MDd -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;build\.moc\moc_predefs.h</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generate moc_predefs.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">build\.moc\moc_predefs.h;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="src\gui\existitemdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\imageproperty.ui">
+    </QtUic>
+    <QtUic Include="src\gui\itemproperty.ui">
+    </QtUic>
+    <QtUic Include="src\gui\linkproperty.ui">
+    </QtUic>
+    <QtUic Include="src\gui\mainwindow.ui">
+    </QtUic>
+    <QtUic Include="src\gui\multieditdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\newitemdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\newprojectdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\passworddlg.ui" />
+    <QtUic Include="src\gui\prjpropsdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\quickstartdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\savealldlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\selectdocdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\slnpanel.ui">
+    </QtUic>
+    <QtUic Include="src\gui\snippetsdlg.ui">
+    </QtUic>
+    <QtUic Include="src\gui\tableproperty.ui">
+    </QtUic>
+    <QtUic Include="src\gui\topicchooser.ui">
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\images\app-about.png" />
+    <None Include="src\images\app-settings.png" />
+    <None Include="src\images\close.png" />
+    <None Include="src\images\edit-clear.png" />
+    <None Include="src\images\edit-copy.png" />
+    <None Include="src\images\edit-copytext.png" />
+    <None Include="src\images\edit-cut.png" />
+    <None Include="src\images\edit-cuttext.png" />
+    <None Include="src\images\edit-erase.png" />
+    <None Include="src\images\edit-mktext.png" />
+    <None Include="src\images\edit-outside.png" />
+    <None Include="src\images\edit-paste.png" />
+    <None Include="src\images\edit-pastetext.png" />
+    <None Include="src\images\edit-redo.png" />
+    <None Include="src\images\edit-taginfo.png" />
+    <None Include="src\images\edit-undo.png" />
+    <None Include="src\images\edit-untable.png" />
+    <None Include="src\images\edit-untag.png" />
+    <None Include="src\images\file-exportpdf.png" />
+    <None Include="src\images\file-link.png" />
+    <None Include="src\images\file-print.png" />
+    <None Include="src\images\file-reload.png" />
+    <None Include="src\images\file-saveas.png" />
+    <None Include="src\images\insert-datetime.png" />
+    <None Include="src\images\insert-hlink.png" />
+    <None Include="src\images\insert-horzline.png" />
+    <None Include="src\images\insert-image.png" />
+    <None Include="src\images\insert-snippet.png" />
+    <None Include="src\images\insert-symbol.png" />
+    <None Include="src\images\insert-table.png" />
+    <None Include="src\images\li-none.png" />
+    <None Include="src\images\li-note.png" />
+    <None Include="src\images\li-ok.png" />
+    <None Include="src\images\li-old.png" />
+    <None Include="src\images\li-qok.png" />
+    <None Include="src\images\li-qold.png" />
+    <QtRcc Include="src\neopad.qrc">
+    </QtRcc>
+    <None Include="src\images\prj-new.png" />
+    <None Include="src\images\prj-open.png" />
+    <None Include="src\images\prj-options.png" />
+    <None Include="src\images\prj-save-all.png" />
+    <None Include="src\images\prj-save.png" />
+    <None Include="src\images\searchnext.png" />
+    <None Include="src\images\searchprevious.png" />
+    <None Include="src\images\text-ann.png" />
+    <None Include="src\images\text-bold.png" />
+    <None Include="src\images\text-cmt.png" />
+    <None Include="src\images\text-code.png" />
+    <None Include="src\images\text-def.png" />
+    <None Include="src\images\text-del.png" />
+    <None Include="src\images\text-em.png" />
+    <None Include="src\images\text-feature.png" />
+    <None Include="src\images\text-h1.png" />
+    <None Include="src\images\text-h2.png" />
+    <None Include="src\images\text-h3.png" />
+    <None Include="src\images\text-h4.png" />
+    <None Include="src\images\text-h5.png" />
+    <None Include="src\images\text-h6.png" />
+    <None Include="src\images\text-important.png" />
+    <None Include="src\images\text-ins.png" />
+    <None Include="src\images\text-italic.png" />
+    <None Include="src\images\text-kbd.png" />
+    <None Include="src\images\text-mark.png" />
+    <None Include="src\images\text-note.png" />
+    <None Include="src\images\text-ol.png" />
+    <None Include="src\images\text-para.png" />
+    <None Include="src\images\text-question.png" />
+    <None Include="src\images\text-quote.png" />
+    <None Include="src\images\text-samp.png" />
+    <None Include="src\images\text-source.png" />
+    <None Include="src\images\text-strike.png" />
+    <None Include="src\images\text-strong.png" />
+    <None Include="src\images\text-subscript.png" />
+    <None Include="src\images\text-superscript.png" />
+    <None Include="src\images\text-term.png" />
+    <None Include="src\images\text-ul.png" />
+    <None Include="src\images\text-underline.png" />
+    <None Include="src\images\text-var.png" />
+    <None Include="src\images\ti-folder.png" />
+    <None Include="src\images\ti-folder25.png" />
+    <None Include="src\images\ti-folder50.png" />
+    <None Include="src\images\ti-folder75.png" />
+    <None Include="src\images\ti-hidden.png" />
+    <None Include="src\images\ti-html.png" />
+    <None Include="src\images\ti-lockedall.png" />
+    <None Include="src\images\ti-lockeddoc.png" />
+    <None Include="src\images\ti-lockedtree.png" />
+    <None Include="src\images\ti-undefined.png" />
+    <None Include="src\images\ti-underconstr.png" />
+    <None Include="src\images\ti-unknown.png" />
+    <None Include="src\images\tree-addchild.png" />
+    <None Include="src\images\tree-additem.png" />
+    <None Include="src\images\tree-addsibling.png" />
+    <None Include="src\images\tree-delitem.png" />
+    <None Include="src\images\tree-down.png" />
+    <None Include="src\images\tree-left.png" />
+    <None Include="src\images\tree-right.png" />
+    <None Include="src\images\tree-sync.png" />
+    <None Include="src\images\tree-up.png" />
+    <None Include="src\images\treeicon-doc.png" />
+    <None Include="src\images\treeicon-xml.png" />
+    <None Include="src\images\zoom-in.png" />
+    <None Include="src\images\zoom-normal.png" />
+    <None Include="src\images\zoom-out.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\neopad.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\images\skull.gif" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

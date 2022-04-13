@@ -1,0 +1,702 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;moc;h;def;odl;idl;res;</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{3060f135-6a9f-48bb-87b1-dac54c6d02e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\core">
+      <UniqueIdentifier>{2728969f-2e74-43e4-aff4-7f458c6ebd76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui">
+      <UniqueIdentifier>{b50c2961-8a87-4d76-9aef-7781c5875689}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3rdparty">
+      <UniqueIdentifier>{b1355a9f-da04-4bbd-8128-6ea52d00ef43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\service">
+      <UniqueIdentifier>{ace07294-2581-4feb-a31c-8abbb9398337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\3rdparty\pugixml">
+      <UniqueIdentifier>{204a13f8-6c27-45d4-b0a4-b84ce2132181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\dlg">
+      <UniqueIdentifier>{3a07df0e-51fb-4de1-85c7-5e75edfe1980}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\gui\html">
+      <UniqueIdentifier>{4fda1627-d4bd-4b69-802c-dca6f13d9a26}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\service\fail.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\ini.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\itemproperty.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\mainwindow.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\sys.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\PrjTree.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\PrjStat.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\PrjItem.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Cryptor.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\topicchooser.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\pugitools.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\xini.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\numerator.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\slnpanel.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\slntreewidget.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Snippets.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\3rdparty\pugixml\pugixml.cpp">
+      <Filter>src\3rdparty\pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\existitemdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\multieditdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\newitemdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\newprojectdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\passworddlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\prjpropsdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\quickstartdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\savealldlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\selectdocdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Solution.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\tools.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\snippetsdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\tablemenu.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\webeditview.cpp">
+      <Filter>src\gui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\cstr.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\search.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\htmllink.cpp">
+      <Filter>src\gui\html</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\htmltable.cpp">
+      <Filter>src\gui\html</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\htmlimage.cpp">
+      <Filter>src\gui\html</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\imageproperty.cpp">
+      <Filter>src\gui\html</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\linkproperty.cpp">
+      <Filter>src\gui\html</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\tableproperty.cpp">
+      <Filter>src\gui\html</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp">
+      <Filter>src\3rdparty\pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdparty\pugixml\pugixml.hpp">
+      <Filter>src\3rdparty\pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\vmbsrv.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Cryptor.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\ini.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\PrjStat.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\PrjItem.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\PrjTree.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Solution.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\fail.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\sys.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\tools.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\numerator.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Snippets.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\cstr.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\pugitools.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\xini.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\search.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\htmltable.h">
+      <Filter>src\gui\html</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\htmlimage.h">
+      <Filter>src\gui\html</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\htmllink.h">
+      <Filter>src\gui\html</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="build\.moc\moc_predefs.h.cbt">
+      <Filter>Generated Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="src\gui\existitemdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\imageproperty.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\itemproperty.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\linkproperty.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\mainwindow.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\multieditdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\newitemdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\newprojectdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\prjpropsdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\quickstartdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\savealldlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\selectdocdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\slnpanel.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\snippetsdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\tableproperty.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\topicchooser.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="src\gui\passworddlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\images\app-about.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\app-settings.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\close.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-clear.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-copy.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-copytext.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-cut.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-cuttext.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-erase.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-mktext.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-outside.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-paste.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-pastetext.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-redo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-taginfo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-undo.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-untable.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\edit-untag.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\file-exportpdf.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\file-link.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\file-print.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\file-reload.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\file-saveas.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\insert-datetime.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\insert-hlink.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\insert-horzline.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\insert-image.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\insert-snippet.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\insert-symbol.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\insert-table.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\li-none.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\li-note.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\li-ok.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\li-old.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\li-qok.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\li-qold.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <QtRcc Include="src\neopad.qrc">
+      <Filter>Resource Files</Filter>
+    </QtRcc>
+    <None Include="src\images\prj-new.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\prj-open.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\prj-options.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\prj-save-all.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\prj-save.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\searchnext.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\searchprevious.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-ann.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-bold.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-cmt.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-code.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-def.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-del.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-em.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-feature.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-h1.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-h2.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-h3.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-h4.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-h5.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-h6.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-important.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-ins.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-italic.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-kbd.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-mark.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-note.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-ol.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-para.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-question.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-quote.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-samp.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-source.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-strike.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-strong.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-subscript.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-superscript.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-term.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-ul.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-underline.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\text-var.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-folder.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-folder25.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-folder50.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-folder75.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-hidden.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-html.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-lockedall.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-lockeddoc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-lockedtree.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-undefined.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-underconstr.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\ti-unknown.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-addchild.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-additem.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-addsibling.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-delitem.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-down.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-left.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-right.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-sync.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\tree-up.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\treeicon-doc.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\treeicon-xml.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\zoom-in.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\zoom-normal.png">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="src\images\zoom-out.png">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="src\neopad.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="src\gui\existitemdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\multieditdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\newitemdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\newprojectdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\passworddlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\prjpropsdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\quickstartdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\selectdocdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\snippetsdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\savealldlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\itemproperty.h">
+      <Filter>src\gui</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\webeditview.h">
+      <Filter>src\gui</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\topicchooser.h">
+      <Filter>src\gui</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\slntreewidget.h">
+      <Filter>src\gui</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\slnpanel.h">
+      <Filter>src\gui</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\tablemenu.h">
+      <Filter>src\gui</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\mainwindow.h">
+      <Filter>src\gui</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\imageproperty.h">
+      <Filter>src\gui\html</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\linkproperty.h">
+      <Filter>src\gui\html</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\tableproperty.h">
+      <Filter>src\gui\html</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="src\images\skull.gif">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
