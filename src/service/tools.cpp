@@ -39,65 +39,15 @@ void NormalizeFName(QString &c)
 QString	GenerateUniqueFPath(const QString& path, const QString& name, const QString& ext)
 {
 	// generate a unique filename at a specific path
-	QString spath = path;
-	QString sname = name;
-	spath += "/";
-	spath += name;
-	spath += ".";
-	spath += ext;
-
-	// first based on short name
-	if( QFileInfo(spath).exists() )
+	QString spath = path + "/" + name + "." + ext;
+	unsigned int n = 1;
+	while( QFileInfo(spath).exists() ) 
 	{
-		// such a file exists - we are trying to add the current timestamp to it
-		time_t timeObj;
-		time(&timeObj);
-		tm *pt = gmtime(&timeObj);
-
-		sname.sprintf("%s_%02d%02d%02d_%02d%02d%02d", name,
-			pt->tm_mday, pt->tm_mon, pt->tm_year, pt->tm_hour, pt->tm_min, pt->tm_sec);
-		spath = path + "/" + sname + "." + ext;
-		srand(QDateTime::currentMSecsSinceEpoch() / 1000);
-		while (QFileInfo(spath).exists())
-		{
-			// if such a file exists, we just generate random numbers until we guess
-			sname.sprintf("%s_rnd%d", name, rand());
-			spath = path + "/" + sname + "." + ext;
-		}
+		spath = path + "/" + name + QString::number(n) +  "." + ext;
+		n++;
 	}
 	return spath;
 }
-
-QString GenerateUniqueNumFName(const QString& path, const QString& name, const QString& ext)
-{
-	// generate a unique file name based on the path and the first part of the name
-	// the file name is set separately from the extension
-		
-	// but is there such a file at all? if not, there is no need to search
-	unsigned int n = 0;
-	while (n < ~0) {
-		QString uname = path + "/" + name + QString::number(n) + "." + ext;
-		if (!QFileInfo(uname).exists())
-			return uname;
-		n++;
-	}
-	return "";
-}
-
-int GetDocNum(const QString & doc)
-{
-	// get document number if filename starts with doc
-	if (IsBlank(doc))
-		return 0;
-	QString fname = QFileInfo(doc).fileName();
-	if (fname.leftRef(3) == "doc")
-	{
-		int num = fname.midRef(3).toInt();
-		return num;
-	}
-	return 0;
-}
-
 
 QString U16(const char* s)
 {

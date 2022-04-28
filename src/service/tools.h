@@ -6,9 +6,6 @@
 bool IsBlank(const QString &s);
 void AddSlash(QString &path);
 void NormalizeFName(QString &c);
-
-int     GetDocNum(const QString & doc);
-QString GenerateUniqueNumFName(const QString& path, const QString& name, const QString& ext);
 QString	GenerateUniqueFPath(const QString& path, const QString& name, const QString& ext);
 
 QString U16(const char* s);

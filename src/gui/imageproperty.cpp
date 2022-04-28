@@ -112,6 +112,7 @@ void ImageProperties::onCreateImage()
 	// create empty image file and open this file
 	m_fpath = GenerateUniqueFPath(m_adir, "image", "png");
 	QImage image(100, 100, QImage::Format_ARGB32);
+	image.fill(QColor(255, 255, 255));
 	image.save(m_fpath, "PNG");
 	ui.lineFPath->setText(m_fpath);
 	ui.comboAction->setCurrentIndex(0);
