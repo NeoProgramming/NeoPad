@@ -107,17 +107,12 @@ public slots:
 
 	void onImageProperties();
 	void onLinkProperties();
-	void onTdProperties();
 	void onLinkFollow();
 	void onLinkClicked(const QUrl & url);
 public:
-	int  GetHitContext(QWebHitTestResult &r);
-	int  GetElementContext(const QWebElement &el);
-	void OpenLink(const QUrl&);
 	bool LoadHtml(MTPOS tpos, int di);
 	bool ReloadHtml();
 	void FixCssPath();
-	void DoInsertHtml(QString html);
 	bool SaveHtml(bool update_tree);
 	void Find(const QString &text, bool backward);
 protected:
@@ -131,7 +126,14 @@ private:
 	void execCommand(const QString &cmd, const QString &arg);
 //	bool queryCommandState(const QString&);
 	bool execScript(const QString &jsfn, QString *outRes = nullptr);
+	int  GetHitContext(QWebHitTestResult &r);
+	int  GetElementContext(const QWebElement &el);
+	void OpenLink(const QUrl&);
+	void InsertHtml(QString html);
+	QString PrepareImage(int action, const QString &fpath);
+	void InsertImage(int action, const QString &fpath, int w, int h);
 
+private:
 	QString m_path;
 	MainWindow *m_wMain;
 	QMenu m_menuContext;

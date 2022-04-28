@@ -119,28 +119,14 @@ QByteArray U8a(const QString &s)
 	return codecUtf8->fromUnicode(s);
 }
 
-int GetValue(QString &s, QString &unit)
-{
-	const QChar *p = s.constData();
-	const QChar *p0 = p;
-	int n = 0;
-	while(!p->isNull() && p->isDigit())
-	{
-		p++;
-		n++;
-	}
-	QString num(p0, n);
-	unit = QString(p);
-	return num.toInt();
-}
-
 //-------------------------------------------------
-bool OpenInExternalApplication(QWidget *par, const QString &app, const QString &FileName)
+bool OpenInExternalApplication(QWidget *par, const QString &app, const QString &fpath)
 {
-	QString fn = FileName;
 	QStringList arguments;
-	arguments << fn;
-	bool r = QProcess::startDetached(app, arguments);
+	QString d = QFileInfo(fpath).absoluteDir().absolutePath();
+	arguments << fpath;
+	bool r = QProcess::startDetached(app, arguments, d);
+	//bool r = QProcess::startDetached(app + " \"" + QFileInfo(fpath).canonicalFilePath() + "\"");
 	if (!r)
 		QMessageBox::warning(par, "NeoPad", "Process start error! Process: \r\n" + app);
 	return r;

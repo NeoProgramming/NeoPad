@@ -1,46 +1,70 @@
 #include "htmlimage.h"
+#include <QFile>
+#include <QFileInfo>
+
+HtmlImage::HtmlImage()
+{
+	m_image = QWebElement();
+}
 
 HtmlImage::HtmlImage(QWebElement &image)
 {
 	m_image = image;
-	m_width = "100%";
-	m_height = "100%";
-	m_src = "";
-	m_alt = "";
 }
 
 HtmlImage::~HtmlImage(void)
 {
 }
 
-bool HtmlImage::Init(QWebElement &image)
+QString HtmlImage::GetPath()
 {
-	// read data from tag
-	if(image.isNull())
-		return 0;
-
-	m_fpath       = image.attribute("src");
-	m_width       = image.attribute("width");
-	m_height      = image.attribute("height");
-
-	m_alt   = image.attribute("alt");
-	m_title = image.attribute("title");
-
-	return 1;
+	if (m_image.isNull())
+		return QString();
+	return m_image.attribute("src");
 }
 
-bool HtmlImage::Apply(QWebElement &image)
+int HtmlImage::GetWidth()
 {
-	// write data to tag
-	if(image.isNull())
+	if (m_image.isNull())
 		return 0;
-
-	image.setAttribute("src", m_fpath);
-	image.setAttribute("width", m_width);
-	image.setAttribute("height", m_height);
-
-	image.setAttribute("alt", m_alt);
-	image.setAttribute("title", m_title);
-
-	return 1;
+	QString width = m_image.attribute("width");
+	if (width.endsWith('%'))
+		return -width.toInt();
+	return width.toInt();
 }
+
+int HtmlImage::GetHeight()
+{
+	if (m_image.isNull())
+		return 0;
+	QString height = m_image.attribute("height");
+	if (height.endsWith('%'))
+		return -height.toInt();
+	return height.toInt();
+}
+
+void HtmlImage::SetPath(const QString &fpath)
+{
+	m_image.setAttribute("src", fpath);
+}
+
+void HtmlImage::SetWidth(int w)
+{
+	if(w < 0)
+		m_image.setAttribute("width", QString::asprintf("%d%%", -w));
+	else if(w > 0)
+		m_image.setAttribute("width", QString::asprintf("%d", w));
+	else
+		m_image.removeAttribute("width");
+}
+
+void HtmlImage::SetHeight(int h)
+{
+	if (h < 0)
+		m_image.setAttribute("height", QString::asprintf("%d%%", -h));
+	else if (h > 0)
+		m_image.setAttribute("height", QString::asprintf("%d", h));
+	else
+		m_image.removeAttribute("height");
+}
+

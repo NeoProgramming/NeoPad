@@ -6,18 +6,17 @@
 class HtmlImage
 {
 public:
+	HtmlImage();
 	HtmlImage(QWebElement &image);
 	~HtmlImage(void);
-	bool Init(QWebElement &image);
-	bool Apply(QWebElement &image);
-	QString MakeHtml();
-public:
-	QString m_fpath;
-	QString m_width;
-	QString m_height;
-	QString m_src;
-	QString m_alt;
-	QString m_title;
+
+	QString GetPath();
+	int GetWidth();
+	int GetHeight();
+
+	void SetPath(const QString &fpath);
+	void SetWidth(int w);
+	void SetHeight(int h);
 private:
 	QWebElement m_image;
 };

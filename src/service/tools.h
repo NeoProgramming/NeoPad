@@ -16,7 +16,6 @@ QString U16(const std::string &s);
 std::string U8(const QString &s);
 QByteArray U8a(const QString &s);
 
-int  GetValue(QString &s, QString &unit);
 bool OpenInExternalApplication(QWidget *par, const QString &app, const QString& FileName);
 int  StartExternalApplication(const QString &app, const QString &FileName, const QString& dir);
 int  StartExternalApplication(const QString &app, QStringList &arguments, const QString& dir);

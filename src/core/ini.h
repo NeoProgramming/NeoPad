@@ -18,6 +18,7 @@ namespace INI
 	extern std::string  HtmEditPath;
 	extern std::string  BrowserPath;
 	extern std::string  VisEditPath;
+	extern std::string  ImgEditPath;
 	extern std::string  ExplorePath;
 	extern std::string  CommitPath;
 	extern std::string  SyncPath;

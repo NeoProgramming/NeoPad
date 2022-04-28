@@ -33,6 +33,7 @@ void HtmlLink::Make(const QString &text, const QString &url)
     if (m_link.isNull())
         return;
     if(url.isEmpty()) {
+		// remove link
         m_link.setOuterXml(text);
     }
     else {

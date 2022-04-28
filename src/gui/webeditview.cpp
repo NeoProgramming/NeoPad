@@ -244,8 +244,8 @@ void WebEditView::keyPressEvent(QKeyEvent * e)
 	if((key==Qt::Key_Return) && (m & Qt::ControlModifier))
 		onEditOutside();
 	else if((key==Qt::Key_Return) && (m==0)) {
-		if(!onEditDeflist())
-			QWebView::keyPressEvent(e);
+	//@	if(!onEditDeflist())
+		QWebView::keyPressEvent(e);
 	}
 	else
 		QWebView::keyPressEvent(e);
@@ -634,7 +634,7 @@ void WebEditView::onInsertHorzLine()
 void WebEditView::onInsertTable(int cols, int rows)
 {
 	HtmlTable table;
-	DoInsertHtml(table.MakeHtml(rows, cols));
+	InsertHtml(table.MakeHtml(rows, cols));
 }
 
 void WebEditView::onInsertTable()
@@ -643,7 +643,7 @@ void WebEditView::onInsertTable()
 	HtmlTable table;
 	if(dlg.DoModal(5,5) == QDialog::Accepted)
 	{
-		DoInsertHtml(table.MakeHtml(dlg.m_rowsCount, dlg.m_colsCount));
+		InsertHtml(table.MakeHtml(dlg.m_rowsCount, dlg.m_colsCount));
 	}
 }
 
@@ -651,34 +651,11 @@ void WebEditView::onInsertImage()
 {
 	ImageProperties dlg;
 	dlg.m_action = INI::LastImageAction;
-	if(dlg.DoModal(0) == QDialog::Accepted)
+	dlg.m_adir = m_Item->GetAbsDir(m_di);
+	if(dlg.DoModal() == QDialog::Accepted)
 	{
 		INI::LastImageAction = dlg.m_action;
-		if(dlg.m_action == 1)
-		{
-			// copy the image, with the generation of a new name
-			QFileInfo fi(dlg.m_fpath);
-			QString npath = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
-			QFile::copy(dlg.m_fpath, npath);
-
-			npath = GetRelPath(npath, m_Item->GetAbsDir(m_di), false);
-			execCommand("insertImage", npath);			
-		}
-		else if(dlg.m_action == 2)
-		{
-			// transfer the image, with the generation of a new name
-			QFileInfo fi(dlg.m_fpath);
-			QString npath = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
-			QFile::rename(dlg.m_fpath, npath);
-			
-			npath = GetRelPath(npath, m_Item->GetAbsDir(m_di), false);
-			execCommand("insertImage", npath);
-		}
-		else if(dlg.m_action == 0)
-		{
-			QString npath = GetRelPath(dlg.m_fpath, m_Item->GetAbsDir(m_di), false);
-			execCommand("insertImage", npath);
-		}
+		InsertImage(dlg.m_action, dlg.m_fpath, dlg.m_width, dlg.m_height);
 	}
 }
 
@@ -696,7 +673,7 @@ void WebEditView::onInsertDateTime()
 	QDateTime t = QDateTime::currentDateTime();
 	QString s = t.toString(Qt::SystemLocaleLongDate);
 	
-	DoInsertHtml(s);
+	InsertHtml(s);
 }
 
 void WebEditView::onInsertSnippet()
@@ -707,7 +684,7 @@ void WebEditView::onInsertSnippet()
 		// snippet name
 		QString s = *dlg.m_pSel;
 		s = theSln.m_Snippets.GetSnippet(s);
-		DoInsertHtml(s);
+		InsertHtml(s);
 	}
 }
 
@@ -729,7 +706,7 @@ void WebEditView::onInsertBulList()
 }
 
 
-void WebEditView::DoInsertHtml(QString html)
+void WebEditView::InsertHtml(QString html)
 {
 	html.replace('\r', ' ');
 	html.replace('\n', ' ');
@@ -748,6 +725,58 @@ void WebEditView::DoInsertHtml(QString html)
 	QWebFrame *frame = this->page()->mainFrame();
 	frame->evaluateJavaScript(js);
 	setWindowModified(true);
+}
+
+QString WebEditView::PrepareImage(int action, const QString &fpath)
+{
+	QString npath;
+	
+	if (action == 1)
+	{
+		// copy the image, with the generation of a new name
+		QFileInfo fi(fpath);
+		npath = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
+		QFile::copy(fpath, npath);
+		npath = GetRelPath(npath, m_Item->GetAbsDir(m_di), false);
+	}
+	else if (action == 2)
+	{
+		// transfer the image, with the generation of a new name
+		QFileInfo fi(fpath);
+		npath = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
+		QFile::rename(fpath, npath);
+		npath = GetRelPath(npath, m_Item->GetAbsDir(m_di), false);
+	}
+	else if (action == 0)
+	{
+		npath = GetRelPath(fpath, m_Item->GetAbsDir(m_di), false);
+	}
+	return npath;
+}
+
+void WebEditView::InsertImage(int action, const QString &fpath, int w, int h)
+{
+	QString npath, html;
+	// 1 copy/move image if needed
+	npath = PrepareImage(action, fpath);
+
+	// without w/h:
+	// execCommand("insertImage", npath);
+
+	// 2 generate html
+	html = "<img src=\"" + npath + "\"";
+	if (w < 0)
+		html += QString::asprintf(" width=\"%d%%\"", -w);
+	else if (w > 0)
+		html += QString::asprintf(" width=\"%d\"", w);
+	if (h < 0)
+		html += QString::asprintf(" height=\"%d%%\"", -h);
+	else if (h > 0)
+		html += QString::asprintf(" height=\"%d\"", h);
+	html += ">";
+
+	// 3 insert image into document
+	InsertHtml(html);
 }
 
 void WebEditView::onTableProperties()
@@ -847,11 +876,18 @@ void WebEditView::onImageProperties()
 	if(m_elImage.isNull())
 		return;
 	HtmlImage image(m_elImage);
-	image.Init(m_elImage);
 	ImageProperties dlg;
-	if(dlg.DoModal(&image) == QDialog::Accepted)
+	dlg.m_adir = m_Item->GetAbsDir(m_di);
+	dlg.m_fpath = image.GetPath();
+	dlg.m_width = image.GetWidth();
+	dlg.m_height = image.GetHeight();
+	if(dlg.DoModal() == QDialog::Accepted)
 	{
-		image.Apply(m_elImage);
+		if (dlg.m_fpath != image.GetPath() || dlg.m_action != 0)
+			dlg.m_fpath = PrepareImage(dlg.m_action, dlg.m_fpath);
+		image.SetPath(dlg.m_fpath);
+		image.SetWidth(dlg.m_width);
+		image.SetHeight(dlg.m_height);
 		setWindowModified(true);
 	}
 }
@@ -868,11 +904,6 @@ void WebEditView::onLinkProperties()
         link.Make(dlg.m_text, dlg.m_url);
         setWindowModified(true);
 	}
-}
-
-void WebEditView::onTdProperties()
-{
-
 }
 
 void WebEditView::onEditClearDoc()

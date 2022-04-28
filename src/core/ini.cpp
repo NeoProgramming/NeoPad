@@ -27,7 +27,8 @@ namespace INI
 	int OutlinerMode = 0;		// open with a single click
 
 	std::string  HtmEditPath;	// Text editor
-	std::string  VisEditPath;	// Visual editor
+	std::string  VisEditPath;	// Visual html editor
+	std::string  ImgEditPath;	// Image editor
 	std::string  BrowserPath;	// Browser
 	std::string  ExplorePath;	// File manager
 	std::string  CommitPath;	// 
@@ -39,27 +40,28 @@ namespace INI
 //////////////////////////////////////////////////////////////////////////
 
 XIniData SecSettings[] = {
-	XINI_INT	(AutoSavePages),
-	XINI_STR	(CurrProjectPath),
+	XINI_INT(AutoSavePages),
+	XINI_STR(CurrProjectPath),
 
-	XINI_INT	(QSModeNew),
+	XINI_INT(QSModeNew),
 
-	XINI_STR	(HtmEditPath),
-	XINI_STR	(VisEditPath),
-	XINI_STR	(BrowserPath),
-	XINI_STR	(ExplorePath),
-	XINI_STR	(CommitPath),
-	XINI_STR	(SyncPath),
-	XINI_STR	(PdfgenPath),
-	XINI_INT	(OutlinerMode),
-	XINI_INT	(CreateNewVmb),
-	XINI_INT	(CreateNewDir),
-	XINI_INT    (LastImageAction),
-    XINI_STR	(ScriptsDir),
-    XINI_INT    (IconSize),
-	XINI_HEX    (BackColor1),
-	XINI_HEX    (BackColor2),
-    XINI_STR	(TitleRedef),
+	XINI_STR(HtmEditPath),
+	XINI_STR(VisEditPath),
+	XINI_STR(ImgEditPath),
+	XINI_STR(BrowserPath),
+	XINI_STR(ExplorePath),
+	XINI_STR(CommitPath),
+	XINI_STR(SyncPath),
+	XINI_STR(PdfgenPath),
+	XINI_INT(OutlinerMode),
+	XINI_INT(CreateNewVmb),
+	XINI_INT(CreateNewDir),
+	XINI_INT(LastImageAction),
+    XINI_STR(ScriptsDir),
+    XINI_INT(IconSize),
+	XINI_HEX(BackColor1),
+	XINI_HEX(BackColor2),
+    XINI_STR(TitleRedef),
 	0
 };
 

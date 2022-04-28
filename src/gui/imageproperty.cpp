@@ -1,158 +1,127 @@
 #include <QFileDialog>
-#include <QTextCodec>
 
 #include "../core/ini.h"
 #include "imageproperty.h"
 #include "../service/tools.h"
-
-extern QTextCodec *codecUtf8;
-
 
 
 ImageProperties::ImageProperties(QWidget *parent)
      : QDialog(parent)
 {	
 	ui.setupUi(this);
-	connect(ui.pushOpen,		SIGNAL(clicked()),		this, SLOT(onLoadImage()));	
-	connect(ui.radioOriginal,	SIGNAL(clicked(bool)),	this, SLOT(onSizeOriginal(bool)));	
-	connect(ui.radioCustom,		SIGNAL(clicked(bool)),	this, SLOT(onSizeCustom(bool)));	
-	connect(ui.spinWidth,		SIGNAL(valueChanged(int)), this, SLOT(onSetWidth(int)));	
-	connect(ui.spinHeight,		SIGNAL(valueChanged(int)), this, SLOT(onSetHeight(int)));	
-	connect(ui.comboAction,     SIGNAL(currentIndexChanged(int)), this, SLOT(onActionChanged(int)));
-	connect(ui.pushCreate,		SIGNAL(clicked()),		this, SLOT(onCreateImage()));
+	connect(ui.pushOpen,	&QPushButton::clicked,	 this, &ImageProperties::onOverview);
+	connect(ui.pushCreate,  &QPushButton::clicked,   this, &ImageProperties::onCreateImage);
+	connect(ui.pushEdit,    &QPushButton::clicked,   this, &ImageProperties::onEditImage);
+	connect(ui.checkWidth,	&QCheckBox::clicked,	 this, &ImageProperties::onCheckWidth);
+	connect(ui.checkHeight, &QCheckBox::clicked,	 this, &ImageProperties::onCheckHeight);
+	connect(ui.spinWidth,   qOverload<int>(&QSpinBox::valueChanged), this, &ImageProperties::onSetWidth);
+	connect(ui.spinHeight,  qOverload<int>(&QSpinBox::valueChanged), this, &ImageProperties::onSetHeight);
+	connect(ui.lineFPath, &QLineEdit::textChanged, this, &ImageProperties::onPathChanged);
 }
 
-int  ImageProperties::DoModal(HtmlImage *image)
+void ImageProperties::onPathChanged(const QString &path)
 {
-	m_image = image;
-	ui.comboAction->setCurrentIndex(m_action);
-	if(image)
-	{
-		ui.LEFileName->setEnabled(false);
-		ui.comboAction->setEnabled(false);
-		ui.pushOpen->setEnabled(false);
+	bool p = path.contains('/');
+	ui.comboAction->setEnabled(p);
+	if (!p)
+		ui.comboAction->setCurrentIndex(0);
+}
 
-		m_sizeOrignial = 1;
-		QString unit;
-		int v = GetValue(image->m_width, unit);
-		if(v)
-			m_sizeOrignial = 0;
-		ui.spinWidth->setValue( v );
-		v = (unit == "%") ? 1 : 0;
-		ui.comboWidthUnit->setCurrentIndex( v );
-		v = GetValue(image->m_height, unit);
-		if(v)
-			m_sizeOrignial = 0;
-		ui.spinHeight->setValue( v );
-		v = (unit == "%") ? 1 : 0;
-		ui.comboHeightUnit->setCurrentIndex( v );
+int  ImageProperties::DoModal()
+{
+	ui.checkWidth->setChecked(m_width != 0);
+	ui.spinWidth->setValue( abs(m_width) );
+	ui.comboWidthUnit->setCurrentIndex(m_width<0 ? 1 : 0);
 
-		ui.radioCustom->setChecked(!m_sizeOrignial);
-		ui.radioOriginal->setChecked(m_sizeOrignial);
-		onSizeOriginal(m_sizeOrignial);
-		m_fpath = image->m_fpath;
-		ui.LEFileName->setText(m_fpath);
-		LoadImageInfo();
-	}
+	ui.checkHeight->setChecked(m_height != 0);
+	ui.spinHeight->setValue( abs(m_height) );
+	ui.comboHeightUnit->setCurrentIndex(m_height<0 ? 1 : 0);
 
+	ui.lineFPath->setText(m_fpath);
+	
 	return this->exec();
 }
 
 void ImageProperties::accept()
 {	
-	m_fpath = ui.LEFileName->text();
-	if(m_image)
-	{
-		if(m_sizeOrignial)
-		{
-			m_image->m_width = "";
-			m_image->m_height = "";
-		}
-		else
-		{
-			m_image->m_width.sprintf("%d%s", ui.spinWidth->value(), ui.comboWidthUnit->currentIndex() ? "%": "");
-			m_image->m_height.sprintf("%d%s", ui.spinHeight->value(), ui.comboHeightUnit->currentIndex() ? "%": "");
-		}
-		m_image->m_src = ui.LEFileName->text();
-		m_image->m_alt = ui.LEAltText->text();
-		m_image->m_title = ui.LEPopUpHint->text();
-	}
+	m_action = ui.comboAction->currentIndex();
+	m_fpath = ui.lineFPath->text();
+
+	if (!ui.checkWidth->isChecked())
+		m_width = 0;
+	else if (ui.comboWidthUnit->currentIndex())
+		m_width = -ui.spinWidth->value();
+	else
+		m_width = ui.spinWidth->value();
+
+	if (!ui.checkHeight->isChecked())
+		m_height = 0;
+	else if (ui.comboHeightUnit->currentIndex())
+		m_height = -ui.spinHeight->value();
+	else
+		m_height = ui.spinHeight->value();
+		
 	QDialog::accept();
 }
 
-void ImageProperties::onLoadImage()
+void ImageProperties::onOverview()
 {
 	m_fpath = QFileDialog::getOpenFileName(this, tr("Load Image..."),
 							  INI::LastImageDir.c_str(),
 							  tr("Images (*.png *.jpg *.gif);;All Files (*)"));
 	if(!m_fpath.isEmpty())
 	{
-		ui.LEFileName->setText(m_fpath);
+		ui.lineFPath->setText(m_fpath);
         INI::LastImageDir = U8(QDir(m_fpath).path());
-		LoadImageInfo();
 	}
 }
 
-void ImageProperties::LoadImageInfo()
+void ImageProperties::onCheckWidth(bool state)
 {
-	QFileInfo fi(m_fpath);
-	if (fi.exists())
-	{
-		img.load(m_fpath);
-		ui.spinHeight->setValue( img.height() );
-		ui.spinWidth->setValue( img.width() );
-	}
-}
+	m_width = !state;
 
-
-void ImageProperties::onSizeOriginal(bool state)
-{
-	onSizeCustom(!state);
-}
-
-void ImageProperties::onActionChanged(int a)
-{
-	m_action = a;
-}
-
-
-void ImageProperties::onSizeCustom(bool state)
-{
-	m_sizeOrignial = !state;
-	ui.checkKeepRatio->setEnabled(state);
-	ui.LHeight->setEnabled(state);
-	ui.LWidth->setEnabled(state);
 	ui.spinHeight->setEnabled(state);
 	ui.spinWidth->setEnabled(state);
 	ui.comboWidthUnit->setEnabled(state);
 	ui.comboHeightUnit->setEnabled(state);
 }
 
+void ImageProperties::onCheckHeight(bool state)
+{
+	m_height = !state;
+
+	ui.spinHeight->setEnabled(state);
+	ui.spinWidth->setEnabled(state);
+	ui.comboWidthUnit->setEnabled(state);
+	ui.comboHeightUnit->setEnabled(state);
+}
 
 void ImageProperties::onSetHeight(int y)
 {
 	ui.spinHeight->setValue(y);
-	if (ui.checkKeepRatio->isChecked())
-	{
-		QImage tmpImage = img.scaledToHeight(y, Qt::FastTransformation);
-		ui.spinWidth->setValue(tmpImage.width());
-	}
 }
-
 
 void ImageProperties::onSetWidth(int x)
 {
 	ui.spinWidth->setValue(x);
-	if (ui.checkKeepRatio->isChecked())
-	{
-		QImage tmpImage = img.scaledToWidth(x, Qt::FastTransformation);
-		ui.spinHeight->setValue(tmpImage.height());
-	}
 }
 
 void ImageProperties::onCreateImage()
 {
 	// open image editor and put image path to path line
-	
+	// create empty image file and open this file
+	m_fpath = GenerateUniqueFPath(m_adir, "image", "png");
+	QImage image(100, 100, QImage::Format_ARGB32);
+	image.save(m_fpath, "PNG");
+	ui.lineFPath->setText(m_fpath);
+	ui.comboAction->setCurrentIndex(0);
 }
 
+void ImageProperties::onEditImage()
+{
+	m_fpath = ui.lineFPath->text();
+	if (QFileInfo(m_fpath).isAbsolute())
+		OpenInExternalApplication(this, U16(INI::ImgEditPath), m_fpath);
+	else
+		OpenInExternalApplication(this, U16(INI::ImgEditPath), m_adir + "/" + m_fpath);
+}
