@@ -28,7 +28,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 {
 	ui.setupUi(this);
 
-
+	ui.treeContents->setRootIsDecorated(false);
 	ui.treeContents->setUniformRowHeights(true);			// all lines are the same height
 	ui.treeContents->header()->setStretchLastSection(false);// the last section is NOT the full available width
 	ui.treeContents->header()->setSectionResizeMode(QHeaderView::ResizeToContents);	// header resizing mode
