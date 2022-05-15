@@ -638,16 +638,18 @@ bool CSolution::MakeDoc(MTPOS tpItem, int bi)
 	// create document
 	path = tpItem->GetDocAbsPath(bi);
 	QFile file(path);
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+	if (!file.open(QIODevice::WriteOnly))
 		return false;
 
 	path = tpItem->GetCssRelPath(bi);
-	
+	QByteArray a = U8a(m_Bases[bi].save_prefix);
+	file.write(a);
 	file.write("<html>\n");
 	file.write("<head>\n");
 	file.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
 	
-	file.write(codecUtf8->fromUnicode(path));
+
+	file.write(U8a(path));
 
 	file.write("\">\n");
 	file.write("<meta content=\"text/html; charset=utf-8\" http-equiv=Content-Type>\n");
