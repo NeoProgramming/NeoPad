@@ -146,7 +146,7 @@ void CSolution::CreateProject(const QString& name, const QString& dir, const QSt
 	// create a new empty project with the given name at the given path
 	RemoveAll();
 	CreateRoot(name, dir);
-	AddBase(btitle0, bsuffix0, "", "");
+	AddBase(btitle0, bsuffix0, "", "", "");
 	MakeDoc(m_root, 0);
 	
 	SaveProject(true);
@@ -310,13 +310,16 @@ void CSolution::LoadItemData(pugi::xml_node txElem, MT_ITEM *item, bool vmb)
 	item->status = GetTreeStatus(txElem.attribute(MBA::status).as_string());
 }
 
-void CSolution::AddBase(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath)
+void CSolution::AddBase(const QString &title, const QString &suffix, const QString &rpath, 
+	const QString &csspath, const QString &prefix)
 {
 	NeopadBase base;
 	base.title = title;
 	base.suffix = suffix;
 	base.rpath = rpath;
 	base.csspath = csspath;
+	base.load_prefix = prefix;
+	base.save_prefix = prefix;
 
 	if (base.rpath.isEmpty())
 		base.rpath = ".";
@@ -356,7 +359,8 @@ void CSolution::LoadBasesInfo(pugi::xml_node txRoot)
 			U16(txBase.attribute("title").as_string()),
 			U16(txBase.attribute("suffix").as_string()),
 			U16(txBase.attribute("rpath").as_string()),
-			U16(txBase.attribute("csspath").as_string())
+			U16(txBase.attribute("csspath").as_string()),
+			U16(txBase.attribute("prefix").as_string())
 			);
 
 		txBase = txBase.next_sibling();
@@ -374,6 +378,7 @@ void CSolution::SaveBasesInfo(pugi::xml_node txRoot)
 		set_attr(txBase, "suffix").set_value(U8a(base.suffix).constData());
 		set_attr(txBase, "rpath").set_value(U8a(base.rpath).constData());
 		set_attr(txBase, "csspath").set_value(U8a(base.csspath).constData());
+		set_attr(txBase, "prefix").set_value(U8a(base.save_prefix).constData());
 	}
 }
 
@@ -986,6 +991,14 @@ void CSolution::EncryptDocs(MTPOS tposParent, const QString &oldPsw, const QStri
 	}
 }
 
+void CSolution::TransformDocs(int bi)
+{
+	ForEach([&](MTPOS pos) {
+		TransformFile(pos, bi);
+	});
+	m_Bases[bi].load_prefix = m_Bases[bi].save_prefix;
+}
+
 MTPOS CSolution::Locate(const QString &guid)
 {
 	// recursive search on tree
@@ -1015,6 +1028,16 @@ void CSolution::Search(const QString &text, int scope, CMtposList &results)
     });
 }
 
+bool CSolution::TransformFile(MTPOS pos, int bi)
+{
+	QString html;
+	if (!LoadDoc(pos, bi, html))
+		return false;
+	if (!SaveDoc(pos, bi, html))
+		return false;
+	return true;
+}
+
 bool CSolution::SearchInFile(MTPOS pos, const QString &text)
 {
 	QByteArray data;
@@ -1023,22 +1046,74 @@ bool CSolution::SearchInFile(MTPOS pos, const QString &text)
 	if (void *wnd = m_pCB->FindOpenedDoc(pos, 0)) {
 		m_pCB->GetDocData(wnd, html);
 	}
-	else if (isEncrypted(fpath)) {
-		if (m_Password.isEmpty()) 
+	else if (!LoadDoc(pos, 0, html)) {
+		return false;
+	}
+    
+    return search(html, text);
+}
+
+bool CSolution::LoadDoc(MTPOS item, int bi, QString &content)
+{
+	QString fpath = item->GetDocAbsPath(bi);
+	fpath.replace("\\", "/");
+
+	// load file
+	QByteArray data;
+	if (isEncrypted(fpath)) {
+		if (m_Password.isEmpty())
 			return Fail("Password not set"), false;
-		else if (!decryptFile(fpath, m_Password, data))
+		if (!decryptFile(fpath, m_Password, data))
 			return Fail("decryptFile() error"), false;
-		html = QString::fromUtf8(data);
+		content = QString::fromUtf8(data);
 	}
 	else {
 		QFile file(fpath);
 		if (!file.open(QIODevice::ReadOnly))
-			return false;
+			return Fail("file.open() error"), false;
 		data = file.readAll();
 		file.close();
-		html = QString::fromUtf8(data);
+		content = QString::fromUtf8(data);
 	}
-    
-    return search(html, text);
+
+	// remove prefix
+	if (!m_Bases[bi].load_prefix.isEmpty()) {
+		if (content.startsWith(m_Bases[bi].load_prefix))
+			content = content.mid(m_Bases[bi].load_prefix.length());
+	}
+
+	return true;
+}
+
+bool CSolution::SaveDoc(MTPOS item, int bi, const QString &content)
+{
+	QByteArray s;
+
+	// get path
+	QString fpath = item->GetDocAbsPath(bi);
+	fpath.replace("\\", "/");
+
+	// add prefix
+	if(!m_Bases[bi].save_prefix.isEmpty())
+		s = (m_Bases[bi].save_prefix + content).toUtf8();
+	else
+		s = content.toUtf8();
+
+	// save
+	bool success = false;
+	if (theSln.m_Password.isEmpty()) {
+		QFile file(fpath);
+		if (success = file.open(QIODevice::WriteOnly))
+			file.write(s);
+	}
+	else {
+		success = encryptFile(fpath, m_Password, s);
+	}
+
+	if (success)
+		SaveItem(item, bi);
+
+	m_bModify = true;	//???
+	return true;
 }
 

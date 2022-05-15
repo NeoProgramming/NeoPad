@@ -1492,6 +1492,16 @@
     <string>Encrypt/decrypt...</string>
    </property>
   </action>
+  <action name="actionUpdatePrefixes1">
+   <property name="text">
+    <string>Update prefixes</string>
+   </property>
+  </action>
+  <action name="actionUpdatePrefixes2">
+   <property name="text">
+    <string>Update prefixes</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../neopad.qrc"/>

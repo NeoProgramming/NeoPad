@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>287</width>
-    <height>95</height>
+    <width>295</width>
+    <height>98</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,6 +71,13 @@
    </item>
    <item row="0" column="1" colspan="4">
     <widget class="QLineEdit" name="lineId"/>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QCheckBox" name="checkOpen">
+     <property name="text">
+      <string>Open file</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

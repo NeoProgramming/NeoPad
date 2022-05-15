@@ -50,6 +50,9 @@ public:
 	bool	SaveProject(bool recursive);
 	bool	SaveSubBase(MTPOS tpPar, bool recursive);
 
+	bool    LoadDoc(MTPOS item, int di, QString &content);
+	bool    SaveDoc(MTPOS item, int di, const QString &content);
+
 	MTPOS	AddItem(MTPOS tpPar, MTPOS tpAfter, const QString& title, const QString& id);
 	void	RenameItem(MTPOS tpos, const QString & id);
 	void    RenameTitle(MTPOS item, const QString & title, int di);
@@ -72,12 +75,14 @@ public:
 	void	GenContents(int bi, const QString &fpath);
 	QString GetCssAbsPath(int bi);
 	void    EncryptDocs(MTPOS tposParent, const QString &oldPsw, const QString &newPsw);
+	void    TransformDocs(int bi);
+	bool	TransformFile(MTPOS tpos, int bi);
 
 	MTPOS	Locate(const QString &guid);
     void    Search(const QString &text, int scope, CMtposList &results);
     bool    SearchInFile(MTPOS pos, const QString &text);
 protected:
-	void    AddBase(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath);
+	void    AddBase(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath, const QString &prefix);
 
 	bool    LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot);
 	void	MakeXmlDoc(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase);

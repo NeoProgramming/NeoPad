@@ -134,7 +134,7 @@ private:
 	void InsertImage(int action, const QString &fpath, int w, int h);
 
 private:
-	QString m_path;
+	
 	MainWindow *m_wMain;
 	QMenu m_menuContext;
 	QMenu m_menuTable;

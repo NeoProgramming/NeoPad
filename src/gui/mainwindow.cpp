@@ -393,7 +393,7 @@ void MainWindow::onProjectEncrypt()
 	PasswordDlg dlg;
 	if (theSln.m_Password.isEmpty()) {
 		// encrypt
-		if (QMessageBox::Yes == QMessageBox::question(this, "Cryptography", "Encrypt all database?")) {
+		//if (QMessageBox::Yes == QMessageBox::question(this, "Cryptography", "Encrypt all database?")) {
 			if (dlg.DoSetPassword() == QDialog::Accepted) {
 				// htmls
 				theSln.EncryptDocs(theSln.GetRoot(), "", dlg.m_psw1);
@@ -401,12 +401,12 @@ void MainWindow::onProjectEncrypt()
 				theSln.m_Password = dlg.m_psw1;
 				theSln.SaveProject(true);
 			}
-		}
+		//}
 	}
 	else {
 		// decrypt/recrypt
 		dlg.m_psw0 = theSln.m_Password;
-		if (QMessageBox::Yes == QMessageBox::question(this, "Cryptography", "Recrypt all database?")) {
+		//if (QMessageBox::Yes == QMessageBox::question(this, "Cryptography", "Recrypt all database?")) {
 			if (dlg.DoChangePassword() == QDialog::Accepted) {
 				// htmls
 				theSln.EncryptDocs(theSln.GetRoot(), theSln.m_Password, dlg.m_psw2);
@@ -414,7 +414,7 @@ void MainWindow::onProjectEncrypt()
 				theSln.m_Password = dlg.m_psw2;
 				theSln.SaveProject(true);
 			}
-		}
+		//}
 	}
 }
 
@@ -513,7 +513,7 @@ void MainWindow::onProjectProperties()
 	dlg.m_snippets = theSln.m_Snippets.m_SnippDir;
 	dlg.m_bases[0] = theSln.m_Bases[0];
 	dlg.m_bases[1] = theSln.m_Bases[1];
-	
+		
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
 		// global paths
@@ -522,9 +522,14 @@ void MainWindow::onProjectProperties()
 		// bases
 		int cnt = std::max(1, !dlg.m_bases[0].suffix.isEmpty() + !dlg.m_bases[1].suffix.isEmpty());
 		theSln.m_BasesCnt = cnt;
-		theSln.m_Bases[0] = dlg.m_bases[0];
-		theSln.m_Bases[1] = dlg.m_bases[1];
-
+		for (int bi = 0; bi < BCNT; bi++) {
+			theSln.m_Bases[bi] = dlg.m_bases[bi];
+			if (theSln.m_Bases[bi].load_prefix != theSln.m_Bases[bi].save_prefix) {
+				setCursor(Qt::WaitCursor);
+				theSln.TransformDocs(bi);
+				setCursor(Qt::ArrowCursor);
+			}
+		}
 		m_wSln->UpdateBases();
 	}
 }

@@ -12,13 +12,14 @@ public:
 	NewItemDlg(QWidget *parent = 0);
 	~NewItemDlg();
 	int DoModal();
-	bool start_editing = true;
+	bool m_open = false;
 	QString m_title, m_id;
 public slots:
 	void onOk();
 	void onChangeId(const QString &text);
 	void onChangeTitle(const QString &text);
 private:
+	bool start_editing = true;
 	Ui::NewItemDlg ui;
 };
 

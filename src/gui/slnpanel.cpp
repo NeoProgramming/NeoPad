@@ -629,6 +629,9 @@ void SlnPanel::onInsertNewChild()
 			newitem->setData(0, Qt::UserRole, qVariantFromValue((void*)tpNew));
 			UpdateItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
+			if (dlg.m_open) {
+				OpenDoc(newitem, 0);
+			}
 			return;
 		}
 	}
@@ -667,6 +670,9 @@ void SlnPanel::onInsertNewSibling()
 			newitem->setData(0, Qt::UserRole, qVariantFromValue((void*)tpNew));
 			UpdateItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
+			if(dlg.m_open) {
+				OpenDoc(newitem, 0);
+			}
 			return;
 		}
 		else {

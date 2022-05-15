@@ -121,22 +121,10 @@ bool WebEditView::maybeSave()
 bool WebEditView::SaveHtml(bool update_tree)
 {
 	QString content = this->page()->mainFrame()->toHtml();
-	QByteArray s = content.toUtf8();	// save in utf-8 as in standard format
-	bool success = false;
-	if (theSln.m_Password.isEmpty()) {
-		QFile file(m_path);
-		if (success = file.open(QIODevice::WriteOnly)) 
-			file.write(s);
-	}
-	else {
-		success = encryptFile(m_path, theSln.m_Password, s);
-	}	
-	
+	bool success = theSln.SaveDoc(m_Item, m_di, content);
 	if (success) 
-		theSln.SaveItem(m_Item, m_di);
+		setWindowModified(false);
 	
-	theSln.m_bModify = true;	//???
-	setWindowModified(false);
 	if(update_tree)
 		m_wMain->getSln()->UpdateTreeItem(m_Item);
 	return success;
@@ -355,24 +343,17 @@ void WebEditView::FixCssPath()
 
 bool WebEditView::LoadHtml(MTPOS tpos, int bi)
 {
-	m_path = tpos->GetDocAbsPath(bi);
-	m_path.replace("\\", "/");
-	m_Item = tpos;
-	m_di = bi;
+	QString content;
+
 	this->settings()->setObjectCacheCapacities(0, 0, 0);
 
-	if (isEncrypted(m_path)) {
-		QByteArray plain;
-		if (!decryptFile(m_path, theSln.m_Password, plain))
-			return false;
-		QWebView::setContent(plain);
-		settings()->setUserStyleSheetUrl(QUrl::fromLocalFile(theSln.GetCssAbsPath(bi)));
-	//	QWebView::reload();
-	}
-	else {
-		QWebView::load(QUrl::fromUserInput(m_path));
-	}
-		
+	m_Item = tpos;
+	m_di = bi;
+	bool success = theSln.LoadDoc(m_Item, m_di, content);
+	if (!success)
+		return false;
+	QWebView::setHtml(content);
+	settings()->setUserStyleSheetUrl(QUrl::fromLocalFile(theSln.GetCssAbsPath(bi)));
 	page()->setContentEditable(true);
 	connect(page(), &QWebPage::linkClicked, this, &WebEditView::onLinkClicked);
 	

@@ -73,7 +73,9 @@ QByteArray U8a(const QString &s)
 bool OpenInExternalApplication(QWidget *par, const QString &app, const QString &fpath)
 {
 	QStringList arguments;
-	QString d = QFileInfo(fpath).absoluteDir().absolutePath();
+	QString d;
+	if(fpath[0]=='/' || fpath[1]==':')
+		d = QFileInfo(fpath).absoluteDir().absolutePath();
 	arguments << fpath;
 	bool r = QProcess::startDetached(app, arguments, d);
 	//bool r = QProcess::startDetached(app + " \"" + QFileInfo(fpath).canonicalFilePath() + "\"");

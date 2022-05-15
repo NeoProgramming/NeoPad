@@ -29,7 +29,7 @@ void NewItemDlg::onOk()
 {
 	m_title = ui.lineTitle->text();
 	m_id = ui.lineId->text();
-
+	m_open = ui.checkOpen->isChecked();
 	accept();
 }
 

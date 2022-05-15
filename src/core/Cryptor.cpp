@@ -86,6 +86,7 @@ bool recryptFile(const QString &path, const QString &oldPassword, const QString 
 	if (!QFileInfo::exists(path) || !QFileInfo(path).isFile())
 		return false;
 
+	// decrypt
 	if (isEncrypted(path)) {
 		if (!decryptFile(path, oldPassword, plain))
 			return false;
@@ -100,6 +101,7 @@ bool recryptFile(const QString &path, const QString &oldPassword, const QString 
 		file.close();
 	}
 
+	// encrypt
 	if (newPassword.isEmpty()) {
 		QFile file(path);
 		if (!file.open(QIODevice::WriteOnly))
