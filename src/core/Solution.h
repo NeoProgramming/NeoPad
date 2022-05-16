@@ -72,7 +72,7 @@ public:
 	
     void    SaveItem(MTPOS tpItem, int bi);
 	void    MakeUnsavedList(CMtposList &mpl);
-	void	GenContents(int bi, const QString &fpath);
+	void	GenContents(int bi, const QString &fpath, const QString &base);
 	QString GetCssAbsPath(int bi);
 	void    EncryptDocs(MTPOS tposParent, const QString &oldPsw, const QString &newPsw);
 	void    TransformDocs(int bi);
@@ -109,7 +109,7 @@ protected:
 	void    HandleChanges(MTPOS tpItem1, MTPOS tpItem2);
 	bool    MoveFiles(MTPOS tpItem, MTPOS tpNewPar);
 	void	MakeUnsavedListR(CMtposList &mpl, MTPOS mtNode);
-	void    GenContentsLevel(MTPOS node, int bi, QFile &file);
+	void    GenContentsLevel(MTPOS node, int bi, QFile &file, const QString &base);
 };
 
 extern CSolution theSln;

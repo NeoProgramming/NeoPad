@@ -1388,10 +1388,16 @@ void MainWindow::UpdateTab(MTPOS tpos)
 
 void MainWindow::GenContents(int bi)
 {
-	QString ctxName = QFileDialog::getSaveFileName(this, tr("Select contents file"),
-        theSln.GetBaseDir(bi) + "/contents.html", "HTML files (*.html)");
-	if (!ctxName.isEmpty())
-		theSln.GenContents(bi, ctxName);
+	bool ok = true;
+	QString base = QInputDialog::getText(this, "Input base URL", "URL:", QLineEdit::Normal, "", &ok);
+	if (ok) {
+		if (!base.isEmpty() && !base.endsWith('/'))
+			base += '/';
+		QString ctxName = QFileDialog::getSaveFileName(this, tr("Select contents file"),
+			theSln.GetBaseDir(bi) + "/contents.html", "HTML files (*.html)");
+		if (!ctxName.isEmpty())
+			theSln.GenContents(bi, ctxName, base);
+	}
 }
 
 void MainWindow::EditCss(int bi)

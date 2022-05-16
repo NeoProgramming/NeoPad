@@ -58,6 +58,16 @@ bool MT_ITEM::IsPublic()
     return status == ETreeStatus::TS_READY || status == ETreeStatus::TS_ALMOST;
 }
 
+int MT_ITEM::GetPublicChildrenCount()
+{
+	int count = 0;
+	for (auto child : children) {
+		if (child->IsPublic())
+			count++;
+	}
+	return count;
+}
+
 void MT_ITEM::RemoveChildren()
 {
 	for (auto child : children) {

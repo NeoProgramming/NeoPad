@@ -922,42 +922,58 @@ void CSolution::SaveItem(MTPOS tpItem, int di)
 	HandleChanges(tpItem, false);
 }
 
-void CSolution::GenContents(int bi, const QString &fpath)
+void CSolution::GenContents(int bi, const QString &fpath, const QString &base)
 {
 	QFile file(fpath);
 	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
 		return;
 	if (!m_root)
 		return;
-	file.write("<html>\n");
-	file.write("<head>\n");
-	file.write("<meta content=\"text/html; charset=utf-8\" http-equiv=Content-Type>\n");
-	file.write("</head>\n");
-	file.write("<body>\n");
-	GenContentsLevel(m_root, bi, file);
-	file.write("</body>\n");
-	file.write("</html>\n");
+
+	GenContentsLevel(m_root, bi, file, base);
+
 	file.close();
 }
 
-void CSolution::GenContentsLevel(MTPOS node, int bi, QFile &file)
+void CSolution::GenContentsLevel(MTPOS node, int bi, QFile &file, const QString &base)
 {
-	int items = 0;
+	int index = 0;
+	int count = node->GetPublicChildrenCount();
 	for (MTPOS child : node->children) {
         if (!child->title[bi].isEmpty() && child->IsPublic() ) {
-			if (items==0)
-				file.write("\n<ul>");
-			file.write("\n<li><a href=\"");
-			file.write(U8a(child->GetDocRelPath(bi)));
-			file.write("\">");
-			file.write(U8a(child->GetTitle(bi)));
-			file.write("</a>");
-			GenContentsLevel(child, bi, file);
+			
+			if (index==0)
+				file.write("\n<ul class='Container'>");
+
+			file.write("\n<li class='Node");
+			if (child->GetPublicChildrenCount())
+				file.write(" ExpandClosed");
+			else
+				file.write(" ExpandLeaf");
+			if (index == count - 1)
+				file.write(" IsLast");
+			file.write("'>\n");
+
+			file.write("<div class='Expand'></div>\n");
+			
+			file.write("<div class='Content'>");
+				file.write("<span class='NodeImage'></span>");
+				file.write("<a target='content' href='");
+				file.write(U8a(base));
+				file.write(U8a(child->GetDocRelPath(bi)));
+				file.write("'>");
+				file.write(U8a(child->GetTitle(bi)));
+				file.write("</a>");
+			file.write("</div>");
+			
+			GenContentsLevel(child, bi, file, base);
+
 			file.write("\n</li>");
-			items++;
+			index++;
 		}
 	}
-	if (items > 0)
+
+	if (index > 0)
 		file.write("\n</ul>");
 }
 

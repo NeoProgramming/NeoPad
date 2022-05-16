@@ -62,6 +62,7 @@ public:
 
 	bool	IsAncestor(MT_ITEM *item);
     bool    IsPublic();
+	int     GetPublicChildrenCount();
 
 	void	RemoveChildren();
 	void    LoadItemPaths(const QString &apath);
