@@ -945,7 +945,10 @@ void CSolution::GenContentsLevel(MTPOS node, int bi, QFile &file, const QString 
 			if (index==0)
 				file.write("\n<ul class='Container'>");
 
-			file.write("\n<li class='Node");
+			file.write("\n<li id='");
+			file.write(U8a(child->GetGuid()));
+			file.write("' ");
+			file.write("class='Node");
 			if (child->GetPublicChildrenCount())
 				file.write(" ExpandClosed");
 			else

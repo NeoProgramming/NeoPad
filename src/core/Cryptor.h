@@ -6,7 +6,7 @@
 
 // based on: https://github.com/alexeylysenko/CryptFileDevice
 // one object can either encrypt or decrypt
-
+// openssl: https://slproweb.com/products/Win32OpenSSL.html
 
 bool isEncrypted(const QString &path);
 bool decryptFile(const QString &path, const QString &password, QByteArray &data);
