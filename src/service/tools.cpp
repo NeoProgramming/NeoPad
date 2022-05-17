@@ -36,17 +36,34 @@ void NormalizeFName(QString &c)
 	c.replace(':', '_');
 }
 
-QString	GenerateUniqueFPath(const QString& path, const QString& name, const QString& ext)
+unsigned int GenerateUniqueFNum(const QString& path, const QString& name, const QString& ext)
 {
 	// generate a unique filename at a specific path
 	QString spath = path + "/" + name + "." + ext;
 	unsigned int n = 1;
-	while( QFileInfo(spath).exists() ) 
-	{
-		spath = path + "/" + name + QString::number(n) +  "." + ext;
+	while (QFileInfo(spath).exists()) {
+		spath = path + "/" + name + QString::number(n) + "." + ext;
 		n++;
 	}
-	return spath;
+	return n;
+}
+
+QString	GenerateUniqueFTitle(const QString& path, const QString& name, const QString& ext)
+{
+	unsigned int n = GenerateUniqueFNum(path, name, ext);
+	return name + QString::number(n);
+}
+
+QString	GenerateUniqueFName(const QString& path, const QString& name, const QString& ext)
+{
+	unsigned int n = GenerateUniqueFNum(path, name, ext);
+	return name + QString::number(n) + "." + ext;
+}
+
+QString	GenerateUniqueFPath(const QString& path, const QString& name, const QString& ext)
+{
+	unsigned int n = GenerateUniqueFNum(path, name, ext);
+	return path + "/" + name + QString::number(n) + "." + ext;
 }
 
 QString U16(const char* s)

@@ -615,6 +615,8 @@ void SlnPanel::onInsertNewChild()
 	if (!tpPar) 
 		return;
 
+	//dlg.m_title = dlg.m_id = GenerateUniqueFTitle(theSln.Get
+
 	QTreeWidgetItem *newitem = new QTreeWidgetItem(item);
 	newitem->setText(0, dlg.m_title);
 	newitem->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_UNREADY));
