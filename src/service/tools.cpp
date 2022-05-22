@@ -40,10 +40,10 @@ unsigned int GenerateUniqueFNum(const QString& path, const QString& name, const 
 {
 	// generate a unique filename at a specific path
 	QString spath = path + "/" + name + "." + ext;
-	unsigned int n = 1;
+	unsigned int n = 0;
 	while (QFileInfo(spath).exists()) {
-		spath = path + "/" + name + QString::number(n) + "." + ext;
 		n++;
+		spath = path + "/" + name + QString::number(n) + "." + ext;
 	}
 	return n;
 }

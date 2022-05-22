@@ -10,13 +10,18 @@ public:
 	HtmlImage(QWebElement &image);
 	~HtmlImage(void);
 
-	QString GetPath();
+	QString GetSrc();
 	int GetWidth();
 	int GetHeight();
+	bool IsEmbedded();
 
-	void SetPath(const QString &fpath);
+	void SetSrc(const QString &fpath);
 	void SetWidth(int w);
 	void SetHeight(int h);
+
+	static QString ConvertToEmbedded(const QString &fpath);
+	static bool ConvertToFile(const QString& data, const QString &fpath);
+	static QString GetImageExt(const QString& code);
 private:
 	QWebElement m_image;
 };

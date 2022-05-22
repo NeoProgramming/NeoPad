@@ -30,3 +30,13 @@ namespace MBA
 	const char status[] = "s";
 };
 
+enum class ImageAction : int {
+	Href,
+	Copy,
+	Move,
+	//HardLink,
+	//SymLink,
+	Embed,
+	Extract
+};
+

@@ -352,7 +352,8 @@ bool WebEditView::LoadHtml(MTPOS tpos, int bi)
 	bool success = theSln.LoadDoc(m_Item, m_di, content);
 	if (!success)
 		return false;
-	QWebView::setHtml(content);
+	QWebView::setHtml(content, QUrl::fromLocalFile(m_Item->GetDocAbsPath(m_di)));
+	settings()->setAttribute(QWebSettings::AutoLoadImages, true);
 	settings()->setUserStyleSheetUrl(QUrl::fromLocalFile(theSln.GetCssAbsPath(bi)));
 	page()->setContentEditable(true);
 	connect(page(), &QWebPage::linkClicked, this, &WebEditView::onLinkClicked);
@@ -631,12 +632,13 @@ void WebEditView::onInsertTable()
 void WebEditView::onInsertImage()
 {
 	ImageProperties dlg;
-	dlg.m_action = INI::LastImageAction;
+	dlg.m_action = static_cast<ImageAction> (INI::LastImageAction);
 	dlg.m_adir = m_Item->GetAbsDir(m_di);
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
-		INI::LastImageAction = dlg.m_action;
-		InsertImage(dlg.m_action, dlg.m_fpath, dlg.m_width, dlg.m_height);
+		INI::LastImageAction = static_cast<int> (dlg.m_action);
+		QString res = PrepareImage(dlg.m_action, dlg.m_fpath);
+		InsertImage(res, dlg.m_width, dlg.m_height);
 	}
 }
 
@@ -704,48 +706,50 @@ void WebEditView::InsertHtml(QString html)
 		"s.outerHTML = z; ";
 
 	QWebFrame *frame = this->page()->mainFrame();
-	frame->evaluateJavaScript(js);
+	QVariant r = frame->evaluateJavaScript(js);
 	setWindowModified(true);
 }
 
-QString WebEditView::PrepareImage(int action, const QString &fpath)
+QString WebEditView::PrepareImage(ImageAction action, const QString &fpath)
 {
-	QString npath;
+	QString res;
 	
-	if (action == 1)
-	{
-		// copy the image, with the generation of a new name
+	if (action == ImageAction::Copy) {
+		// copy the image, with generation of new name
 		QFileInfo fi(fpath);
-		npath = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
-		QFile::copy(fpath, npath);
-		npath = GetRelPath(npath, m_Item->GetAbsDir(m_di), false);
+		res = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
+		QFile::copy(fpath, res);
+		res = GetRelPath(res, m_Item->GetAbsDir(m_di), false);
 	}
-	else if (action == 2)
-	{
-		// transfer the image, with the generation of a new name
+	else if (action == ImageAction::Move) {
+		// move the image, with generation of new name
 		QFileInfo fi(fpath);
-		npath = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
-		QFile::rename(fpath, npath);
-		npath = GetRelPath(npath, m_Item->GetAbsDir(m_di), false);
+		res = GenerateUniqueFPath(m_Item->GetAbsDir(m_di), fi.baseName(), fi.completeSuffix());
+		QFile::rename(fpath, res);
+		res = GetRelPath(res, m_Item->GetAbsDir(m_di), false);
 	}
-	else if (action == 0)
-	{
-		npath = GetRelPath(fpath, m_Item->GetAbsDir(m_di), false);
+	else if (action == ImageAction::Embed) {
+		// convert to embedded data
+		res = HtmlImage::ConvertToEmbedded(fpath);
 	}
-	return npath;
+	else if (action == ImageAction::Extract) {
+		res = GetRelPath(fpath, m_Item->GetAbsDir(m_di), false);
+	}
+	else if (action == ImageAction::Href) {
+		// direct hyperlink to image
+		res = GetRelPath(fpath, m_Item->GetAbsDir(m_di), false);
+	}
+	return res;
 }
 
-void WebEditView::InsertImage(int action, const QString &fpath, int w, int h)
+void WebEditView::InsertImage(const QString &image, int w, int h)
 {
-	QString npath, html;
-	// 1 copy/move image if needed
-	npath = PrepareImage(action, fpath);
-
+	QString html;
 	// without w/h:
 	// execCommand("insertImage", npath);
 
 	// 2 generate html
-	html = "<img src=\"" + npath + "\"";
+	html = "<img src=\"" + image + "\"";
 	if (w < 0)
 		html += QString::asprintf(" width=\"%d%%\"", -w);
 	else if (w > 0)
@@ -859,14 +863,27 @@ void WebEditView::onImageProperties()
 	HtmlImage image(m_elImage);
 	ImageProperties dlg;
 	dlg.m_adir = m_Item->GetAbsDir(m_di);
-	dlg.m_fpath = image.GetPath();
 	dlg.m_width = image.GetWidth();
 	dlg.m_height = image.GetHeight();
+	dlg.m_embedded = image.IsEmbedded();
+	dlg.m_fpath = image.GetSrc();
+	ImageAction a = dlg.m_action = image.IsEmbedded() ? ImageAction::Embed : ImageAction::Href;
+	if(dlg.m_embedded)
+		dlg.m_ext = HtmlImage::GetImageExt(dlg.m_fpath);
+	
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
-		if (dlg.m_fpath != image.GetPath() || dlg.m_action != 0)
-			dlg.m_fpath = PrepareImage(dlg.m_action, dlg.m_fpath);
-		image.SetPath(dlg.m_fpath);
+		if(dlg.m_action == ImageAction::Extract)
+			HtmlImage::ConvertToFile(image.GetSrc(), dlg.m_fpath);
+		
+		if ((!dlg.m_fpath.isEmpty() && dlg.m_fpath != image.GetSrc()) || dlg.m_action != a) {
+			dlg.m_fpath = PrepareImage(dlg.m_action, dlg.m_adir + "/" + dlg.m_fpath);
+			image.SetSrc(dlg.m_fpath);
+		}
+
+		if (dlg.m_delete && !dlg.m_embedded)
+			QFile::remove(dlg.m_adir + "/" + image.GetSrc());
+
 		image.SetWidth(dlg.m_width);
 		image.SetHeight(dlg.m_height);
 		setWindowModified(true);

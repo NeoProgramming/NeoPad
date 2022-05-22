@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
+    <width>433</width>
     <height>193</height>
    </rect>
   </property>
@@ -14,7 +14,7 @@
    <string>Image</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="0" colspan="3">
+   <item row="2" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout_8">
      <item>
       <widget class="QGroupBox" name="groupBox_2">
@@ -101,80 +101,20 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="0">
-    <widget class="QPushButton" name="pushEdit">
-     <property name="text">
-      <string>Edit image</string>
-     </property>
-    </widget>
-   </item>
    <item row="3" column="2">
-    <widget class="QDialogButtonBox" name="buttonBox">
+    <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>178</width>
+       <height>20</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
    </item>
-   <item row="0" column="0" colspan="3">
-    <layout class="QHBoxLayout" name="horizontalLayout_9">
-     <item>
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>Image address</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QComboBox" name="comboAction">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <item>
-        <property name="text">
-         <string>Create link to original place</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Copy image to doc folder</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>Move image to doc folder</string>
-        </property>
-       </item>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushCreate">
-       <property name="text">
-        <string>Create image</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="0" colspan="3">
+   <item row="1" column="0" colspan="4">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <property name="spacing">
       <number>0</number>
@@ -203,18 +143,88 @@
      </item>
     </layout>
    </item>
-   <item row="3" column="1">
-    <spacer name="horizontalSpacer">
+   <item row="3" column="0">
+    <widget class="QPushButton" name="pushEdit">
+     <property name="text">
+      <string>Edit image</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="4">
+    <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <item>
+      <widget class="QComboBox" name="comboAction">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <item>
+        <property name="text">
+         <string>Create link to original place</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Copy image to doc folder</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Move image to doc folder</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Embed image</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Convert embed image to file</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushCreate">
+       <property name="text">
+        <string>Create image</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="3">
+    <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>178</width>
-       <height>20</height>
-      </size>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
-    </spacer>
+    </widget>
+   </item>
+   <item row="3" column="1">
+    <widget class="QCheckBox" name="checkDelete">
+     <property name="text">
+      <string>Delete original image</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

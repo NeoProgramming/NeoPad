@@ -130,8 +130,8 @@ private:
 	int  GetElementContext(const QWebElement &el);
 	void OpenLink(const QUrl&);
 	void InsertHtml(QString html);
-	QString PrepareImage(int action, const QString &fpath);
-	void InsertImage(int action, const QString &fpath, int w, int h);
+	QString PrepareImage(ImageAction action, const QString &fpath);
+	void InsertImage(const QString &fpath, int w, int h);
 
 private:
 	
