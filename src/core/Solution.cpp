@@ -1032,18 +1032,18 @@ MTPOS CSolution::Locate(const QString &guid)
 	return result;
 }
 
-void CSolution::Search(const QString &text, int scope, CMtposList &results)
+void CSolution::Search(const QString &text, unsigned int scope, CMtposList &results)
 {
     // recursive search on tree
     ForEach([&](MTPOS pos) {
         // search in title
-		if (scope == 0 || scope == 1) {
+		if (scope & ESM_TREE) {
 			if (pos->GetTitle(0).contains(text, Qt::CaseInsensitive))
 				results.push_back(pos);
 		}
         // search in file
-		if (scope == 0 || scope == 2) {
-			if (SearchInFile(pos, text))
+		if (scope & (ESM_TEXT|ESM_TAG|ESM_ATTR)) {
+			if (SearchInFile(pos, text, scope))
 				results.push_back(pos);
 		}
     });
@@ -1059,7 +1059,7 @@ bool CSolution::TransformFile(MTPOS pos, int bi)
 	return true;
 }
 
-bool CSolution::SearchInFile(MTPOS pos, const QString &text)
+bool CSolution::SearchInFile(MTPOS pos, const QString &text, unsigned int scope)
 {
 	QByteArray data;
 	QString html;
@@ -1071,7 +1071,7 @@ bool CSolution::SearchInFile(MTPOS pos, const QString &text)
 		return false;
 	}
     
-    return search(html, text);
+    return search(html, text, scope);
 }
 
 bool CSolution::LoadDoc(MTPOS item, int bi, QString &content)

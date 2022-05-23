@@ -29,7 +29,7 @@ int HtmlImage::GetWidth()
 		return 0;
 	QString width = m_image.attribute("width");
 	if (width.endsWith('%'))
-		return -width.toInt();
+		return -width.mid(0, width.length()-1).toInt();
 	return width.toInt();
 }
 
@@ -39,7 +39,7 @@ int HtmlImage::GetHeight()
 		return 0;
 	QString height = m_image.attribute("height");
 	if (height.endsWith('%'))
-		return -height.toInt();
+		return -height.mid(0, height.length() - 1).toInt();
 	return height.toInt();
 }
 

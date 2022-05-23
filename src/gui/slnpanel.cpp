@@ -17,6 +17,7 @@
 #include "../core/vmbsrv.h"
 #include "../core/ini.h"
 #include "../service/tools.h"
+#include "../service/search.h"
 
 extern QTextCodec *codecUtf8;
 
@@ -67,6 +68,9 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	m_LangIcons[(int)ELangStatus::LS_OLD] = QIcon(":/langicons/images/li-old.png");
 	m_LangIcons[(int)ELangStatus::LS_QOK] = QIcon(":/langicons/images/li-qok.png");
 	m_LangIcons[(int)ELangStatus::LS_QOLD] = QIcon(":/langicons/images/li-qold.png");
+
+	ui.checkTree->setChecked(true);
+	ui.checkText->setChecked(true);
 }
 
 QAction *SlnPanel::MakeAction(QString text, QMenu *menu, const char *slot)
@@ -847,7 +851,20 @@ void SlnPanel::onSearch()
     CMtposList results;
 	setCursor(QCursor(Qt::WaitCursor));
 	QString text = ui.lineSearch->text().toHtmlEscaped();
-    theSln.Search(text, ui.comboScope->currentIndex(), results);
+	unsigned int scope = 0;
+	if (ui.checkTree->isChecked())
+		scope |= ESM_TREE;
+	if (ui.checkText->isChecked())
+		scope |= ESM_TEXT;
+	if (ui.checkTags->isChecked())
+		scope |= ESM_TAG;
+	if (ui.checkAttrs->isChecked())
+		scope |= ESM_ATTR;
+	if (!scope) {
+		QMessageBox::warning(this, "Search", "Search scope not defined!");
+		return;
+	}
+    theSln.Search(text, scope, results);
     ui.treeResults->clear();
     for(auto pos : results) {
         QTreeWidgetItem *item = new QTreeWidgetItem();

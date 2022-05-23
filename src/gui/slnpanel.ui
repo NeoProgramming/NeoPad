@@ -8,7 +8,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>383</width>
+    <width>352</width>
     <height>482</height>
    </rect>
   </property>
@@ -36,160 +36,173 @@
      <property name="spacing">
       <number>3</number>
      </property>
-    </layout>
-   </item>
-   <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="whatsThis">
-      <string>Displays contents of project</string>
-     </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="pageContent">
-      <property name="whatsThis">
-       <string>&lt;b&gt;Project&lt;/b&gt;&lt;p&gt;Choose the topic you want from the contents list.&lt;/p&gt;</string>
-      </property>
-      <attribute name="title">
-       <string>Contents</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="leftMargin">
+     <item>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="whatsThis">
+        <string>Displays contents of project</string>
+       </property>
+       <property name="currentIndex">
         <number>1</number>
        </property>
-       <property name="topMargin">
-        <number>1</number>
-       </property>
-       <property name="rightMargin">
-        <number>1</number>
-       </property>
-       <property name="bottomMargin">
-        <number>1</number>
-       </property>
-       <item>
-        <widget class="QSplitter" name="splitter">
-         <property name="enabled">
-          <bool>true</bool>
+       <widget class="QWidget" name="pageContent">
+        <property name="whatsThis">
+         <string>&lt;b&gt;Project&lt;/b&gt;&lt;p&gt;Choose the topic you want from the contents list.&lt;/p&gt;</string>
+        </property>
+        <attribute name="title">
+         <string>Contents</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <property name="leftMargin">
+          <number>1</number>
          </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+         <property name="topMargin">
+          <number>1</number>
          </property>
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+         <property name="rightMargin">
+          <number>1</number>
          </property>
-         <widget class="SlnTreeWidget" name="treeContents">
-          <property name="contextMenuPolicy">
-           <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <property name="acceptDrops">
-           <bool>false</bool>
-          </property>
-          <property name="whatsThis">
-           <string>&lt;b&gt;Contents list of project.&lt;/b&gt;&lt;p&gt;Click an item to see the page.&lt;/p&gt;</string>
-          </property>
-          <property name="editTriggers">
-           <set>QAbstractItemView::EditKeyPressed</set>
-          </property>
-          <property name="showDropIndicator" stdset="0">
-           <bool>false</bool>
-          </property>
-          <property name="dragEnabled">
-           <bool>false</bool>
-          </property>
-          <property name="dragDropMode">
-           <enum>QAbstractItemView::NoDragDrop</enum>
-          </property>
-          <property name="alternatingRowColors">
-           <bool>true</bool>
-          </property>
-          <property name="selectionBehavior">
-           <enum>QAbstractItemView::SelectItems</enum>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>16</width>
-            <height>16</height>
-           </size>
-          </property>
-          <column>
-           <property name="text">
-            <string notr="true">1</string>
+         <property name="bottomMargin">
+          <number>1</number>
+         </property>
+         <item>
+          <widget class="QSplitter" name="splitter">
+           <property name="enabled">
+            <bool>true</bool>
            </property>
-          </column>
-         </widget>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pageSearch">
-      <attribute name="title">
-       <string>Search</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="0">
-        <widget class="QPushButton" name="pushSearch">
-         <property name="text">
-          <string>Search</string>
-         </property>
-        </widget>
-       </item>
-       <item row="9" column="0" colspan="2">
-        <widget class="QTreeWidget" name="treeResults">
-         <property name="rootIsDecorated">
-          <bool>false</bool>
-         </property>
-         <attribute name="headerVisible">
-          <bool>false</bool>
-         </attribute>
-         <column>
-          <property name="text">
-           <string notr="true">1</string>
-          </property>
-         </column>
-        </widget>
-       </item>
-       <item row="0" column="0" colspan="2">
-        <widget class="QLineEdit" name="lineSearch"/>
-       </item>
-       <item row="5" column="1">
-        <widget class="QPushButton" name="pushFindNext">
-         <property name="text">
-          <string>Find forward</string>
-         </property>
-        </widget>
-       </item>
-       <item row="5" column="0">
-        <widget class="QPushButton" name="pushFindPrev">
-         <property name="text">
-          <string>Find backward</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QComboBox" name="comboScope">
-         <item>
-          <property name="text">
-           <string>Everywhere</string>
-          </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <widget class="SlnTreeWidget" name="treeContents">
+            <property name="contextMenuPolicy">
+             <enum>Qt::CustomContextMenu</enum>
+            </property>
+            <property name="acceptDrops">
+             <bool>false</bool>
+            </property>
+            <property name="whatsThis">
+             <string>&lt;b&gt;Contents list of project.&lt;/b&gt;&lt;p&gt;Click an item to see the page.&lt;/p&gt;</string>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::EditKeyPressed</set>
+            </property>
+            <property name="showDropIndicator" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="dragEnabled">
+             <bool>false</bool>
+            </property>
+            <property name="dragDropMode">
+             <enum>QAbstractItemView::NoDragDrop</enum>
+            </property>
+            <property name="alternatingRowColors">
+             <bool>true</bool>
+            </property>
+            <property name="selectionBehavior">
+             <enum>QAbstractItemView::SelectItems</enum>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>16</width>
+              <height>16</height>
+             </size>
+            </property>
+            <column>
+             <property name="text">
+              <string notr="true">1</string>
+             </property>
+            </column>
+           </widget>
+          </widget>
          </item>
-         <item>
-          <property name="text">
-           <string>In tree</string>
-          </property>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="pageSearch">
+        <attribute name="title">
+         <string>Search</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="10" column="0" colspan="7">
+          <widget class="QTreeWidget" name="treeResults">
+           <property name="rootIsDecorated">
+            <bool>false</bool>
+           </property>
+           <attribute name="headerVisible">
+            <bool>false</bool>
+           </attribute>
+           <column>
+            <property name="text">
+             <string notr="true">1</string>
+            </property>
+           </column>
+          </widget>
          </item>
-         <item>
-          <property name="text">
-           <string>In documents</string>
-          </property>
+         <item row="0" column="0" colspan="7">
+          <widget class="QLineEdit" name="lineSearch"/>
          </item>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </widget>
+         <item row="1" column="6">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QCheckBox" name="checkTree">
+             <property name="text">
+              <string>Tree</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkText">
+             <property name="text">
+              <string>Text</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkTags">
+             <property name="text">
+              <string>Tags</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="checkAttrs">
+             <property name="text">
+              <string>Attrs</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="6" column="6">
+          <widget class="QPushButton" name="pushFindNext">
+           <property name="text">
+            <string>Find forward</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="6">
+          <widget class="QPushButton" name="pushSearch">
+           <property name="text">
+            <string>Search</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0" colspan="6">
+          <widget class="QPushButton" name="pushFindPrev">
+           <property name="text">
+            <string>Find backward</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
@@ -201,7 +214,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>treeContents</tabstop>
  </tabstops>
  <resources/>

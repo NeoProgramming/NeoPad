@@ -79,8 +79,8 @@ public:
 	bool	TransformFile(MTPOS tpos, int bi);
 
 	MTPOS	Locate(const QString &guid);
-    void    Search(const QString &text, int scope, CMtposList &results);
-    bool    SearchInFile(MTPOS pos, const QString &text);
+    void    Search(const QString &text, unsigned int scope, CMtposList &results);
+    bool    SearchInFile(MTPOS pos, const QString &text, unsigned int scope);
 protected:
 	void    AddBase(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath, const QString &prefix);
 

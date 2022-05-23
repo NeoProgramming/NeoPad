@@ -39,10 +39,12 @@ int  ImageProperties::DoModal()
 	ui.comboAction->setCurrentIndex(static_cast<int>(m_action));
 
 	ui.checkWidth->setChecked(m_width != 0);
+	ui.spinWidth->setEnabled(m_width != 0);
 	ui.spinWidth->setValue(abs(m_width));
 	ui.comboWidthUnit->setCurrentIndex(m_width < 0 ? 1 : 0);
 
 	ui.checkHeight->setChecked(m_height != 0);
+	ui.spinHeight->setEnabled(m_height != 0);
 	ui.spinHeight->setValue(abs(m_height));
 	ui.comboHeightUnit->setCurrentIndex(m_height < 0 ? 1 : 0);
 
@@ -111,10 +113,8 @@ void ImageProperties::onCheckWidth(bool state)
 {
 	m_width = !state;
 
-	ui.spinHeight->setEnabled(state);
 	ui.spinWidth->setEnabled(state);
 	ui.comboWidthUnit->setEnabled(state);
-	ui.comboHeightUnit->setEnabled(state);
 }
 
 void ImageProperties::onCheckHeight(bool state)
@@ -122,8 +122,6 @@ void ImageProperties::onCheckHeight(bool state)
 	m_height = !state;
 
 	ui.spinHeight->setEnabled(state);
-	ui.spinWidth->setEnabled(state);
-	ui.comboWidthUnit->setEnabled(state);
 	ui.comboHeightUnit->setEnabled(state);
 }
 
