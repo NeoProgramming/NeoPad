@@ -42,7 +42,7 @@
         <string>Displays contents of project</string>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="pageContent">
         <property name="whatsThis">
@@ -111,6 +111,9 @@
               <width>16</width>
               <height>16</height>
              </size>
+            </property>
+            <property name="expandsOnDoubleClick">
+             <bool>false</bool>
             </property>
             <column>
              <property name="text">
