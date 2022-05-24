@@ -46,6 +46,10 @@ public slots:
 	void onEditUndo();
 	void onEditRedo();
 
+	void onEditCopySpecial();
+	void onEditCutSpecial();
+	void onEditPasteSpecial();
+
 	void onTextBold();
 	void onTextItalic();
 	void onTextUnderline();

@@ -32,6 +32,7 @@ public:
 	int m_BasesCnt = 0;
 	QString m_Password;
 	NeopadCallback *m_pCB = nullptr;
+	QString m_RecentClipboard;
 public:
 	CSolution(void);
 	~CSolution(void);

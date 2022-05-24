@@ -229,12 +229,24 @@ void WebEditView::keyPressEvent(QKeyEvent * e)
 	// this is how our own hotkeys are implemented
 	int	key = e->key();
 	Qt::KeyboardModifiers m = e->modifiers();
-	if((key==Qt::Key_Return) && (m & Qt::ControlModifier))
+	if ((key == Qt::Key_Return) && (m & Qt::ControlModifier))
 		onEditOutside();
-	else if((key==Qt::Key_Return) && (m==0)) {
-	//@	if(!onEditDeflist())
+	else if ((key == Qt::Key_Return) && (m == 0)) 
 		QWebView::keyPressEvent(e);
-	}
+	
+	else if ((key == Qt::Key_C) && (m & Qt::ControlModifier))
+		onEditCopySpecial();
+	else if ((key == Qt::Key_Insert) && (m & Qt::ControlModifier))
+		onEditCopySpecial();
+	else if ((key == Qt::Key_X) && (m & Qt::ControlModifier))
+		onEditCutSpecial();
+	else if ((key == Qt::Key_Delete) && (m & Qt::ShiftModifier))
+		onEditCutSpecial();
+	else if ((key == Qt::Key_V) && (m & Qt::ControlModifier))
+		onEditPasteSpecial();
+	else if ((key == Qt::Key_Insert) && (m & Qt::ShiftModifier))
+		onEditPasteSpecial();
+	
 	else
 		QWebView::keyPressEvent(e);
 }
@@ -367,6 +379,38 @@ bool WebEditView::LoadHtml(MTPOS tpos, int bi)
 
 //////////////////////////////////////////////////////////////////////////
 // edit
+
+void WebEditView::onEditCopySpecial()
+{
+	triggerPageAction(QWebPage::Copy);
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData->hasHtml()) {
+		theSln.m_RecentClipboard = mimeData->html();
+	}
+}
+
+void WebEditView::onEditCutSpecial()
+{
+	triggerPageAction(QWebPage::Cut);
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData->hasHtml()) {
+		theSln.m_RecentClipboard = mimeData->html();
+	}
+}
+
+void WebEditView::onEditPasteSpecial()
+{
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData->hasHtml()) {
+		QString data = mimeData->html();
+		if (data != theSln.m_RecentClipboard)
+			clipboard->setText(clipboard->text());
+	}
+	triggerPageAction(QWebPage::Paste);
+}
 
 void WebEditView::onEditCut()
 {
