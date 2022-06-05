@@ -230,6 +230,7 @@ MainWindow::MainWindow()
     connect(ui.actionEditConfig,	&QAction::triggered, this, &MainWindow::onToolsEditConfig);
 	connect(ui.actionEditScript,    &QAction::triggered, this, &MainWindow::onToolsEditScript);
 	connect(ui.actionReloadScript,  &QAction::triggered, this, &MainWindow::onToolsReloadScript);	
+	connect(ui.actionTestClipboard, &QAction::triggered, this, &MainWindow::onToolsTestClipboard);
 
 	m_wSln->initialize();
 	UpdateZoom(100);
@@ -996,6 +997,20 @@ void MainWindow::onToolsEditScript()
 void MainWindow::onToolsReloadScript()
 {
 	loadScripts();
+}
+
+void MainWindow::onToolsTestClipboard()
+{
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData->hasHtml()) {
+		QString data = mimeData->html();
+		bool b = (data != theSln.m_RecentClipboard);
+		QMessageBox::information(this, b ? "equal" : "not equal", theSln.m_RecentClipboard);
+	}
+	else {
+		QMessageBox::information(this, "not html", theSln.m_RecentClipboard);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

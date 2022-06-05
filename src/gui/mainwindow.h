@@ -72,7 +72,7 @@ public slots:
 	void onToolsEditConfig();
 	void onToolsEditScript();
 	void onToolsReloadScript();
-	
+	void onToolsTestClipboard();
 private slots:
 	void onPostInit();
 

@@ -43,7 +43,6 @@
    <addaction name="actionProjectOpen"/>
    <addaction name="actionFileSave"/>
    <addaction name="actionFileSaveAll"/>
-   <addaction name="actionFileReload"/>
   </widget>
   <widget class="QToolBar" name="toolBarEdit">
    <property name="windowTitle">
@@ -94,6 +93,8 @@
     </property>
     <addaction name="actionFileSave"/>
     <addaction name="actionFileSaveAll"/>
+    <addaction name="separator"/>
+    <addaction name="actionFileReload"/>
     <addaction name="separator"/>
     <addaction name="actionClearDoc"/>
     <addaction name="actionCorrectCssPath"/>
@@ -205,6 +206,7 @@
     <addaction name="actionEditConfig"/>
     <addaction name="actionEditScript"/>
     <addaction name="actionReloadScript"/>
+    <addaction name="actionTestClipboard"/>
    </widget>
    <widget class="QMenu" name="menuDiv">
     <property name="title">
@@ -1500,6 +1502,11 @@
   <action name="actionUpdatePrefixes2">
    <property name="text">
     <string>Update prefixes</string>
+   </property>
+  </action>
+  <action name="actionTestClipboard">
+   <property name="text">
+    <string>Test Clipboard</string>
    </property>
   </action>
  </widget>
