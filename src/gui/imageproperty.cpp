@@ -14,10 +14,10 @@ ImageProperties::ImageProperties(QWidget *parent)
 	connect(ui.pushEdit,    &QPushButton::clicked,   this, &ImageProperties::onEditImage);
 	connect(ui.checkWidth,	&QCheckBox::clicked,	 this, &ImageProperties::onCheckWidth);
 	connect(ui.checkHeight, &QCheckBox::clicked,	 this, &ImageProperties::onCheckHeight);
-	connect(ui.spinWidth,   qOverload<int>(&QSpinBox::valueChanged), this, &ImageProperties::onSetWidth);
-	connect(ui.spinHeight,  qOverload<int>(&QSpinBox::valueChanged), this, &ImageProperties::onSetHeight);
+    connect(ui.spinWidth,   static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &ImageProperties::onSetWidth);
+    connect(ui.spinHeight,  static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &ImageProperties::onSetHeight);
 	connect(ui.lineFPath,	&QLineEdit::textChanged, this, &ImageProperties::onPathChanged);
-	connect(ui.comboAction, qOverload<int>(&QComboBox::currentIndexChanged), this, &ImageProperties::onActionChanged);
+    connect(ui.comboAction, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &ImageProperties::onActionChanged);
 }
 
 void ImageProperties::onActionChanged(int index)
