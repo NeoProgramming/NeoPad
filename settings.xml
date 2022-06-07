@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<ini>
+	<rec i="SecSettings" v="">
+		<rec i="AutoSavePages" v="1" />
+		<rec i="CurrProjectPath" v="/home/q/neobook/content/content.vmbase" />
+		<rec i="QSModeNew" v="0" />
+		<rec i="HtmEditPath" v="notepad.exe" />
+		<rec i="VisEditPath" v="" />
+		<rec i="ImgEditPath" v="" />
+		<rec i="BrowserPath" v="" />
+		<rec i="ExplorePath" v="explorer" />
+		<rec i="CommitPath" v="" />
+		<rec i="SyncPath" v="" />
+		<rec i="PdfgenPath" v="" />
+		<rec i="OutlinerMode" v="0" />
+		<rec i="CreateNewVmb" v="0" />
+		<rec i="CreateNewDir" v="0" />
+		<rec i="LastImageAction" v="0" />
+		<rec i="ScriptsDir" v="" />
+		<rec i="IconSize" v="16" />
+		<rec i="BackColor1" v="00FFC782" />
+		<rec i="BackColor2" v="00F0CF72" />
+		<rec i="TitleRedef" v="" />
+	</rec>
+	<rec i="SecRecent" v="">
+		<rec i="RecentProjects" v="/home/q/neobook/content/content.vmbase" />
+	</rec>
+	<rec i="SecWindows" v="">
+		<rec i="WinGeometry" v="01d9d0cb00030000000000f6000000610000054100000320000000f80000007f0000053f0000031e0000000000000000057a000000f80000007f0000053f0000031e" />
+		<rec i="WinState" v="000000ff00000000fd00000001000000000000015b0000024efc0200000001fb0000000e007300690064006500620061007201000000520000024e000000e100ffffff000002e70000024e00000004000000040000000800000008fc0000000200000002000000030000001c0074006f006f006c00420061007200500072006f006a0065006300740100000000ffffffff0000000000000000000000160074006f006f006c00420061007200450064006900740100000074ffffffff0000000000000000000000160074006f006f006c004200610072005400650078007401000001b7ffffffff00000000000000000000000200000003000000160074006f006f006c00420061007200540072006500650100000000ffffffff00000000000000000000001a0074006f006f006c0042006100720049006e007300650072007401000000f8ffffffff0000000000000000000000160074006f006f006c004200610072005000610072006101000001dcffffffff0000000000000000" />
+		<rec i="LastImageDir" v="" />
+	</rec>
+	<rec i="AppPassword" v="" />
+</ini>
