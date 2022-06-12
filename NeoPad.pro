@@ -19,15 +19,15 @@ QT += webkit
 QT += webkitwidgets
 
 win32 {
-	INCLUDEPATH += c:/OpenSSL-Win32/include
-	LIBS += -Lc:/OpenSSL-Win32/bin -llibeay32
+        INCLUDEPATH += c:/Libs/OpenSSL-111m-Win32/include
+        LIBS += -Lc:/Libs/OpenSSL-111m-Win32/lib -llibssl -llibcrypto
 }
 linux|macx {
 #for linux: sudo apt-get install libssl-dev
 	LIBS += -lcrypto
 }
 
-win32:RC_FILE = neopad.rc
+win32:RC_FILE = ./src/neopad.rc
 #macx:RC_FILE = VolumeIcon.icns
 #macx:QMAKE_MAC_SDK=/Developer/SDKs/MacOSX10.4u.sdk
 #macx:CONFIG+=x86 ppc
