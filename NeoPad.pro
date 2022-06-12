@@ -9,8 +9,6 @@ RCC_DIR	= build/.rcc
 OBJECTS_DIR = build/.obj
 UI_DIR	= ui
 
-system(./updateBuildNumber.sh ./datetime.gen)
-
 QT += core
 QT += gui
 QT += widgets
@@ -18,12 +16,15 @@ QT += network
 QT += webkit
 QT += webkitwidgets
 
+#for windows: place OpenSSL-111m-Win32 to c:/Libs
 win32 {
-        INCLUDEPATH += c:/Libs/OpenSSL-111m-Win32/include
-        LIBS += -Lc:/Libs/OpenSSL-111m-Win32/lib -llibssl -llibcrypto
+	system(./updateBuildNumber.bat ./datetime.gen)
+    INCLUDEPATH += c:/Libs/OpenSSL-111m-Win32/include
+    LIBS += -Lc:/Libs/OpenSSL-111m-Win32/lib -llibssl -llibcrypto
 }
-linux|macx {
 #for linux: sudo apt-get install libssl-dev
+linux|macx {
+	system(./updateBuildNumber.sh ./datetime.gen)
 	LIBS += -lcrypto
 }
 
