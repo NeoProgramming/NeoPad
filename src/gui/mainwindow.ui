@@ -1361,10 +1361,10 @@
      <normaloff>:/file/images/file-reload.png</normaloff>:/file/images/file-reload.png</iconset>
    </property>
    <property name="text">
-    <string>Save As...</string>
+    <string>Reload page...</string>
    </property>
    <property name="toolTip">
-    <string>Save As</string>
+    <string>Reload page</string>
    </property>
   </action>
   <action name="actionParaAnn">

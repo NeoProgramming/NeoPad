@@ -406,8 +406,11 @@ void WebEditView::onEditPasteSpecial()
 	const QMimeData *mimeData = clipboard->mimeData();
 	if (mimeData->hasHtml()) {
 		QString data = mimeData->html();
-		if (data != theSln.m_RecentClipboard)
+		if (data != theSln.m_RecentClipboard) {
+			theSln.m_DebugRCB = theSln.m_RecentClipboard;
+			theSln.m_DebugCCB = data;
 			clipboard->setText(clipboard->text());
+		}
 	}
 	triggerPageAction(QWebPage::Paste);
 }

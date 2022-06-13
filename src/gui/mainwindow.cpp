@@ -1001,16 +1001,11 @@ void MainWindow::onToolsReloadScript()
 
 void MainWindow::onToolsTestClipboard()
 {
-	QClipboard *clipboard = QApplication::clipboard();
-	const QMimeData *mimeData = clipboard->mimeData();
-	if (mimeData->hasHtml()) {
-		QString data = mimeData->html();
-		bool b = (data != theSln.m_RecentClipboard);
-		QMessageBox::information(this, b ? "equal" : "not equal", theSln.m_RecentClipboard);
-	}
-	else {
-		QMessageBox::information(this, "not html", theSln.m_RecentClipboard);
-	}
+	QMessageBox::information(this, "Test Clipboard", 
+		"=== Recent === \r\n" +
+		theSln.m_DebugRCB +
+		"\r\n=== Current === \r\n" +
+		theSln.m_DebugCCB);
 }
 
 //////////////////////////////////////////////////////////////////////////
