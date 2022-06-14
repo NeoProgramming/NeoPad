@@ -230,7 +230,6 @@ MainWindow::MainWindow()
     connect(ui.actionEditConfig,	&QAction::triggered, this, &MainWindow::onToolsEditConfig);
 	connect(ui.actionEditScript,    &QAction::triggered, this, &MainWindow::onToolsEditScript);
 	connect(ui.actionReloadScript,  &QAction::triggered, this, &MainWindow::onToolsReloadScript);	
-	connect(ui.actionTestClipboard, &QAction::triggered, this, &MainWindow::onToolsTestClipboard);
 
 	m_wSln->initialize();
 	UpdateZoom(100);
@@ -999,14 +998,6 @@ void MainWindow::onToolsReloadScript()
 	loadScripts();
 }
 
-void MainWindow::onToolsTestClipboard()
-{
-	QMessageBox::information(this, "Test Clipboard", 
-		"=== Recent === \r\n" +
-		theSln.m_DebugRCB +
-		"\r\n=== Current === \r\n" +
-		theSln.m_DebugCCB);
-}
 
 //////////////////////////////////////////////////////////////////////////
 // insert

@@ -34,8 +34,6 @@ public:
 	NeopadCallback *m_pCB = nullptr;
 	QString m_RecentClipboard;
 
-	QString m_DebugRCB;	// recent
-	QString m_DebugCCB;	// current
 public:
 	CSolution(void);
 	~CSolution(void);

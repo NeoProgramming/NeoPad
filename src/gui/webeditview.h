@@ -37,6 +37,8 @@ public slots:
     void onEditCopyText();
 	void onEditPaste();
 	void onEditPasteText();
+	void onEditPasteSpecial();
+
 	void onEditUntag();
 	void onEditOutside();
 	void onEditTagInfo();
@@ -45,10 +47,6 @@ public slots:
 	void onEditClearDoc();
 	void onEditUndo();
 	void onEditRedo();
-
-	void onEditCopySpecial();
-	void onEditCutSpecial();
-	void onEditPasteSpecial();
 
 	void onTextBold();
 	void onTextItalic();

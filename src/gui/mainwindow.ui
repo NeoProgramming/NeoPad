@@ -206,7 +206,6 @@
     <addaction name="actionEditConfig"/>
     <addaction name="actionEditScript"/>
     <addaction name="actionReloadScript"/>
-    <addaction name="actionTestClipboard"/>
    </widget>
    <widget class="QMenu" name="menuDiv">
     <property name="title">

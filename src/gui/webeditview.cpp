@@ -235,13 +235,13 @@ void WebEditView::keyPressEvent(QKeyEvent * e)
 		QWebView::keyPressEvent(e);
 	
 	else if ((key == Qt::Key_C) && (m & Qt::ControlModifier))
-		onEditCopySpecial();
+		onEditCopy();
 	else if ((key == Qt::Key_Insert) && (m & Qt::ControlModifier))
-		onEditCopySpecial();
+		onEditCopy();
 	else if ((key == Qt::Key_X) && (m & Qt::ControlModifier))
-		onEditCutSpecial();
+		onEditCut();
 	else if ((key == Qt::Key_Delete) && (m & Qt::ShiftModifier))
-		onEditCutSpecial();
+		onEditCut();
 	else if ((key == Qt::Key_V) && (m & Qt::ControlModifier))
 		onEditPasteSpecial();
 	else if ((key == Qt::Key_Insert) && (m & Qt::ShiftModifier))
@@ -380,44 +380,14 @@ bool WebEditView::LoadHtml(MTPOS tpos, int bi)
 //////////////////////////////////////////////////////////////////////////
 // edit
 
-void WebEditView::onEditCopySpecial()
-{
-	triggerPageAction(QWebPage::Copy);
-	QClipboard *clipboard = QApplication::clipboard();
-	const QMimeData *mimeData = clipboard->mimeData();
-	if (mimeData->hasHtml()) {
-		theSln.m_RecentClipboard = mimeData->html();
-	}
-}
-
-void WebEditView::onEditCutSpecial()
-{
-	triggerPageAction(QWebPage::Cut);
-	QClipboard *clipboard = QApplication::clipboard();
-	const QMimeData *mimeData = clipboard->mimeData();
-	if (mimeData->hasHtml()) {
-		theSln.m_RecentClipboard = mimeData->html();
-	}
-}
-
-void WebEditView::onEditPasteSpecial()
-{
-	QClipboard *clipboard = QApplication::clipboard();
-	const QMimeData *mimeData = clipboard->mimeData();
-	if (mimeData->hasHtml()) {
-		QString data = mimeData->html();
-		if (data != theSln.m_RecentClipboard) {
-			theSln.m_DebugRCB = theSln.m_RecentClipboard;
-			theSln.m_DebugCCB = data;
-			clipboard->setText(clipboard->text());
-		}
-	}
-	triggerPageAction(QWebPage::Paste);
-}
-
 void WebEditView::onEditCut()
 {
 	triggerPageAction(QWebPage::Cut);
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData->hasHtml()) {
+		theSln.m_RecentClipboard = mimeData->html();
+	}
 }
 
 void WebEditView::onEditCutText()
@@ -431,6 +401,11 @@ void WebEditView::onEditCutText()
 void WebEditView::onEditCopy()
 {
 	triggerPageAction(QWebPage::Copy);
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData->hasHtml()) {
+		theSln.m_RecentClipboard = mimeData->html();
+	}
 }
 
 void WebEditView::onEditCopyText()
@@ -454,6 +429,20 @@ void WebEditView::onEditPasteText()
 	clipboard->setText(originalText);
 	triggerPageAction(QWebPage::Paste);
 }
+
+void WebEditView::onEditPasteSpecial()
+{
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData->hasHtml()) {
+		QString data = mimeData->html();
+		if (data != theSln.m_RecentClipboard) {
+			clipboard->setText(clipboard->text());
+		}
+	}
+	triggerPageAction(QWebPage::Paste);
+}
+
 
 void WebEditView::onEditUndo()
 {
