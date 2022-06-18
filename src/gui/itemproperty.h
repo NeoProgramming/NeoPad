@@ -12,7 +12,7 @@ class ItemProperties : public QDialog
 public:
     ItemProperties(QWidget *parent);
     int DoModal(MTPOS tpos);
-	QString m_title0, m_title1;
+	QString m_id, m_title0, m_title1;
 
 signals:
 	void insertContentsItem(QString title, QString fileName, QString iconFN);

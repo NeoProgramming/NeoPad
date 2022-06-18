@@ -798,17 +798,45 @@ void CSolution::MakeUnsavedListR(CMtposList &mpl, MTPOS mtNode)
 	}
 }
 
-void CSolution::RenameItem(MTPOS tpos, const QString & id)
+bool CSolution::RenameItem(MTPOS tpos, const QString & id)
 {
-	// rename vmb & vmb dir
-	QFile::rename(tpos->GetVmbAbsPath(), tpos->GetAbsDir(-1) + "/" + id + ".vmbase");
-	QDir().rename(tpos->GetAbsDir(-1), tpos->parent->GetAbsDir(-1) + "/" + id);
+	if (id == tpos->GetId())
+		return true;
+
+	// check if rename is possible
+	// doc dirs can match with vmbase dir and each other
+	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
+	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
+	if (QFileInfo(vmb).exists())
+		return Fail("vmbase file with the same name already exists"), false;
+	if (QFileInfo(dir).exists())
+		return Fail("directory with the same name already exists"), false;
+	for (int bi = 0; bi < BCnt(); bi++) {
+		QString doc = tpos->GetAbsDir(bi) + "/" + id + GetDocExt(bi);
+		if(QFileInfo(doc).exists())
+			return Fail("document with the same name already exists"), false;
+		if (m_Bases[bi].path_is_unique) {
+			QString dir = tpos->parent->GetAbsDir(bi) + "/" + id;
+			if(QFileInfo(dir).exists())
+				return Fail("directory with the same name already exists"), false;
+		}
+	}
+
+	// rename vmbase file
+	QFile::rename(tpos->GetVmbAbsPath(), vmb);
 	// rename docs & doc dirs
 	for (int bi = 0; bi < BCnt(); bi++) {
 		QFile::rename(tpos->GetDocAbsPath(bi), tpos->GetAbsDir(bi) + "/" + id + GetDocExt(bi));
 		if (m_Bases[bi].path_is_unique)
 			QDir().rename(tpos->GetAbsDir(bi), tpos->parent->GetAbsDir(bi) + "/" + id);
 	}
+	// rename main dir
+	QDir().rename(tpos->GetAbsDir(-1), dir);
+	// change id
+	tpos->id = id;
+	UpdateBaseDirs(tpos);
+	HandleChanges(tpos, false);
+	return true;
 }
 
 void  CSolution::RenameTitle(MTPOS item, const QString & title, int bi)

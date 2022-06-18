@@ -23,8 +23,8 @@ ItemProperties::ItemProperties(QWidget *parent)
 
 int ItemProperties::DoModal(MTPOS tpos)
 {
-	ui.lineTitle0->setText(m_title0);
-	ui.lineTitle1->setText(m_title1);
+	ui.lineTitle0->setText(tpos->GetTitle(0));
+	ui.lineTitle1->setText(tpos->GetTitle(1));
 
 	ui.lineID->setText(tpos->GetId());
 	ui.lineDoc0Path->setText(tpos->GetDocAbsPath(0));
@@ -47,6 +47,7 @@ int ItemProperties::DoModal(MTPOS tpos)
 
 void ItemProperties::onOk()
 {
+	m_id = ui.lineID->text();
 	m_title0 = ui.lineTitle0->text();
 	m_title1 = ui.lineTitle1->text();
 

@@ -465,14 +465,14 @@ void SlnPanel::onItemProperties()
 	if (!tpos) return;
 
 	ItemProperties dlg(this);
-	dlg.m_title0 = tpos->GetTitle(0);
-	dlg.m_title1 = tpos->GetTitle(1);
-		
 	if (dlg.DoModal(tpos) == QDialog::Accepted)	// inside the check for the correctness of renaming
 	{
 		theSln.RenameTitle(tpos, dlg.m_title0, 0);
 		theSln.RenameTitle(tpos, dlg.m_title1, 1);
-
+		if (tpos->GetId() != dlg.m_id) {
+			if (!theSln.RenameItem(tpos, dlg.m_id))
+				QMessageBox::warning(this, "Rename error", FailMsg);
+		}
 		UpdateItem(item);
 		mw->UpdateTab(tpos);
 	}

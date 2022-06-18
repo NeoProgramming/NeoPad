@@ -56,7 +56,7 @@ public:
 	bool    SaveDoc(MTPOS item, int di, const QString &content);
 
 	MTPOS	AddItem(MTPOS tpPar, MTPOS tpAfter, const QString& title, const QString& id);
-	void	RenameItem(MTPOS tpos, const QString & id);
+	bool	RenameItem(MTPOS tpos, const QString & id);
 	void    RenameTitle(MTPOS item, const QString & title, int di);
 	void    SetStatus(MTPOS item, ETreeStatus status, bool rec);
 
