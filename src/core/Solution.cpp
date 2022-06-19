@@ -34,7 +34,9 @@ const char* csStatusNames[] = {
 QString CSolution::GetDocExt(int bi)
 {
 	// get extension by document type
-	if (bi < 0 || bi >= BCnt())
+	if (bi < 0)
+		return MBA::extVmbase;
+	if (bi >= BCnt())
 		return QString(".error") + MBA::extHtml;
 	if(m_Bases[bi].suffix.isEmpty())
 		return MBA::extHtml;
@@ -798,29 +800,40 @@ void CSolution::MakeUnsavedListR(CMtposList &mpl, MTPOS mtNode)
 	}
 }
 
-bool CSolution::RenameItem(MTPOS tpos, const QString & id)
+bool CSolution::IsFNamesAvailable(MTPOS tpos, const QString & id)
 {
-	if (id == tpos->GetId())
-		return true;
-
-	// check if rename is possible
+	// check if create/move/rename is possible
 	// doc dirs can match with vmbase dir and each other
 	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
 	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
+
 	if (QFileInfo(vmb).exists())
 		return Fail("vmbase file with the same name already exists"), false;
 	if (QFileInfo(dir).exists())
 		return Fail("directory with the same name already exists"), false;
+	
 	for (int bi = 0; bi < BCnt(); bi++) {
 		QString doc = tpos->GetAbsDir(bi) + "/" + id + GetDocExt(bi);
-		if(QFileInfo(doc).exists())
+		if (QFileInfo(doc).exists())
 			return Fail("document with the same name already exists"), false;
 		if (m_Bases[bi].path_is_unique) {
 			QString dir = tpos->parent->GetAbsDir(bi) + "/" + id;
-			if(QFileInfo(dir).exists())
+			if (QFileInfo(dir).exists())
 				return Fail("directory with the same name already exists"), false;
 		}
 	}
+	return true;
+}
+
+bool CSolution::RenameItem(MTPOS tpos, const QString & id)
+{
+	if (id == tpos->GetId())
+		return true;
+	if (!IsFNamesAvailable(tpos, id))
+		return false;
+
+	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
+	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
 
 	// rename vmbase file
 	QFile::rename(tpos->GetVmbAbsPath(), vmb);

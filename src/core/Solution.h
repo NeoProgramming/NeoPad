@@ -84,6 +84,8 @@ public:
     void    Search(const QString &text, unsigned int scope, CMtposList &results);
     bool    SearchInFile(MTPOS pos, const QString &text, unsigned int scope);
 protected:
+	bool    IsFNamesAvailable(MTPOS pos, const QString &id);
+
 	void    AddBase(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath, const QString &prefix);
 
 	bool    LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot);
