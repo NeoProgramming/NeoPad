@@ -849,6 +849,7 @@ bool CSolution::RenameItem(MTPOS tpos, const QString & id)
 	tpos->id = id;
 	UpdateBaseDirs(tpos);
 	HandleChanges(tpos, false);
+	HandleChanges(tpos->parent, false);
 	return true;
 }
 
