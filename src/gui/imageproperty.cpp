@@ -99,9 +99,12 @@ void ImageProperties::accept()
 
 void ImageProperties::onOverview()
 {
+	m_fpath = ui.lineFPath->text();
+	if (m_fpath.isEmpty())
+		m_fpath = INI::LastImageDir.c_str();
 	m_fpath = QFileDialog::getOpenFileName(this, tr("Load Image..."),
-							  INI::LastImageDir.c_str(),
-							  tr("Images (*.png *.jpg *.gif);;All Files (*)"));
+		m_fpath,
+		tr("Images (*.png *.jpg *.gif);;All Files (*)"));
 	if(!m_fpath.isEmpty())
 	{
 		ui.lineFPath->setText(m_fpath);
@@ -139,7 +142,7 @@ void ImageProperties::onCreateImage()
 {
 	// open image editor and put image path to path line
 	// create empty image file and open this file
-	m_fpath = GenerateUniqueFPath(m_adir, "image", m_ext);
+	m_fpath = GenerateUniqueFPath(m_adir, "image", "png");
 	if (ui.comboAction->currentIndex() != static_cast<int>(ImageAction::Extract)) {
 		QImage image(100, 100, QImage::Format_ARGB32);
 		image.fill(QColor(255, 255, 255));

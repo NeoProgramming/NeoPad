@@ -670,6 +670,7 @@ void WebEditView::onInsertImage()
 	ImageProperties dlg;
 	dlg.m_action = static_cast<ImageAction> (INI::LastImageAction);
 	dlg.m_adir = m_Item->GetAbsDir(m_di);
+
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
 		INI::LastImageAction = static_cast<int> (dlg.m_action);
