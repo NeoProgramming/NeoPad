@@ -62,6 +62,7 @@ private slots:
 	void onFindPrev();
 
 	void onItemDoubleClicked(QTreeWidgetItem* item, int column);
+    void onResDoubleClicked(QTreeWidgetItem* curItem, int column);
 	int  onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m);
 
 	void onItemProperties();

@@ -126,7 +126,7 @@ void SlnPanel::initialize()
 
 	connect(ui.treeContents, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onShowContentsMenu(QPoint)));
 	connect(ui.treeContents, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem*, int)));
-    connect(ui.treeResults, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem*, int)));
+    connect(ui.treeResults, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(onResDoubleClicked(QTreeWidgetItem*, int)));
 
     ui.tabWidget->setCurrentIndex(0);
 
@@ -359,6 +359,14 @@ void SlnPanel::OpenDoc(QTreeWidgetItem *item, int di)
 	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
 	mw->DoOpenDoc(tpos, di);
 	UpdateItem(item);
+}
+
+void SlnPanel::onResDoubleClicked(QTreeWidgetItem* curItem, int column)
+{
+    // open document by double click
+    onItemDoubleClicked(curItem, column);
+    // search first occurence
+    onFindNext();
 }
 
 void SlnPanel::onItemDoubleClicked(QTreeWidgetItem* curItem, int column)
