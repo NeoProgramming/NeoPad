@@ -845,12 +845,19 @@ void SlnPanel::EnsureVisible(MTPOS node)
 	}
 }
 
+void SlnPanel::Search(const QString &text)
+{
+    ui.tabWidget->setCurrentIndex(1);
+    ui.lineSearch->setText(text);
+    onSearch();
+}
+
 void SlnPanel::onSearch()
 {
     // searching...
     CMtposList results;
 	setCursor(QCursor(Qt::WaitCursor));
-	QString text = ui.lineSearch->text().toHtmlEscaped();
+    QString text = ui.lineSearch->text().toHtmlEscaped();
 	unsigned int scope = 0;
 	if (ui.checkTree->isChecked())
 		scope |= ESM_TREE;

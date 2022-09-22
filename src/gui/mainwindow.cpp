@@ -1445,3 +1445,9 @@ void MainWindow::OpenLocalLink(const QString &url, int di)
 		return;
 	OpenDoc(pos, di);
 }
+
+void MainWindow::Search(const QString &text)
+{
+    // Search
+    m_wSln->Search(text);
+}

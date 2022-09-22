@@ -45,7 +45,7 @@ public:
 	void loadSettings();
 	void loadScripts();
 	void projectModified(bool modified);
-	
+    void Search(const QString &text);
 	MainWindow *newWindow();
 public:
 	void* FindOpenedDoc(MTPOS pos, int di) override;
@@ -164,7 +164,6 @@ private:
 	bool DoPrjOpen(const QString& fpath);
 	void DoOpenDoc(MTPOS mtPos, int di);
 	bool DoSelectDoc(MTPOS tpos, int di);
-
 	void OpenDoc(MTPOS mtPos, int di);
 	void LoadToCurrentDoc(MTPOS mtPos, int di);
 	void CreateNewDoc(MTPOS mtPos, int di);

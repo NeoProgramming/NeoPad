@@ -58,12 +58,16 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	actionTableDelRow   = new QAction(tr("Delete row"), 0);
 	actionTableDelCol   = new QAction(tr("Delete column"), 0);
 
+    actionSearch  = new QAction(tr("Search"), 0);
+
 	connect(actionTableInsAbove, &QAction::triggered, this, &WebEditView::onTableInsAbove);
 	connect(actionTableInsBelow, &QAction::triggered, this, &WebEditView::onTableInsBelow);
 	connect(actionTableInsLeft, &QAction::triggered, this, &WebEditView::onTableInsLeft);
 	connect(actionTableInsRight, &QAction::triggered, this, &WebEditView::onTableInsRight);
 	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDelRow);
 	connect(actionTableDelCol, &QAction::triggered, this, &WebEditView::onTableDelColumn);
+
+    connect(actionSearch, &QAction::triggered, this, &WebEditView::onSearch);
 
 	// table menu
 	m_menuTable.setTitle("Table");
@@ -82,6 +86,8 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
     m_menuContext.addAction(mw->ui.actionEditCopyText);
 	m_menuContext.addAction(mw->ui.actionEditPaste);
 	m_menuContext.addAction(mw->ui.actionEditPasteText);
+    m_menuContext.addSeparator();
+    m_menuContext.addAction(actionSearch);
 	m_menuContext.addSeparator();
 	m_menuContext.addAction(actionTableProps);
 	m_menuContext.addMenu( &m_menuTable );
@@ -799,6 +805,18 @@ void WebEditView::InsertImage(const QString &image, int w, int h)
 
 	// 3 insert image into document
 	InsertHtml(html);
+}
+
+void WebEditView::onSearch()
+{
+    // 1 get selected text
+    QString sel;
+    sel = page()->selectedText();
+    if(sel.isEmpty())
+        execScript("getFocusText()", &sel);
+
+    // 2 activate search
+    m_wMain->Search(sel);
 }
 
 void WebEditView::onTableProperties()

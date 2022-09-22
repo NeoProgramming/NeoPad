@@ -108,9 +108,11 @@ public slots:
 	void onTableDelRow();
 
 	void onImageProperties();
+
 	void onLinkProperties();
 	void onLinkFollow();
 	void onLinkClicked(const QUrl & url);
+    void onSearch();
 public:
 	bool LoadHtml(MTPOS tpos, int di);
 	bool ReloadHtml();
@@ -149,6 +151,7 @@ private:
 	QAction *actionTableDelCol;
 	QAction *actionImageProps;
 	QAction *actionLinkProps;
+    QAction *actionSearch;
 
 	QWebElement m_elTable;
 	QWebElement m_elTR;

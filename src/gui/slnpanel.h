@@ -40,6 +40,8 @@ public:
 	void SetCurrItemStatus(ETreeStatus status);
 	void SetCurrNodeStatus(ETreeStatus status);
 
+    void Search(const QString &text);
+
 	QIcon& GetTreeItemIcon(ETreeStatus i);
 	QIcon& GetLangItemIcon(ELangStatus i);
 
