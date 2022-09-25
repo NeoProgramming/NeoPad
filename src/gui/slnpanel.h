@@ -40,6 +40,8 @@ public:
 	void SetCurrItemStatus(ETreeStatus status);
 	void SetCurrNodeStatus(ETreeStatus status);
 
+    void Search(const QString &text);
+
 	QIcon& GetTreeItemIcon(ETreeStatus i);
 	QIcon& GetLangItemIcon(ELangStatus i);
 
@@ -60,6 +62,7 @@ private slots:
 	void onFindPrev();
 
 	void onItemDoubleClicked(QTreeWidgetItem* item, int column);
+    void onResDoubleClicked(QTreeWidgetItem* curItem, int column);
 	int  onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m);
 
 	void onItemProperties();
