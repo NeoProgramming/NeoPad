@@ -39,7 +39,7 @@ void NormalizeFName(QString &c)
 unsigned int GenerateUniqueFNum(const QString& path, const QString& name, const QString& ext)
 {
 	// generate a unique filename at a specific path
-	QString spath = path + "/" + name + "." + ext;
+	QString spath = path + "/" + name + "0." + ext;
 	unsigned int n = 0;
 	while (QFileInfo(spath).exists()) {
 		n++;

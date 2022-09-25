@@ -83,6 +83,8 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	m_menuContext.addAction(mw->ui.actionEditPaste);
 	m_menuContext.addAction(mw->ui.actionEditPasteText);
 	m_menuContext.addSeparator();
+	m_menuContext.addAction(mw->ui.actionToolsLink);
+	m_menuContext.addSeparator();
 	m_menuContext.addAction(actionTableProps);
 	m_menuContext.addMenu( &m_menuTable );
 	m_menuContext.addAction(actionImageProps);

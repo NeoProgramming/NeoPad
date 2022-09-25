@@ -1455,7 +1455,7 @@
     <string>Link</string>
    </property>
    <property name="toolTip">
-    <string>Link</string>
+    <string>Web Search/Link</string>
    </property>
   </action>
   <action name="actionProjectStatistics">
