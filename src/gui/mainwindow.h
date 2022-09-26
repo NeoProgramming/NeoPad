@@ -150,7 +150,9 @@ private slots:
 	void onAppForceExit();
 
     void onTreeSync();
-	void onLinkFollow();
+	void onToolsLink();
+	void onToolsSearch();
+	void onToolsTranslate();
 protected:
     void closeEvent(QCloseEvent *);
     

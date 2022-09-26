@@ -50,8 +50,12 @@
         <file>images/file-print.png</file>
         <file>images/file-exportpdf.png</file>
         <file>images/file-reload.png</file>
-        <file>images/file-link.png</file>
     </qresource>
+	<qresource prefix="/tools">
+	    <file>images/tools-link.png</file>
+		<file>images/tools-search.png</file>
+		<file>images/tools-translate.png</file>
+	</qresource>
     <qresource prefix="/msc">
         <file>images/close.png</file>
         <file>images/searchnext.png</file>

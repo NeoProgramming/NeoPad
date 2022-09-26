@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1096</width>
+    <width>1101</width>
     <height>672</height>
    </rect>
   </property>
@@ -76,7 +76,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1096</width>
+     <width>1101</width>
      <height>18</height>
     </rect>
    </property>
@@ -298,7 +298,6 @@
    <addaction name="actionTreeRemoveItem"/>
    <addaction name="separator"/>
    <addaction name="actionTreeSync"/>
-   <addaction name="actionToolsLink"/>
   </widget>
   <widget class="QToolBar" name="toolBarInsert">
    <property name="windowTitle">
@@ -343,6 +342,20 @@
    <addaction name="actionParaQuote"/>
    <addaction name="actionParaAnn"/>
    <addaction name="actionParaNote"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarTools">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionToolsLink"/>
+   <addaction name="actionToolsSearch"/>
+   <addaction name="actionToolsTranslate"/>
   </widget>
   <action name="actionAppExit">
    <property name="icon">
@@ -1449,7 +1462,7 @@
   <action name="actionToolsLink">
    <property name="icon">
     <iconset resource="../neopad.qrc">
-     <normaloff>:/file/images/file-link.png</normaloff>:/file/images/file-link.png</iconset>
+     <normaloff>:/tools/images/tools-link.png</normaloff>:/tools/images/tools-link.png</iconset>
    </property>
    <property name="text">
     <string>Link</string>
@@ -1506,6 +1519,24 @@
   <action name="actionTestClipboard">
    <property name="text">
     <string>Test Clipboard</string>
+   </property>
+  </action>
+  <action name="actionToolsSearch">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tools/images/tools-search.png</normaloff>:/tools/images/tools-search.png</iconset>
+   </property>
+   <property name="text">
+    <string>Search</string>
+   </property>
+  </action>
+  <action name="actionToolsTranslate">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/tools/images/tools-translate.png</normaloff>:/tools/images/tools-translate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Translate</string>
    </property>
   </action>
  </widget>

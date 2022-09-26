@@ -72,6 +72,7 @@ MainWindow::MainWindow()
     ui.toolBarProject->setIconSize( tbSize );
     ui.toolBarText->setIconSize( tbSize );
     ui.toolBarTree->setIconSize( tbSize );
+	ui.toolBarTools->setIconSize( tbSize );
 		
 	m_wArea = new QMdiArea;
 	m_wArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -119,6 +120,7 @@ MainWindow::MainWindow()
 	SetAutoRaiseToolBar(ui.toolBarProject, false);
 	SetAutoRaiseToolBar(ui.toolBarText, false);
 	SetAutoRaiseToolBar(ui.toolBarTree, false);
+	SetAutoRaiseToolBar(ui.toolBarTools, false);
 	
 	// read script
 	loadScripts();
@@ -219,7 +221,9 @@ MainWindow::MainWindow()
 	connect(ui.actionAppForceExit,		&QAction::triggered, this, &MainWindow::onAppForceExit);
 	
     connect(ui.actionTreeSync,			&QAction::triggered, this, &MainWindow::onTreeSync);
-	connect(ui.actionToolsLink,         &QAction::triggered, this, &MainWindow::onLinkFollow);
+	connect(ui.actionToolsLink,         &QAction::triggered, this, &MainWindow::onToolsLink);
+	connect(ui.actionToolsSearch,		&QAction::triggered, this, &MainWindow::onToolsSearch);
+	connect(ui.actionToolsTranslate,	&QAction::triggered, this, &MainWindow::onToolsTranslate);
 
 	QAction *viewsAction = createPopupMenu()->menuAction();
 	viewsAction->setText(tr("Toolbars & panels"));
@@ -439,13 +443,31 @@ void MainWindow::onTreeSync()
     }
 }
 
-void MainWindow::onLinkFollow()
+void MainWindow::onToolsLink()
 {
 	// following a link
     WebEditView *wnd = GetActiveMdiChild();
     if(wnd) {
-		wnd->onLinkFollow();
+		wnd->onToolsLink();
     }
+}
+
+void MainWindow::onToolsSearch()
+{
+	// following a link
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd) {
+		wnd->onToolsSearch();
+	}
+}
+
+void MainWindow::onToolsTranslate()
+{
+	// following a link
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd) {
+		wnd->onToolsTranslate();
+	}
 }
 //-------------------------------------------------
 void MainWindow::onProjectNew()

@@ -58,17 +58,13 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	actionTableDelRow   = new QAction(tr("Delete row"), 0);
 	actionTableDelCol   = new QAction(tr("Delete column"), 0);
 
-    actionSearch  = new QAction(tr("Search"), 0);
-
 	connect(actionTableInsAbove, &QAction::triggered, this, &WebEditView::onTableInsAbove);
 	connect(actionTableInsBelow, &QAction::triggered, this, &WebEditView::onTableInsBelow);
 	connect(actionTableInsLeft, &QAction::triggered, this, &WebEditView::onTableInsLeft);
 	connect(actionTableInsRight, &QAction::triggered, this, &WebEditView::onTableInsRight);
 	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDelRow);
 	connect(actionTableDelCol, &QAction::triggered, this, &WebEditView::onTableDelColumn);
-
-    connect(actionSearch, &QAction::triggered, this, &WebEditView::onSearch);
-
+	
 	// table menu
 	m_menuTable.setTitle("Table");
 	m_menuTable.addAction(actionTableInsAbove);
@@ -87,9 +83,9 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	m_menuContext.addAction(mw->ui.actionEditPaste);
 	m_menuContext.addAction(mw->ui.actionEditPasteText);
     m_menuContext.addSeparator();
-    m_menuContext.addAction(actionSearch);
-	m_menuContext.addSeparator();
 	m_menuContext.addAction(mw->ui.actionToolsLink);
+	m_menuContext.addAction(mw->ui.actionToolsSearch);
+	m_menuContext.addAction(mw->ui.actionToolsTranslate);
 	m_menuContext.addSeparator();
 	m_menuContext.addAction(actionTableProps);
 	m_menuContext.addMenu( &m_menuTable );
@@ -809,18 +805,6 @@ void WebEditView::InsertImage(const QString &image, int w, int h)
 	InsertHtml(html);
 }
 
-void WebEditView::onSearch()
-{
-    // 1 get selected text
-    QString sel;
-    sel = page()->selectedText();
-    if(sel.isEmpty())
-        execScript("getFocusText()", &sel);
-
-    // 2 activate search
-    m_wMain->Search(sel);
-}
-
 void WebEditView::onTableProperties()
 {
 	if(m_elTable.isNull()) {
@@ -976,8 +960,18 @@ void WebEditView::Find(const QString &text, bool backward)
 	setFocus();
 }
 
+void WebEditView::onLinkClicked(const QUrl & url)
+{
+	QString s = url.toString();
+	if (!s.startsWith("http"))
+		m_wMain->OpenLocalLink(s, m_di);
+	else if (INI::BrowserPath.empty())
+		QMessageBox::warning(this, "Error", "BrowserPath is not set!");
+	else
+		OpenInExternalApplication(this, U16(INI::BrowserPath), s);
+}
 
-void WebEditView::onLinkFollow()
+void WebEditView::onToolsLink()
 {
 	// open the highlighted link in the browser (if it starts with http (s) or in a search engine)
 	QString sel;
@@ -993,13 +987,28 @@ void WebEditView::onLinkFollow()
 		OpenInExternalApplication(this, U16(INI::BrowserPath), "https://www.google.com/search?q=" + sel);
 }
 
-void WebEditView::onLinkClicked(const QUrl & url)
+void WebEditView::onToolsSearch()
 {
-	QString s = url.toString();
-    if (!s.startsWith("http"))
-        m_wMain->OpenLocalLink(s, m_di);
-    else if (INI::BrowserPath.empty())
-		QMessageBox::warning(this, "Error", "BrowserPath is not set!");
-    else
-		OpenInExternalApplication(this, U16(INI::BrowserPath), s);
+	// 1 get selected text
+	QString sel;
+	sel = page()->selectedText();
+	if (sel.isEmpty())
+		execScript("getFocusText()", &sel);
+
+	// 2 activate search
+	m_wMain->Search(sel);
 }
+
+void WebEditView::onToolsTranslate()
+{
+	QString sel;
+	sel = page()->selectedText();
+	if (sel.isEmpty())
+		execScript("getFocusText()", &sel);
+	if (INI::BrowserPath.empty())
+		QMessageBox::warning(this, "Error", "BrowserPath is not set!");
+	else
+		OpenInExternalApplication(this, U16(INI::BrowserPath), "http://translate.google.com/#auto/en/" + sel);
+}
+
+
