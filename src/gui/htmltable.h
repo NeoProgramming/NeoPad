@@ -16,8 +16,10 @@ public:
 
 	void SetDimensions(int rows, int cols);
 
-	QString MakeHtml(int rowsCount, int colsCount);
+    QString MakeHtml(int rowsCount, int colsCount);
+    QString MakeHtml(const QString &text);
 	QString MakeHtmlRow(int colsCount);
+    QString MakeHtmlRow(const QString &text);
 
 	void InsertRowAbove(QWebElement &tr);
 	void InsertRowBelow(QWebElement &tr);

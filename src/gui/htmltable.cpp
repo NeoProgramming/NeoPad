@@ -43,6 +43,25 @@ int HtmlTable::GetRowCount()
 	return rowsCount;
 }
 
+QString HtmlTable::MakeHtmlRow(const QString &text)
+{
+    // convert tabbed text to html row
+    QString html = "<tr>";
+    int start = 0;
+    int end = 0;
+    while(start < text.length()) {
+        html += "<td>";
+        end = text.indexOf('\t', start);
+        if(end<0)
+            end = text.length();
+        html += text.mid(start, end-start);
+        start = end+1;
+        html += "</td>";
+    }
+    html += "</tr>";
+    return html;
+}
+
 QString HtmlTable::MakeHtmlRow(int colsCount)
 {
 	QString html = "<tr>";
@@ -52,10 +71,27 @@ QString HtmlTable::MakeHtmlRow(int colsCount)
 	return html;
 }
 
+QString HtmlTable::MakeHtml(const QString &text)
+{
+    QString html = "<table>";
+    int start = 0;
+    int end = 0;
+    while(start < text.length()) {
+        end = text.indexOf(QRegExp("[\r\n]"), start);
+        if(end<0)
+            end = text.length();
+        html += MakeHtmlRow(text.mid(start, end-start));
+        start = end+1;
+        if(start < text.length() && text[start+1]=='\n')
+            start++;
+    }
+    html += "</table>";
+    return html;
+}
+
 QString HtmlTable::MakeHtml(int rowsCount, int colsCount)
 {
-	QString html;
-	html.sprintf("<table>");
+    QString html = "<table>";
 	for (int r=0; r<rowsCount; r++)
 		html += MakeHtmlRow(colsCount);
 	html += "</table>";
