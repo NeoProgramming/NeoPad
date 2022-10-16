@@ -443,7 +443,8 @@ void WebEditView::onEditPasteTable()
 //    clipboard->setText(originalText);
 
     HtmlTable table;
-    InsertHtml(table.MakeHtml(originalText));
+	QString html = table.MakeHtml(originalText);
+    InsertHtml(html);
 
     // debug
 //    clipboard->setText(table.MakeHtml(originalText));
@@ -749,6 +750,7 @@ void WebEditView::InsertHtml(QString html)
 {
 	html.replace('\r', ' ');
 	html.replace('\n', ' ');
+	html.replace("\'", "&rsquo;");
 	
 	QString js = 
 		"var r = document.createTextNode('" + html + " '); "
