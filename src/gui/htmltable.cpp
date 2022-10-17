@@ -21,6 +21,11 @@ int HtmlTable::GetColCount()
 	QWebElement tr = m_table.findFirst("tr");
 	if(tr.isNull())
 		return -1;
+	return GetCellCountInRow(tr);
+}
+
+int HtmlTable::GetCellCountInRow(QWebElement &tr)
+{
 	QWebElement td = tr.findFirst("td");
 	int colsCount = 0;
 	while (!td.isNull()) {
@@ -34,8 +39,9 @@ int HtmlTable::GetRowCount()
 {
 	if (m_table.isNull())
 		return -1;
-	int rowsCount = 0;
+	
 	QWebElement tr = m_table.findFirst("tr");
+	int rowsCount = 0;
 	while (!tr.isNull()) {
 		rowsCount++;
 		tr = tr.nextSibling();
@@ -62,11 +68,18 @@ QString HtmlTable::MakeHtmlRow(const QString &text)
     return html;
 }
 
+QString HtmlTable::MakeHtmlCells(int cellsCount)
+{
+	QString html;
+	for (int c = 0; c < cellsCount; c++)
+		html += "<td>&nbsp;</td>";
+	return html;
+}
+
 QString HtmlTable::MakeHtmlRow(int colsCount)
 {
 	QString html = "<tr>";
-	for (int c = 0; c < colsCount; c++)
-		html += "<td>&nbsp;</td>";
+	html += MakeHtmlCells(colsCount);
 	html += "</tr>";
 	return html;
 }
@@ -225,6 +238,20 @@ void HtmlTable::InsertRowBelow(QWebElement &tr)
 		return;
 	int colsCount = GetColCount();
 	tr.appendOutside(MakeHtmlRow(colsCount));
+}
+
+bool HtmlTable::NormalizeRow(QWebElement &tr)
+{
+	if (tr.isNull())
+		return false;
+	int colsCount = GetColCount();
+	int cellCount = GetCellCountInRow(tr);
+	if (cellCount < colsCount) {
+		QString cells = MakeHtmlCells(colsCount - cellCount);
+		tr.appendInside(cells);
+		return true;
+	}
+	return false;
 }
 
 void HtmlTable::InsertColLeft(QWebElement &tdi)
