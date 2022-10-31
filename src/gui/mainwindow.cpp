@@ -125,36 +125,37 @@ MainWindow::MainWindow()
 	// read script
 	loadScripts();
     
-	connect(ui.actionWindowClose,	&QAction::triggered, m_wArea, &QMdiArea::closeActiveSubWindow);
-	connect(ui.actionWindowCloseAll,&QAction::triggered, m_wArea, &QMdiArea::closeAllSubWindows);
-	connect(ui.actionWindowTile,	&QAction::triggered, m_wArea, &QMdiArea::tileSubWindows);
-	connect(ui.actionWindowCascade, &QAction::triggered, m_wArea, &QMdiArea::cascadeSubWindows);
+	connect(ui.actionWindowClose,		&QAction::triggered, m_wArea, &QMdiArea::closeActiveSubWindow);
+	connect(ui.actionWindowCloseAll,	&QAction::triggered, m_wArea, &QMdiArea::closeAllSubWindows);
+	connect(ui.actionWindowTile,		&QAction::triggered, m_wArea, &QMdiArea::tileSubWindows);
+	connect(ui.actionWindowCascade,		&QAction::triggered, m_wArea, &QMdiArea::cascadeSubWindows);
 
-	connect(ui.actionWindowHTile,	&QAction::triggered, this, &MainWindow::onTileSubWindowsHorizontally);
-	connect(ui.actionWindowVTile,	&QAction::triggered, this, &MainWindow::onTileSubWindowsVertically);
-	connect(ui.actionAboutNeopad,   &QAction::triggered, this, &MainWindow::onAppAbout);
-	connect(ui.actionAboutQt,       &QAction::triggered, this, &MainWindow::onAppAboutQt);
-	connect(ui.actionClearDoc,      &QAction::triggered, this, &MainWindow::onEditClearDoc);
-	connect(ui.actionCorrectCssPath,&QAction::triggered, this, &MainWindow::onEditFixCssPath);
+	connect(ui.actionWindowHTile,		&QAction::triggered, this, &MainWindow::onTileSubWindowsHorizontally);
+	connect(ui.actionWindowVTile,		&QAction::triggered, this, &MainWindow::onTileSubWindowsVertically);
+	connect(ui.actionAboutNeopad,		&QAction::triggered, this, &MainWindow::onAppAbout);
+	connect(ui.actionAboutQt,			&QAction::triggered, this, &MainWindow::onAppAboutQt);
+	connect(ui.actionClearDoc,			&QAction::triggered, this, &MainWindow::onEditClearDoc);
+	connect(ui.actionCorrectCssPath,	&QAction::triggered, this, &MainWindow::onEditFixCssPath);
 
-	connect(ui.actionEditCut,		&QAction::triggered, this, &MainWindow::onEditCut);
-	connect(ui.actionEditCutText,	&QAction::triggered, this, &MainWindow::onEditCutText);
-	connect(ui.actionEditCopy,		&QAction::triggered, this, &MainWindow::onEditCopy);
-    connect(ui.actionEditCopyText,	&QAction::triggered, this, &MainWindow::onEditCopyText);
-	connect(ui.actionEditPaste,		&QAction::triggered, this, &MainWindow::onEditPaste);
-	connect(ui.actionEditPasteText, &QAction::triggered, this, &MainWindow::onEditPasteText);
-    connect(ui.actionEditPasteTable,&QAction::triggered, this, &MainWindow::onEditPasteTable);
-	connect(ui.actionEditUndo,		&QAction::triggered, this, &MainWindow::onEditUndo);
-	connect(ui.actionEditRedo,		&QAction::triggered, this, &MainWindow::onEditRedo);
-	connect(ui.actionEditRedo,		&QAction::triggered, this, &MainWindow::onEditRedo);
-	connect(ui.actionEditUntag,		&QAction::triggered, this, &MainWindow::onEditUntag);
-	connect(ui.actionEditOutside,	&QAction::triggered, this, &MainWindow::onEditOutside);
-	connect(ui.actionEditInfo,		&QAction::triggered, this, &MainWindow::onEditTagInfo);
-	connect(ui.actionEditUntable,	&QAction::triggered, this, &MainWindow::onEditUntable);
+	connect(ui.actionEditCut,			&QAction::triggered, this, &MainWindow::onEditCut);
+	connect(ui.actionEditCutText,		&QAction::triggered, this, &MainWindow::onEditCutText);
+	connect(ui.actionEditCopy,			&QAction::triggered, this, &MainWindow::onEditCopy);
+    connect(ui.actionEditCopyText,		&QAction::triggered, this, &MainWindow::onEditCopyText);
+	connect(ui.actionEditPaste,			&QAction::triggered, this, &MainWindow::onEditPaste);
+	connect(ui.actionEditPasteText,		&QAction::triggered, this, &MainWindow::onEditPasteText);
+    connect(ui.actionEditPasteAsTable,	&QAction::triggered, this, &MainWindow::onEditPasteAsTable);
+	connect(ui.actionEditPasteInTable,	&QAction::triggered, this, &MainWindow::onEditPasteInTable);
+	connect(ui.actionEditUndo,			&QAction::triggered, this, &MainWindow::onEditUndo);
+	connect(ui.actionEditRedo,			&QAction::triggered, this, &MainWindow::onEditRedo);
+	connect(ui.actionEditRedo,			&QAction::triggered, this, &MainWindow::onEditRedo);
+	connect(ui.actionEditUntag,			&QAction::triggered, this, &MainWindow::onEditUntag);
+	connect(ui.actionEditOutside,		&QAction::triggered, this, &MainWindow::onEditOutside);
+	connect(ui.actionEditInfo,			&QAction::triggered, this, &MainWindow::onEditTagInfo);
+	connect(ui.actionEditUntable,		&QAction::triggered, this, &MainWindow::onEditUntable);
 
-	connect(ui.actionZoomIn,		&QAction::triggered,		this, &MainWindow::onZoomIn);
-	connect(ui.actionZoomOut,		&QAction::triggered,		this, &MainWindow::onZoomOut);
-	connect(ui.actionZoomNormal,	&QAction::triggered,		this, &MainWindow::onZoomNormal);
+	connect(ui.actionZoomIn,			&QAction::triggered,		this, &MainWindow::onZoomIn);
+	connect(ui.actionZoomOut,			&QAction::triggered,		this, &MainWindow::onZoomOut);
+	connect(ui.actionZoomNormal,		&QAction::triggered,		this, &MainWindow::onZoomNormal);
 
 	connect(ui.actionTextBold,			&QAction::triggered, this, &MainWindow::onTextBold);
 	connect(ui.actionTextItalic,		&QAction::triggered, this, &MainWindow::onTextItalic);
@@ -865,12 +866,20 @@ void MainWindow::onEditPasteText()
 		wnd->onEditPasteText();
 }
 
-void MainWindow::onEditPasteTable()
+void MainWindow::onEditPasteAsTable()
 {
     WebEditView *wnd = GetActiveMdiChild();
     if (wnd)
-        wnd->onEditPasteTable();
+        wnd->onEditPasteAsTable();
 }
+
+void MainWindow::onEditPasteInTable()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onEditPasteInTable();
+}
+
 
 void MainWindow::onEditUndo()
 {

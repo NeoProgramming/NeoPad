@@ -75,6 +75,8 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	m_menuTable.addAction(actionTableInsLeft);
 	m_menuTable.addAction(actionTableInsRight);
 	m_menuTable.addSeparator();
+	m_menuTable.addAction(mw->ui.actionEditPasteInTable);
+	m_menuTable.addSeparator();
 	m_menuTable.addAction(actionTableDelRow);
 	m_menuTable.addAction(actionTableDelCol);
 
@@ -85,8 +87,8 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
     m_menuContext.addAction(mw->ui.actionEditCopyText);
 	m_menuContext.addAction(mw->ui.actionEditPaste);
 	m_menuContext.addAction(mw->ui.actionEditPasteText);
-    m_menuContext.addAction(mw->ui.actionEditPasteTable);
-    m_menuContext.addSeparator();
+    m_menuContext.addAction(mw->ui.actionEditPasteAsTable);
+	m_menuContext.addSeparator();
 	m_menuContext.addAction(mw->ui.actionToolsLink);
 	m_menuContext.addAction(mw->ui.actionToolsSearch);
 	m_menuContext.addAction(mw->ui.actionToolsTranslate);
@@ -439,7 +441,7 @@ void WebEditView::onEditPasteText()
 	triggerPageAction(QWebPage::Paste);
 }
 
-void WebEditView::onEditPasteTable()
+void WebEditView::onEditPasteAsTable()
 {
     // paste text as table
     QClipboard *clipboard = QApplication::clipboard();
@@ -453,6 +455,21 @@ void WebEditView::onEditPasteTable()
     // debug
 //    clipboard->setText(table.MakeHtml(originalText));
 //    triggerPageAction(QWebPage::Paste);
+}
+
+void WebEditView::onEditPasteInTable()
+{
+	if (m_elTable.isNull()) {
+		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+		return;
+	}
+	HtmlTable table(m_elTable);
+
+	QClipboard *clipboard = QApplication::clipboard();
+	QString originalText = clipboard->text();
+
+	table.InsertData(originalText, m_elTD);
+	setWindowModified(true);
 }
 
 void WebEditView::onEditPasteSpecial()

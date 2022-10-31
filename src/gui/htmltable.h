@@ -23,6 +23,8 @@ public:
 	QString MakeHtmlRow(int colsCount);
     QString MakeHtmlRow(const QString &text);
 
+	void InsertData(const QString &text, QWebElement &td);
+
 	void InsertRowAbove(QWebElement &tr);
 	void InsertRowBelow(QWebElement &tr);
 
@@ -35,8 +37,14 @@ public:
 	bool NormalizeRow(QWebElement &tr);
 	
 protected:
+	void Parse(const QString &text, QList<QStringList> &data);
+	void ParseRow(const QString &text, QStringList &row);
+	int  Normalize(QList<QStringList> &data);
 	void SetTrColCount(QWebElement &tr, int colsCount);
+	
+	int  GetRowIndex(QWebElement &td);
 	int  GetColIndex(QWebElement &td);
+
 	QWebElement GetColByIndex(QWebElement &tr, int ti);
 private:
 	QWebElement m_table;

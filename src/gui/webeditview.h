@@ -37,7 +37,8 @@ public slots:
     void onEditCopyText();
 	void onEditPaste();
 	void onEditPasteText();
-    void onEditPasteTable();
+    void onEditPasteAsTable();
+	void onEditPasteInTable();
 	void onEditPasteSpecial();
 
 	void onEditUntag();

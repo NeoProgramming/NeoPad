@@ -171,6 +171,22 @@ void HtmlTable::SetDimensions(int rowsCount, int colsCount)
 	}
 }
 
+int HtmlTable::GetRowIndex(QWebElement &tdi)
+{
+	int n = 0;
+	QWebElement tri = tdi.parent();
+	if (tri.isNull())
+		return -1;
+	QWebElement tr = m_table.findFirst("tr");
+	while (!tr.isNull()) {
+		if (tr == tri)
+			return n;
+		n += 1;
+		tr = tr.nextSibling();
+	}
+	return -1;
+}
+
 int HtmlTable::GetColIndex(QWebElement &tdi)
 {
 	int n = 0;
@@ -286,3 +302,72 @@ void HtmlTable::InsertColRight(QWebElement &tdi)
 	}
 }
 
+void HtmlTable::Parse(const QString &text, QList<QStringList> &data)
+{
+	int start = 0;
+	int end = 0;
+	while (start < text.length()) {
+		end = text.indexOf(QRegExp("[\r\n]"), start);
+		if (end < 0)
+			end = text.length();
+		QStringList sl;
+		ParseRow(text.mid(start, end - start), sl);
+		data.push_back(sl);		
+		start = end + 1;
+		if (start < text.length() && text[start + 1] == '\n')
+			start++;
+	}
+}
+
+void HtmlTable::ParseRow(const QString &text, QStringList &row)
+{
+	int start = 0;
+	int end = 0;
+	while (start < text.length()) {
+		end = text.indexOf('\t', start);
+		if (end < 0)
+			end = text.length();
+		row.push_back(text.mid(start, end - start));
+		start = end + 1;
+	}
+}
+
+int HtmlTable::Normalize(QList<QStringList> &data)
+{
+	int cols = 0;
+	for (auto &row : data) {
+		cols = std::max(cols, row.count());
+	}
+	for (auto &row : data) {
+		while (row.count() < cols)
+			row.push_back("");
+	}
+	return cols;
+}
+
+void HtmlTable::InsertData(const QString &text, QWebElement &td)
+{
+	QList<QStringList> data;
+	Parse(text, data);
+	int cols = Normalize(data);
+	int rows = data.count();
+
+	// row & col of td
+	int col = GetColIndex(td);
+	int row = GetRowIndex(td);
+	
+	cols = std::max(col + cols, GetColCount());
+	rows = std::max(row + rows, GetRowCount());
+	SetDimensions(rows, cols);
+	
+	// insert
+	QWebElement tr = td.parent();
+	for (auto &r : data) {
+		QWebElement td = GetColByIndex(tr, col);
+		for (auto &c : r) {
+			td.setPlainText(c);
+			td = td.nextSibling();
+		}
+		tr = tr.nextSibling();
+	}
+}
