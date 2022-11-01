@@ -698,5 +698,8 @@
     <Image Include="src\images\skull.gif">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="src\images\edit-pastetable.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

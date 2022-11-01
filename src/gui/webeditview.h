@@ -38,7 +38,6 @@ public slots:
 	void onEditPaste();
 	void onEditPasteText();
     void onEditPasteAsTable();
-	void onEditPasteInTable();
 	void onEditPasteSpecial();
 
 	void onEditUntag();
@@ -109,6 +108,7 @@ public slots:
 	void onTableInsRight();
 	void onTableDelColumn();
 	void onTableDelRow();
+	void onTablePasteData();
 
 	void onImageProperties();
 
@@ -156,6 +156,7 @@ private:
 	QAction *actionTableInsRight;
 	QAction *actionTableDelRow;
 	QAction *actionTableDelCol;
+	QAction *actionTablePasteData;
 	QAction *actionImageProps;
 	QAction *actionLinkProps;
     

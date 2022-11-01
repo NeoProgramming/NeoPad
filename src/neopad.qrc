@@ -44,6 +44,7 @@
         <file>images/edit-outside.png</file>
         <file>images/edit-taginfo.png</file>
         <file>images/edit-erase.png</file>
+        <file>images/edit-pastetable.png</file>
     </qresource>
     <qresource prefix="/file">
         <file>images/file-saveas.png</file>
@@ -51,11 +52,11 @@
         <file>images/file-exportpdf.png</file>
         <file>images/file-reload.png</file>
     </qresource>
-	<qresource prefix="/tools">
-	    <file>images/tools-link.png</file>
-		<file>images/tools-search.png</file>
-		<file>images/tools-translate.png</file>
-	</qresource>
+    <qresource prefix="/tools">
+        <file>images/tools-link.png</file>
+        <file>images/tools-search.png</file>
+        <file>images/tools-translate.png</file>
+    </qresource>
     <qresource prefix="/msc">
         <file>images/close.png</file>
         <file>images/searchnext.png</file>

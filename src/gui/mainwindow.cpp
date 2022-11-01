@@ -144,7 +144,6 @@ MainWindow::MainWindow()
 	connect(ui.actionEditPaste,			&QAction::triggered, this, &MainWindow::onEditPaste);
 	connect(ui.actionEditPasteText,		&QAction::triggered, this, &MainWindow::onEditPasteText);
     connect(ui.actionEditPasteAsTable,	&QAction::triggered, this, &MainWindow::onEditPasteAsTable);
-	connect(ui.actionEditPasteInTable,	&QAction::triggered, this, &MainWindow::onEditPasteInTable);
 	connect(ui.actionEditUndo,			&QAction::triggered, this, &MainWindow::onEditUndo);
 	connect(ui.actionEditRedo,			&QAction::triggered, this, &MainWindow::onEditRedo);
 	connect(ui.actionEditRedo,			&QAction::triggered, this, &MainWindow::onEditRedo);
@@ -872,14 +871,6 @@ void MainWindow::onEditPasteAsTable()
     if (wnd)
         wnd->onEditPasteAsTable();
 }
-
-void MainWindow::onEditPasteInTable()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onEditPasteInTable();
-}
-
 
 void MainWindow::onEditUndo()
 {

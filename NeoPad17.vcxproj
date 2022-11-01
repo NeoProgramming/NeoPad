@@ -475,6 +475,7 @@
     <ResourceCompile Include="src\neopad.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="src\images\edit-pastetable.png" />
     <Image Include="src\images\skull.gif" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -58,6 +58,7 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	actionTableInsRight = new QAction(tr("Insert column right"), 0);
 	actionTableDelRow   = new QAction(tr("Delete row"), 0);
 	actionTableDelCol   = new QAction(tr("Delete column"), 0);
+	actionTablePasteData= new QAction(tr("Paste Data"), 0);
 
 	connect(actionTableInsAbove, &QAction::triggered, this, &WebEditView::onTableInsAbove);
 	connect(actionTableInsBelow, &QAction::triggered, this, &WebEditView::onTableInsBelow);
@@ -66,6 +67,7 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	connect(actionTableInsRight, &QAction::triggered, this, &WebEditView::onTableInsRight);
 	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDelRow);
 	connect(actionTableDelCol, &QAction::triggered, this, &WebEditView::onTableDelColumn);
+	connect(actionTablePasteData, &QAction::triggered, this, &WebEditView::onTablePasteData);
 	
 	// table menu
 	m_menuTable.setTitle("Table");
@@ -75,7 +77,7 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	m_menuTable.addAction(actionTableInsLeft);
 	m_menuTable.addAction(actionTableInsRight);
 	m_menuTable.addSeparator();
-	m_menuTable.addAction(mw->ui.actionEditPasteInTable);
+	m_menuTable.addAction(actionTablePasteData);
 	m_menuTable.addSeparator();
 	m_menuTable.addAction(actionTableDelRow);
 	m_menuTable.addAction(actionTableDelCol);
@@ -344,6 +346,7 @@ void WebEditView::contextMenuEvent ( QContextMenuEvent * e )
 		actionTableInsRight->setEnabled(ctx & CTX_TABLE);
 		actionTableDelRow->setEnabled(ctx & CTX_TABLE);
 		actionTableDelCol->setEnabled(ctx & CTX_TABLE);
+		actionTablePasteData->setEnabled(ctx & CTX_TABLE);
 		
 		m_menuContext.exec(e->globalPos());
 	}
@@ -457,7 +460,7 @@ void WebEditView::onEditPasteAsTable()
 //    triggerPageAction(QWebPage::Paste);
 }
 
-void WebEditView::onEditPasteInTable()
+void WebEditView::onTablePasteData()
 {
 	if (m_elTable.isNull()) {
 		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);

@@ -67,7 +67,6 @@
    <addaction name="actionEditPaste"/>
    <addaction name="actionEditPasteText"/>
    <addaction name="actionEditPasteAsTable"/>
-   <addaction name="actionEditPasteInTable"/>
    <addaction name="actionEditUntag"/>
    <addaction name="actionEditUntable"/>
    <addaction name="actionEditOutside"/>
@@ -1545,25 +1544,13 @@
   <action name="actionEditPasteAsTable">
    <property name="icon">
     <iconset resource="../neopad.qrc">
-     <normaloff>:/edit/images/edit-pastetext.png</normaloff>:/edit/images/edit-pastetext.png</iconset>
+     <normaloff>:/edit/images/edit-pastetable.png</normaloff>:/edit/images/edit-pastetable.png</iconset>
    </property>
    <property name="text">
     <string>Paste as Table</string>
    </property>
    <property name="toolTip">
     <string>Paste as Table</string>
-   </property>
-  </action>
-  <action name="actionEditPasteInTable">
-   <property name="icon">
-    <iconset resource="../neopad.qrc">
-     <normaloff>:/edit/images/edit-pastetext.png</normaloff>:/edit/images/edit-pastetext.png</iconset>
-   </property>
-   <property name="text">
-    <string>Paste in Table</string>
-   </property>
-   <property name="toolTip">
-    <string>Paste in Table</string>
    </property>
   </action>
  </widget>
