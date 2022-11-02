@@ -24,6 +24,7 @@ public:
     QString MakeHtmlRow(const QString &text);
 
 	void InsertData(const QString &text, QWebElement &td);
+	void AppendData(const QString &text);
 
 	void InsertRowAbove(QWebElement &tr);
 	void InsertRowBelow(QWebElement &tr);

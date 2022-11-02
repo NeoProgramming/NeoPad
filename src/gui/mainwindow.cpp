@@ -179,6 +179,8 @@ MainWindow::MainWindow()
 	connect(ui.actionInsertDatetime,	&QAction::triggered, this, &MainWindow::onInsertDateTime);
 	connect(ui.actionInsertSnippet,		&QAction::triggered, this, &MainWindow::onInsertSnippet);
 	connect(ui.actionInsertSymbol,		&QAction::triggered, this, &MainWindow::onInsertSymbol);
+
+	connect(ui.actionTableAppendData,   &QAction::triggered,   this, &MainWindow::onTableAppendData);
 	
 	connect(ui.actionParaMarkList,		&QAction::triggered, this, &MainWindow::onInsertBulList);
 	connect(ui.actionParaNumList,		&QAction::triggered, this, &MainWindow::onInsertNumList);
@@ -1480,4 +1482,11 @@ void MainWindow::Search(const QString &text)
 {
     // Search
     m_wSln->Search(text);
+}
+
+void MainWindow::onTableAppendData()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTableAppendData();
 }

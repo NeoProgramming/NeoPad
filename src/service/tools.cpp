@@ -13,8 +13,7 @@ extern QTextCodec *codecUtf8;
 
 bool IsBlank(const QString &s)
 {
-	
-	return s.isEmpty();
+	return s.trimmed().isEmpty();
 }
 
 void AddSlash(QString &path)

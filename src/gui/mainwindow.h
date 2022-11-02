@@ -144,6 +144,8 @@ private slots:
 	void onInsertSymbol();
 	void onInsertNumList();
 	void onInsertBulList();
+
+	void onTableAppendData();
 	    
 	void onAppAbout();
 	void onAppAboutQt();

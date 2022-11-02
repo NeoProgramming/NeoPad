@@ -475,6 +475,19 @@ void WebEditView::onTablePasteData()
 	setWindowModified(true);
 }
 
+QWebElement WebEditView::getTag()
+{
+	QWebFrame *frame = this->page()->mainFrame();
+	QWebElement el = frame->documentElement(); // html?
+	QString s = el.tagName();
+	el = el.findFirst("BODY");
+	s = el.tagName();
+	el = el.findFirst("TABLE");
+	s = el.tagName();
+	
+	return el;
+}
+
 void WebEditView::onEditPasteSpecial()
 {
 	QClipboard *clipboard = QApplication::clipboard();
@@ -1063,4 +1076,21 @@ void WebEditView::onToolsTranslate()
 		OpenInExternalApplication(this, U16(INI::BrowserPath), "http://translate.google.com/#auto/en/" + sel);
 }
 
+void WebEditView::onTableAppendData()
+{
+	// paste into end of table
+	if (m_elTable.isNull()) {
+		m_elTable = getTag();
+		if (m_elTable.isNull()) {
+			QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+			return;
+		}
+	}
+	HtmlTable table(m_elTable);
+
+	QClipboard *clipboard = QApplication::clipboard();
+	QString originalText = clipboard->text();
+	table.AppendData(originalText);
+	setWindowModified(true);
+}
 

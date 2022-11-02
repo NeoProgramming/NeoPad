@@ -94,6 +94,8 @@ public slots:
 	void onInsertNumList();
 	void onInsertBulList();
 
+	void onTableAppendData();
+
 	void onZoomOut();
 	void onZoomIn();
 	void onZoomChange(int);
@@ -109,7 +111,7 @@ public slots:
 	void onTableDelColumn();
 	void onTableDelRow();
 	void onTablePasteData();
-
+	
 	void onImageProperties();
 
 	void onLinkProperties();
@@ -131,6 +133,7 @@ protected:
 	virtual void contextMenuEvent ( QContextMenuEvent * event );
 
 private:
+	QWebElement getTag();
 	bool maybeSave();
 	void execCommand(const QString&);
 	void execCommand(const QString &cmd, const QString &arg);

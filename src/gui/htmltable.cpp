@@ -1,4 +1,5 @@
 #include "htmltable.h"
+#include "../service/tools.h"
 
 HtmlTable::HtmlTable()
 {
@@ -369,5 +370,26 @@ void HtmlTable::InsertData(const QString &text, QWebElement &td)
 			td = td.nextSibling();
 		}
 		tr = tr.nextSibling();
+	}
+}
+
+void HtmlTable::AppendData(const QString &text)
+{
+	QWebElement tr = m_table.lastChild();
+	if (tr.tagName() == "TBODY")
+		tr = tr.lastChild();
+	QWebElement td = tr.firstChild();
+	while (!td.isNull() && !IsBlank(td.toPlainText()))
+		td = td.nextSibling();
+	if(!td.isNull()) {
+		td.setPlainText(text);
+	}
+	else {
+		InsertRowBelow(tr);
+		tr = m_table.lastChild();
+		if (tr.tagName() == "TBODY")
+			tr = tr.lastChild();
+		td = tr.firstChild();
+		td.setPlainText(text);
 	}
 }
