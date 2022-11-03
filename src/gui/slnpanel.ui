@@ -130,31 +130,17 @@
          <string>Search</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout">
+         <item row="2" column="4" colspan="4">
+          <widget class="QPushButton" name="pushOptions">
+           <property name="text">
+            <string>Options</string>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0" colspan="8">
           <widget class="QLineEdit" name="lineSearch"/>
          </item>
-         <item row="6" column="4" colspan="4">
-          <widget class="QPushButton" name="pushFindNext">
-           <property name="text">
-            <string>Find forward</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0" colspan="4">
-          <widget class="QPushButton" name="pushFindPrev">
-           <property name="text">
-            <string>Find backward</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="4">
-          <widget class="QPushButton" name="pushSearch">
-           <property name="text">
-            <string>Search</string>
-           </property>
-          </widget>
-         </item>
-         <item row="10" column="0" colspan="8">
+         <item row="11" column="0" colspan="8">
           <widget class="QTreeWidget" name="treeResults">
            <property name="rootIsDecorated">
             <bool>false</bool>
@@ -169,10 +155,24 @@
            </column>
           </widget>
          </item>
-         <item row="1" column="4" colspan="4">
-          <widget class="QPushButton" name="pushOptions">
+         <item row="2" column="0" colspan="4">
+          <widget class="QPushButton" name="pushSearch">
            <property name="text">
-            <string>Options</string>
+            <string>Search all</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="4">
+          <widget class="QPushButton" name="pushFindPrev">
+           <property name="text">
+            <string>Find back</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="4" colspan="4">
+          <widget class="QPushButton" name="pushFindNext">
+           <property name="text">
+            <string>Find next</string>
            </property>
           </widget>
          </item>
