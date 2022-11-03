@@ -70,10 +70,10 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	m_LangIcons[(int)ELangStatus::LS_QOLD] = QIcon(":/langicons/images/li-qold.png");
 
 	QMenu *menu = new QMenu(this);	
-	actionCheckTree = menu->addAction("Tree");
-	actionCheckText = menu->addAction("Text");
-	actionCheckTags = menu->addAction("Tags");
-	actionCheckAttrs= menu->addAction("Attrs");
+	actionCheckTree = menu->addAction("Search in Tree");
+	actionCheckText = menu->addAction("Search in Text");
+	actionCheckTags = menu->addAction("Search in HTML Tags");
+	actionCheckAttrs= menu->addAction("Search in HTML Attributes");
 //	menu->addSeparator();
 //	menu->addAction("Match case");
 //	menu->addAction("Whole words");
