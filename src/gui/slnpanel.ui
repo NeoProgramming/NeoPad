@@ -8,7 +8,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>352</width>
+    <width>310</width>
     <height>482</height>
    </rect>
   </property>
@@ -130,7 +130,31 @@
          <string>Search</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout">
-         <item row="10" column="0" colspan="7">
+         <item row="0" column="0" colspan="8">
+          <widget class="QLineEdit" name="lineSearch"/>
+         </item>
+         <item row="6" column="4" colspan="4">
+          <widget class="QPushButton" name="pushFindNext">
+           <property name="text">
+            <string>Find forward</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0" colspan="4">
+          <widget class="QPushButton" name="pushFindPrev">
+           <property name="text">
+            <string>Find backward</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="4">
+          <widget class="QPushButton" name="pushSearch">
+           <property name="text">
+            <string>Search</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0" colspan="8">
           <widget class="QTreeWidget" name="treeResults">
            <property name="rootIsDecorated">
             <bool>false</bool>
@@ -145,59 +169,10 @@
            </column>
           </widget>
          </item>
-         <item row="0" column="0" colspan="7">
-          <widget class="QLineEdit" name="lineSearch"/>
-         </item>
-         <item row="1" column="6">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QCheckBox" name="checkTree">
-             <property name="text">
-              <string>Tree</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkText">
-             <property name="text">
-              <string>Text</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkTags">
-             <property name="text">
-              <string>Tags</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkAttrs">
-             <property name="text">
-              <string>Attrs</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-         <item row="6" column="6">
-          <widget class="QPushButton" name="pushFindNext">
+         <item row="1" column="4" colspan="4">
+          <widget class="QPushButton" name="pushOptions">
            <property name="text">
-            <string>Find forward</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="6">
-          <widget class="QPushButton" name="pushSearch">
-           <property name="text">
-            <string>Search</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0" colspan="6">
-          <widget class="QPushButton" name="pushFindPrev">
-           <property name="text">
-            <string>Find backward</string>
+            <string>Options</string>
            </property>
           </widget>
          </item>

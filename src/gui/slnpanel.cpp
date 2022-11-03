@@ -69,8 +69,23 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	m_LangIcons[(int)ELangStatus::LS_QOK] = QIcon(":/langicons/images/li-qok.png");
 	m_LangIcons[(int)ELangStatus::LS_QOLD] = QIcon(":/langicons/images/li-qold.png");
 
-	ui.checkTree->setChecked(true);
-	ui.checkText->setChecked(true);
+	QMenu *menu = new QMenu(this);	
+	actionCheckTree = menu->addAction("Tree");
+	actionCheckText = menu->addAction("Text");
+	actionCheckTags = menu->addAction("Tags");
+	actionCheckAttrs= menu->addAction("Attrs");
+//	menu->addSeparator();
+//	menu->addAction("Match case");
+//	menu->addAction("Whole words");
+
+	actionCheckTree->setCheckable(true);
+	actionCheckText->setCheckable(true);
+	actionCheckTags->setCheckable(true);
+	actionCheckAttrs->setCheckable(true);
+	actionCheckTree->setChecked(true);
+	actionCheckText->setChecked(true);
+
+	ui.pushOptions->setMenu(menu);
 }
 
 QAction *SlnPanel::MakeAction(QString text, QMenu *menu, const char *slot)
@@ -867,13 +882,13 @@ void SlnPanel::onSearch()
 	setCursor(QCursor(Qt::WaitCursor));
     QString text = ui.lineSearch->text().toHtmlEscaped();
 	unsigned int scope = 0;
-	if (ui.checkTree->isChecked())
+	if (actionCheckTree->isChecked())
 		scope |= ESM_TREE;
-	if (ui.checkText->isChecked())
+	if (actionCheckText->isChecked())
 		scope |= ESM_TEXT;
-	if (ui.checkTags->isChecked())
+	if (actionCheckTags->isChecked())
 		scope |= ESM_TAG;
-	if (ui.checkAttrs->isChecked())
+	if (actionCheckAttrs->isChecked())
 		scope |= ESM_ATTR;
 	if (!scope) {
 		QMessageBox::warning(this, "Search", "Search scope not defined!");
@@ -903,3 +918,4 @@ void SlnPanel::onFindPrev()
 	if (wnd)
 		wnd->Find(ui.lineSearch->text(), true);
 }
+

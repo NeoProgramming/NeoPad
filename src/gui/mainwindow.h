@@ -146,6 +146,7 @@ private slots:
 	void onInsertBulList();
 
 	void onTableAppendData();
+	void onTableInsertData();
 	    
 	void onAppAbout();
 	void onAppAboutQt();

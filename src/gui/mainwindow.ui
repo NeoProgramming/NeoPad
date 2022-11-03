@@ -370,6 +370,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionTableAppendData"/>
+   <addaction name="actionTableInsertData"/>
   </widget>
   <action name="actionAppExit">
    <property name="icon">
@@ -1568,6 +1569,11 @@
   <action name="actionTableAppendData">
    <property name="text">
     <string>Append Data</string>
+   </property>
+  </action>
+  <action name="actionTableInsertData">
+   <property name="text">
+    <string>Insert Data</string>
    </property>
   </action>
  </widget>

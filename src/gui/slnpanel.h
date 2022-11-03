@@ -120,6 +120,11 @@ private:
 
 	QMenu *submenuOpen0Ext;
 	QMenu *submenuOpen1Ext;
+
+	QAction *actionCheckTree;
+	QAction *actionCheckText;
+	QAction *actionCheckTags;
+	QAction *actionCheckAttrs;
 };
 
 #endif // SLNPANEL_H
