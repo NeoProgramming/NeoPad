@@ -972,6 +972,7 @@ void WebEditView::onTableDelColumn()
 
 void WebEditView::onTableDelRow()
 {
+	GetCaretContext();
 	if (m_elTable.isNull()) {
 		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
 		return;

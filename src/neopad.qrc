@@ -110,6 +110,7 @@
         <file>images/table-collapse.png</file>
         <file>images/table-appenddata.png</file>
         <file>images/table-insertdata.png</file>
+        <file>images/table-deleterow.png</file>
     </qresource>
     <qresource prefix="/treeicons">
         <file>images/ti-folder25.png</file>

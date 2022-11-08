@@ -73,6 +73,7 @@ MainWindow::MainWindow()
     ui.toolBarText->setIconSize( tbSize );
     ui.toolBarTree->setIconSize( tbSize );
 	ui.toolBarTools->setIconSize( tbSize );
+	ui.toolBarTable->setIconSize( tbSize );
 		
 	m_wArea = new QMdiArea;
 	m_wArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -121,6 +122,7 @@ MainWindow::MainWindow()
 	SetAutoRaiseToolBar(ui.toolBarText, false);
 	SetAutoRaiseToolBar(ui.toolBarTree, false);
 	SetAutoRaiseToolBar(ui.toolBarTools, false);
+	SetAutoRaiseToolBar(ui.toolBarTable, false);
 	
 	// read script
 	loadScripts();
@@ -184,6 +186,7 @@ MainWindow::MainWindow()
 	connect(ui.actionTableInsertData,   &QAction::triggered, this, &MainWindow::onTableInsertData);
 	connect(ui.actionTableExpand,       &QAction::triggered, this, &MainWindow::onTableExpand);
 	connect(ui.actionTableCollapse,     &QAction::triggered, this, &MainWindow::onTableCollapse);
+	connect(ui.actionTableDeleteRow,    &QAction::triggered, this, &MainWindow::onTableDeleteRow);
 	
 	connect(ui.actionParaMarkList,		&QAction::triggered, this, &MainWindow::onInsertBulList);
 	connect(ui.actionParaNumList,		&QAction::triggered, this, &MainWindow::onInsertNumList);
@@ -1513,4 +1516,11 @@ void MainWindow::onTableCollapse()
 	WebEditView *wnd = GetActiveMdiChild();
 	if (wnd)
 		wnd->onTableCollapse();
+}
+
+void MainWindow::onTableDeleteRow()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTableDelRow();
 }

@@ -373,6 +373,7 @@
    <addaction name="actionTableInsertData"/>
    <addaction name="actionTableExpand"/>
    <addaction name="actionTableCollapse"/>
+   <addaction name="actionTableDeleteRow"/>
   </widget>
   <action name="actionAppExit">
    <property name="icon">
@@ -1592,7 +1593,10 @@
      <normaloff>:/table/images/table-expand.png</normaloff>:/table/images/table-expand.png</iconset>
    </property>
    <property name="text">
-    <string>Insert Data</string>
+    <string>Shift Right</string>
+   </property>
+   <property name="toolTip">
+    <string>Shift Right</string>
    </property>
   </action>
   <action name="actionTableCollapse">
@@ -1601,7 +1605,22 @@
      <normaloff>:/table/images/table-collapse.png</normaloff>:/table/images/table-collapse.png</iconset>
    </property>
    <property name="text">
-    <string>Insert Data</string>
+    <string>Shift left</string>
+   </property>
+   <property name="toolTip">
+    <string>Shift left</string>
+   </property>
+  </action>
+  <action name="actionTableDeleteRow">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/table/images/table-deleterow.png</normaloff>:/table/images/table-deleterow.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete Row</string>
+   </property>
+   <property name="toolTip">
+    <string>Delete Row</string>
    </property>
   </action>
  </widget>
