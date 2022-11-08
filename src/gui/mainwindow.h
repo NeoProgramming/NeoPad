@@ -147,6 +147,8 @@ private slots:
 
 	void onTableAppendData();
 	void onTableInsertData();
+	void onTableExpand();
+	void onTableCollapse();
 	    
 	void onAppAbout();
 	void onAppAboutQt();

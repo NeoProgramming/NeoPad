@@ -36,6 +36,9 @@ public:
 	void DeleteColumn(QWebElement &td);
 
 	bool NormalizeRow(QWebElement &tr);
+
+	void Expand(QWebElement &td);
+	void Collapse(QWebElement &td);
 	
 protected:
 	void Parse(const QString &text, QList<QStringList> &data);

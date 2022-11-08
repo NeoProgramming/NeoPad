@@ -182,6 +182,8 @@ MainWindow::MainWindow()
 
 	connect(ui.actionTableAppendData,   &QAction::triggered, this, &MainWindow::onTableAppendData);
 	connect(ui.actionTableInsertData,   &QAction::triggered, this, &MainWindow::onTableInsertData);
+	connect(ui.actionTableExpand,       &QAction::triggered, this, &MainWindow::onTableExpand);
+	connect(ui.actionTableCollapse,     &QAction::triggered, this, &MainWindow::onTableCollapse);
 	
 	connect(ui.actionParaMarkList,		&QAction::triggered, this, &MainWindow::onInsertBulList);
 	connect(ui.actionParaNumList,		&QAction::triggered, this, &MainWindow::onInsertNumList);
@@ -1497,4 +1499,18 @@ void MainWindow::onTableInsertData()
 	WebEditView *wnd = GetActiveMdiChild();
 	if (wnd)
 		wnd->onTablePasteData();
+}
+
+void MainWindow::onTableExpand()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTableExpand();
+}
+
+void MainWindow::onTableCollapse()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTableCollapse();
 }

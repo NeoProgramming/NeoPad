@@ -111,6 +111,8 @@ public slots:
 	void onTableDelColumn();
 	void onTableDelRow();
 	void onTablePasteData();
+	void onTableExpand();
+	void onTableCollapse();
 	
 	void onImageProperties();
 
@@ -141,6 +143,7 @@ private:
 	bool execScript(const QString &jsfn, QString *outRes = nullptr);
 	int  GetHitContext(QWebHitTestResult &r);
 	int  GetElementContext(const QWebElement &el);
+	bool GetCaretContext();
 	void OpenLink(const QUrl&);
 	void InsertHtml(QString html);
 	QString PrepareImage(ImageAction action, const QString &fpath);

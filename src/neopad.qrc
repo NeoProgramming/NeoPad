@@ -105,6 +105,12 @@
         <file>images/text-para.png</file>
         <file>images/text-note.png</file>
     </qresource>
+    <qresource prefix="/table">
+        <file>images/table-expand.png</file>
+        <file>images/table-collapse.png</file>
+        <file>images/table-appenddata.png</file>
+        <file>images/table-insertdata.png</file>
+    </qresource>
     <qresource prefix="/treeicons">
         <file>images/ti-folder25.png</file>
         <file>images/ti-folder50.png</file>

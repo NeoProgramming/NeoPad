@@ -318,9 +318,34 @@ int WebEditView::GetHitContext(QWebHitTestResult &hitTestResult)
 {
  	// by the result of the hit test, determine where we are and which context menu to display
 	// go up the tags
+	m_elTable = QWebElement();
+	m_elTR = QWebElement();
+	m_elTD = QWebElement();
+	m_elImage = QWebElement();
+	m_elLink = QWebElement();
+
 	int ctx = GetElementContext(hitTestResult.element()); 
 	ctx |= GetElementContext(hitTestResult.enclosingBlockElement());
  	return ctx;
+}
+
+bool WebEditView::GetCaretContext()
+{
+	// get coordinates of text cursor
+	
+	QString res;
+	QPoint pos;
+	execScript("getCaretPosition();", &res); // "100;200"
+	int i = res.indexOf(';');
+	if (i < 0)
+		return false;
+	pos.setX(res.left(i).toDouble()+1);
+	pos.setY(res.mid(i + 1).toDouble());
+
+	QWebFrame *frame = page()->currentFrame();
+	QWebHitTestResult hitTestResult = frame->hitTestContent(pos);
+	GetHitContext(hitTestResult);
+	return true;
 }
 
 void WebEditView::contextMenuEvent ( QContextMenuEvent * e )
@@ -1079,13 +1104,12 @@ void WebEditView::onToolsTranslate()
 void WebEditView::onTableAppendData()
 {
 	// paste into end of table
+	GetCaretContext();
 	if (m_elTable.isNull()) {
-		m_elTable = getTag();
-		if (m_elTable.isNull()) {
-			QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
-			return;
-		}
+		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+		return;
 	}
+
 	HtmlTable table(m_elTable);
 
 	QClipboard *clipboard = QApplication::clipboard();
@@ -1094,3 +1118,26 @@ void WebEditView::onTableAppendData()
 	setWindowModified(true);
 }
 
+void WebEditView::onTableExpand()
+{
+	GetCaretContext();
+	if (m_elTable.isNull() || m_elTD.isNull()) {
+		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+		return;
+	}
+	HtmlTable table(m_elTable);
+	table.Expand(m_elTD);
+	setWindowModified(true);
+}
+
+void WebEditView::onTableCollapse()
+{
+	GetCaretContext();
+	if (m_elTable.isNull() || m_elTD.isNull()) {
+		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+		return;
+	}
+	HtmlTable table(m_elTable);
+	table.Collapse(m_elTD);
+	setWindowModified(true);
+}

@@ -393,3 +393,43 @@ void HtmlTable::AppendData(const QString &text)
 		td.setPlainText(text);
 	}
 }
+
+void HtmlTable::Expand(QWebElement &td)
+{
+	// iteration from end to 'td'
+	QWebElement tr = m_table.lastChild();
+	if (tr.tagName() == "TBODY")
+		tr = tr.lastChild();
+	QWebElement tdi = tr.lastChild();
+	while (tdi != td) {
+		// prev item
+		QWebElement tdp = tdi.previousSibling();
+		if (tdp.isNull()) {
+			tr = tr.previousSibling();
+			tdp = tr.lastChild();
+		}
+		// move right
+		tdi.setInnerXml(tdp.toInnerXml());
+		// prev item
+		tdi = tdp;
+	}
+	td.setPlainText("");
+}
+
+void HtmlTable::Collapse(QWebElement &td)
+{
+	// iteration from end to 'td'
+	QWebElement tr = td.parent();
+	while (!td.isNull()) {
+		// next
+		QWebElement tdn = td.nextSibling();
+		if (tdn.isNull()) {
+			tr = tr.nextSibling();
+			tdn = tr.firstChild();
+		}
+		// move left
+		td.setInnerXml(tdn.toInnerXml());
+		// next
+		td = tdn;
+	}
+}
