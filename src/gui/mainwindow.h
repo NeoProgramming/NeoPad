@@ -93,6 +93,7 @@ private slots:
 	void onEditPaste();
 	void onEditPasteText();
     void onEditPasteAsTable();
+	void onEditPasteCell();
 	void onEditUndo();
 	void onEditRedo();
 	void onEditUntag();

@@ -67,6 +67,7 @@
    <addaction name="actionEditPaste"/>
    <addaction name="actionEditPasteText"/>
    <addaction name="actionEditPasteAsTable"/>
+   <addaction name="actionEditPasteCell"/>
    <addaction name="actionEditUntag"/>
    <addaction name="actionEditUntable"/>
    <addaction name="actionEditOutside"/>
@@ -1621,6 +1622,18 @@
    </property>
    <property name="toolTip">
     <string>Delete Row</string>
+   </property>
+  </action>
+  <action name="actionEditPasteCell">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-pastecell.png</normaloff>:/edit/images/edit-pastecell.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste into Table Cell</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste into Table Cell</string>
    </property>
   </action>
  </widget>

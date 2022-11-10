@@ -45,6 +45,7 @@
         <file>images/edit-taginfo.png</file>
         <file>images/edit-erase.png</file>
         <file>images/edit-pastetable.png</file>
+        <file>images/edit-pastecell.png</file>
     </qresource>
     <qresource prefix="/file">
         <file>images/file-saveas.png</file>

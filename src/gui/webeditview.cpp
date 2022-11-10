@@ -485,6 +485,17 @@ void WebEditView::onEditPasteAsTable()
 //    triggerPageAction(QWebPage::Paste);
 }
 
+void WebEditView::onEditPasteCell()
+{
+	// paste as text without CR LF s
+	QClipboard *clipboard = QApplication::clipboard();
+	QString originalText = clipboard->text();
+	originalText.replace('\r', ' ');
+	originalText.replace('\n', ' ');
+	clipboard->setText(originalText);
+	triggerPageAction(QWebPage::Paste);
+}
+
 void WebEditView::onTablePasteData()
 {
 	if (m_elTable.isNull()) {
