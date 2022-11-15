@@ -107,6 +107,7 @@ public slots:
 	void onTableInsAbove();
 	void onTableInsBelow();
 	void onTableNormalizeRow();
+	void onTableRemoveEmptyRows();
 	void onTableInsLeft();
 	void onTableInsRight();
 	void onTableDelColumn();
@@ -159,6 +160,7 @@ private:
 	QAction *actionTableInsAbove;
 	QAction *actionTableInsBelow;
 	QAction *actionTableNormRow;
+	QAction *actionTableOptTable;
 	QAction *actionTableInsLeft;
 	QAction *actionTableInsRight;
 	QAction *actionTableDelRow;

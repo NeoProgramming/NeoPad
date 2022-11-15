@@ -36,6 +36,7 @@ public:
 	void DeleteColumn(QWebElement &td);
 
 	bool NormalizeRow(QWebElement &tr);
+	bool RemoveEmptyRows();
 
 	void Expand(QWebElement &td);
 	void Collapse(QWebElement &td);
@@ -50,6 +51,9 @@ protected:
 	int  GetColIndex(QWebElement &td);
 
 	QWebElement GetColByIndex(QWebElement &tr, int ti);
+
+	QWebElement FirstTR();
+	QWebElement LastTR();
 private:
 	QWebElement m_table;
 };

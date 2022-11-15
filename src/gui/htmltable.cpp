@@ -346,6 +346,31 @@ int HtmlTable::Normalize(QList<QStringList> &data)
 	return cols;
 }
 
+bool HtmlTable::RemoveEmptyRows()
+{
+	QWebElement tr = FirstTR();
+	bool removed = false;
+	while (!tr.isNull()) {
+		QWebElement trn = tr.nextSibling();
+		// scan row
+		QWebElement td = tr.firstChild();
+		bool filled = false;
+		while (!td.isNull()) {
+			if (!IsBlank(td.toPlainText())) {
+				filled = true;
+				break;
+			}
+			td = td.nextSibling();
+		}
+		if (!filled) {
+			tr.removeFromDocument();
+			removed = true;
+		}
+		tr = trn;
+	}
+	return removed;
+}
+
 void HtmlTable::InsertData(const QString &text, QWebElement &td)
 {
 	QList<QStringList> data;
@@ -373,11 +398,25 @@ void HtmlTable::InsertData(const QString &text, QWebElement &td)
 	}
 }
 
-void HtmlTable::AppendData(const QString &text)
+QWebElement HtmlTable::FirstTR()
+{
+	QWebElement tr = m_table.firstChild();
+	if (tr.tagName() == "TBODY")
+		tr = tr.firstChild();
+	return tr;
+}
+
+QWebElement HtmlTable::LastTR()
 {
 	QWebElement tr = m_table.lastChild();
 	if (tr.tagName() == "TBODY")
 		tr = tr.lastChild();
+	return tr;
+}
+
+void HtmlTable::AppendData(const QString &text)
+{
+	QWebElement tr = LastTR();
 	QWebElement td = tr.firstChild();
 	while (!td.isNull() && !IsBlank(td.toPlainText()))
 		td = td.nextSibling();
@@ -386,9 +425,7 @@ void HtmlTable::AppendData(const QString &text)
 	}
 	else {
 		InsertRowBelow(tr);
-		tr = m_table.lastChild();
-		if (tr.tagName() == "TBODY")
-			tr = tr.lastChild();
+		tr = LastTR();
 		td = tr.firstChild();
 		td.setPlainText(text);
 	}
@@ -397,9 +434,7 @@ void HtmlTable::AppendData(const QString &text)
 void HtmlTable::Expand(QWebElement &td)
 {
 	// iteration from end to 'td'
-	QWebElement tr = m_table.lastChild();
-	if (tr.tagName() == "TBODY")
-		tr = tr.lastChild();
+	QWebElement tr = LastTR();
 	QWebElement tdi = tr.lastChild();
 	while (tdi != td) {
 		// prev item

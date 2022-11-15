@@ -54,6 +54,7 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	actionTableInsAbove = new QAction(tr("Insert row above"), 0);
 	actionTableInsBelow = new QAction(tr("Insert row below"), 0);
 	actionTableNormRow  = new QAction(tr("Normalize row"), 0);
+	actionTableOptTable = new QAction(tr("Remove empty rows"), 0);
 	actionTableInsLeft  = new QAction(tr("Insert column left"), 0);
 	actionTableInsRight = new QAction(tr("Insert column right"), 0);
 	actionTableDelRow   = new QAction(tr("Delete row"), 0);
@@ -63,6 +64,7 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	connect(actionTableInsAbove, &QAction::triggered, this, &WebEditView::onTableInsAbove);
 	connect(actionTableInsBelow, &QAction::triggered, this, &WebEditView::onTableInsBelow);
 	connect(actionTableNormRow, &QAction::triggered, this, &WebEditView::onTableNormalizeRow);
+	connect(actionTableOptTable, &QAction::triggered, this, &WebEditView::onTableRemoveEmptyRows);
 	connect(actionTableInsLeft, &QAction::triggered, this, &WebEditView::onTableInsLeft);
 	connect(actionTableInsRight, &QAction::triggered, this, &WebEditView::onTableInsRight);
 	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDelRow);
@@ -74,6 +76,7 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	m_menuTable.addAction(actionTableInsAbove);
 	m_menuTable.addAction(actionTableInsBelow);
 	m_menuTable.addAction(actionTableNormRow);
+	m_menuTable.addAction(actionTableOptTable);
 	m_menuTable.addAction(actionTableInsLeft);
 	m_menuTable.addAction(actionTableInsRight);
 	m_menuTable.addSeparator();
@@ -367,6 +370,7 @@ void WebEditView::contextMenuEvent ( QContextMenuEvent * e )
 		actionTableInsAbove->setEnabled(ctx & CTX_TABLE);
 		actionTableInsBelow->setEnabled(ctx & CTX_TABLE);
 		actionTableNormRow->setEnabled(ctx & CTX_TABLE);
+		actionTableOptTable->setEnabled(ctx & CTX_TABLE);
 		actionTableInsLeft->setEnabled(ctx & CTX_TABLE);
 		actionTableInsRight->setEnabled(ctx & CTX_TABLE);
 		actionTableDelRow->setEnabled(ctx & CTX_TABLE);
@@ -939,6 +943,17 @@ void WebEditView::onTableNormalizeRow()
 	}
 	HtmlTable table(m_elTable);
 	if(table.NormalizeRow(m_elTR))
+		setWindowModified(true);
+}
+
+void WebEditView::onTableRemoveEmptyRows()
+{
+	if (m_elTable.isNull()) {
+		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+		return;
+	}
+	HtmlTable table(m_elTable);
+	if (table.RemoveEmptyRows())
 		setWindowModified(true);
 }
 
