@@ -53,6 +53,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
     connect(ui.pushSearch, &QPushButton::clicked, this, &SlnPanel::onSearch);
 	connect(ui.pushFindNext, &QPushButton::clicked, this, &SlnPanel::onFindNext);
 	connect(ui.pushFindPrev, &QPushButton::clicked, this, &SlnPanel::onFindPrev);
+	connect(ui.pushSelNode, &QPushButton::clicked, this, &SlnPanel::onSelNode);
 
 	m_TreeIcons[(int)ETreeStatus::TS_UNKNOWN] = QIcon(":/treeicons/images/ti-unknown.png");
 	m_TreeIcons[(int)ETreeStatus::TS_READY] = QIcon(":/treeicons/images/ti-html.png");
@@ -894,7 +895,7 @@ void SlnPanel::onSearch()
 		QMessageBox::warning(this, "Search", "Search scope not defined!");
 		return;
 	}
-    theSln.Search(text, scope, results);
+    theSln.Search(text, scope, searchRoot, results);
     ui.treeResults->clear();
     for(auto pos : results) {
         QTreeWidgetItem *item = new QTreeWidgetItem();
@@ -919,3 +920,14 @@ void SlnPanel::onFindPrev()
 		wnd->Find(ui.lineSearch->text(), true);
 }
 
+void SlnPanel::onSelNode()
+{
+	TopicChooser dlg(this, "Select node to search");
+	if (!dlg.DoModal())
+		return;
+	searchRoot = dlg.m_posSelected;
+	if (searchRoot)
+		ui.lineNode->setText(searchRoot->GetTitles(0));
+	else
+		ui.lineNode->setText("");
+}

@@ -1074,10 +1074,10 @@ MTPOS CSolution::Locate(const QString &guid)
 	return result;
 }
 
-void CSolution::Search(const QString &text, unsigned int scope, CMtposList &results)
+void CSolution::Search(const QString &text, unsigned int scope, MTPOS root, CMtposList &results)
 {
     // recursive search on tree
-    ForEach([&](MTPOS pos) {
+    ForEach(root, [&](MTPOS pos) {
         // search in title
 		if (scope & ESM_TREE) {
 			if (pos->GetTitle(0).contains(text, Qt::CaseInsensitive))

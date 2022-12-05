@@ -17,7 +17,7 @@ QString Snippets::GetSnippetPath(const QString& name)
 	QString path = m_SnippDir;
 	path += "/";
 	path += name;
-	path += MBA::extHtml;
+//	path += MBA::extHtml;
 	return path;
 }
 

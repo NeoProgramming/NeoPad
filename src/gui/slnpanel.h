@@ -60,6 +60,7 @@ private slots:
     void onSearch();
 	void onFindNext();
 	void onFindPrev();
+	void onSelNode();
 
 	void onItemDoubleClicked(QTreeWidgetItem* item, int column);
     void onResDoubleClicked(QTreeWidgetItem* curItem, int column);
@@ -100,6 +101,7 @@ private:
             
     Ui::SlnForm ui;
     MainWindow *mw;
+	MTPOS searchRoot = nullptr;
 	QIcon m_TreeIcons[(int)ETreeStatus::TS_ITEMS_COUNT];
 	QIcon m_LangIcons[(int)ELangStatus::LS_ITEMS_COUNT];
 	

@@ -114,6 +114,15 @@ QString MT_ITEM::GetTitle(int bi)
 	return title[bi];
 }
 
+QString MT_ITEM::GetTitles(int bi)
+{
+	if (bi < 0 || bi >= theSln.BCnt())
+		return QString();
+	if (!parent)
+		return GetTitle(bi);
+	return GetTitle(bi) + QChar(0x26AB) + parent->GetTitles(bi);
+}
+
 QString MT_ITEM::GetDocLocPath(int bi)
 {
 	QString c = id + theSln.GetDocExt(bi);

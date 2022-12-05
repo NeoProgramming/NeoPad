@@ -78,11 +78,12 @@ public:
 
 	QString GetId();
 	QString GetGuid();
-	QString GetTitle(int di);
-	QString GetDocAbsPath(int di);
+	QString GetTitle(int bi);
+	QString GetTitles(int bi);
+	QString GetDocAbsPath(int bi);
 	QString GetDocRelPath(int bi);
 	QString GetDocLocPath(int bi);
-	time_t  GetDocTime(int di);
+	time_t  GetDocTime(int bi);
 	QString GetVmbAbsPath();
 	QString GetVmbLocPath();
 	QString GetDocTimeStr(int bi);

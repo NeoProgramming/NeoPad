@@ -128,12 +128,14 @@ void PrjTree::Exchange(MTPOS pos1, MTPOS pos2)
 
 void PrjTree::ForEach(const std::function<void(MTPOS)> &fn)
 {
-    ForEachLevel(m_root, fn);
+    ForEach(m_root, fn);
 }
 
-void PrjTree::ForEachLevel(MTPOS node, const std::function<void(MTPOS)> &fn)
+void PrjTree::ForEach(MTPOS node, const std::function<void(MTPOS)> &fn)
 {
+	if (!node)
+		node = m_root;
     fn(node);
     for(auto ch : node->children)
-        ForEachLevel(ch, fn);
+        ForEach(ch, fn);
 }

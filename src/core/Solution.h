@@ -81,7 +81,7 @@ public:
 	bool	TransformFile(MTPOS tpos, int bi);
 
 	MTPOS	Locate(const QString &guid);
-    void    Search(const QString &text, unsigned int scope, CMtposList &results);
+    void    Search(const QString &text, unsigned int scope, MTPOS root, CMtposList &results);
     bool    SearchInFile(MTPOS pos, const QString &text, unsigned int scope);
 protected:
 	bool    IsFNamesAvailable(MTPOS pos, const QString &id);
