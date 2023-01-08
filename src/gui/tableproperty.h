@@ -9,9 +9,10 @@ class TableProperties : public QDialog
     Q_OBJECT
 public:
 	int m_rowsCount = 0, m_colsCount = 0;
+	QString m_class;
 public:
 	TableProperties(QWidget *parent = 0);
-	int  DoModal(int rows, int cols);
+	int  DoModal(int rows, int cols, const QString &style);
     
 public slots:
 	void accept();

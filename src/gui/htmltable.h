@@ -11,6 +11,9 @@ public:
 	HtmlTable(QWebElement &table);
 	~HtmlTable(void);
 
+	QString GetClass();
+	void SetClass(const QString &cls);
+
 	int GetColCount();
 	int GetRowCount();
 	int GetCellCountInRow(QWebElement &tr);
