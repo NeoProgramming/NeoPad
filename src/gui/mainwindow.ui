@@ -273,7 +273,6 @@
    <addaction name="actionTextCode"/>
    <addaction name="actionTextSubscript"/>
    <addaction name="actionTextSuperscript"/>
-   <addaction name="actionTextMark"/>
    <addaction name="actionTextStrong"/>
    <addaction name="actionTextEm"/>
    <addaction name="actionTextIns"/>
@@ -375,6 +374,25 @@
    <addaction name="actionTableExpand"/>
    <addaction name="actionTableCollapse"/>
    <addaction name="actionTableDeleteRow"/>
+  </widget>
+  <widget class="QToolBar" name="toolBarMark">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionTextMark"/>
+   <addaction name="actionTextMark1"/>
+   <addaction name="actionTextMark2"/>
+   <addaction name="actionTextMark3"/>
+   <addaction name="actionTextMark4"/>
+   <addaction name="actionTextMark5"/>
+   <addaction name="actionTextMark6"/>
+   <addaction name="actionTextMark7"/>
   </widget>
   <action name="actionAppExit">
    <property name="icon">
@@ -1634,6 +1652,90 @@
    </property>
    <property name="toolTip">
     <string>Paste into Table Cell</string>
+   </property>
+  </action>
+  <action name="actionTextMark2">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark2.png</normaloff>:/text/images/text-mark2.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark2</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark2</string>
+   </property>
+  </action>
+  <action name="actionTextMark3">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark3.png</normaloff>:/text/images/text-mark3.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark3</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark3</string>
+   </property>
+  </action>
+  <action name="actionTextMark4">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark4.png</normaloff>:/text/images/text-mark4.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark4</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark4</string>
+   </property>
+  </action>
+  <action name="actionTextMark5">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark5.png</normaloff>:/text/images/text-mark5.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark5</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark5</string>
+   </property>
+  </action>
+  <action name="actionTextMark6">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark6.png</normaloff>:/text/images/text-mark6.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark6</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark6</string>
+   </property>
+  </action>
+  <action name="actionTextMark7">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark7.png</normaloff>:/text/images/text-mark7.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark7</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark7</string>
+   </property>
+  </action>
+  <action name="actionTextMark1">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/text/images/text-mark1.png</normaloff>:/text/images/text-mark1.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mark1</string>
+   </property>
+   <property name="toolTip">
+    <string>Mark1</string>
    </property>
   </action>
  </widget>

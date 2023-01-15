@@ -57,7 +57,6 @@ public slots:
 	void onTextSubscript();
 	void onTextSuperscript();
 	void onTextCode();
-	void onTextMark();
 	void onTextStrong();
 	void onTextEm();
 	void onTextIns();
@@ -65,6 +64,15 @@ public slots:
 	void onTextSamp();
 	void onTextVar();
 	void onTextKbd();
+
+	void onTextMark();
+	void onTextMark1();
+	void onTextMark2();
+	void onTextMark3();
+	void onTextMark4();
+	void onTextMark5();
+	void onTextMark6();
+	void onTextMark7();
 
 	void onParaHeading1();
 	void onParaHeading2();

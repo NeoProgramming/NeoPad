@@ -105,6 +105,13 @@
         <file>images/text-kbd.png</file>
         <file>images/text-para.png</file>
         <file>images/text-note.png</file>
+        <file>images/text-mark1.png</file>
+        <file>images/text-mark2.png</file>
+        <file>images/text-mark3.png</file>
+        <file>images/text-mark4.png</file>
+        <file>images/text-mark5.png</file>
+        <file>images/text-mark6.png</file>
+        <file>images/text-mark7.png</file>
     </qresource>
     <qresource prefix="/table">
         <file>images/table-expand.png</file>

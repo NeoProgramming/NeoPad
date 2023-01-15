@@ -108,7 +108,6 @@ private slots:
 	void onTextSubscript();
 	void onTextSuperscript();
 	void onTextCode();
-	void onTextMark();
 	void onTextStrong();
 	void onTextEm();
 	void onTextIns();
@@ -116,6 +115,15 @@ private slots:
 	void onTextSamp();
 	void onTextVar();
 	void onTextKbd();
+
+	void onTextMark();
+	void onTextMark1();
+	void onTextMark2();
+	void onTextMark3();
+	void onTextMark4();
+	void onTextMark5();
+	void onTextMark6();
+	void onTextMark7();
 
 	void onParaH1();
 	void onParaH2();

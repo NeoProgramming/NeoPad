@@ -625,6 +625,42 @@ void WebEditView::onTextMark()
 	execScript("makeSpan('MARK')");
 }
 
+void WebEditView::onTextMark1()
+{
+	execScript("makeSpan('MARK1')");
+}
+
+void WebEditView::onTextMark2()
+{
+	execScript("makeSpan('MARK2')");
+}
+
+void WebEditView::onTextMark3()
+{
+	execScript("makeSpan('MARK3')");
+}
+
+void WebEditView::onTextMark4()
+{
+	execScript("makeSpan('MARK4')");
+}
+
+void WebEditView::onTextMark5()
+{
+	execScript("makeSpan('MARK5')");
+}
+
+void WebEditView::onTextMark6()
+{
+	execScript("makeSpan('MARK6')");
+}
+
+void WebEditView::onTextMark7()
+{
+	execScript("makeSpan('MARK7')");
+}
+
+
 void WebEditView::onTextStrong()
 {
 	execScript("makeSpan('STRONG')");

@@ -74,6 +74,7 @@ MainWindow::MainWindow()
     ui.toolBarTree->setIconSize( tbSize );
 	ui.toolBarTools->setIconSize( tbSize );
 	ui.toolBarTable->setIconSize( tbSize );
+	ui.toolBarMark->setIconSize(tbSize);
 		
 	m_wArea = new QMdiArea;
 	m_wArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -123,6 +124,7 @@ MainWindow::MainWindow()
 	SetAutoRaiseToolBar(ui.toolBarTree, false);
 	SetAutoRaiseToolBar(ui.toolBarTools, false);
 	SetAutoRaiseToolBar(ui.toolBarTable, false);
+	SetAutoRaiseToolBar(ui.toolBarMark, false);
 	
 	// read script
 	loadScripts();
@@ -164,7 +166,6 @@ MainWindow::MainWindow()
 	connect(ui.actionTextUnderline,		&QAction::triggered, this, &MainWindow::onTextUnderline);
 	connect(ui.actionTextStrike,		&QAction::triggered, this, &MainWindow::onTextStrike);
 	connect(ui.actionTextCode,			&QAction::triggered, this, &MainWindow::onTextCode);
-	connect(ui.actionTextMark,			&QAction::triggered, this, &MainWindow::onTextMark);
 	connect(ui.actionTextSubscript,		&QAction::triggered, this, &MainWindow::onTextSubscript);
 	connect(ui.actionTextSuperscript,	&QAction::triggered, this, &MainWindow::onTextSuperscript);
 	connect(ui.actionTextStrong,		&QAction::triggered, this, &MainWindow::onTextStrong);
@@ -174,6 +175,15 @@ MainWindow::MainWindow()
 	connect(ui.actionTextSamp,			&QAction::triggered, this, &MainWindow::onTextSamp);
 	connect(ui.actionTextVar,			&QAction::triggered, this, &MainWindow::onTextVar);
 	connect(ui.actionTextKbd,			&QAction::triggered, this, &MainWindow::onTextKbd);
+
+	connect(ui.actionTextMark,			&QAction::triggered, this, &MainWindow::onTextMark);
+	connect(ui.actionTextMark1,			&QAction::triggered, this, &MainWindow::onTextMark1);
+	connect(ui.actionTextMark2,			&QAction::triggered, this, &MainWindow::onTextMark2);
+	connect(ui.actionTextMark3,			&QAction::triggered, this, &MainWindow::onTextMark3);
+	connect(ui.actionTextMark4,			&QAction::triggered, this, &MainWindow::onTextMark4);
+	connect(ui.actionTextMark5,			&QAction::triggered, this, &MainWindow::onTextMark5);
+	connect(ui.actionTextMark6,			&QAction::triggered, this, &MainWindow::onTextMark6);
+	connect(ui.actionTextMark7,			&QAction::triggered, this, &MainWindow::onTextMark7);
 
 	connect(ui.actionInsertHorzline,	&QAction::triggered, this, &MainWindow::onInsertHorzLine);
 	connect(ui.actionInsertTable,		&QAction::triggered, this, &MainWindow::onInsertTableClicked);
@@ -980,6 +990,49 @@ void MainWindow::onTextMark()
 	if(wnd)
 		wnd->onTextMark();
 }
+void MainWindow::onTextMark1()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTextMark1();
+}
+void MainWindow::onTextMark2()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTextMark2();
+}
+void MainWindow::onTextMark3()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTextMark3();
+}
+void MainWindow::onTextMark4()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTextMark4();
+}
+void MainWindow::onTextMark5()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTextMark5();
+}
+void MainWindow::onTextMark6()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTextMark6();
+}
+void MainWindow::onTextMark7()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onTextMark7();
+}
+
 void MainWindow::onTextStrong()
 {
 	WebEditView *wnd = GetActiveMdiChild();
