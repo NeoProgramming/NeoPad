@@ -16,6 +16,8 @@ QT += network
 QT += webkit
 QT += webkitwidgets
 
+ICON = ./logo.png
+
 #for windows: place OpenSSL-111m-Win32 to c:/Libs
 win32 {
 	system(./updateBuildNumber.bat ./datetime.gen)

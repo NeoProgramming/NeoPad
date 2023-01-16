@@ -23,6 +23,7 @@ int main( int argc, char ** argv )
     QApplication a(argc, argv, true);
     a.setOrganizationName("NeoProgramming");
     a.setApplicationName("NeoPad");
+    a.setWindowIcon(QIcon(":/app/images/app-about.png"));
 
     QStringList paths = QCoreApplication::libraryPaths();
     paths.append(".");
