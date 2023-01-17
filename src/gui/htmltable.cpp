@@ -270,48 +270,33 @@ void HtmlTable::InsertRowBelow(QWebElement &tr)
 	tr.appendOutside(MakeHtmlRow(colsCount));
 }
 
-void HtmlTable::MoveRowAbove(QWebElement &tr)
+void HtmlTable::MoveRow(QWebElement &tr, bool below)
 {
     if(tr.isNull())
         return;
-    QWebElement prev_tr = tr.previousSibling();
-    if(prev_tr.isNull())
+    QWebElement tr2 = below ? tr.nextSibling() : tr.previousSibling();
+    if(tr2.isNull())
         return;
-    if(prev_tr.tagName() != "TR")
+    if(tr2.tagName() != "TR")
         return;
     tr.takeFromDocument();
-    prev_tr.prependOutside(tr);
+    if(below)
+        tr2.appendOutside(tr);
+    else
+        tr2.prependOutside(tr);
     QWebElement td = tr.findFirst("TD");
     if(!td.isNull()) {
        td.setFocus();
        const char *script =
-               "const selection = window.getSelection(); "
-               "const range = document.createRange(); "
-               "selection.removeAllRanges(); "
-               "range.selectNodeContents(this); "
-               "range.collapse(false); "
-               "selection.addRange(range); "
-               "this.focus(); ";
+               "var el = this; "
+               "var range = document.createRange(); "
+               "var sel = window.getSelection(); "
+               "range.setStart(el, 0); "
+               "range.collapse(true); "
+               "sel.removeAllRanges(); "
+               "sel.addRange(range); ";
         td.evaluateJavaScript(script);
     }
-}
-
-void HtmlTable::MoveRowBelow(QWebElement &tr)
-{
-    if(tr.isNull())
-        return;
-    QWebElement next_tr = tr.nextSibling();
-    if(next_tr.isNull())
-        return;
-    if(next_tr.tagName() != "TR")
-        return;
-    tr.takeFromDocument();
-    next_tr.appendOutside(tr);
-    QWebElement td = tr.findFirst("TD");
-    if(!td.isNull())
-        td.setFocus();
-    else
-        tr.setFocus();
 }
 
 bool HtmlTable::NormalizeRow(QWebElement &tr)

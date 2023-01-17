@@ -1059,7 +1059,7 @@ void WebEditView::onTableMoveRowAbove()
         return;
     }
     HtmlTable table(m_elTable);
-    table.MoveRowAbove(m_elTR);
+    table.MoveRow(m_elTR, false);
     setWindowModified(true);
 }
 
@@ -1071,7 +1071,7 @@ void WebEditView::onTableMoveRowBelow()
         return;
     }
     HtmlTable table(m_elTable);
-    table.MoveRowBelow(m_elTR);
+    table.MoveRow(m_elTR, true);
     setWindowModified(true);
 }
 
