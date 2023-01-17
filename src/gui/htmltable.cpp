@@ -281,6 +281,19 @@ void HtmlTable::MoveRowAbove(QWebElement &tr)
         return;
     tr.takeFromDocument();
     prev_tr.prependOutside(tr);
+    QWebElement td = tr.findFirst("TD");
+    if(!td.isNull()) {
+       td.setFocus();
+       const char *script =
+               "const selection = window.getSelection(); "
+               "const range = document.createRange(); "
+               "selection.removeAllRanges(); "
+               "range.selectNodeContents(this); "
+               "range.collapse(false); "
+               "selection.addRange(range); "
+               "this.focus(); ";
+        td.evaluateJavaScript(script);
+    }
 }
 
 void HtmlTable::MoveRowBelow(QWebElement &tr)
@@ -294,6 +307,11 @@ void HtmlTable::MoveRowBelow(QWebElement &tr)
         return;
     tr.takeFromDocument();
     next_tr.appendOutside(tr);
+    QWebElement td = tr.findFirst("TD");
+    if(!td.isNull())
+        td.setFocus();
+    else
+        tr.setFocus();
 }
 
 bool HtmlTable::NormalizeRow(QWebElement &tr)
