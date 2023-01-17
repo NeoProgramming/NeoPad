@@ -123,6 +123,8 @@ public slots:
 	void onTablePasteData();
 	void onTableExpand();
 	void onTableCollapse();
+    void onTableMoveRowAbove();
+    void onTableMoveRowBelow();
 	
 	void onImageProperties();
 

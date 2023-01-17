@@ -159,6 +159,8 @@ private slots:
 	void onTableExpand();
 	void onTableCollapse();
 	void onTableDeleteRow();
+    void onTableMoveRowAbove();
+    void onTableMoveRowBelow();
 	    
 	void onAppAbout();
 	void onAppAboutQt();

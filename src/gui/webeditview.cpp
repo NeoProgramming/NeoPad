@@ -1051,6 +1051,30 @@ void WebEditView::onTableDelRow()
 	}
 }
 
+void WebEditView::onTableMoveRowAbove()
+{
+    GetCaretContext();
+    if (m_elTable.isNull() || m_elTR.isNull()) {
+        QMessageBox::warning(this, AppTitle, tr("Table or row not found"), QMessageBox::Ok);
+        return;
+    }
+    HtmlTable table(m_elTable);
+    table.MoveRowAbove(m_elTR);
+    setWindowModified(true);
+}
+
+void WebEditView::onTableMoveRowBelow()
+{
+    GetCaretContext();
+    if (m_elTable.isNull() || m_elTR.isNull()) {
+        QMessageBox::warning(this, AppTitle, tr("Table or row not found"), QMessageBox::Ok);
+        return;
+    }
+    HtmlTable table(m_elTable);
+    table.MoveRowBelow(m_elTR);
+    setWindowModified(true);
+}
+
 void WebEditView::onImageProperties()
 {
 	if(m_elImage.isNull())

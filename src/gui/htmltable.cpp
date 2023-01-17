@@ -270,6 +270,32 @@ void HtmlTable::InsertRowBelow(QWebElement &tr)
 	tr.appendOutside(MakeHtmlRow(colsCount));
 }
 
+void HtmlTable::MoveRowAbove(QWebElement &tr)
+{
+    if(tr.isNull())
+        return;
+    QWebElement prev_tr = tr.previousSibling();
+    if(prev_tr.isNull())
+        return;
+    if(prev_tr.tagName() != "TR")
+        return;
+    tr.takeFromDocument();
+    prev_tr.prependOutside(tr);
+}
+
+void HtmlTable::MoveRowBelow(QWebElement &tr)
+{
+    if(tr.isNull())
+        return;
+    QWebElement next_tr = tr.nextSibling();
+    if(next_tr.isNull())
+        return;
+    if(next_tr.tagName() != "TR")
+        return;
+    tr.takeFromDocument();
+    next_tr.appendOutside(tr);
+}
+
 bool HtmlTable::NormalizeRow(QWebElement &tr)
 {
 	if (tr.isNull())

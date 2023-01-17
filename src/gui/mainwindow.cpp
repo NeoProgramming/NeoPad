@@ -198,6 +198,9 @@ MainWindow::MainWindow()
 	connect(ui.actionTableExpand,       &QAction::triggered, this, &MainWindow::onTableExpand);
 	connect(ui.actionTableCollapse,     &QAction::triggered, this, &MainWindow::onTableCollapse);
 	connect(ui.actionTableDeleteRow,    &QAction::triggered, this, &MainWindow::onTableDeleteRow);
+    connect(ui.actionTableMoveRowAbove, &QAction::triggered, this, &MainWindow::onTableMoveRowAbove);
+    connect(ui.actionTableMoveRowBelow, &QAction::triggered, this, &MainWindow::onTableMoveRowBelow);
+
 	
 	connect(ui.actionParaMarkList,		&QAction::triggered, this, &MainWindow::onInsertBulList);
 	connect(ui.actionParaNumList,		&QAction::triggered, this, &MainWindow::onInsertNumList);
@@ -1585,3 +1588,18 @@ void MainWindow::onTableDeleteRow()
 	if (wnd)
 		wnd->onTableDelRow();
 }
+
+void MainWindow::onTableMoveRowAbove()
+{
+    WebEditView *wnd = GetActiveMdiChild();
+    if (wnd)
+        wnd->onTableMoveRowAbove();
+}
+
+void MainWindow::onTableMoveRowBelow()
+{
+    WebEditView *wnd = GetActiveMdiChild();
+    if (wnd)
+        wnd->onTableMoveRowBelow();
+}
+

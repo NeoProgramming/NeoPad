@@ -43,7 +43,9 @@ public:
 
 	void Expand(QWebElement &td);
 	void Collapse(QWebElement &td);
-	
+
+    void MoveRowAbove(QWebElement &tr);
+    void MoveRowBelow(QWebElement &tr);
 protected:
 	void Parse(const QString &text, QList<QStringList> &data);
 	void ParseRow(const QString &text, QStringList &row);

@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>18</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -353,7 +353,7 @@
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <addaction name="actionToolsLink"/>
    <addaction name="actionToolsSearch"/>
@@ -374,6 +374,8 @@
    <addaction name="actionTableExpand"/>
    <addaction name="actionTableCollapse"/>
    <addaction name="actionTableDeleteRow"/>
+   <addaction name="actionTableMoveRowAbove"/>
+   <addaction name="actionTableMoveRowBelow"/>
   </widget>
   <widget class="QToolBar" name="toolBarMark">
    <property name="windowTitle">
@@ -1736,6 +1738,30 @@
    </property>
    <property name="toolTip">
     <string>Mark1</string>
+   </property>
+  </action>
+  <action name="actionTableMoveRowAbove">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/table/images/table-rowup.png</normaloff>:/table/images/table-rowup.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move row above</string>
+   </property>
+   <property name="toolTip">
+    <string>Move row above</string>
+   </property>
+  </action>
+  <action name="actionTableMoveRowBelow">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/table/images/table-rowdown.png</normaloff>:/table/images/table-rowdown.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move row below</string>
+   </property>
+   <property name="toolTip">
+    <string>Move row below</string>
    </property>
   </action>
  </widget>
