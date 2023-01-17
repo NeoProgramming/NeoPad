@@ -99,6 +99,7 @@ function isValidAttr(a)
 	|| a=='src'
 	|| a=='colspan'
 	|| a=='rowspan'
+	|| a=='class'
 	)
 		return true;
 	return false;
