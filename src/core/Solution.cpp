@@ -538,6 +538,9 @@ MTPOS CSolution::AddItem(MTPOS tpPar, MTPOS tpAfter, const QString& title, const
 		
 	MT_ITEM item;
 	item.p_subbase = 1;
+
+	if(INI::DefItemStatus != 0)
+		item.status = (ETreeStatus)INI::DefItemStatus;
 	
 	// identifier; just in case, normalize it
 	item.id = id;
