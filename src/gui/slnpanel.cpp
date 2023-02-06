@@ -635,6 +635,7 @@ void SlnPanel::onInsertNewChild()
 	// insert the blank into the tree
 	NewItemDlg dlg;
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
+    dlg.m_open = INI::OpenNewDoc;
 
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) 
@@ -676,6 +677,7 @@ void SlnPanel::onInsertNewSibling()
 	// insert a new item after the given one
 	NewItemDlg dlg;
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
+    dlg.m_open = INI::OpenNewDoc;
 
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;

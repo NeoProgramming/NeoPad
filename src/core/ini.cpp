@@ -26,6 +26,7 @@ namespace INI
 
 	int OutlinerMode = 0;		// open with a single click
 	int DefItemStatus = 0;
+    int OpenNewDoc = 0;
 
 	std::string  HtmEditPath;	// Text editor
 	std::string  VisEditPath;	// Visual html editor
@@ -56,6 +57,7 @@ XIniData SecSettings[] = {
 	XINI_STR(PdfgenPath),
 	XINI_INT(OutlinerMode),
 	XINI_INT(DefItemStatus),
+    XINI_INT(OpenNewDoc),
 	XINI_INT(CreateNewVmb),
 	XINI_INT(CreateNewDir),
 	XINI_INT(LastImageAction),

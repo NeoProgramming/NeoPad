@@ -22,6 +22,7 @@ int NewItemDlg::DoModal()
 	ui.lineId->setText(m_id);
 	ui.lineId->selectAll();
 	ui.lineId->setFocus();
+    ui.checkOpen->setChecked(m_open);
 	return this->exec();
 }
 

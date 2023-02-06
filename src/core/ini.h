@@ -8,6 +8,7 @@ namespace INI
 
 	extern int OutlinerMode;
 	extern int DefItemStatus;
+    extern int OpenNewDoc;
 	extern std::string  CurrProjectPath;
 	extern int QSModeNew;
 	extern int AutoSavePages;
