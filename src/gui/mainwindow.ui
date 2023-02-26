@@ -66,6 +66,7 @@
    <addaction name="actionEditCopyText"/>
    <addaction name="actionEditPaste"/>
    <addaction name="actionEditPasteText"/>
+   <addaction name="actionEditPasteImage"/>
    <addaction name="actionEditPasteAsTable"/>
    <addaction name="actionEditPasteCell"/>
    <addaction name="actionEditUntag"/>
@@ -79,7 +80,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>20</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -123,6 +124,7 @@
     <addaction name="actionEditCopyText"/>
     <addaction name="actionEditPaste"/>
     <addaction name="actionEditPasteText"/>
+    <addaction name="actionEditPasteImage"/>
     <addaction name="actionEditPasteAsTable"/>
     <addaction name="separator"/>
     <addaction name="actionEditUntag"/>
@@ -597,6 +599,15 @@
    </property>
    <property name="text">
     <string>Paste</string>
+   </property>
+  </action>
+  <action name="actionEditPasteImage">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/edit/images/edit-pasteimage.png</normaloff>:/edit/images/edit-pasteimage.png</iconset>
+   </property>
+   <property name="text">
+    <string>Paste Image</string>
    </property>
   </action>
   <action name="actionEditCut">

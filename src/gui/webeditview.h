@@ -38,6 +38,7 @@ public slots:
 	void onEditPaste();
 	void onEditPasteText();
     void onEditPasteAsTable();
+	void onEditPasteImage();
 	void onEditPasteCell();
 	void onEditPasteSpecial();
 
@@ -144,8 +145,8 @@ public:
 protected:
 	virtual void keyPressEvent(QKeyEvent * event);
 	virtual void closeEvent(QCloseEvent *e);
-	virtual void contextMenuEvent ( QContextMenuEvent * event );
-
+	virtual void contextMenuEvent (QContextMenuEvent * event);
+	
 private:
 	QWebElement getTag();
 	bool maybeSave();

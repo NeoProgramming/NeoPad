@@ -22,6 +22,10 @@ class MainWindow : public QMainWindow, public NeopadCallback
 {
     Q_OBJECT
 	friend class SlnPanel;
+	struct ChildHandler {
+		QAction *pAction;
+		void (WebEditView::*pHandler)();
+	};
 public:
     MainWindow();
     virtual ~MainWindow();
@@ -92,6 +96,7 @@ private slots:
     void onEditCopyText();
 	void onEditPaste();
 	void onEditPasteText();
+	void onEditPasteImage();
     void onEditPasteAsTable();
 	void onEditPasteCell();
 	void onEditUndo();
@@ -176,6 +181,7 @@ protected:
     
 private:
 	WebEditView *GetActiveMdiChild();
+	void MainWindow::regChildAction(QAction *action, void (WebEditView::*pHandler)());
 
 	void GenContents(int bi);
 	void EditCss(int bi);
@@ -196,8 +202,9 @@ private:
 	QToolButton* createMenuButton(const char *res, QMenu *menu, const QString &tooltip);
 	QMenu* createTableMenu(const char *slot);
 private:	
+	QVector<ChildHandler> m_Handlers;	// на будущее - таблица указателей на обработчики
 	QMdiArea      *m_wArea;
-	QTabBar       *m_tabBar;
+	QTabBar       *m_tabBar;			// извлекаем из m_wArea
 	QSignalMapper *windowMapper;
 	
 	SlnPanel	  *m_wSln;

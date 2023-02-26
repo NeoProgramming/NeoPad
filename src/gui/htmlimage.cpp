@@ -1,6 +1,8 @@
 #include "htmlimage.h"
 #include <QFile>
 #include <QFileInfo>
+#include <QImage>
+#include <QBuffer>
 
 HtmlImage::HtmlImage()
 {
@@ -141,4 +143,16 @@ bool HtmlImage::ConvertToFile(const QString& code, const QString &fpath)
 	file.write(data);
 	file.close();
 	return true;
+}
+
+QString HtmlImage::MakeHtml(const QImage &image)
+{
+	QByteArray ba;
+	QBuffer buffer(&ba);
+	buffer.open(QIODevice::WriteOnly);
+	image.save(&buffer, "PNG");
+	QString res = "<img src=\"data:image;base64,";
+	res += ba.toBase64();
+	res += "\">";
+	return res;
 }

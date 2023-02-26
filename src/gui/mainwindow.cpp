@@ -83,6 +83,10 @@ MainWindow::MainWindow()
 	m_wArea->setTabsClosable(true);
 	m_wArea->setTabsMovable(true);
 
+	QTabWidget *tabWidget = m_wArea->findChild<QTabWidget*>();
+//	tabWidget->setTabBar(new CustomTabBar(tabWidget));
+//	m_wArea->setTabBar(new TabBar(m_wArea));
+
 	QList<QTabBar *> tabBarList = m_wArea->findChildren<QTabBar*>();
 	m_tabBar = tabBarList.at(0);
 	if (m_tabBar) {
@@ -138,6 +142,10 @@ MainWindow::MainWindow()
 	connect(ui.actionWindowVTile,		&QAction::triggered, this, &MainWindow::onTileSubWindowsVertically);
 	connect(ui.actionAboutNeopad,		&QAction::triggered, this, &MainWindow::onAppAbout);
 	connect(ui.actionAboutQt,			&QAction::triggered, this, &MainWindow::onAppAboutQt);
+
+	// register actions for children windows
+	regChildAction(ui.actionClearDoc,   &WebEditView::onEditClearDoc);
+
 	connect(ui.actionClearDoc,			&QAction::triggered, this, &MainWindow::onEditClearDoc);
 	connect(ui.actionCorrectCssPath,	&QAction::triggered, this, &MainWindow::onEditFixCssPath);
 
@@ -147,6 +155,7 @@ MainWindow::MainWindow()
     connect(ui.actionEditCopyText,		&QAction::triggered, this, &MainWindow::onEditCopyText);
 	connect(ui.actionEditPaste,			&QAction::triggered, this, &MainWindow::onEditPaste);
 	connect(ui.actionEditPasteText,		&QAction::triggered, this, &MainWindow::onEditPasteText);
+	connect(ui.actionEditPasteImage,    &QAction::triggered, this, &MainWindow::onEditPasteImage);
     connect(ui.actionEditPasteAsTable,	&QAction::triggered, this, &MainWindow::onEditPasteAsTable);
 	connect(ui.actionEditPasteCell,     &QAction::triggered, this, &MainWindow::onEditPasteCell);
 	connect(ui.actionEditUndo,			&QAction::triggered, this, &MainWindow::onEditUndo);
@@ -272,6 +281,11 @@ void MainWindow::onPostInit()
 //-------------------------------------------------
 MainWindow::~MainWindow()
 {
+}
+
+void MainWindow::regChildAction(QAction *action, void (WebEditView::*handler)())
+{
+	m_Handlers.append(ChildHandler{ action, handler });
 }
 
 //-------------------------------------------------
@@ -885,6 +899,13 @@ void MainWindow::onEditPasteText()
 	WebEditView *wnd = GetActiveMdiChild();
 	if (wnd)
 		wnd->onEditPasteText();
+}
+
+void MainWindow::onEditPasteImage()
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd)
+		wnd->onEditPasteImage();
 }
 
 void MainWindow::onEditPasteAsTable()

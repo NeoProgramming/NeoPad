@@ -20,11 +20,11 @@ public:
 
 	void SetDimensions(int rows, int cols);
 
-    QString MakeHtml(int rowsCount, int colsCount);
-    QString MakeHtml(const QString &text);
-	QString MakeHtmlCells(int cellsCount);
-	QString MakeHtmlRow(int colsCount);
-    QString MakeHtmlRow(const QString &text);
+    static QString MakeHtml(int rowsCount, int colsCount);
+	static QString MakeHtml(const QString &text);
+	static QString MakeHtmlCells(int cellsCount);
+	static QString MakeHtmlRow(int colsCount);
+	static QString MakeHtmlRow(const QString &text);
 
 	void InsertData(const QString &text, QWebElement &td);
 	void AppendData(const QString &text);

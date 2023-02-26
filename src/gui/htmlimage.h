@@ -19,6 +19,7 @@ public:
 	void SetWidth(int w);
 	void SetHeight(int h);
 
+	static QString MakeHtml(const QImage &image);
 	static QString ConvertToEmbedded(const QString &fpath);
 	static bool ConvertToFile(const QString& data, const QString &fpath);
 	static QString GetImageExt(const QString& code);

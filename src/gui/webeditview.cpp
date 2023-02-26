@@ -91,6 +91,7 @@ WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
 	m_menuContext.addAction(mw->ui.actionEditCopy);
     m_menuContext.addAction(mw->ui.actionEditCopyText);
 	m_menuContext.addAction(mw->ui.actionEditPaste);
+	m_menuContext.addAction(mw->ui.actionEditPasteImage);
 	m_menuContext.addAction(mw->ui.actionEditPasteText);
     m_menuContext.addAction(mw->ui.actionEditPasteAsTable);
 	m_menuContext.addSeparator();
@@ -478,15 +479,28 @@ void WebEditView::onEditPasteAsTable()
     // paste text as table
     QClipboard *clipboard = QApplication::clipboard();
     QString originalText = clipboard->text();
-//    clipboard->setText(originalText);
 
-    HtmlTable table;
-	QString html = table.MakeHtml(originalText);
+	QString html = HtmlTable::MakeHtml(originalText);
     InsertHtml(html);
+}
 
-    // debug
-//    clipboard->setText(table.MakeHtml(originalText));
-//    triggerPageAction(QWebPage::Paste);
+void WebEditView::onEditPasteImage()
+{
+	const QClipboard *clipboard = QApplication::clipboard();
+	if (!clipboard)
+		return;
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (!mimeData)
+		return;
+	if (!mimeData->hasImage())
+		return;
+
+	
+	QImage img = clipboard->image();
+	if (!img.isNull()) {
+		QString html = HtmlImage::MakeHtml(img);
+		InsertHtml(html);
+	}
 }
 
 void WebEditView::onEditPasteCell()
