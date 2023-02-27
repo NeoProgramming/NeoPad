@@ -181,7 +181,7 @@ protected:
     
 private:
 	WebEditView *GetActiveMdiChild();
-	void MainWindow::regChildAction(QAction *action, void (WebEditView::*pHandler)());
+    void regChildAction(QAction *action, void (WebEditView::*pHandler)());
 
 	void GenContents(int bi);
 	void EditCss(int bi);
