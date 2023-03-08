@@ -124,14 +124,15 @@
         <file>images/table-rowup.png</file>
     </qresource>
     <qresource prefix="/treeicons">
-        <file>images/ti-folder25.png</file>
-        <file>images/ti-folder50.png</file>
-        <file>images/ti-folder75.png</file>
+        <file>images/ti-html25.png</file>
+        <file>images/ti-html50.png</file>
+        <file>images/ti-html75.png</file>
         <file>images/ti-html.png</file>
-        <file>images/ti-underconstr.png</file>
+        <file>images/ti-html0.png</file>
         <file>images/ti-unknown.png</file>
         <file>images/ti-locked.png</file>
         <file>images/ti-htmlx.png</file>
+		<file>images/ti-folder.png</file>
     </qresource>
     <qresource prefix="/langicons">
         <file>images/li-none.png</file>

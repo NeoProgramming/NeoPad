@@ -101,12 +101,13 @@ protected:
 	bool	LoadSubBase(const QString &id, MTPOS tpParNode);
 	void	LoadItemData(pugi::xml_node txItem, MT_ITEM *item, bool vmb);
 	void	LoadBasesInfo(pugi::xml_node txRoot);
-	
-	void	SaveSubTag(pugi::xml_node pxParent, MTPOS tposParent, bool recursive);
+	void	LoadFavorites(pugi::xml_node txRoot);
 
+	void	SaveSubTag(pugi::xml_node pxParent, MTPOS tposParent, bool recursive);
 	void    SaveItemData(pugi::xml_node txItem, MT_ITEM *item);
 	void	SaveBasesInfo(pugi::xml_node txRoot);
-	
+	void	SaveFavorites(pugi::xml_node txRoot);
+
 	void	addProjectToRecent(const QString &path);
 	
 	void    HandleChanges(MTPOS tpItem, bool recursive);

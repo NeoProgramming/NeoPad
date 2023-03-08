@@ -134,6 +134,9 @@ bool CSolution::SaveProject(bool recursive)
 	// save bases
 	SaveBasesInfo(xRoot);
 
+	// save favorites
+	SaveFavorites(xRoot);
+
 	// write file
 	QString path = m_root->GetVmbAbsPath();
 	if (SaveXmlDoc(path, xdoc)) {
@@ -384,6 +387,16 @@ void CSolution::SaveBasesInfo(pugi::xml_node txRoot)
 	}
 }
 
+void CSolution::LoadFavorites(pugi::xml_node txRoot)
+{
+
+}
+
+void CSolution::SaveFavorites(pugi::xml_node txRoot)
+{
+
+}
+
 bool CSolution::LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot)
 {
 	// psw enc 
@@ -440,6 +453,9 @@ bool CSolution::LoadProject(const QString &fpath)
 	LoadBasesInfo(xroot);
 	if (m_BasesCnt < 1)
 		return Fail("No bases found"), false;
+
+	// favorites
+	LoadFavorites(xroot);
 
 	// load content (only after downloading the bases!)
 	CreateRoot("", m_RootDir);

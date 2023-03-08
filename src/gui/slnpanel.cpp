@@ -58,11 +58,12 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	m_TreeIcons[(int)ETreeStatus::TS_UNKNOWN] = QIcon(":/treeicons/images/ti-unknown.png");
 	m_TreeIcons[(int)ETreeStatus::TS_READY] = QIcon(":/treeicons/images/ti-html.png");
 	m_TreeIcons[(int)ETreeStatus::TS_ALMOST] = QIcon(":/treeicons/images/ti-htmlx.png");
-	m_TreeIcons[(int)ETreeStatus::TS_75] = QIcon(":/treeicons/images/ti-folder75.png");
-	m_TreeIcons[(int)ETreeStatus::TS_50] = QIcon(":/treeicons/images/ti-folder50.png");
-	m_TreeIcons[(int)ETreeStatus::TS_25] = QIcon(":/treeicons/images/ti-folder25.png");
-	m_TreeIcons[(int)ETreeStatus::TS_UNREADY] = QIcon(":/treeicons/images/ti-underconstr.png");
+	m_TreeIcons[(int)ETreeStatus::TS_75] = QIcon(":/treeicons/images/ti-html75.png");
+	m_TreeIcons[(int)ETreeStatus::TS_50] = QIcon(":/treeicons/images/ti-html50.png");
+	m_TreeIcons[(int)ETreeStatus::TS_25] = QIcon(":/treeicons/images/ti-html25.png");
+	m_TreeIcons[(int)ETreeStatus::TS_UNREADY] = QIcon(":/treeicons/images/ti-html0.png");
 	m_TreeIcons[(int)ETreeStatus::TS_LOCKED] = QIcon(":/treeicons/images/ti-locked.png");
+	m_TreeIcons[(int)ETreeStatus::TS_FOLDER] = QIcon(":/treeicons/images/ti-folder.png");
 
 	m_LangIcons[(int)ELangStatus::LS_NONE] = QIcon(":/langicons/images/li-none.png");
 	m_LangIcons[(int)ELangStatus::LS_OK] = QIcon(":/langicons/images/li-ok.png");
@@ -87,6 +88,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	actionCheckText->setChecked(true);
 
 	ui.pushOptions->setMenu(menu);
+
+	ui.comboFavRoot->addItem("ALL FAVORITES");
 }
 
 QAction *SlnPanel::MakeAction(QString text, QMenu *menu, const char *slot)

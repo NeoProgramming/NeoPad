@@ -15,6 +15,7 @@ enum class ETreeStatus
 	TS_25,
 	TS_UNREADY,		// unfinished document
 	TS_LOCKED,		// ready but blocked for publication
+	TS_FOLDER,
 
 	TS_ITEMS_COUNT
 };
@@ -74,7 +75,6 @@ public:
 
 	QString GetInfo();
 	QString GetInfo2();
-	QString GetUrl();
 
 	QString GetId();
 	QString GetGuid();
