@@ -1,8 +1,8 @@
-#include "Bases.h"
+#include "Books.h"
 #include <QDir>
 #include "../service/tools.h"
 
-void Bases::AddBase(const QString &title, const QString &suffix, const QString &rpath,
+void Books::AddBase(const QString &title, const QString &suffix, const QString &rpath,
     const QString &csspath, const QString &prefix)
 {
     NeopadBook base;
@@ -37,7 +37,7 @@ void Bases::AddBase(const QString &title, const QString &suffix, const QString &
     booksCnt++;
 }
 
-QString Bases::GetDocExt(int bi)
+QString Books::GetDocExt(int bi)
 {
     // get extension by document type
     if (bi < 0)
@@ -49,7 +49,7 @@ QString Bases::GetDocExt(int bi)
     return "." + books[bi].suffix + MBA::extHtml;
 }
 
-bool Bases::LoadBasesInfo(pugi::xml_node txRoot)
+bool Books::LoadBasesInfo(pugi::xml_node txRoot)
 {
     pugi::xml_node txBases = txRoot.child("bases");
     if (!txBases)
@@ -73,7 +73,7 @@ bool Bases::LoadBasesInfo(pugi::xml_node txRoot)
 }
 
 
-void Bases::SaveBasesInfo(pugi::xml_node txRoot)
+void Books::SaveBasesInfo(pugi::xml_node txRoot)
 {
     pugi::xml_node txBases = txRoot.append_child("bases");
     if (!txBases)

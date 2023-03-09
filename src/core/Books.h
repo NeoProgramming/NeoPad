@@ -4,7 +4,7 @@
 #include "vmbsrv.h"
 #include "../service/pugitools.h"
 
-class Bases {
+class Books {
 public:
     int     BCnt()
     {
