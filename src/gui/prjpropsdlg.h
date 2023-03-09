@@ -27,7 +27,7 @@ public:
 
 	QString m_images;
 	QString m_snippets;
-	NeopadBase m_bases[BCNT];
+	NeopadBook m_bases[BCNT];
 private:
 	Ui::PrjPropsDlg ui;
 };

@@ -13,8 +13,10 @@ MT_ITEM::MT_ITEM()
 	attrs = 0;
 	status = ETreeStatus::TS_UNREADY;
 	check = 1;
-	for (int i = 0; i<theSln.BCnt(); i++)
-		time[i] = -1;
+    //for (int i = 0; i<theSln.BCnt(); i++)
+    //	time[i] = -1;
+    for(auto &v : time)
+        v = -1;
 }
 
 MT_ITEM::MT_ITEM(const char *text)
@@ -22,17 +24,20 @@ MT_ITEM::MT_ITEM(const char *text)
 	attrs = 0;
 	title[0] = text;
 	status = ETreeStatus::TS_UNREADY;
-	for (int i = 0; i<theSln.BCnt(); i++)
-		time[i] = -1;
+    //for (int i = 0; i<theSln.BCnt(); i++)
+    //	time[i] = -1;
+    for(auto &v : time)
+        v = -1;
 }
 
 MT_ITEM::MT_ITEM(const MT_ITEM &obj)
 {
 	attrs = obj.attrs;
-	for (int i = 0; i < BCNT; i++) {
-		title[i] = obj.title[i];
-		time[i] = obj.time[i];
-	}
+    for (int i = 0; i < BCNT; i++) {
+        title[i] = obj.title[i];
+        time[i] = obj.time[i];
+    }
+
 	rdir = obj.rdir;
 	attrs = obj.attrs;
 	status = obj.status;
@@ -109,14 +114,14 @@ QString MT_ITEM::GetGuid()
 
 QString MT_ITEM::GetTitle(int bi)
 {
-	if (bi<0 || bi >= theSln.BCnt())
+    if (bi<0 || bi >= BCNT)
 		return QString();
 	return title[bi];
 }
 
 QString MT_ITEM::GetTitles(int bi)
 {
-	if (bi < 0 || bi >= theSln.BCnt())
+    if (bi < 0 || bi >= BCNT)
 		return QString();
 	if (!parent)
 		return GetTitle(bi);
@@ -125,14 +130,14 @@ QString MT_ITEM::GetTitles(int bi)
 
 QString MT_ITEM::GetDocLocPath(int bi)
 {
-	QString c = id + theSln.GetDocExt(bi);
+    QString c = id + theSln.m_Bases.GetDocExt(bi);
 	return c;
 }
 
 QString MT_ITEM::GetDocRelPath(int bi)
 {
 	// get document path
-	if (bi<0 || bi >= theSln.BCnt())
+    if (bi<0 || bi >= BCNT)
 		return QString();
 
 	QString c = GetBaseDir();
@@ -144,7 +149,7 @@ QString MT_ITEM::GetDocRelPath(int bi)
 QString MT_ITEM::GetDocAbsPath(int bi)
 {
 	// get document path
-	if (bi<0 || bi >= theSln.BCnt())
+    if (bi<0 || bi >= BCNT)
 		return QString();
 
 	QString c = GetAbsDir(bi);
@@ -174,7 +179,7 @@ QString MT_ITEM::GetVmbLocPath()
 time_t MT_ITEM::GetDocTime(int bi)
 {
 	// get document time from vmbase tags
-	if (bi<0 || bi >= theSln.BCnt())
+    if (bi<0 || bi >= BCNT)
 		return 0;
 	return time[bi];
 }
@@ -244,11 +249,11 @@ QString MT_ITEM::GetAbsDir(int bi)
 	// c:/users/user1/project/base1/dir1/dir2/dir3"
 	QString bdir = GetBaseDir();
 	
-	if (bi < 0 || bi >= theSln.BCnt())
+    if (bi < 0 || bi >= BCNT)
 		return theSln.m_RootDir + "/" + bdir;
 	if(theSln.m_Bases[bi].rpath.isEmpty())
 		return theSln.m_RootDir + "/" + bdir;
-	return theSln.m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
+    return     theSln.m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
 }
 
 QString MT_ITEM::GetBaseDir()

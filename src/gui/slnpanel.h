@@ -48,7 +48,7 @@ public:
     void EnsureVisible(MTPOS node);
 
     void initialize();
-	void UpdateBases();
+    void UpdateBases();
     void LoadTree();
 	void LoadTreeLevel(MTPOS node, QTreeWidgetItem *parent);
 	

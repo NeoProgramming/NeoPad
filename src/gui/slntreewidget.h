@@ -4,6 +4,7 @@
 #include <QTreeWidget>
 #include <QDropEvent>
 
+// for drag & drop
 class SlnTreeWidget : public QTreeWidget
 {
 	Q_OBJECT

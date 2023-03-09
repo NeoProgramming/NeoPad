@@ -1518,7 +1518,7 @@ void MainWindow::GenContents(int bi)
 		if (!base.isEmpty() && !base.endsWith('/'))
 			base += '/';
 		QString ctxName = QFileDialog::getSaveFileName(this, tr("Select contents file"),
-			theSln.GetBaseDir(bi) + "/contents.html", "HTML files (*.html)");
+			theSln.GetBookDir(bi) + "/contents.html", "HTML files (*.html)");
 		if (!ctxName.isEmpty())
 			theSln.GenContents(bi, ctxName, base);
 	}

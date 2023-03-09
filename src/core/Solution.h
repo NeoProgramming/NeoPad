@@ -9,13 +9,13 @@
 #include "PrjTree.h"
 #include "Snippets.h"
 #include "vmbsrv.h"
-
+#include "Bases.h"
 
 
 class CSolution : public PrjTree
 {
 public:
-	QString	GetDocExt(int di);
+
 
 	static ETreeStatus	GetTreeStatus(const char* attr);
 	static const char*	GetTreeStatus(ETreeStatus status);
@@ -28,22 +28,17 @@ public:
 	QString m_ImageDir;		// path to the directory with pictures
 	Snippets m_Snippets;
 	QString m_RootDir;		// main base for xml files
-	NeopadBase	m_Bases[BCNT];
-	int m_BasesCnt = 0;
 	QString m_Password;
 	NeopadCallback *m_pCB = nullptr;
 	QString m_RecentClipboard;
-
+    Bases m_Bases;
 public:
 	CSolution(void);
 	~CSolution(void);
 	void	LoadSettings();
 	void	SaveSettings();
-	int     BCnt() 
-	{
-		return m_BasesCnt;
-	}
-	QString GetBaseDir(int bi);
+
+    QString GetBookDir(int bi);
 	QString GetPrjTitle();
 
 	// work with the project
@@ -86,8 +81,6 @@ public:
 protected:
 	bool    IsFNamesAvailable(MTPOS pos, const QString &id);
 
-	void    AddBase(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath, const QString &prefix);
-
 	bool    LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot);
 	void	MakeXmlDoc(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase);
 	bool	SaveXmlDoc(const QString &path, const pugi::xml_document &xdoc);
@@ -100,12 +93,12 @@ protected:
 	bool	LoadSubTag(pugi::xml_node txPar, MTPOS tpPar);
 	bool	LoadSubBase(const QString &id, MTPOS tpParNode);
 	void	LoadItemData(pugi::xml_node txItem, MT_ITEM *item, bool vmb);
-	void	LoadBasesInfo(pugi::xml_node txRoot);
+
 	void	LoadFavorites(pugi::xml_node txRoot);
 
 	void	SaveSubTag(pugi::xml_node pxParent, MTPOS tposParent, bool recursive);
 	void    SaveItemData(pugi::xml_node txItem, MT_ITEM *item);
-	void	SaveBasesInfo(pugi::xml_node txRoot);
+
 	void	SaveFavorites(pugi::xml_node txRoot);
 
 	void	addProjectToRecent(const QString &path);

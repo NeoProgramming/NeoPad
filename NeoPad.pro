@@ -58,6 +58,7 @@ FORMS += \
 
 HEADERS += \
     ./src/core/ini.h \
+    ./src/core/Bases.h \
     ./src/core/Cryptor.h \
     ./src/core/PrjItem.h \
     ./src/core/PrjStat.h \
@@ -98,6 +99,7 @@ HEADERS += \
     
 SOURCES += \
     ./src/main.cpp \
+    ./src/core/Bases.cpp \
     ./src/core/Cryptor.cpp \
     ./src/core/ini.cpp \
     ./src/core/PrjItem.cpp \

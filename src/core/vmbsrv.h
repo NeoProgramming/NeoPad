@@ -6,7 +6,7 @@
 const char AppTitle[] = "NeoPad";
 
 
-struct NeopadBase
+struct NeopadBook
 {
 	QString suffix;
 	QString title;

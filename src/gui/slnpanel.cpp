@@ -289,7 +289,7 @@ void SlnPanel::LoadTreeLevel(MTPOS tposNode, QTreeWidgetItem *parent)
 	for (MTPOS tpos : tposNode->children)
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem(parent);
-		item->setData(0, Qt::UserRole, qVariantFromValue((void*)tpos));
+        item->setData(0, Qt::UserRole, QVariant::fromValue((void*)tpos));
     //    item->setBackgroundColor(0,  QColor(255,255,0));
 		UpdateItem(item);
 		LoadTreeLevel(tpos, item);
@@ -301,6 +301,13 @@ void SlnPanel::UpdateBases()
 	QTreeWidgetItem* headerItem = ui.treeContents->headerItem();
 	headerItem->setText(0, theSln.m_Bases[0].title);
 	headerItem->setText(1, theSln.m_Bases[1].title);
+
+    headerItem = ui.treeFavorites->headerItem();
+    headerItem->setText(0, theSln.m_Bases[0].title);
+    headerItem->setText(1, theSln.m_Bases[1].title);
+
+    submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.m_Bases[0].title));
+    submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.m_Bases[1].title));
 }
 
 void SlnPanel::LoadTree()
@@ -314,7 +321,7 @@ void SlnPanel::LoadTree()
 	ui.treeContents->clear();
 	QTreeWidgetItem *root = new QTreeWidgetItem();
 	root->setText(0, tposRoot->title[0]);
-	root->setData(0, Qt::UserRole, qVariantFromValue((void*)tposRoot));
+    root->setData(0, Qt::UserRole, QVariant::fromValue((void*)tposRoot));
 
 	ui.treeContents->addTopLevelItem(root);
 	UpdateItem(root);
@@ -322,10 +329,7 @@ void SlnPanel::LoadTree()
 	LoadTreeLevel(tposRoot, root);
 	root->setExpanded(true);
 
-	UpdateBases();
-
-	submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.m_Bases[0].title));
-	submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.m_Bases[1].title));
+	UpdateBases();	
 
 	setCursor(Qt::ArrowCursor);
 	showInitDoneMessage();

@@ -31,17 +31,6 @@ const char* csStatusNames[] = {
 	NULL
 };
 
-QString CSolution::GetDocExt(int bi)
-{
-	// get extension by document type
-	if (bi < 0)
-		return MBA::extVmbase;
-	if (bi >= BCnt())
-		return QString(".error") + MBA::extHtml;
-	if(m_Bases[bi].suffix.isEmpty())
-		return MBA::extHtml;
-	return "." + m_Bases[bi].suffix + MBA::extHtml;
-}
 
 ETreeStatus CSolution::GetTreeStatus(const char* attr)
 {
@@ -132,7 +121,7 @@ bool CSolution::SaveProject(bool recursive)
 	SaveSubTag(xBase, m_root, recursive);
 
 	// save bases
-	SaveBasesInfo(xRoot);
+    m_Bases.SaveBasesInfo(xRoot);
 
 	// save favorites
 	SaveFavorites(xRoot);
@@ -315,80 +304,14 @@ void CSolution::LoadItemData(pugi::xml_node txElem, MT_ITEM *item, bool vmb)
 	item->status = GetTreeStatus(txElem.attribute(MBA::status).as_string());
 }
 
-void CSolution::AddBase(const QString &title, const QString &suffix, const QString &rpath, 
-	const QString &csspath, const QString &prefix)
-{
-	NeopadBase base;
-	base.title = title;
-	base.suffix = suffix;
-	base.rpath = rpath;
-	base.csspath = csspath;
-	base.load_prefix = prefix;
-	base.save_prefix = prefix;
 
-	if (base.rpath.isEmpty())
-		base.rpath = ".";
-	if (base.csspath.isEmpty())
-		base.csspath = "default.css";
 
-	// unique path for base
-	base.path_is_unique = QDir::cleanPath(base.rpath) != "." &&
-		!std::count_if(&m_Bases[0], &m_Bases[BCNT], [&base](const NeopadBase&b)->bool {
-			return QDir::cleanPath(base.rpath) == QDir::cleanPath(b.rpath);
-		}
-	);
-
-	// only one element without prefix is possible 
-	if (base.suffix.isEmpty()) {
-		for (int i = 0; i < m_BasesCnt; i++)
-			if (m_Bases[i].suffix.isEmpty())
-				return;
-	}
-
-	// add to bases
-	m_Bases[m_BasesCnt] = base;
-	m_BasesCnt++;
-}
-
-void CSolution::LoadBasesInfo(pugi::xml_node txRoot)
-{
-	pugi::xml_node txBases = txRoot.child("bases");
-	if (!txBases)
-		return;
-	
-	m_BasesCnt = 0;
-	pugi::xml_node txBase = txBases.first_child();
-	while (txBase && m_BasesCnt<BCNT) {
-		
-		AddBase(
-			U16(txBase.attribute("title").as_string()),
-			U16(txBase.attribute("suffix").as_string()),
-			U16(txBase.attribute("rpath").as_string()),
-			U16(txBase.attribute("csspath").as_string()),
-			U16(txBase.attribute("prefix").as_string())
-			);
-
-		txBase = txBase.next_sibling();
-	}
-}
-
-void CSolution::SaveBasesInfo(pugi::xml_node txRoot)
-{
-	pugi::xml_node txBases = txRoot.append_child("bases");
-	if (!txBases)
-		return;
-	for (const NeopadBase& base : m_Bases) {
-		pugi::xml_node txBase = txBases.append_child("base");
-		set_attr(txBase, "title").set_value(U8a(base.title).constData());
-		set_attr(txBase, "suffix").set_value(U8a(base.suffix).constData());
-		set_attr(txBase, "rpath").set_value(U8a(base.rpath).constData());
-		set_attr(txBase, "csspath").set_value(U8a(base.csspath).constData());
-		set_attr(txBase, "prefix").set_value(U8a(base.save_prefix).constData());
-	}
-}
 
 void CSolution::LoadFavorites(pugi::xml_node txRoot)
 {
+    pugi::xml_node txFavs = txRoot.child("favorites");
+    if (!txFavs)
+        return;
 
 }
 
@@ -450,9 +373,8 @@ bool CSolution::LoadProject(const QString &fpath)
 	m_RootDir = QFileInfo(fpath).dir().canonicalPath();
 
 	// bases
-	LoadBasesInfo(xroot);
-	if (m_BasesCnt < 1)
-		return Fail("No bases found"), false;
+    if(!m_Bases.LoadBasesInfo(xroot))
+        return Fail("No bases found"), false;
 
 	// favorites
 	LoadFavorites(xroot);
@@ -875,7 +797,7 @@ bool CSolution::RenameItem(MTPOS tpos, const QString & id)
 void  CSolution::RenameTitle(MTPOS item, const QString & title, int bi)
 {
 	// change title
-	if (bi < 0 || bi >= theSln.BCnt())
+    if (bi < 0 || bi >= BCNT)
 		return;
 	item->title[bi] = title;
 	HandleChanges(item, false);
@@ -1041,9 +963,15 @@ void CSolution::GenContentsLevel(MTPOS node, int bi, QFile &file, const QString 
 		file.write("\n</ul>");
 }
 
-QString CSolution::GetBaseDir(int bi)
+QString CSolution::GetBookDir(int bi)
 {
-	return theSln.m_RootDir + "/" + theSln.m_Bases[bi].rpath;
+ //   if (bi < 0 || bi >= BCNT)
+ //       return m_RootDir + "/" + bdir;
+ //   if(m_Bases[bi].rpath.isEmpty())
+ //       return m_RootDir + "/" + bdir;
+ //   return     m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
+
+    return theSln.m_RootDir + "/" + theSln.m_Bases.books[bi].rpath;
 }
 
 QString CSolution::GetPrjTitle()
@@ -1060,7 +988,7 @@ QString CSolution::GetCssAbsPath(int bi)
 {
 	if (QFileInfo(theSln.m_Bases[bi].csspath).isAbsolute())
 		return theSln.m_Bases[bi].csspath;
-	return GetBaseDir(bi) + "/" + theSln.m_Bases[bi].csspath;
+    return GetBookDir(bi) + "/" + theSln.m_Bases[bi].csspath;
 }
 
 void CSolution::EncryptDocs(MTPOS tposParent, const QString &oldPsw, const QString &newPsw)

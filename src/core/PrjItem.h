@@ -31,6 +31,12 @@ enum class ELangStatus
 	LS_ITEMS_COUNT
 };
 
+struct MT_BASE
+{
+
+};
+
+
 // tree element (main structural element of the base)
 struct MT_ITEM
 {
@@ -45,6 +51,7 @@ struct MT_ITEM
 		};
 	};
 public:
+    // move all BCNT-items to struct
 	// persistent variables
 	ETreeStatus status = ETreeStatus::TS_UNREADY;    // status
 	QString		title[BCNT];// custom title
@@ -101,6 +108,14 @@ public:
 
 	QString GetRelPath(MT_ITEM *item, int di);
 	QString GetRelUrl(MT_ITEM *item, int di);
+};
+
+struct MT_REF : public MT_BASE
+{
+        MT_ITEM *ref = nullptr;
+        QString title;
+        MT_REF*	parent = nullptr;
+        std::list<MT_REF*>	children;
 };
 
 // temporary
