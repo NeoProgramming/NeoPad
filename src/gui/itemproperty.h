@@ -2,7 +2,7 @@
 #define __ITEMPROPERTY_H__
 
 #include "ui_itemproperty.h"
-#include "../core/PrjItem.h"
+#include "../core/DocItem.h"
 
 //==================== class ItemProperties ====================
 class ItemProperties : public QDialog
@@ -11,7 +11,7 @@ class ItemProperties : public QDialog
 
 public:
     ItemProperties(QWidget *parent);
-    int DoModal(MTPOS tpos);
+    int DoModal(DocItem* tpos);
 	QString m_id, m_title0, m_title1;
 
 signals:

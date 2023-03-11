@@ -34,7 +34,7 @@ int SnippetsDlg::DoModal()
 	{
 		QListWidgetItem *item = new QListWidgetItem();
 		item->setText(s);
-		item->setData(Qt::UserRole, qVariantFromValue(&s));
+		item->setData(Qt::UserRole, QVariant::fromValue(&s));
 		ui.listSnippets->addItem(item);
 	}
 

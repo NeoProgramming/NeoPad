@@ -214,10 +214,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\3rdparty\pugixml\pugixml.cpp" />
+    <ClCompile Include="src\core\BaseItem.cpp" />
+    <ClCompile Include="src\core\Books.cpp" />
     <ClCompile Include="src\core\Cryptor.cpp" />
-    <ClCompile Include="src\core\PrjItem.cpp" />
+    <ClCompile Include="src\core\DocItem.cpp" />
+    <ClCompile Include="src\core\Favorites.cpp" />
     <ClCompile Include="src\core\PrjStat.cpp" />
-    <ClCompile Include="src\core\PrjTree.cpp" />
+    <ClCompile Include="src\core\RefItem.cpp" />
     <ClCompile Include="src\core\Snippets.cpp" />
     <ClCompile Include="src\core\Solution.cpp" />
     <ClCompile Include="src\gui\htmllink.cpp" />
@@ -257,10 +260,14 @@
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp" />
     <ClInclude Include="src\3rdparty\pugixml\pugixml.hpp" />
+    <ClInclude Include="src\core\BaseItem.h" />
+    <ClInclude Include="src\core\Books.h" />
     <ClInclude Include="src\core\Cryptor.h" />
-    <ClInclude Include="src\core\PrjItem.h" />
+    <ClInclude Include="src\core\DocItem.h" />
+    <ClInclude Include="src\core\Favorites.h" />
     <ClInclude Include="src\core\PrjStat.h" />
     <ClInclude Include="src\core\PrjTree.h" />
+    <ClInclude Include="src\core\RefItem.h" />
     <ClInclude Include="src\core\Snippets.h" />
     <ClInclude Include="src\core\Solution.h" />
     <ClInclude Include="src\gui\htmllink.h" />

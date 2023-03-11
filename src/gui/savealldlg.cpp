@@ -24,11 +24,11 @@ SaveAllDlg::~SaveAllDlg()
 bool SaveAllDlg::DoModal(MainWindow *mw)
 {
 	// list of unsaved vmbase
-	for (MTPOS mtpos : mpl)
+	for (DocItem* mtpos : mpl)
 	{
 		QListWidgetItem *item = new QListWidgetItem( mtpos->GetTitle(0));
-		item->setData(Qt::UserRole, qVariantFromValue((void*)mtpos));
-		item->setData(Qt::UserRole+1, qVariantFromValue(0));
+		item->setData(Qt::UserRole, QVariant::fromValue(mtpos));
+		item->setData(Qt::UserRole+1, QVariant::fromValue(0));
 		item->setIcon(mw->m_iconVmb);
 		
 		ui.listFiles->addItem(item);
@@ -45,8 +45,8 @@ bool SaveAllDlg::DoModal(MainWindow *mw)
 		if(view->isWindowModified())
 		{
 			QListWidgetItem *item = new QListWidgetItem(view->windowTitle());
-			item->setData(Qt::UserRole, qVariantFromValue((void*)view));
-			item->setData(Qt::UserRole+1, qVariantFromValue(1));
+			item->setData(Qt::UserRole, QVariant::fromValue(view));
+			item->setData(Qt::UserRole+1, QVariant::fromValue(1));
 			item->setIcon(mw->m_iconHtm);
 			
 			ui.listFiles->addItem(item);
@@ -69,15 +69,15 @@ void SaveAllDlg::DoSave(bool all)
 		if(all || item->isSelected())
 		{
 			// see what kind of element it is; 
-			unsigned int t = item->data(Qt::UserRole + 1).value<unsigned int>();
+			unsigned int t = item->data(Qt::UserRole+1).value<unsigned int>();
 			if(t == 0)	// this is a vmbase node
 			{
-				MTPOS tpos = (MTPOS)item->data(Qt::UserRole).value<void*>();
+				DocItem* tpos = item->data(Qt::UserRole).value<DocItem*>();
 				theSln.SaveSubBase(tpos, false);
 			}
 			else if(t == 1) // this is html document
 			{
-				WebEditView *view = (WebEditView*)item->data(Qt::UserRole).value<void*>();
+				WebEditView *view = item->data(Qt::UserRole).value<WebEditView*>();
 				view->OnFileSave();
 			}
 		}

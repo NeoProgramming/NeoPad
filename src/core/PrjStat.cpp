@@ -5,7 +5,7 @@ NEOPAD_STAT::NEOPAD_STAT()
 	memset(arr, 0, sizeof(arr));
 }
 
-int NEOPAD_STAT::CalcStatistics(MTPOS node)
+int NEOPAD_STAT::CalcStatistics(DocItem* node)
 {
 	int total = 1;
 	switch (node->status) {
@@ -58,7 +58,7 @@ int NEOPAD_STAT::CalcStatistics(MTPOS node)
 
 	for (MTPOS tpos : node->children)
 	{
-		total += CalcStatistics(tpos);
+		total += CalcStatistics(tpos->This<DocItem>());
 	}
 	return total;
 }

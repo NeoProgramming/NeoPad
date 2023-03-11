@@ -5,7 +5,7 @@
 #include <QtGui>
 #include <QtWebKit>
 #include <QWebView>
-#include "../core/PrjItem.h"
+#include "../core/DocItem.h"
 
 class MainWindow;
 
@@ -14,9 +14,9 @@ class WebEditView : public QWebView
 	Q_OBJECT
 
 public:
-	WebEditView(MainWindow *mw, MTPOS tpos, int di);
+	WebEditView(MainWindow *mw, DocItem* tpos, int di);
 	~WebEditView();
-	MTPOS m_Item;
+	DocItem* m_Item;
 	int   m_di;
 private:
     static QString jsGetSelBounds();
@@ -137,7 +137,7 @@ public slots:
 	void onToolsTranslate();	
     
 public:
-	bool LoadHtml(MTPOS tpos, int di);
+	bool LoadHtml(DocItem* tpos, int di);
 	bool ReloadHtml();
 	void FixCssPath();
 	bool SaveHtml(bool update_tree);

@@ -22,10 +22,7 @@ class MainWindow : public QMainWindow, public NeopadCallback
 {
     Q_OBJECT
 	friend class SlnPanel;
-	struct ChildHandler {
-		QAction *pAction;
-		void (WebEditView::*pHandler)();
-	};
+
 public:
     MainWindow();
     virtual ~MainWindow();
@@ -42,7 +39,7 @@ public:
 	QString		 m_jsPath;
 
 	SlnPanel *getSln() const;
-	void  UpdateTab(MTPOS tpos);
+	void  UpdateTab(DocItem* tpos);
     qreal UpdateZoom(int percent);
 	void  OpenLocalLink(const QString &url, int di);
 	void saveSettings();
@@ -181,30 +178,28 @@ protected:
     
 private:
 	WebEditView *GetActiveMdiChild();
-    void regChildAction(QAction *action, void (WebEditView::*pHandler)());
-
+	void MainWindow::onChild(void (WebEditView::*pHandler)());
 	void GenContents(int bi);
 	void EditCss(int bi);
 	bool DoSaveAll();
 	void DoQuickStart(int code);
 	bool DoPrjOpen(const QString& fpath);
-	void DoOpenDoc(MTPOS mtPos, int di);
-	bool DoSelectDoc(MTPOS tpos, int di);
-	void OpenDoc(MTPOS mtPos, int di);
-	void LoadToCurrentDoc(MTPOS mtPos, int di);
-	void CreateNewDoc(MTPOS mtPos, int di);
-	bool OpenExistingDoc(MTPOS mtPos, int di);
-	QMdiSubWindow * FindTab(MTPOS mtPos, int di);
-	void MakePagesListForPdfPrinting(MTPOS mtPos, int level, int &page, QStringList &args, QString &toc);
+	void DoOpenDoc(DocItem* mtPos, int di);
+	bool DoSelectDoc(DocItem* tpos, int di);
+	void OpenDoc(DocItem* mtPos, int di);
+	void LoadToCurrentDoc(DocItem* mtPos, int di);
+	void CreateNewDoc(DocItem* mtPos, int di);
+	bool OpenExistingDoc(DocItem* mtPos, int di);
+	QMdiSubWindow * FindTab(DocItem* mtPos, int di);
+	void MakePagesListForPdfPrinting(DocItem* mtPos, int level, int &page, QStringList &args, QString &toc);
 	void UpdateTitle();
 	void createSpecialToolWidgets();
 	
 	QToolButton* createMenuButton(const char *res, QMenu *menu, const QString &tooltip);
 	QMenu* createTableMenu(const char *slot);
 private:	
-	QVector<ChildHandler> m_Handlers;	// на будущее - таблица указателей на обработчики
 	QMdiArea      *m_wArea;
-	QTabBar       *m_tabBar;			// извлекаем из m_wArea
+	QTabBar       *m_tabBar;			// extract from m_wArea
 	QSignalMapper *windowMapper;
 	
 	SlnPanel	  *m_wSln;

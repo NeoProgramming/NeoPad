@@ -1,42 +1,36 @@
-#include "PrjItem.h"
+#include "DocItem.h"
 #include <QFileInfo>
 #include <QDir>
 #include <QDateTime>
-
 #include "Solution.h"
 #include "../service/tools.h"
 
-const char csTimeFormat[] = "yyyy-MM-dd HH:mm:ss";
-
-MT_ITEM::MT_ITEM()
+DocItem::DocItem() : BaseItem()
 {
-	attrs = 0;
-	status = ETreeStatus::TS_UNREADY;
-	check = 1;
-    //for (int i = 0; i<theSln.BCnt(); i++)
-    //	time[i] = -1;
-    for(auto &v : time)
-        v = -1;
+	//for (int i = 0; i<theSln.BCnt(); i++)
+   //	time[i] = -1;
+	for (auto &v : time)
+		v = -1;
 }
 
-MT_ITEM::MT_ITEM(const char *text)
+DocItem::DocItem(const char *text) : BaseItem()
 {
 	attrs = 0;
 	title[0] = text;
 	status = ETreeStatus::TS_UNREADY;
-    //for (int i = 0; i<theSln.BCnt(); i++)
-    //	time[i] = -1;
-    for(auto &v : time)
-        v = -1;
+	//for (int i = 0; i<theSln.BCnt(); i++)
+	//	time[i] = -1;
+	for (auto &v : time)
+		v = -1;
 }
 
-MT_ITEM::MT_ITEM(const MT_ITEM &obj)
+DocItem::DocItem(const DocItem &obj) 
 {
 	attrs = obj.attrs;
-    for (int i = 0; i < BCNT; i++) {
-        title[i] = obj.title[i];
-        time[i] = obj.time[i];
-    }
+	for (int i = 0; i < BCNT; i++) {
+		title[i] = obj.title[i];
+		time[i] = obj.time[i];
+	}
 
 	rdir = obj.rdir;
 	attrs = obj.attrs;
@@ -46,98 +40,63 @@ MT_ITEM::MT_ITEM(const MT_ITEM &obj)
 	children = obj.children;
 }
 
-bool MT_ITEM::IsAncestor(MT_ITEM *item)
+QString DocItem::GetInfo()
 {
-	// check if the given element is an ancestor of the item element
-	while (item) {
-		if (item == this)
-			return true;
-		item = item->parent;
-	}
-	return false;
+	// generate an information string with the element status
+	QString info = QString("SubBase: %1, Modify: %2, OwnRDir: %3")
+		.arg(p_subbase).arg(p_modify).arg(rdir);
+	return info;
 }
 
-bool MT_ITEM::IsPublic()
+QString DocItem::GetInfo2()
 {
-    // check if the document is published
-    return status == ETreeStatus::TS_READY || status == ETreeStatus::TS_ALMOST;
+	QString s;
+	int nc = children.size();
+	int nd = QDir(GetAbsDir(-1)).entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks).size();
+
+	s.sprintf("Nodes: %d; Subdirs: %d; GUID: ", nc, nd);
+	s += guid;
+	return s;
 }
 
-int MT_ITEM::GetPublicChildrenCount()
-{
-	int count = 0;
-	for (auto child : children) {
-		if (child->IsPublic())
-			count++;
-	}
-	return count;
-}
-
-void MT_ITEM::RemoveChildren()
-{
-	for (auto child : children) {
-		child->RemoveChildren();
-		delete child;
-	}
-	children.clear();
-}
-
-void MT_ITEM::LoadItemPaths(const QString &apath)
+void DocItem::LoadItemPaths(const QString &apath)
 {
 	QFileInfo fi(apath);
 	rdir = GetRelDir(apath, theSln.m_RootDir, false);
 	id = fi.baseName();	// vmb = id + ".vmbase"
 }
 
-void MT_ITEM::SetCheck(bool _check)
-{
-	this->check = _check;
-}
-
-bool MT_ITEM::GetCheck()
-{
-	return check;
-}
-
-QString MT_ITEM::GetInfo()
-{
-	// generate an information string with the element status
-    QString info = QString("SubBase: %1, Modify: %2, OwnRDir: %3")
-            .arg(p_subbase).arg(p_modify).arg(rdir);
-	return info;
-}
-
-QString MT_ITEM::GetGuid()
+QString DocItem::GetGuid()
 {
 	return guid;
 }
 
-QString MT_ITEM::GetTitle(int bi)
+QString DocItem::GetTitle(int bi)
 {
-    if (bi<0 || bi >= BCNT)
+	if (bi < 0 || bi >= BCNT)
 		return QString();
 	return title[bi];
 }
 
-QString MT_ITEM::GetTitles(int bi)
+QString DocItem::GetTitles(int bi)
 {
-    if (bi < 0 || bi >= BCNT)
+	if (bi < 0 || bi >= BCNT)
 		return QString();
 	if (!parent)
 		return GetTitle(bi);
-	return GetTitle(bi) + QChar(0x26AB) + parent->GetTitles(bi);
+	return GetTitle(bi) + QChar(0x26AB) + Par<DocItem>()->GetTitles(bi);
 }
 
-QString MT_ITEM::GetDocLocPath(int bi)
+QString DocItem::GetDocLocPath(int bi)
 {
-    QString c = id + theSln.m_Bases.GetDocExt(bi);
+	QString c = id + theSln.m_Books.GetDocExt(bi);
 	return c;
 }
 
-QString MT_ITEM::GetDocRelPath(int bi)
+QString DocItem::GetDocRelPath(int bi)
 {
 	// get document path
-    if (bi<0 || bi >= BCNT)
+	if (bi < 0 || bi >= BCNT)
 		return QString();
 
 	QString c = GetBaseDir();
@@ -146,10 +105,10 @@ QString MT_ITEM::GetDocRelPath(int bi)
 	return c;
 }
 
-QString MT_ITEM::GetDocAbsPath(int bi)
+QString DocItem::GetDocAbsPath(int bi)
 {
 	// get document path
-    if (bi<0 || bi >= BCNT)
+	if (bi < 0 || bi >= BCNT)
 		return QString();
 
 	QString c = GetAbsDir(bi);
@@ -159,7 +118,7 @@ QString MT_ITEM::GetDocAbsPath(int bi)
 	return c;
 }
 
-QString MT_ITEM::GetVmbAbsPath()
+QString DocItem::GetVmbAbsPath()
 {
 	// get the path to the .vmbase file that contains this item
 	QString c;
@@ -170,27 +129,21 @@ QString MT_ITEM::GetVmbAbsPath()
 	return c;
 }
 
-QString MT_ITEM::GetVmbLocPath()
+QString DocItem::GetVmbLocPath()
 {
 	QString c = id + ".vmbase";
 	return c;
 }
 
-time_t MT_ITEM::GetDocTime(int bi)
+time_t DocItem::GetDocTime(int bi)
 {
 	// get document time from vmbase tags
-    if (bi<0 || bi >= BCNT)
+	if (bi < 0 || bi >= BCNT)
 		return 0;
 	return time[bi];
 }
 
-QString MT_ITEM::GetId()
-{
-	return id;
-}
-
-
-ETreeStatus MT_ITEM::GetTreeStatus()
+ETreeStatus DocItem::GetTreeStatus()
 {
 	QString path = GetDocAbsPath(0);
 	if (!QFileInfo(path).isFile())
@@ -198,7 +151,7 @@ ETreeStatus MT_ITEM::GetTreeStatus()
 	return status;
 }
 
-ELangStatus MT_ITEM::GetLangStatus(int di2)
+ELangStatus DocItem::GetLangStatus(int di2)
 {
 	QString path = GetDocAbsPath(di2);
 	if (!QFileInfo(path).isFile())
@@ -223,65 +176,47 @@ ELangStatus MT_ITEM::GetLangStatus(int di2)
 	return ELangStatus::LS_QOK;
 }
 
-QString MT_ITEM::GetInfo2()
-{
-	QString s;
-	int nc = children.size();
-	int nd = QDir(GetAbsDir(-1)).entryList(QDir::Dirs | QDir::NoDotAndDotDot | QDir::NoSymLinks).size();
-
-	s.sprintf("Nodes: %d; Subdirs: %d; GUID: ", nc, nd);
-	s += guid;
-	return s;
-}
-
-void MT_ITEM::ChangeModify(bool modify, bool recursive)
-{
-	p_modify = modify;
-	if (recursive) 
-		for (MTPOS child : children) 
-			child->ChangeModify(modify, recursive);
-}
-
-QString MT_ITEM::GetAbsDir(int bi)
+QString DocItem::GetAbsDir(int bi)
 {
 	// getting the absolute path for a given tree element
 	// "general" version, so far without division into bases
 	// c:/users/user1/project/base1/dir1/dir2/dir3"
 	QString bdir = GetBaseDir();
-	
-    if (bi < 0 || bi >= BCNT)
+
+	if (bi < 0 || bi >= BCNT)
 		return theSln.m_RootDir + "/" + bdir;
-	if(theSln.m_Bases[bi].rpath.isEmpty())
+	if (theSln.m_Books.books[bi].rpath.isEmpty())
 		return theSln.m_RootDir + "/" + bdir;
-    return     theSln.m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
+	return     theSln.m_RootDir + "/" + theSln.m_Books.books[bi].rpath + "/" + bdir;
 }
 
-QString MT_ITEM::GetBaseDir()
+QString DocItem::GetBaseDir()
 {
 	// getting the path within base ; empty return is impossible
 	// "./dir1/dir2/dir3"
-	MT_ITEM *item = this;
+	DocItem *item = this;
 	while (item) {
 		if (!item->rdir.isEmpty())
 			return item->rdir;
-		item = item->parent;
+		item = item->Par<DocItem>();
 	}
 	return ".";
 }
 
-void MT_ITEM::UpdateBaseDir()
+void DocItem::UpdateBaseDir()
 {
 	// regenerate rdir based on id
 	// there is a certain node; to regenerate rdir, you need to go through all the nodes
 	rdir = id;
-	MT_ITEM* item = parent;
+	DocItem* item = Par<DocItem>();
 	while (item && item->parent) {
 		rdir = item->id + "/" + rdir;
-		item = item->parent;
+		item = item->Par<DocItem>();
 	}
 }
 
-QString MT_ITEM::GetDocTimeStr(int bi)
+const char csTimeFormat[] = "yyyy-MM-dd HH:mm:ss";
+QString DocItem::GetDocTimeStr(int bi)
 {
 	QDateTime dt;
 	if (time[bi] == -1)
@@ -291,7 +226,7 @@ QString MT_ITEM::GetDocTimeStr(int bi)
 	return tt;
 }
 
-void MT_ITEM::SetDocTime(const char *tstr, int bi)
+void DocItem::SetDocTime(const char *tstr, int bi)
 {
 	if (IsBlank(tstr))
 		time[bi] = -1;
@@ -301,7 +236,7 @@ void MT_ITEM::SetDocTime(const char *tstr, int bi)
 	}
 }
 
-void MT_ITEM::SetDocTime(int bi)
+void DocItem::SetDocTime(int bi)
 {
 	QFileInfo fi = QFileInfo(GetDocAbsPath(bi));
 	if (!fi.exists())
@@ -310,7 +245,7 @@ void MT_ITEM::SetDocTime(int bi)
 		time[bi] = fi.lastModified().toTime_t();
 }
 
-QString MT_ITEM::GetCssRelPath(int bi)
+QString DocItem::GetCssRelPath(int bi)
 {
 	// calculate the path to css from the given (this) document to the css file specified in the database
 	// the path in the database can be either absolute or relative (relative to the root)
@@ -320,15 +255,13 @@ QString MT_ITEM::GetCssRelPath(int bi)
 	return rel;
 }
 
-QString MT_ITEM::GetRelPath(MT_ITEM *item, int di)
+QString DocItem::GetRelPath(DocItem *item, int di)
 {
 	QString rel = ::GetRelPath(GetDocAbsPath(di), item->GetDocAbsPath(di), true);
 	return rel;
 }
 
-QString MT_ITEM::GetRelUrl(MT_ITEM *item, int di)
+QString DocItem::GetRelUrl(DocItem *item, int di)
 {
 	return GetRelPath(item, di) + "?" + GetGuid();
 }
-
-

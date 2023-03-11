@@ -1,6 +1,6 @@
 #pragma once
 
-#include "PrjItem.h"
+#include "DocItem.h"
 
 // statistics
 struct NEOPAD_STAT 
@@ -27,5 +27,5 @@ struct NEOPAD_STAT
 	};
 
 	NEOPAD_STAT();
-	int     CalcStatistics(MTPOS node);
+	int     CalcStatistics(DocItem* node);
 };

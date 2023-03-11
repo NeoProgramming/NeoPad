@@ -132,6 +132,8 @@ MainWindow::MainWindow()
 	
 	// read script
 	loadScripts();
+
+#define CHILD(meth)	[this]() { onChild(&WebEditView::meth); }
     
 	connect(ui.actionWindowClose,		&QAction::triggered, m_wArea, &QMdiArea::closeActiveSubWindow);
 	connect(ui.actionWindowCloseAll,	&QAction::triggered, m_wArea, &QMdiArea::closeAllSubWindows);
@@ -142,10 +144,7 @@ MainWindow::MainWindow()
 	connect(ui.actionWindowVTile,		&QAction::triggered, this, &MainWindow::onTileSubWindowsVertically);
 	connect(ui.actionAboutNeopad,		&QAction::triggered, this, &MainWindow::onAppAbout);
 	connect(ui.actionAboutQt,			&QAction::triggered, this, &MainWindow::onAppAboutQt);
-
-	// register actions for children windows
-	regChildAction(ui.actionClearDoc,   &WebEditView::onEditClearDoc);
-
+	
 	connect(ui.actionClearDoc,			&QAction::triggered, this, &MainWindow::onEditClearDoc);
 	connect(ui.actionCorrectCssPath,	&QAction::triggered, this, &MainWindow::onEditFixCssPath);
 
@@ -166,11 +165,13 @@ MainWindow::MainWindow()
 	connect(ui.actionEditInfo,			&QAction::triggered, this, &MainWindow::onEditTagInfo);
 	connect(ui.actionEditUntable,		&QAction::triggered, this, &MainWindow::onEditUntable);
 
-	connect(ui.actionZoomIn,			&QAction::triggered,		this, &MainWindow::onZoomIn);
-	connect(ui.actionZoomOut,			&QAction::triggered,		this, &MainWindow::onZoomOut);
-	connect(ui.actionZoomNormal,		&QAction::triggered,		this, &MainWindow::onZoomNormal);
+	connect(ui.actionZoomIn,			&QAction::triggered, this, &MainWindow::onZoomIn);
+	connect(ui.actionZoomOut,			&QAction::triggered, this, &MainWindow::onZoomOut);
+	connect(ui.actionZoomNormal,		&QAction::triggered, this, &MainWindow::onZoomNormal);
 
-	connect(ui.actionTextBold,			&QAction::triggered, this, &MainWindow::onTextBold);
+	//connect(ui.actionTextBold,			&QAction::triggered, this, &MainWindow::onTextBold);
+	connect(ui.actionTextBold,			&QAction::triggered, this, CHILD(onTextBold));
+
 	connect(ui.actionTextItalic,		&QAction::triggered, this, &MainWindow::onTextItalic);
 	connect(ui.actionTextUnderline,		&QAction::triggered, this, &MainWindow::onTextUnderline);
 	connect(ui.actionTextStrike,		&QAction::triggered, this, &MainWindow::onTextStrike);
@@ -225,6 +226,7 @@ MainWindow::MainWindow()
     connect(ui.actionProjectStatistics,	&QAction::triggered, this, &MainWindow::onProjectStatistics);
 	connect(ui.actionProjectPrinfPdf,	&QAction::triggered, this, &MainWindow::onProjectPrintPdfBundle);
 	connect(ui.actionExportPdfFiles,	&QAction::triggered, this, &MainWindow::onProjectPrintPdfFiles);
+
 	connect(ui.actionGenContents1,      &QAction::triggered, this, [this](){ GenContents(0); });
 	connect(ui.actionGenContents2,      &QAction::triggered, this, [this](){ GenContents(1); });
 	connect(ui.actionEditCss1,          &QAction::triggered, this, [this](){ EditCss(0); });
@@ -273,6 +275,14 @@ MainWindow::MainWindow()
 	QTimer::singleShot(0, this, SLOT(onPostInit()));
 }
 
+void MainWindow::onChild(void (WebEditView::*pHandler)())
+{
+	WebEditView *wnd = GetActiveMdiChild();
+	if (wnd) {
+		(wnd->*pHandler)();
+	}
+}
+
 void MainWindow::onPostInit()
 {
 	onProjectQuickStart();
@@ -281,11 +291,6 @@ void MainWindow::onPostInit()
 //-------------------------------------------------
 MainWindow::~MainWindow()
 {
-}
-
-void MainWindow::regChildAction(QAction *action, void (WebEditView::*handler)())
-{
-	m_Handlers.append(ChildHandler{ action, handler });
 }
 
 //-------------------------------------------------
@@ -570,8 +575,8 @@ void MainWindow::onProjectProperties()
 
 	dlg.m_images   = theSln.m_ImageDir;
 	dlg.m_snippets = theSln.m_Snippets.m_SnippDir;
-	dlg.m_bases[0] = theSln.m_Bases[0];
-	dlg.m_bases[1] = theSln.m_Bases[1];
+	dlg.m_bases[0] = theSln.m_Books.books[0];
+	dlg.m_bases[1] = theSln.m_Books.books[1];
 		
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
@@ -580,10 +585,10 @@ void MainWindow::onProjectProperties()
 		theSln.m_Snippets.m_SnippDir = dlg.m_snippets;
 		// bases
 		int cnt = std::max(1, !dlg.m_bases[0].suffix.isEmpty() + !dlg.m_bases[1].suffix.isEmpty());
-		theSln.m_BasesCnt = cnt;
+		theSln.m_Books.booksCnt = cnt;
 		for (int bi = 0; bi < BCNT; bi++) {
-			theSln.m_Bases[bi] = dlg.m_bases[bi];
-			if (theSln.m_Bases[bi].load_prefix != theSln.m_Bases[bi].save_prefix) {
+			theSln.m_Books.books[bi] = dlg.m_bases[bi];
+			if (theSln.m_Books.books[bi].load_prefix != theSln.m_Books.books[bi].save_prefix) {
 				setCursor(Qt::WaitCursor);
 				theSln.TransformDocs(bi);
 				setCursor(Qt::ArrowCursor);
@@ -722,7 +727,7 @@ void MainWindow::UpdateTitle()
 	setWindowTitle(theSln.GetPrjTitle() + " - Neopad");
 }
 
-void MainWindow::DoOpenDoc(MTPOS tpos, int di)
+void MainWindow::DoOpenDoc(DocItem* tpos, int di)
 {
 	if(!tpos)
 		return;
@@ -739,7 +744,7 @@ void MainWindow::DoOpenDoc(MTPOS tpos, int di)
 	qApp->restoreOverrideCursor();
 }
 
-bool MainWindow::DoSelectDoc(MTPOS tpos, int bi)
+bool MainWindow::DoSelectDoc(DocItem* tpos, int bi)
 {
 	// open 'SelectDoc' dialog
 	SelectDocDlg dlg(this);
@@ -770,7 +775,7 @@ bool MainWindow::DoSelectDoc(MTPOS tpos, int bi)
 	return true;
 }
 
-void MainWindow::OpenDoc(MTPOS mtPos, int bi)
+void MainWindow::OpenDoc(DocItem* mtPos, int bi)
 {
 	if(!OpenExistingDoc(mtPos, bi))
 	{
@@ -781,12 +786,12 @@ void MainWindow::OpenDoc(MTPOS mtPos, int bi)
 	}
 }
 
-void MainWindow::LoadToCurrentDoc(MTPOS mtPos, int di)
+void MainWindow::LoadToCurrentDoc(DocItem* mtPos, int di)
 {
 
 }
 
-void MainWindow::CreateNewDoc(MTPOS mtPos, int di)
+void MainWindow::CreateNewDoc(DocItem* mtPos, int di)
 {
 	WebEditView *child = new WebEditView(this, mtPos, di);
 	m_wArea->addSubWindow(child);
@@ -795,7 +800,7 @@ void MainWindow::CreateNewDoc(MTPOS mtPos, int di)
 	child->show();
 }
 
-QMdiSubWindow * MainWindow::FindTab(MTPOS mtPos, int di)
+QMdiSubWindow * MainWindow::FindTab(DocItem* mtPos, int di)
 {
 	QList<QMdiSubWindow *> wl = m_wArea->subWindowList();
 	QList<QMdiSubWindow *>::Iterator i = wl.begin();
@@ -813,7 +818,7 @@ QMdiSubWindow * MainWindow::FindTab(MTPOS mtPos, int di)
 	return 0;
 }
 
-bool MainWindow::OpenExistingDoc(MTPOS mtPos, int di)
+bool MainWindow::OpenExistingDoc(DocItem* mtPos, int di)
 {
 	QMdiSubWindow *subwnd = FindTab(mtPos, di);
 	if (subwnd)
@@ -1477,7 +1482,7 @@ void MainWindow::onProjectPrintPdfFiles()
 	return;
 }
 
-void MainWindow::MakePagesListForPdfPrinting(MTPOS tpos, int level, int &page, QStringList &args, QString &toc)
+void MainWindow::MakePagesListForPdfPrinting(DocItem* tpos, int level, int &page, QStringList &args, QString &toc)
 {
 	if (!tpos->GetCheck())
 		return;
@@ -1495,11 +1500,11 @@ void MainWindow::MakePagesListForPdfPrinting(MTPOS tpos, int level, int &page, Q
 		
 	for(MTPOS tchild : tpos->children)
 	{
-		MakePagesListForPdfPrinting(tchild, level + 1, page, args, toc);
+		MakePagesListForPdfPrinting(tchild->This<DocItem>(), level + 1, page, args, toc);
 	}
 }
 
-void MainWindow::UpdateTab(MTPOS tpos)
+void MainWindow::UpdateTab(DocItem* tpos)
 {
 	QMdiSubWindow * subwnd;
 	subwnd = FindTab(tpos, 0);
@@ -1563,7 +1568,7 @@ void MainWindow::OpenLocalLink(const QString &url, int di)
 	if (i < 0)
 		return;
 	QString guid = url.mid(i + 1);
-	MTPOS pos = theSln.Locate(guid);
+	DocItem* pos = theSln.Locate(guid);
 	if (!pos)
 		return;
 	OpenDoc(pos, di);

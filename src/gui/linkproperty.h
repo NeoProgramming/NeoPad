@@ -2,7 +2,7 @@
 #define __LINKPROPERTY_H__
 
 #include "ui_linkproperty.h"
-#include "../core/PrjItem.h"
+#include "../core/DocItem.h"
 
 class LinkProperties : public QDialog
 {
@@ -12,7 +12,7 @@ public:
 
 public:
 	LinkProperties(QWidget *parent = 0);
-    int DoModal(bool textEditable, const QString &text, const QString &url, MTPOS item, int di);
+    int DoModal(bool textEditable, const QString &text, const QString &url, DocItem* item, int di);
 
 public slots:
     void onChooseNode();
@@ -21,7 +21,7 @@ public slots:
 	
 private:
 	Ui::LinkProperty ui;
-	MTPOS m_item;
+	DocItem* m_item;
 	int m_di;
 };
 

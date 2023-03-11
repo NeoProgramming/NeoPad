@@ -35,7 +35,7 @@ public:
 	void UpdateNode(QTreeWidgetItem * item);
 
 	void UpdateTree();
-	void UpdateTreeItem(MTPOS item);
+	void UpdateTreeItem(DocItem* item);
 
 	void SetCurrItemStatus(ETreeStatus status);
 	void SetCurrNodeStatus(ETreeStatus status);
@@ -45,7 +45,7 @@ public:
 	QIcon& GetTreeItemIcon(ETreeStatus i);
 	QIcon& GetLangItemIcon(ELangStatus i);
 
-    void EnsureVisible(MTPOS node);
+    void EnsureVisible(DocItem* node);
 
     void initialize();
     void UpdateBases();
@@ -95,13 +95,12 @@ private slots:
 	
 private:
    
-	MTPOS GetMtposFromRes();
-	QTreeWidgetItem* FindItem(QTreeWidgetItem *par, MTPOS mtpos);
+	QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);
     void showInitDoneMessage();
             
     Ui::SlnForm ui;
     MainWindow *mw;
-	MTPOS searchRoot = nullptr;
+	DocItem* searchRoot = nullptr;
 	QIcon m_TreeIcons[(int)ETreeStatus::TS_ITEMS_COUNT];
 	QIcon m_LangIcons[(int)ELangStatus::LS_ITEMS_COUNT];
 	

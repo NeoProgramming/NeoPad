@@ -28,7 +28,7 @@ enum HtmlCtx {
 	CTX_LINK = 0x10
 };
 
-WebEditView::WebEditView(MainWindow *mw, MTPOS tpos, int di)
+WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	: QWebView()
 {
 	setAttribute(Qt::WA_DeleteOnClose);
@@ -397,7 +397,7 @@ void WebEditView::FixCssPath()
 	execScript(cmd);
 }
 
-bool WebEditView::LoadHtml(MTPOS tpos, int bi)
+bool WebEditView::LoadHtml(DocItem* tpos, int bi)
 {
 	QString content;
 

@@ -11,7 +11,7 @@ LinkProperties::LinkProperties(QWidget *parent)
      connect(ui.pushRemoveLink, &QPushButton::clicked, this, &LinkProperties::onRemoveLink);
 }
 
-int  LinkProperties::DoModal(bool textEditable, const QString &text, const QString &url, MTPOS item, int di)
+int  LinkProperties::DoModal(bool textEditable, const QString &text, const QString &url, DocItem* item, int di)
 {
 	ui.lineText->setText(m_text = text);
 	ui.lineUrl->setText(m_url = url);

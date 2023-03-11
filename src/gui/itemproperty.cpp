@@ -21,7 +21,7 @@ ItemProperties::ItemProperties(QWidget *parent)
 	 connect(ui.pushCancel, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
-int ItemProperties::DoModal(MTPOS tpos)
+int ItemProperties::DoModal(DocItem* tpos)
 {
 	ui.lineTitle0->setText(tpos->GetTitle(0));
 	ui.lineTitle1->setText(tpos->GetTitle(1));

@@ -2,7 +2,7 @@
 #include <QDir>
 #include "../service/tools.h"
 
-void Books::AddBase(const QString &title, const QString &suffix, const QString &rpath,
+void Books::AddBook(const QString &title, const QString &suffix, const QString &rpath,
     const QString &csspath, const QString &prefix)
 {
     NeopadBook base;
@@ -49,7 +49,7 @@ QString Books::GetDocExt(int bi)
     return "." + books[bi].suffix + MBA::extHtml;
 }
 
-bool Books::LoadBasesInfo(pugi::xml_node txRoot)
+bool Books::LoadBooksInfo(pugi::xml_node txRoot)
 {
     pugi::xml_node txBases = txRoot.child("bases");
     if (!txBases)
@@ -59,7 +59,7 @@ bool Books::LoadBasesInfo(pugi::xml_node txRoot)
     pugi::xml_node txBase = txBases.first_child();
     while (txBase && booksCnt<BCNT) {
 
-        AddBase(
+        AddBook(
             U16(txBase.attribute("title").as_string()),
             U16(txBase.attribute("suffix").as_string()),
             U16(txBase.attribute("rpath").as_string()),
@@ -73,7 +73,7 @@ bool Books::LoadBasesInfo(pugi::xml_node txRoot)
 }
 
 
-void Books::SaveBasesInfo(pugi::xml_node txRoot)
+void Books::SaveBooksInfo(pugi::xml_node txRoot)
 {
     pugi::xml_node txBases = txRoot.append_child("bases");
     if (!txBases)
@@ -87,3 +87,17 @@ void Books::SaveBasesInfo(pugi::xml_node txRoot)
         set_attr(txBase, "prefix").set_value(U8a(base.save_prefix).constData());
     }
 }
+
+void Books::SetLPrefix(int bi)
+{
+	books[bi].load_prefix = books[bi].save_prefix;
+}
+
+void Books::RemovePrefix(int bi, QString &content)
+{
+	if (!books[bi].load_prefix.isEmpty()) {
+		if (content.startsWith(books[bi].load_prefix))
+			content = content.mid(books[bi].load_prefix.length());
+	}
+}
+

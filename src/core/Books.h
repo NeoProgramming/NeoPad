@@ -10,10 +10,12 @@ public:
     {
         return booksCnt;
     }
-    void    AddBase(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath, const QString &prefix);
+    void    AddBook(const QString &title, const QString &suffix, const QString &rpath, const QString &csspath, const QString &prefix);
     QString	GetDocExt(int di);
-    bool	LoadBasesInfo(pugi::xml_node txRoot);
-    void	SaveBasesInfo(pugi::xml_node txRoot);
+    bool	LoadBooksInfo(pugi::xml_node txRoot);
+    void	SaveBooksInfo(pugi::xml_node txRoot);
+	void    SetLPrefix(int bi);
+	void    RemovePrefix(int bi, QString &content);
 public:
     NeopadBook	books[BCNT];
     int booksCnt = 0;

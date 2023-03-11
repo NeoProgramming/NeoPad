@@ -289,7 +289,7 @@ void SlnPanel::LoadTreeLevel(MTPOS tposNode, QTreeWidgetItem *parent)
 	for (MTPOS tpos : tposNode->children)
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem(parent);
-        item->setData(0, Qt::UserRole, QVariant::fromValue((void*)tpos));
+        item->setData(0, Qt::UserRole, QVariant::fromValue(tpos->This<DocItem>()));
     //    item->setBackgroundColor(0,  QColor(255,255,0));
 		UpdateItem(item);
 		LoadTreeLevel(tpos, item);
@@ -299,20 +299,20 @@ void SlnPanel::LoadTreeLevel(MTPOS tposNode, QTreeWidgetItem *parent)
 void SlnPanel::UpdateBases()
 {
 	QTreeWidgetItem* headerItem = ui.treeContents->headerItem();
-	headerItem->setText(0, theSln.m_Bases[0].title);
-	headerItem->setText(1, theSln.m_Bases[1].title);
+	headerItem->setText(0, theSln.m_Books.books[0].title);
+	headerItem->setText(1, theSln.m_Books.books[1].title);
 
     headerItem = ui.treeFavorites->headerItem();
-    headerItem->setText(0, theSln.m_Bases[0].title);
-    headerItem->setText(1, theSln.m_Bases[1].title);
+    headerItem->setText(0, theSln.m_Books.books[0].title);
+    headerItem->setText(1, theSln.m_Books.books[1].title);
 
-    submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.m_Bases[0].title));
-    submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.m_Bases[1].title));
+    submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.m_Books.books[0].title));
+    submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.m_Books.books[1].title));
 }
 
 void SlnPanel::LoadTree()
 {
-	MTPOS tposRoot = theSln.GetRoot();
+	DocItem* tposRoot = theSln.GetRoot();
 	if (!tposRoot)
 		return;
 
@@ -321,7 +321,7 @@ void SlnPanel::LoadTree()
 	ui.treeContents->clear();
 	QTreeWidgetItem *root = new QTreeWidgetItem();
 	root->setText(0, tposRoot->title[0]);
-    root->setData(0, Qt::UserRole, QVariant::fromValue((void*)tposRoot));
+    root->setData(0, Qt::UserRole, QVariant::fromValue(tposRoot));
 
 	ui.treeContents->addTopLevelItem(root);
 	UpdateItem(root);
@@ -354,7 +354,7 @@ void SlnPanel::RemoveItemDontAsk(bool del_files)
 {
 	// remove item from tree
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (theSln.RemoveNode(tpos, del_files))
 	{
 		QTreeWidgetItem *parent = item->parent();
@@ -379,7 +379,7 @@ void SlnPanel::OpenDoc(QTreeWidgetItem *item, int di)
 		item = ui.treeContents->currentItem();
 	if (!item)
 		return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	mw->DoOpenDoc(tpos, di);
 	UpdateItem(item);
 }
@@ -403,7 +403,7 @@ void SlnPanel::DoChangeTreeItemStatus(ETreeStatus status, bool rec)
 	// change the status of the current tree item (and possibly all children)
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, rec);
@@ -427,7 +427,7 @@ QIcon& SlnPanel::GetLangItemIcon(ELangStatus i)
 void SlnPanel::UpdateItem(QTreeWidgetItem * item)
 {
 	// set the text and picture of the node depending on its state and attributes
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 
 	item->setText(0, tpos->GetTitle(0));
 	ETreeStatus im = tpos->GetTreeStatus();
@@ -450,7 +450,7 @@ void SlnPanel::UpdateNode(QTreeWidgetItem * item)
 	}
 }
 
-void SlnPanel::UpdateTreeItem(MTPOS pos)
+void SlnPanel::UpdateTreeItem(DocItem* pos)
 {
 	QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), pos);
 	if (item)
@@ -466,7 +466,7 @@ void SlnPanel::SetCurrItemStatus(ETreeStatus status)
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, false);
@@ -477,7 +477,7 @@ void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, true);
@@ -492,7 +492,7 @@ void SlnPanel::onItemProperties()
 	// rename item, document file and tree file
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	ItemProperties dlg(this);
@@ -546,7 +546,7 @@ void SlnPanel::onDeleteDoc(int di)
 		QTreeWidgetItem *item = ui.treeContents->currentItem();
 		if (di < 0)
 			di = ui.treeContents->currentColumn();
-		MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+		DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 		theSln.RemoveNodeDoc(tpos, di);
 		UpdateItem(item);
 		mw->projectModified(true);
@@ -557,7 +557,7 @@ void SlnPanel::onOpenVmbaseInExtTextEditor()
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	QString path;
@@ -572,7 +572,7 @@ void SlnPanel::onMoveItem()
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpDrag = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpDrag = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpDrag) return;
 
 	TopicChooser dlg(this, "Select new parent item");
@@ -608,7 +608,7 @@ void SlnPanel::onOpenFolder(int bi)
 
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	QString path = tpos->GetAbsDir(bi);
@@ -624,7 +624,7 @@ void SlnPanel::OpenInExtProgram(const QString& program, int di)
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	QString path;
@@ -647,7 +647,7 @@ void SlnPanel::onInsertNewChild()
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) 
 		return;
-	MTPOS tpPar = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpPar = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpPar) 
 		return;
 
@@ -661,10 +661,10 @@ void SlnPanel::onInsertNewChild()
 	if (dlg.DoModal() == QDialog::Accepted)
 	{
 		// ok - insert the element into the base and connect the workpiece
-		MTPOS tpNew = theSln.AddItem(tpPar, nullptr, dlg.m_title, dlg.m_id);
+		DocItem* tpNew = theSln.AddItem(tpPar, nullptr, dlg.m_title, dlg.m_id);
 		if (tpNew)
 		{
-			newitem->setData(0, Qt::UserRole, qVariantFromValue((void*)tpNew));
+			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
 			UpdateItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
 			if (dlg.m_open) {
@@ -688,11 +688,11 @@ void SlnPanel::onInsertNewSibling()
 
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpAfter = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpAfter = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpAfter) return;
 	QTreeWidgetItem *par = item->parent();
 	if (!par) return;
-	MTPOS tpPar = (MTPOS)par->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpPar = par->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpPar) return;
 
 	QTreeWidgetItem *newitem = new QTreeWidgetItem(par, item);
@@ -703,10 +703,10 @@ void SlnPanel::onInsertNewSibling()
 	if (dlg.DoModal() == QDialog::Accepted)
 	{
 		// ok - insert the element into the base and connect the workpiece
-		MTPOS tpNew = theSln.AddItem(tpPar, tpAfter, dlg.m_title, dlg.m_id);
+		DocItem* tpNew = theSln.AddItem(tpPar, tpAfter, dlg.m_title, dlg.m_id);
 		if (tpNew)
 		{
-			newitem->setData(0, Qt::UserRole, qVariantFromValue((void*)tpNew));
+			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
 			UpdateItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
 			if(dlg.m_open) {
@@ -749,7 +749,7 @@ void SlnPanel::onMoveItemUp()
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	if (theSln.MoveUp(tpos))
@@ -766,7 +766,7 @@ void SlnPanel::onMoveItemDown()
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	if (theSln.MoveDown(tpos))
@@ -784,7 +784,7 @@ void SlnPanel::onMoveItemParent()
 	// move node left: make it next after parent
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	if (theSln.MoveParent(tpos))
@@ -801,7 +801,7 @@ void SlnPanel::onMoveItemChild()
 	// move node to the right: make it the last child of its previous one
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if (!item) return;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpos) return;
 
 	if (theSln.MoveChild(tpos))
@@ -811,20 +811,6 @@ void SlnPanel::onMoveItemChild()
 		ui.treeContents->setCurrentItem(item);
 	}
 }
-MTPOS SlnPanel::GetMtposFromRes()
-{
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return 0;
-	MTPOS tpos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
-	if (!tpos) return 0;
-
-	if (tpos != theSln.GetRoot())
-	{
-		QMessageBox::warning(this, AppTitle, tr("Resourse settings are available only from root item"), QMessageBox::Ok);
-		return 0;
-	}
-	return tpos;
-}
 
 int SlnPanel::onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m)
 {
@@ -833,8 +819,8 @@ int SlnPanel::onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m)
 	// return Qt::IgnoreAction or Qt::MoveAction
 	if (!drag || !drop)
 		return 0;
-	MTPOS tpDrag = (MTPOS)drag->data(0, Qt::UserRole).value<void*>();
-	MTPOS tpDrop = (MTPOS)drop->data(0, Qt::UserRole).value<void*>();
+	DocItem* tpDrag = drag->data(0, Qt::UserRole).value<DocItem*>();
+	DocItem* tpDrop = drop->data(0, Qt::UserRole).value<DocItem*>();
 
 	int r = QMessageBox::warning(this, AppTitle,
 		tr("Are you sure want to move node '%1' to node '%2'").arg(tpDrag->GetTitle(0)).arg(tpDrop->GetTitle(0)),
@@ -848,11 +834,11 @@ int SlnPanel::onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m)
 	return 0;
 }
 
-QTreeWidgetItem* SlnPanel::FindItem(QTreeWidgetItem *par, MTPOS mtpos)
+QTreeWidgetItem* SlnPanel::FindItem(QTreeWidgetItem *par, DocItem* mtpos)
 {
 	// recursive search for an element with a given identifier
 	// checking this item
-	MTPOS pos = (MTPOS)par->data(0, Qt::UserRole).value<void*>();
+	DocItem* pos = par->data(0, Qt::UserRole).value<DocItem*>();
 	if (pos == mtpos)
 		return par;
 
@@ -867,7 +853,7 @@ QTreeWidgetItem* SlnPanel::FindItem(QTreeWidgetItem *par, MTPOS mtpos)
 	return 0;
 }
 
-void SlnPanel::EnsureVisible(MTPOS node)
+void SlnPanel::EnsureVisible(DocItem* node)
 {
 	QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), node);
 	if (item)
@@ -888,7 +874,7 @@ void SlnPanel::Search(const QString &text)
 void SlnPanel::onSearch()
 {
     // searching...
-    CMtposList results;
+	std::list<DocItem*> results;
 	setCursor(QCursor(Qt::WaitCursor));
     QString text = ui.lineSearch->text().toHtmlEscaped();
 	unsigned int scope = 0;
@@ -908,7 +894,7 @@ void SlnPanel::onSearch()
     ui.treeResults->clear();
     for(auto pos : results) {
         QTreeWidgetItem *item = new QTreeWidgetItem();
-        item->setData(0, Qt::UserRole, qVariantFromValue((void*)pos));
+        item->setData(0, Qt::UserRole, QVariant::fromValue(pos));
         ui.treeResults->addTopLevelItem(item);
         UpdateItem(item);
     }

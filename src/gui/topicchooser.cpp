@@ -16,7 +16,7 @@ TopicChooser::TopicChooser(QWidget *parent, const QString &title)
 
 bool TopicChooser::DoModal(bool checks)
 {
-	MTPOS tposRoot = theSln.GetRoot();
+	DocItem* tposRoot = theSln.GetRoot();
 	if(!tposRoot) 
 		return false;
 
@@ -26,7 +26,7 @@ bool TopicChooser::DoModal(bool checks)
 	ui.treeContents->clear();
 	QTreeWidgetItem *root = new QTreeWidgetItem();
 	root->setText(0, tposRoot->title[0] );
-	root->setData(0, Qt::UserRole, qVariantFromValue((void*)tposRoot));
+	root->setData(0, Qt::UserRole, QVariant::fromValue(tposRoot));
 	ui.treeContents->addTopLevelItem(root);
 
 	LoadLevel(root, tposRoot);
@@ -40,7 +40,7 @@ bool TopicChooser::DoModal(bool checks)
 	return exec() == QDialog::Accepted;
 }
 
-void TopicChooser::LoadLevel(QTreeWidgetItem *treeNode, MTPOS tposNode)
+void TopicChooser::LoadLevel(QTreeWidgetItem *treeNode, DocItem* tposNode)
 {
 	if (m_checks)
 	{
@@ -51,11 +51,11 @@ void TopicChooser::LoadLevel(QTreeWidgetItem *treeNode, MTPOS tposNode)
 
 	for(MTPOS tpos : tposNode->children )
 	{
+		DocItem* docItem = tpos->This<DocItem>();
 		QTreeWidgetItem *item = new QTreeWidgetItem(treeNode);
-		item->setText(0, tpos->title[0]);
-		item->setData(0, Qt::UserRole, qVariantFromValue((void*)tpos));
-		
-		LoadLevel(item, tpos);
+		item->setText(0, docItem->title[0]);
+		item->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
+		LoadLevel(item, docItem);
 	}
 }
 
@@ -63,7 +63,7 @@ void TopicChooser::onOk()
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
 	if(!item) return;
-	m_posSelected = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	m_posSelected = item->data(0, Qt::UserRole).value<DocItem*>();
 	
 	accept();	
 }
@@ -71,7 +71,7 @@ void TopicChooser::onOk()
 void TopicChooser::onItemChanged(QTreeWidgetItem * item, int column)
 {
 	bool c = item->checkState(0);
-	MTPOS pos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+	DocItem* pos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (!pos)
 		return;
 	pos->SetCheck(c);
@@ -84,7 +84,7 @@ void TopicChooser::CheckSubItems(QTreeWidgetItem *node, bool check)
 	for (int i = 0; i < n; i++)
 	{
 		QTreeWidgetItem *item = node->child(i);
-		MTPOS pos = (MTPOS)item->data(0, Qt::UserRole).value<void*>();
+		DocItem* pos = item->data(0, Qt::UserRole).value<DocItem*>();
 		pos->SetCheck(check);
 		item->setCheckState(0, check ? Qt::Checked : Qt::Unchecked);
 	}

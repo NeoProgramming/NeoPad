@@ -4,9 +4,9 @@
 #include <QDialog>
 #include <QMdiSubWindow>
 #include <QList>
+#include <list>
 #include "ui_savealldlg.h"
-
-#include "../core/PrjItem.h"
+#include "../core/DocItem.h"
 
 class MainWindow;
 
@@ -19,7 +19,7 @@ public:
 	~SaveAllDlg();
 
 	QList<QMdiSubWindow *> wl;
-	CMtposList mpl;
+	std::list<DocItem*> mpl;
 
 	bool DoModal(MainWindow *mw);
 private:

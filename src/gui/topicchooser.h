@@ -13,12 +13,12 @@ class TopicChooser : public QDialog
 public:
     TopicChooser(QWidget *parent, const QString& title);
 	bool DoModal(bool checks=false);
-	MTPOS m_posSelected;
+	DocItem* m_posSelected;
 private slots:
 	void onOk();
 	void onItemChanged(QTreeWidgetItem * item, int column);
 private:
-	void LoadLevel(QTreeWidgetItem *treeNode, MTPOS posNode);
+	void LoadLevel(QTreeWidgetItem *treeNode, DocItem* posNode);
 	void CheckSubItems(QTreeWidgetItem *node, bool check);
     Ui::TopicChooser ui;
 	bool m_checks;

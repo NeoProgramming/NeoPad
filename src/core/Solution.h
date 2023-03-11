@@ -7,15 +7,15 @@
 #include "../service/fail.h"
 
 #include "PrjTree.h"
+#include "DocItem.h"
 #include "Snippets.h"
 #include "vmbsrv.h"
-#include "Bases.h"
+#include "Books.h"
+#include "Favorites.h"
 
-
-class CSolution : public PrjTree
+class CSolution : public PrjTree<DocItem>
 {
 public:
-
 
 	static ETreeStatus	GetTreeStatus(const char* attr);
 	static const char*	GetTreeStatus(ETreeStatus status);
@@ -31,7 +31,8 @@ public:
 	QString m_Password;
 	NeopadCallback *m_pCB = nullptr;
 	QString m_RecentClipboard;
-    Bases m_Bases;
+    Books m_Books;
+	Favorites m_Favs;
 public:
 	CSolution(void);
 	~CSolution(void);
@@ -45,69 +46,65 @@ public:
 	void	CreateProject(const QString &name, const QString& dir, const QString &btitle0, const QString &bsuffix0);
 	bool	LoadProject(const QString &fpath);
 	bool	SaveProject(bool recursive);
-	bool	SaveSubBase(MTPOS tpPar, bool recursive);
+	bool	SaveSubBase(DocItem* tpPar, bool recursive);
 
-	bool    LoadDoc(MTPOS item, int di, QString &content);
-	bool    SaveDoc(MTPOS item, int di, const QString &content);
-
-	MTPOS	AddItem(MTPOS tpPar, MTPOS tpAfter, const QString& title, const QString& id);
-	bool	RenameItem(MTPOS tpos, const QString & id);
-	void    RenameTitle(MTPOS item, const QString & title, int di);
-	void    SetStatus(MTPOS item, ETreeStatus status, bool rec);
-
-	bool	RemoveNode(MTPOS tpItem, bool del_files);
-	void    RemoveNodeFiles(MTPOS tpItem);
-	void	RemoveNodeDoc(MTPOS tpItem, int bi);
-		
-	bool	MakeDoc(MTPOS tpItem, int bi);
-
-	bool    Move(MTPOS tpItem, MTPOS tpNewPar, MTPOS tpAfter);
-	bool    MoveUp(MTPOS tpItem);
-	bool    MoveDown(MTPOS tpItem);
-	bool    MoveChild(MTPOS tpItem);
-	bool    MoveParent(MTPOS tpItem);
+	bool    LoadDoc(DocItem* item, int bi, QString &content);
+	bool    SaveDoc(DocItem* item, int bi, const QString &content);
 	
-    void    SaveItem(MTPOS tpItem, int bi);
-	void    MakeUnsavedList(CMtposList &mpl);
+	DocItem*AddItem(DocItem* tpPar, DocItem* tpAfter, const QString& title, const QString& id);
+	bool	RenameItem(DocItem* tpos, const QString & id);
+	void    RenameTitle(DocItem* item, const QString & title, int bi);
+	void    SetStatus(DocItem* item, ETreeStatus status, bool rec);
+
+	bool	RemoveNode(DocItem* tpItem, bool del_files);
+	void    RemoveNodeFiles(DocItem* tpItem);
+	void	RemoveNodeDoc(DocItem* tpItem, int bi);
+		
+	bool	MakeDoc(DocItem* tpItem, int bi);
+
+	bool    Move(DocItem* tpItem, DocItem* tpNewPar, DocItem* tpAfter);
+	bool    MoveUp(DocItem* tpItem);
+	bool    MoveDown(DocItem* tpItem);
+	bool    MoveChild(DocItem* tpItem);
+	bool    MoveParent(DocItem* tpItem);
+	
+    void    SaveItem(DocItem* tpItem, int bi);
+	void    MakeUnsavedList(std::list<DocItem*> &mpl);
 	void	GenContents(int bi, const QString &fpath, const QString &base);
 	QString GetCssAbsPath(int bi);
-	void    EncryptDocs(MTPOS tposParent, const QString &oldPsw, const QString &newPsw);
+	void    EncryptDocs(DocItem* tposParent, const QString &oldPsw, const QString &newPsw);
 	void    TransformDocs(int bi);
-	bool	TransformFile(MTPOS tpos, int bi);
+	bool	TransformFile(DocItem* tpos, int bi);
 
-	MTPOS	Locate(const QString &guid);
-    void    Search(const QString &text, unsigned int scope, MTPOS root, CMtposList &results);
-    bool    SearchInFile(MTPOS pos, const QString &text, unsigned int scope);
+	DocItem*Locate(const QString &guid);
+    void    Search(const QString &text, unsigned int scope, DocItem* root, std::list<DocItem*> &results);
+    bool    SearchInFile(DocItem* pos, const QString &text, unsigned int scope);
 protected:
-	bool    IsFNamesAvailable(MTPOS pos, const QString &id);
+	bool    IsFNamesAvailable(DocItem* pos, const QString &id);
 
 	bool    LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot);
 	void	MakeXmlDoc(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase);
 	bool	SaveXmlDoc(const QString &path, const pugi::xml_document &xdoc);
 
-	MTPOS   GetAncestorWithFile(MTPOS item, bool include_this = false);
+	DocItem*   GetAncestorWithFile(DocItem* item, bool include_this = false);
 
-	void	UpdateBaseDirs(MTPOS tpNode);
-	MTPOS   CreateRoot(const QString& name, const QString& dir);
+	void	UpdateBaseDirs(DocItem* tpNode);
+	DocItem* CreateRoot(const QString& name, const QString& dir);
 
-	bool	LoadSubTag(pugi::xml_node txPar, MTPOS tpPar);
-	bool	LoadSubBase(const QString &id, MTPOS tpParNode);
-	void	LoadItemData(pugi::xml_node txItem, MT_ITEM *item, bool vmb);
-
-	void	LoadFavorites(pugi::xml_node txRoot);
-
-	void	SaveSubTag(pugi::xml_node pxParent, MTPOS tposParent, bool recursive);
-	void    SaveItemData(pugi::xml_node txItem, MT_ITEM *item);
-
-	void	SaveFavorites(pugi::xml_node txRoot);
-
+	bool	LoadSubTag(pugi::xml_node txPar, DocItem* tpPar);
+	bool	LoadSubBase(const QString &id, DocItem* tpParNode);
+	void	LoadItemData(pugi::xml_node txItem, DocItem *item);
+	
+	void	SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool recursive);
+	void    SaveItemData(pugi::xml_node txItem, DocItem *item);
+	
 	void	addProjectToRecent(const QString &path);
 	
-	void    HandleChanges(MTPOS tpItem, bool recursive);
-	void    HandleChanges(MTPOS tpItem1, MTPOS tpItem2);
-	bool    MoveFiles(MTPOS tpItem, MTPOS tpNewPar);
-	void	MakeUnsavedListR(CMtposList &mpl, MTPOS mtNode);
-	void    GenContentsLevel(MTPOS node, int bi, QFile &file, const QString &base);
+	void    HandleChanges(DocItem* tpItem, bool recursive);
+	void    HandleChanges(DocItem* tpItem1, DocItem* tpItem2);
+	bool    MoveFiles(DocItem* tpItem, DocItem* tpNewPar);
+	void	MakeUnsavedListR(std::list<DocItem*> &mpl, DocItem* mtNode);
+	void    GenContentsLevel(DocItem* node, int bi, QFile &file, const QString &base);
 };
 
 extern CSolution theSln;
