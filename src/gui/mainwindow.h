@@ -54,10 +54,7 @@ public:
 	
 public slots:
 
-	void onFileReload();
-	void onFileSave();
-	void onFileSaveAll();
-	
+	void onProjectSaveAll();
     void onProjectOpen(QString fileName);
     void onProjectQuickStart();
 	void onProjectNew();
@@ -79,100 +76,18 @@ private slots:
 
 	void onTileSubWindowsHorizontally();
 	void onTileSubWindowsVertically();
-	
-	void onZoomIn();
-	void onZoomOut();
-	void onZoomNormal();
+
 	void onZoomChange(int);
 
-	void onEditClearDoc();
-	void onEditFixCssPath();
-	void onEditCut();
-	void onEditCutText();
-	void onEditCopy();
-    void onEditCopyText();
-	void onEditPaste();
-	void onEditPasteText();
-	void onEditPasteImage();
-    void onEditPasteAsTable();
-	void onEditPasteCell();
-	void onEditUndo();
-	void onEditRedo();
-	void onEditUntag();
-	void onEditOutside();
-	void onEditTagInfo();
-	void onEditUntable();
-
-	void onTextBold();
-	void onTextItalic();
-	void onTextUnderline();
-	void onTextStrike();
-	void onTextSubscript();
-	void onTextSuperscript();
-	void onTextCode();
-	void onTextStrong();
-	void onTextEm();
-	void onTextIns();
-	void onTextDel();
-	void onTextSamp();
-	void onTextVar();
-	void onTextKbd();
-
-	void onTextMark();
-	void onTextMark1();
-	void onTextMark2();
-	void onTextMark3();
-	void onTextMark4();
-	void onTextMark5();
-	void onTextMark6();
-	void onTextMark7();
-
-	void onParaH1();
-	void onParaH2();
-	void onParaH3();
-	void onParaH4();
-	void onParaH5();
-	void onParaH6();
-	void onParaDiv();
-	void onParaPara();
-	void onParaComment();
-	void onParaSource();
-	void onParaQuestion();
-	void onParaImportant();
-	void onParaFeature();
-	void onParaQuote();
-	void onParaAnn();
-	void onParaTerm();
-	void onParaNote();
-
 	void onInsertTableChanged(int cols, int rows);
-	void onInsertTableClicked();
-	void onInsertHorzLine();
-	void onInsertImage();
-	void onInsertHyperlink();
-	void onInsertDateTime();
-	void onInsertSnippet();
-	void onInsertSymbol();
-	void onInsertNumList();
-	void onInsertBulList();
-
-	void onTableAppendData();
-	void onTableInsertData();
-	void onTableExpand();
-	void onTableCollapse();
-	void onTableDeleteRow();
-    void onTableMoveRowAbove();
-    void onTableMoveRowBelow();
-	    
+		    
 	void onAppAbout();
 	void onAppAboutQt();
 	void onAppExit();
 	void onAppForceExit();
 
     void onTreeSync();
-	void onToolsLink();
-	void onToolsSearch();
-	void onToolsTranslate();
+	
 protected:
     void closeEvent(QCloseEvent *);
     

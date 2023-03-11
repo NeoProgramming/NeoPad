@@ -132,132 +132,135 @@ MainWindow::MainWindow()
 	
 	// read script
 	loadScripts();
-
-#define CHILD(meth)	[this]() { onChild(&WebEditView::meth); }
     
-	connect(ui.actionWindowClose,		&QAction::triggered, m_wArea, &QMdiArea::closeActiveSubWindow);
-	connect(ui.actionWindowCloseAll,	&QAction::triggered, m_wArea, &QMdiArea::closeAllSubWindows);
-	connect(ui.actionWindowTile,		&QAction::triggered, m_wArea, &QMdiArea::tileSubWindows);
-	connect(ui.actionWindowCascade,		&QAction::triggered, m_wArea, &QMdiArea::cascadeSubWindows);
+	connect(ui.actionWindowClose,	&QAction::triggered, m_wArea, &QMdiArea::closeActiveSubWindow);
+	connect(ui.actionWindowCloseAll,&QAction::triggered, m_wArea, &QMdiArea::closeAllSubWindows);
+	connect(ui.actionWindowTile,	&QAction::triggered, m_wArea, &QMdiArea::tileSubWindows);
+	connect(ui.actionWindowCascade,	&QAction::triggered, m_wArea, &QMdiArea::cascadeSubWindows);
 
-	connect(ui.actionWindowHTile,		&QAction::triggered, this, &MainWindow::onTileSubWindowsHorizontally);
-	connect(ui.actionWindowVTile,		&QAction::triggered, this, &MainWindow::onTileSubWindowsVertically);
-	connect(ui.actionAboutNeopad,		&QAction::triggered, this, &MainWindow::onAppAbout);
-	connect(ui.actionAboutQt,			&QAction::triggered, this, &MainWindow::onAppAboutQt);
-	
-	connect(ui.actionClearDoc,			&QAction::triggered, this, &MainWindow::onEditClearDoc);
-	connect(ui.actionCorrectCssPath,	&QAction::triggered, this, &MainWindow::onEditFixCssPath);
-
-	connect(ui.actionEditCut,			&QAction::triggered, this, &MainWindow::onEditCut);
-	connect(ui.actionEditCutText,		&QAction::triggered, this, &MainWindow::onEditCutText);
-	connect(ui.actionEditCopy,			&QAction::triggered, this, &MainWindow::onEditCopy);
-    connect(ui.actionEditCopyText,		&QAction::triggered, this, &MainWindow::onEditCopyText);
-	connect(ui.actionEditPaste,			&QAction::triggered, this, &MainWindow::onEditPaste);
-	connect(ui.actionEditPasteText,		&QAction::triggered, this, &MainWindow::onEditPasteText);
-	connect(ui.actionEditPasteImage,    &QAction::triggered, this, &MainWindow::onEditPasteImage);
-    connect(ui.actionEditPasteAsTable,	&QAction::triggered, this, &MainWindow::onEditPasteAsTable);
-	connect(ui.actionEditPasteCell,     &QAction::triggered, this, &MainWindow::onEditPasteCell);
-	connect(ui.actionEditUndo,			&QAction::triggered, this, &MainWindow::onEditUndo);
-	connect(ui.actionEditRedo,			&QAction::triggered, this, &MainWindow::onEditRedo);
-	connect(ui.actionEditRedo,			&QAction::triggered, this, &MainWindow::onEditRedo);
-	connect(ui.actionEditUntag,			&QAction::triggered, this, &MainWindow::onEditUntag);
-	connect(ui.actionEditOutside,		&QAction::triggered, this, &MainWindow::onEditOutside);
-	connect(ui.actionEditInfo,			&QAction::triggered, this, &MainWindow::onEditTagInfo);
-	connect(ui.actionEditUntable,		&QAction::triggered, this, &MainWindow::onEditUntable);
-
-	connect(ui.actionZoomIn,			&QAction::triggered, this, &MainWindow::onZoomIn);
-	connect(ui.actionZoomOut,			&QAction::triggered, this, &MainWindow::onZoomOut);
-	connect(ui.actionZoomNormal,		&QAction::triggered, this, &MainWindow::onZoomNormal);
-
-	//connect(ui.actionTextBold,			&QAction::triggered, this, &MainWindow::onTextBold);
-	connect(ui.actionTextBold,			&QAction::triggered, this, CHILD(onTextBold));
-
-	connect(ui.actionTextItalic,		&QAction::triggered, this, &MainWindow::onTextItalic);
-	connect(ui.actionTextUnderline,		&QAction::triggered, this, &MainWindow::onTextUnderline);
-	connect(ui.actionTextStrike,		&QAction::triggered, this, &MainWindow::onTextStrike);
-	connect(ui.actionTextCode,			&QAction::triggered, this, &MainWindow::onTextCode);
-	connect(ui.actionTextSubscript,		&QAction::triggered, this, &MainWindow::onTextSubscript);
-	connect(ui.actionTextSuperscript,	&QAction::triggered, this, &MainWindow::onTextSuperscript);
-	connect(ui.actionTextStrong,		&QAction::triggered, this, &MainWindow::onTextStrong);
-	connect(ui.actionTextEm,			&QAction::triggered, this, &MainWindow::onTextEm);
-	connect(ui.actionTextIns,			&QAction::triggered, this, &MainWindow::onTextIns);
-	connect(ui.actionTextDel,			&QAction::triggered, this, &MainWindow::onTextDel);
-	connect(ui.actionTextSamp,			&QAction::triggered, this, &MainWindow::onTextSamp);
-	connect(ui.actionTextVar,			&QAction::triggered, this, &MainWindow::onTextVar);
-	connect(ui.actionTextKbd,			&QAction::triggered, this, &MainWindow::onTextKbd);
-
-	connect(ui.actionTextMark,			&QAction::triggered, this, &MainWindow::onTextMark);
-	connect(ui.actionTextMark1,			&QAction::triggered, this, &MainWindow::onTextMark1);
-	connect(ui.actionTextMark2,			&QAction::triggered, this, &MainWindow::onTextMark2);
-	connect(ui.actionTextMark3,			&QAction::triggered, this, &MainWindow::onTextMark3);
-	connect(ui.actionTextMark4,			&QAction::triggered, this, &MainWindow::onTextMark4);
-	connect(ui.actionTextMark5,			&QAction::triggered, this, &MainWindow::onTextMark5);
-	connect(ui.actionTextMark6,			&QAction::triggered, this, &MainWindow::onTextMark6);
-	connect(ui.actionTextMark7,			&QAction::triggered, this, &MainWindow::onTextMark7);
-
-	connect(ui.actionInsertHorzline,	&QAction::triggered, this, &MainWindow::onInsertHorzLine);
-	connect(ui.actionInsertTable,		&QAction::triggered, this, &MainWindow::onInsertTableClicked);
-	connect(ui.actionInsertImage,		&QAction::triggered, this, &MainWindow::onInsertImage);
-	connect(ui.actionInsertHyperlink,	&QAction::triggered, this, &MainWindow::onInsertHyperlink);
-	connect(ui.actionInsertDatetime,	&QAction::triggered, this, &MainWindow::onInsertDateTime);
-	connect(ui.actionInsertSnippet,		&QAction::triggered, this, &MainWindow::onInsertSnippet);
-	connect(ui.actionInsertSymbol,		&QAction::triggered, this, &MainWindow::onInsertSymbol);
-
-	connect(ui.actionTableAppendData,   &QAction::triggered, this, &MainWindow::onTableAppendData);
-	connect(ui.actionTableInsertData,   &QAction::triggered, this, &MainWindow::onTableInsertData);
-	connect(ui.actionTableExpand,       &QAction::triggered, this, &MainWindow::onTableExpand);
-	connect(ui.actionTableCollapse,     &QAction::triggered, this, &MainWindow::onTableCollapse);
-	connect(ui.actionTableDeleteRow,    &QAction::triggered, this, &MainWindow::onTableDeleteRow);
-    connect(ui.actionTableMoveRowAbove, &QAction::triggered, this, &MainWindow::onTableMoveRowAbove);
-    connect(ui.actionTableMoveRowBelow, &QAction::triggered, this, &MainWindow::onTableMoveRowBelow);
+	connect(ui.actionWindowHTile,	&QAction::triggered, this, &MainWindow::onTileSubWindowsHorizontally);
+	connect(ui.actionWindowVTile,	&QAction::triggered, this, &MainWindow::onTileSubWindowsVertically);
+	connect(ui.actionAboutNeopad,	&QAction::triggered, this, &MainWindow::onAppAbout);
+	connect(ui.actionAboutQt,		&QAction::triggered, this, &MainWindow::onAppAboutQt);
 
 	
-	connect(ui.actionParaMarkList,		&QAction::triggered, this, &MainWindow::onInsertBulList);
-	connect(ui.actionParaNumList,		&QAction::triggered, this, &MainWindow::onInsertNumList);
+#define CONN_CHILD(act, meth) connect(act, &QAction::triggered, this, [this]() { onChild(&WebEditView::meth); } )
 
-	connect(ui.actionQuickStart,		&QAction::triggered, this, &MainWindow::onProjectQuickStart);
-	connect(ui.actionProjectNew,		&QAction::triggered, this, &MainWindow::onProjectNew);
-	connect(ui.actionProjectSave,		&QAction::triggered, this, &MainWindow::onProjectSave);
-//	connect(ui.actionProjectOpen,		&QAction::triggered, this, &MainWindow::onProjectOpen);
-	connect(ui.actionFileReload,		&QAction::triggered, this, &MainWindow::onFileReload);
-	connect(ui.actionFileSave,			&QAction::triggered, this, &MainWindow::onFileSave);
-	connect(ui.actionFileSaveAll,		&QAction::triggered, this, &MainWindow::onFileSaveAll);
-	connect(ui.actionProjectProperties,	&QAction::triggered, this, &MainWindow::onProjectProperties);
-    connect(ui.actionProjectStatistics,	&QAction::triggered, this, &MainWindow::onProjectStatistics);
-	connect(ui.actionProjectPrinfPdf,	&QAction::triggered, this, &MainWindow::onProjectPrintPdfBundle);
-	connect(ui.actionExportPdfFiles,	&QAction::triggered, this, &MainWindow::onProjectPrintPdfFiles);
+	CONN_CHILD(ui.actionZoomIn,		onZoomIn);
+	CONN_CHILD(ui.actionZoomOut,	onZoomOut);
+	CONN_CHILD(ui.actionZoomNormal, onZoomNormal);
 
-	connect(ui.actionGenContents1,      &QAction::triggered, this, [this](){ GenContents(0); });
-	connect(ui.actionGenContents2,      &QAction::triggered, this, [this](){ GenContents(1); });
-	connect(ui.actionEditCss1,          &QAction::triggered, this, [this](){ EditCss(0); });
-	connect(ui.actionEditCss2,          &QAction::triggered, this, [this](){ EditCss(1); });
-	connect(ui.actionCryptBase,         &QAction::triggered, this, &MainWindow::onProjectEncrypt);
+	CONN_CHILD(ui.actionClearDoc,		onEditClearDoc);
+	CONN_CHILD(ui.actionCorrectCssPath,	onEditFixCssPath);
+
+	CONN_CHILD(ui.actionEditCut,			onEditCut);
+	CONN_CHILD(ui.actionEditCutText,		onEditCutText);
+	CONN_CHILD(ui.actionEditCopy,			onEditCopy);
+	CONN_CHILD(ui.actionEditCopyText,		onEditCopyText);
+	CONN_CHILD(ui.actionEditPaste,			onEditPaste);
+	CONN_CHILD(ui.actionEditPasteText,		onEditPasteText);
+	CONN_CHILD(ui.actionEditPasteImage,     onEditPasteImage);
+	CONN_CHILD(ui.actionEditPasteAsTable,	onEditPasteAsTable);
+	CONN_CHILD(ui.actionEditPasteCell,      onEditPasteCell);
+	CONN_CHILD(ui.actionEditUndo,			onEditUndo);
+	CONN_CHILD(ui.actionEditRedo,			onEditRedo);
+	CONN_CHILD(ui.actionEditRedo,			onEditRedo);
+	CONN_CHILD(ui.actionEditUntag,			onEditUntag);
+	CONN_CHILD(ui.actionEditOutside,		onEditOutside);
+	CONN_CHILD(ui.actionEditInfo,			onEditTagInfo);
+	CONN_CHILD(ui.actionEditUntable,		onEditUntable);	
+
+	CONN_CHILD(ui.actionTextBold,		onTextBold);
+	CONN_CHILD(ui.actionTextItalic,		onTextItalic);
+	CONN_CHILD(ui.actionTextUnderline,	onTextUnderline);
+	CONN_CHILD(ui.actionTextStrike,		onTextStrike);
+	CONN_CHILD(ui.actionTextCode,		onTextCode);
+	CONN_CHILD(ui.actionTextSubscript,	onTextSubscript);
+	CONN_CHILD(ui.actionTextSuperscript,onTextSuperscript);
+	CONN_CHILD(ui.actionTextStrong,		onTextStrong);
+	CONN_CHILD(ui.actionTextEm,			onTextEm);
+	CONN_CHILD(ui.actionTextIns,		onTextIns);
+	CONN_CHILD(ui.actionTextDel,		onTextDel);
+	CONN_CHILD(ui.actionTextSamp,		onTextSamp);
+	CONN_CHILD(ui.actionTextVar,		onTextVar);
+	CONN_CHILD(ui.actionTextKbd,		onTextKbd);
+
+	CONN_CHILD(ui.actionTextMark,		onTextMark);
+	CONN_CHILD(ui.actionTextMark1,		onTextMark1);
+	CONN_CHILD(ui.actionTextMark2,		onTextMark2);
+	CONN_CHILD(ui.actionTextMark3,		onTextMark3);
+	CONN_CHILD(ui.actionTextMark4,		onTextMark4);
+	CONN_CHILD(ui.actionTextMark5,		onTextMark5);
+	CONN_CHILD(ui.actionTextMark6,		onTextMark6);
+	CONN_CHILD(ui.actionTextMark7,		onTextMark7);
+
+	CONN_CHILD(ui.actionInsertTable,    onInsertTable);
+	CONN_CHILD(ui.actionInsertHorzline,	onInsertHorzLine);
+	CONN_CHILD(ui.actionInsertImage,	onInsertImage);
+	CONN_CHILD(ui.actionInsertHyperlink,onInsertHyperlink);
+	CONN_CHILD(ui.actionInsertDatetime,	onInsertDateTime);
+	CONN_CHILD(ui.actionInsertSnippet,	onInsertSnippet);
+	CONN_CHILD(ui.actionInsertSymbol,	onInsertSymbol);
+
+	CONN_CHILD(ui.actionTableAppendData,   onTableAppendData);
+	CONN_CHILD(ui.actionTableInsertData,   onTableInsertData);
+	CONN_CHILD(ui.actionTableExpand,       onTableExpand);
+	CONN_CHILD(ui.actionTableCollapse,     onTableCollapse);
+	CONN_CHILD(ui.actionTableDeleteRow,    onTableDeleteRow);
+	CONN_CHILD(ui.actionTableMoveRowAbove, onTableMoveRowAbove);
+	CONN_CHILD(ui.actionTableMoveRowBelow, onTableMoveRowBelow);
+		
+	CONN_CHILD(ui.actionParaMarkList,	onInsertBulList);
+	CONN_CHILD(ui.actionParaNumList,	onInsertNumList);
+
+	CONN_CHILD(ui.actionFileReload,	onFileReload);
+	CONN_CHILD(ui.actionFileSave,	onFileSave);
 	
-	connect(ui.actionParaH1,			&QAction::triggered, this, &MainWindow::onParaH1);
-	connect(ui.actionParaH2,			&QAction::triggered, this, &MainWindow::onParaH2);
-	connect(ui.actionParaH3,			&QAction::triggered, this, &MainWindow::onParaH3);
-	connect(ui.actionParaH4,			&QAction::triggered, this, &MainWindow::onParaH4);
-	connect(ui.actionParaH5,			&QAction::triggered, this, &MainWindow::onParaH5);
-	connect(ui.actionParaH6,			&QAction::triggered, this, &MainWindow::onParaH6);
-	connect(ui.actionParaDiv,           &QAction::triggered, this, &MainWindow::onParaDiv);
-	connect(ui.actionParaPara,			&QAction::triggered, this, &MainWindow::onParaPara);
-	connect(ui.actionParaComment,		&QAction::triggered, this, &MainWindow::onParaComment);
-	connect(ui.actionParaSource,		&QAction::triggered, this, &MainWindow::onParaSource);
-	connect(ui.actionParaQuestion,		&QAction::triggered, this, &MainWindow::onParaQuestion);
-	connect(ui.actionParaImportant,		&QAction::triggered, this, &MainWindow::onParaImportant);
-	connect(ui.actionParaFeature,		&QAction::triggered, this, &MainWindow::onParaFeature);
-	connect(ui.actionParaQuote,			&QAction::triggered, this, &MainWindow::onParaQuote);
-	connect(ui.actionParaAnn,			&QAction::triggered, this, &MainWindow::onParaAnn);
-	connect(ui.actionParaTerm,			&QAction::triggered, this, &MainWindow::onParaTerm);
-	connect(ui.actionParaNote,			&QAction::triggered, this, &MainWindow::onParaNote);
+	CONN_CHILD(ui.actionParaH1,			onParaHeading1);
+	CONN_CHILD(ui.actionParaH2,			onParaHeading2);
+	CONN_CHILD(ui.actionParaH3,			onParaHeading3);
+	CONN_CHILD(ui.actionParaH4,			onParaHeading4);
+	CONN_CHILD(ui.actionParaH5,			onParaHeading5);
+	CONN_CHILD(ui.actionParaH6,			onParaHeading6);
+	CONN_CHILD(ui.actionParaDiv,        onParaDiv);
+	CONN_CHILD(ui.actionParaPara,		onParaPara);
+	CONN_CHILD(ui.actionParaComment,	onParaComment);
+	CONN_CHILD(ui.actionParaSource,		onParaSource);
+	CONN_CHILD(ui.actionParaQuestion,	onParaQuestion);
+	CONN_CHILD(ui.actionParaImportant,	onParaImportant);
+	CONN_CHILD(ui.actionParaFeature,	onParaFeature);
+	CONN_CHILD(ui.actionParaQuote,		onParaQuote);
+	CONN_CHILD(ui.actionParaAnn,		onParaAnn);
+	CONN_CHILD(ui.actionParaTerm,		onParaTerm);
+	CONN_CHILD(ui.actionParaNote,		onParaNote);
+
+	CONN_CHILD(ui.actionToolsLink,      onToolsLink);
+	CONN_CHILD(ui.actionToolsSearch,    onToolsSearch);
+	CONN_CHILD(ui.actionToolsTranslate, onToolsTranslate);
+
+#undef CONN_CHILD
+
+	connect(ui.actionQuickStart, &QAction::triggered, this, &MainWindow::onProjectQuickStart);
+	connect(ui.actionProjectNew, &QAction::triggered, this, &MainWindow::onProjectNew);
+	connect(ui.actionProjectSave, &QAction::triggered, this, &MainWindow::onProjectSave);
+	//	connect(ui.actionProjectOpen,		&QAction::triggered, this, &MainWindow::onProjectOpen);
+	connect(ui.actionFileSaveAll, &QAction::triggered, this, &MainWindow::onProjectSaveAll);
+	connect(ui.actionProjectProperties, &QAction::triggered, this, &MainWindow::onProjectProperties);
+	connect(ui.actionProjectStatistics, &QAction::triggered, this, &MainWindow::onProjectStatistics);
+	connect(ui.actionProjectPrinfPdf, &QAction::triggered, this, &MainWindow::onProjectPrintPdfBundle);
+	connect(ui.actionExportPdfFiles, &QAction::triggered, this, &MainWindow::onProjectPrintPdfFiles);
+
+	connect(ui.actionGenContents1, &QAction::triggered, this, [this]() { GenContents(0); });
+	connect(ui.actionGenContents2, &QAction::triggered, this, [this]() { GenContents(1); });
+	connect(ui.actionEditCss1, &QAction::triggered, this, [this]() { EditCss(0); });
+	connect(ui.actionEditCss2, &QAction::triggered, this, [this]() { EditCss(1); });
+	connect(ui.actionCryptBase, &QAction::triggered, this, &MainWindow::onProjectEncrypt);
 
 	connect(ui.actionAppExit,			&QAction::triggered, this, &MainWindow::onAppExit);
 	connect(ui.actionAppForceExit,		&QAction::triggered, this, &MainWindow::onAppForceExit);
 	
     connect(ui.actionTreeSync,			&QAction::triggered, this, &MainWindow::onTreeSync);
-	connect(ui.actionToolsLink,         &QAction::triggered, this, &MainWindow::onToolsLink);
-	connect(ui.actionToolsSearch,		&QAction::triggered, this, &MainWindow::onToolsSearch);
-	connect(ui.actionToolsTranslate,	&QAction::triggered, this, &MainWindow::onToolsTranslate);
+	
 
 	QAction *viewsAction = createPopupMenu()->menuAction();
 	viewsAction->setText(tr("Toolbars & panels"));
@@ -485,32 +488,6 @@ void MainWindow::onTreeSync()
     }
 }
 
-void MainWindow::onToolsLink()
-{
-	// following a link
-    WebEditView *wnd = GetActiveMdiChild();
-    if(wnd) {
-		wnd->onToolsLink();
-    }
-}
-
-void MainWindow::onToolsSearch()
-{
-	// following a link
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd) {
-		wnd->onToolsSearch();
-	}
-}
-
-void MainWindow::onToolsTranslate()
-{
-	// following a link
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd) {
-		wnd->onToolsTranslate();
-	}
-}
 //-------------------------------------------------
 void MainWindow::onProjectNew()
 {
@@ -530,28 +507,7 @@ void MainWindow::onProjectSave()
 	}
 }
 
-void MainWindow::onFileSave()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->OnFileSave();
-}
-
-void MainWindow::onFileReload()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->ReloadHtml();
-}
-
-void MainWindow::onEditFixCssPath()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->FixCssPath();
-}
-
-void MainWindow::onFileSaveAll()
+void MainWindow::onProjectSaveAll()
 {
 	QList<QMdiSubWindow *> wl = m_wArea->subWindowList();	
 	QList<QMdiSubWindow *>::Iterator i = wl.begin();
@@ -651,7 +607,7 @@ void MainWindow::createSpecialToolWidgets()
 	// insert table menu
 	tbtnInsertTable = createMenuButton(":/insert/images/insert-table.png", createTableMenu(SLOT(onInsertTableChanged(int,int))), 
 		tr("Insert table"));
-	connect(tbtnInsertTable, SIGNAL(clicked()), this, SLOT(onInsertTableClicked()));
+	connect(tbtnInsertTable, &QToolButton::clicked, this, [this]() { onChild(&WebEditView::onInsertTable); } );
 	ui.toolBarInsert->insertWidget(ui.actionInsertImage, tbtnInsertTable);
 }
 
@@ -836,280 +792,11 @@ WebEditView *MainWindow::GetActiveMdiChild()
 	return 0;
 }
 
-void MainWindow::onZoomIn()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onZoomIn();
-}
-
-void MainWindow::onZoomOut()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onZoomOut();
-}
-
-void MainWindow::onZoomNormal()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onZoomChange(100);
-}
-
 void MainWindow::onZoomChange(int percent)
 {
 	WebEditView *wnd = GetActiveMdiChild();
 	if(wnd)
 		wnd->onZoomChange(percent);
-}
-
-void MainWindow::onEditCut()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditCut();
-}
-
-void MainWindow::onEditCutText()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditCutText();
-}
-
-void MainWindow::onEditCopy()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditCopy();
-}
-
-void MainWindow::onEditCopyText()
-{
-    WebEditView *wnd = GetActiveMdiChild();
-    if(wnd)
-        wnd->onEditCopyText();
-}
-
-void MainWindow::onEditPaste()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditPaste();
-}
-
-void MainWindow::onEditPasteText()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onEditPasteText();
-}
-
-void MainWindow::onEditPasteImage()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onEditPasteImage();
-}
-
-void MainWindow::onEditPasteAsTable()
-{
-    WebEditView *wnd = GetActiveMdiChild();
-    if (wnd)
-        wnd->onEditPasteAsTable();
-}
-
-void MainWindow::onEditPasteCell()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onEditPasteCell();
-}
-
-void MainWindow::onEditUndo()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditUndo();
-}
-
-void MainWindow::onEditRedo()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditRedo();
-}
-
-void MainWindow::onEditUntag()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditUntag();
-}
-
-void MainWindow::onEditOutside()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditOutside();
-}
-
-void MainWindow::onEditTagInfo()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditTagInfo();
-}
-
-void MainWindow::onEditUntable()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditUntable();
-
-}
-//////////////////////////////////////////////////////////////////////////
-// text 
-void MainWindow::onTextBold()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextBold();
-}
-void MainWindow::onTextItalic()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextItalic();
-}
-void MainWindow::onTextUnderline()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextUnderline();
-}
-void MainWindow::onTextStrike()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextStrike();
-}
-void MainWindow::onTextSubscript()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextSubscript();
-}
-void MainWindow::onTextSuperscript()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextSuperscript();
-}
-void MainWindow::onTextCode()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextCode();
-}
-void MainWindow::onTextMark()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextMark();
-}
-void MainWindow::onTextMark1()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTextMark1();
-}
-void MainWindow::onTextMark2()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTextMark2();
-}
-void MainWindow::onTextMark3()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTextMark3();
-}
-void MainWindow::onTextMark4()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTextMark4();
-}
-void MainWindow::onTextMark5()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTextMark5();
-}
-void MainWindow::onTextMark6()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTextMark6();
-}
-void MainWindow::onTextMark7()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTextMark7();
-}
-
-void MainWindow::onTextStrong()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextStrong();
-}
-void MainWindow::onTextEm()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextEm();
-}
-void MainWindow::onTextIns()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextIns();
-}
-void MainWindow::onTextDel()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextDel();
-}
-void MainWindow::onTextSamp()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextSamp();
-}
-void MainWindow::onTextVar()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextVar();
-}
-void MainWindow::onTextKbd()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onTextKbd();
-}
-
-void MainWindow::onEditClearDoc()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onEditClearDoc();
 }
 
 void MainWindow::onToolsEditScript()
@@ -1135,168 +822,6 @@ void MainWindow::onInsertTableChanged(int cols, int rows)
 	WebEditView *wnd = GetActiveMdiChild();
 	if(wnd)
 		wnd->onInsertTable(cols, rows);
-}
-
-void MainWindow::onInsertTableClicked()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertTable();
-}
-
-void MainWindow::onInsertHorzLine()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertHorzLine();
-}
-void MainWindow::onInsertImage()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertImage();
-}
-void MainWindow::onInsertHyperlink()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertHyperlink();
-}
-void MainWindow::onInsertDateTime()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertDateTime();
-}
-void MainWindow::onInsertSnippet()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertSnippet();
-}
-void MainWindow::onInsertSymbol()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertSymbol();
-}
-
-void MainWindow::onInsertNumList()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertNumList();
-}
-
-void MainWindow::onInsertBulList()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onInsertBulList();
-}
-
-void MainWindow::onParaH1()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-		wnd->onParaHeading1();
-}
-void MainWindow::onParaH2()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if(wnd)
-wnd->onParaHeading2();
-}
-void MainWindow::onParaH3()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaHeading3();
-}
-void MainWindow::onParaH4()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaHeading4();
-}
-void MainWindow::onParaH5()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaHeading5();
-}
-void MainWindow::onParaH6()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaHeading6();
-}
-
-void MainWindow::onParaDiv()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaDiv();
-}
-void MainWindow::onParaPara()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaPara();
-}
-void MainWindow::onParaComment()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaComment();
-}
-void MainWindow::onParaSource()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaSource();
-}
-void MainWindow::onParaQuestion()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaQuestion();
-}
-void MainWindow::onParaImportant()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaImportant();
-}
-void MainWindow::onParaFeature()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaFeature();
-}
-void MainWindow::onParaQuote()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaQuote();
-}
-void MainWindow::onParaAnn()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaAnn();
-}
-void MainWindow::onParaTerm()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaTerm();
-}
-void MainWindow::onParaNote()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onParaNote();
 }
 
 void MainWindow::onToolsSnippets()
@@ -1580,52 +1105,4 @@ void MainWindow::Search(const QString &text)
     m_wSln->Search(text);
 }
 
-void MainWindow::onTableAppendData()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTableAppendData();
-}
-
-void MainWindow::onTableInsertData()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTablePasteData();
-}
-
-void MainWindow::onTableExpand()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTableExpand();
-}
-
-void MainWindow::onTableCollapse()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTableCollapse();
-}
-
-void MainWindow::onTableDeleteRow()
-{
-	WebEditView *wnd = GetActiveMdiChild();
-	if (wnd)
-		wnd->onTableDelRow();
-}
-
-void MainWindow::onTableMoveRowAbove()
-{
-    WebEditView *wnd = GetActiveMdiChild();
-    if (wnd)
-        wnd->onTableMoveRowAbove();
-}
-
-void MainWindow::onTableMoveRowBelow()
-{
-    WebEditView *wnd = GetActiveMdiChild();
-    if (wnd)
-        wnd->onTableMoveRowBelow();
-}
 

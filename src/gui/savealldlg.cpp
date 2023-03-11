@@ -78,7 +78,7 @@ void SaveAllDlg::DoSave(bool all)
 			else if(t == 1) // this is html document
 			{
 				WebEditView *view = item->data(Qt::UserRole).value<WebEditView*>();
-				view->OnFileSave();
+				view->onFileSave();
 			}
 		}
 	}

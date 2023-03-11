@@ -29,7 +29,8 @@ private:
 	static QString jsDoClearTags();
 public slots:
 
-	bool OnFileSave();
+	void onFileSave();
+	void onFileReload();
 		
 	void onEditCut();
 	void onEditCutText();
@@ -48,6 +49,7 @@ public slots:
 	void onEditUntable();
 	bool onEditDeflist();
 	void onEditClearDoc();
+	void onEditFixCssPath();
 	void onEditUndo();
 	void onEditRedo();
 
@@ -104,14 +106,17 @@ public slots:
 	void onInsertNumList();
 	void onInsertBulList();
 
-	void onTableAppendData();
+	
 
 	void onZoomOut();
 	void onZoomIn();
+	void onZoomNormal();
+
 	void onZoomChange(int);
 
 	void onAdjustSource();
 
+	void onTableAppendData();
 	void onTableProperties();
 	void onTableInsAbove();
 	void onTableInsBelow();
@@ -119,9 +124,9 @@ public slots:
 	void onTableRemoveEmptyRows();
 	void onTableInsLeft();
 	void onTableInsRight();
-	void onTableDelColumn();
-	void onTableDelRow();
-	void onTablePasteData();
+	void onTableDeleteColumn();
+	void onTableDeleteRow();
+	void onTableInsertData();
 	void onTableExpand();
 	void onTableCollapse();
     void onTableMoveRowAbove();
@@ -138,8 +143,8 @@ public slots:
     
 public:
 	bool LoadHtml(DocItem* tpos, int di);
-	bool ReloadHtml();
-	void FixCssPath();
+	
+	
 	bool SaveHtml(bool update_tree);
 	void Find(const QString &text, bool backward);
 protected:

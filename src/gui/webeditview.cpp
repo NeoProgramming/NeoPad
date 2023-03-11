@@ -67,9 +67,9 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	connect(actionTableOptTable, &QAction::triggered, this, &WebEditView::onTableRemoveEmptyRows);
 	connect(actionTableInsLeft, &QAction::triggered, this, &WebEditView::onTableInsLeft);
 	connect(actionTableInsRight, &QAction::triggered, this, &WebEditView::onTableInsRight);
-	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDelRow);
-	connect(actionTableDelCol, &QAction::triggered, this, &WebEditView::onTableDelColumn);
-	connect(actionTablePasteData, &QAction::triggered, this, &WebEditView::onTablePasteData);
+	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDeleteRow);
+	connect(actionTableDelCol, &QAction::triggered, this, &WebEditView::onTableDeleteColumn);
+	connect(actionTablePasteData, &QAction::triggered, this, &WebEditView::onTableInsertData);
 	
 	// table menu
 	m_menuTable.setTitle("Table");
@@ -128,7 +128,7 @@ bool WebEditView::maybeSave()
         QMessageBox::Save | QMessageBox::No
 		| QMessageBox::Cancel);
 	if (ret == QMessageBox::Save)
-		return OnFileSave();
+		return SaveHtml(true);
 	else if (ret == QMessageBox::Cancel)
 		return false;
 	return true;
@@ -146,9 +146,9 @@ bool WebEditView::SaveHtml(bool update_tree)
 	return success;
 }
 
-bool WebEditView::OnFileSave()
+void WebEditView::onFileSave()
 {
-	return SaveHtml(true);
+	SaveHtml(true);
 }
 
 void WebEditView::onZoomOut()
@@ -177,6 +177,11 @@ void WebEditView::onZoomIn()
 
 		m_wMain->UpdateZoom(percent);
 	}
+}
+
+void WebEditView::onZoomNormal()
+{
+	onZoomChange(100);
 }
 
 void WebEditView::execCommand(const QString &cmd)
@@ -382,14 +387,14 @@ void WebEditView::contextMenuEvent ( QContextMenuEvent * e )
 	}
 }
 
-bool WebEditView::ReloadHtml()
+void WebEditView::onFileReload()
 {
     if(!maybeSave())
-        return false;
-	return LoadHtml(m_Item, m_di);
+        return;
+	LoadHtml(m_Item, m_di);
 }
 
-void WebEditView::FixCssPath()
+void WebEditView::onEditFixCssPath()
 {
 	// find out the relative path of THIS file relative to the BASE, where the css is located
 	QString cp = m_Item->GetCssRelPath(m_di);
@@ -514,7 +519,7 @@ void WebEditView::onEditPasteCell()
 	triggerPageAction(QWebPage::Paste);
 }
 
-void WebEditView::onTablePasteData()
+void WebEditView::onTableInsertData()
 {
 	if (m_elTable.isNull()) {
 		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
@@ -1030,7 +1035,7 @@ void WebEditView::onTableInsRight()
 	setWindowModified(true);
 }
 
-void WebEditView::onTableDelColumn()
+void WebEditView::onTableDeleteColumn()
 {
 	if (m_elTable.isNull()) {
 		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
@@ -1047,7 +1052,7 @@ void WebEditView::onTableDelColumn()
 	}
 }
 
-void WebEditView::onTableDelRow()
+void WebEditView::onTableDeleteRow()
 {
 	GetCaretContext();
 	if (m_elTable.isNull()) {
