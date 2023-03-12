@@ -217,6 +217,7 @@
     <ClCompile Include="src\core\Books.cpp" />
     <ClCompile Include="src\core\Cryptor.cpp" />
     <ClCompile Include="src\core\DocItem.cpp" />
+    <ClCompile Include="src\core\Documents.cpp" />
     <ClCompile Include="src\core\Favorites.cpp" />
     <ClCompile Include="src\core\PrjStat.cpp" />
     <ClCompile Include="src\core\FavItem.cpp" />
@@ -263,6 +264,7 @@
     <ClInclude Include="src\core\Books.h" />
     <ClInclude Include="src\core\Cryptor.h" />
     <ClInclude Include="src\core\DocItem.h" />
+    <ClInclude Include="src\core\Documents.h" />
     <ClInclude Include="src\core\Favorites.h" />
     <ClInclude Include="src\core\PrjStat.h" />
     <ClInclude Include="src\core\PrjTree.h" />

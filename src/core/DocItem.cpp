@@ -133,7 +133,7 @@ QString DocItem::GetTitles(int bi)
 
 QString DocItem::GetDocLocPath(int bi)
 {
-	QString c = id + theSln.m_Books.GetDocExt(bi);
+	QString c = id + theSln.Books.GetDocExt(bi);
 	return c;
 }
 
@@ -229,9 +229,9 @@ QString DocItem::GetAbsDir(int bi)
 
 	if (bi < 0 || bi >= BCNT)
 		return theSln.m_RootDir + "/" + bdir;
-	if (theSln.m_Books.books[bi].rpath.isEmpty())
+	if (theSln.Books.books[bi].rpath.isEmpty())
 		return theSln.m_RootDir + "/" + bdir;
-	return     theSln.m_RootDir + "/" + theSln.m_Books.books[bi].rpath + "/" + bdir;
+	return     theSln.m_RootDir + "/" + theSln.Books.books[bi].rpath + "/" + bdir;
 }
 
 QString DocItem::GetBaseDir()

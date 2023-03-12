@@ -9,6 +9,8 @@ void Favorites::LoadFavorites(pugi::xml_node txRoot)
 		return;
 	if (!AddRoot(new FavItem))
 		return;
+	m_root->type = FavItem::T_GROUP;
+	m_root->title = "ALL FAVORITES";
 	LoadFavoritesLevel(txFavs, m_root);
 }
 

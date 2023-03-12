@@ -33,7 +33,7 @@ int main( int argc, char ** argv )
     QCoreApplication::setLibraryPaths(paths);
 
  	codecUtf8 = QTextCodec::codecForName("Utf-8");
-    theSln.LoadSettings();
+    theSln.loadSettings();
 
     bool ok = true;
 	int appExec = 0;
@@ -48,7 +48,7 @@ int main( int argc, char ** argv )
 		a.connect( &a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()) );
 
 		appExec = a.exec();
-        theSln.SaveSettings();
+        theSln.saveSettings();
 	}
         	
     return appExec;

@@ -220,6 +220,9 @@
          </item>
          <item>
           <widget class="QTreeWidget" name="treeFavorites">
+           <property name="contextMenuPolicy">
+            <enum>Qt::CustomContextMenu</enum>
+           </property>
            <column>
             <property name="text">
              <string notr="true">1</string>

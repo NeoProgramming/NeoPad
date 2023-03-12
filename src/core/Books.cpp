@@ -2,7 +2,7 @@
 #include <QDir>
 #include "../service/tools.h"
 
-void Books::AddBook(const QString &title, const QString &suffix, const QString &rpath,
+void BooksInfo::AddBook(const QString &title, const QString &suffix, const QString &rpath,
     const QString &csspath, const QString &prefix)
 {
     NeopadBook base;
@@ -37,7 +37,7 @@ void Books::AddBook(const QString &title, const QString &suffix, const QString &
     booksCnt++;
 }
 
-QString Books::GetDocExt(int bi)
+QString BooksInfo::GetDocExt(int bi)
 {
     // get extension by document type
     if (bi < 0)
@@ -49,7 +49,7 @@ QString Books::GetDocExt(int bi)
     return "." + books[bi].suffix + MBA::extHtml;
 }
 
-bool Books::LoadBooksInfo(pugi::xml_node txRoot)
+bool BooksInfo::LoadBooksInfo(pugi::xml_node txRoot)
 {
     pugi::xml_node txBases = txRoot.child("bases");
     if (!txBases)
@@ -73,7 +73,7 @@ bool Books::LoadBooksInfo(pugi::xml_node txRoot)
 }
 
 
-void Books::SaveBooksInfo(pugi::xml_node txRoot)
+void BooksInfo::SaveBooksInfo(pugi::xml_node txRoot)
 {
     pugi::xml_node txBases = txRoot.append_child("bases");
     if (!txBases)
@@ -88,12 +88,12 @@ void Books::SaveBooksInfo(pugi::xml_node txRoot)
     }
 }
 
-void Books::SetLPrefix(int bi)
+void BooksInfo::SetLPrefix(int bi)
 {
 	books[bi].load_prefix = books[bi].save_prefix;
 }
 
-void Books::RemovePrefix(int bi, QString &content)
+void BooksInfo::RemovePrefix(int bi, QString &content)
 {
 	if (!books[bi].load_prefix.isEmpty()) {
 		if (content.startsWith(books[bi].load_prefix))

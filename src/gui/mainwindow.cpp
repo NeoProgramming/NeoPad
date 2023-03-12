@@ -270,7 +270,6 @@ MainWindow::MainWindow()
 	connect(ui.actionEditScript,    &QAction::triggered, this, &MainWindow::onToolsEditScript);
 	connect(ui.actionReloadScript,  &QAction::triggered, this, &MainWindow::onToolsReloadScript);	
 
-	m_wSln->initialize();
 	UpdateZoom(100);
 
 	QTimer::singleShot(0, this, SLOT(onPostInit()));
@@ -492,7 +491,11 @@ void MainWindow::onProjectNew()
 	NewProjectDlg dlg;
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
-		theSln.CreateProject(dlg.m_name, dlg.m_base, dlg.m_suffixes[0], dlg.m_suffixes[0]);
+		if(!QDir::isAbsolutePath(dlg.m_base))
+			dlg.m_base = theSln.m_sProgDir + "/" + dlg.m_base;
+		bool res = theSln.CreateProject(dlg.m_name, dlg.m_base, dlg.m_suffixes[0], dlg.m_suffixes[0]);
+		if (res)
+			theSln.addProjectToRecent(dlg.m_base);
 		m_wSln->Load();
 		UpdateTitle();
 	}
@@ -529,8 +532,8 @@ void MainWindow::onProjectProperties()
 
 	dlg.m_images   = theSln.m_ImageDir;
 	dlg.m_snippets = theSln.m_Snippets.m_SnippDir;
-	dlg.m_bases[0] = theSln.m_Books.books[0];
-	dlg.m_bases[1] = theSln.m_Books.books[1];
+	dlg.m_bases[0] = theSln.Books.books[0];
+	dlg.m_bases[1] = theSln.Books.books[1];
 		
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
@@ -539,10 +542,10 @@ void MainWindow::onProjectProperties()
 		theSln.m_Snippets.m_SnippDir = dlg.m_snippets;
 		// bases
 		int cnt = std::max(1, !dlg.m_bases[0].suffix.isEmpty() + !dlg.m_bases[1].suffix.isEmpty());
-		theSln.m_Books.booksCnt = cnt;
+		theSln.Books.booksCnt = cnt;
 		for (int bi = 0; bi < BCNT; bi++) {
-			theSln.m_Books.books[bi] = dlg.m_bases[bi];
-			if (theSln.m_Books.books[bi].load_prefix != theSln.m_Books.books[bi].save_prefix) {
+			theSln.Books.books[bi] = dlg.m_bases[bi];
+			if (theSln.Books.books[bi].load_prefix != theSln.Books.books[bi].save_prefix) {
 				setCursor(Qt::WaitCursor);
 				theSln.TransformDocs(bi);
 				setCursor(Qt::ArrowCursor);
@@ -835,7 +838,7 @@ void MainWindow::onToolsOptions()
 
 void MainWindow::onToolsEditConfig()
 {
-    theSln.SaveSettings();
+    theSln.saveSettings();
 	QString s = theSln.m_sProgDir + "/settings.xml";
 
 	if (!QFileInfo(s).isFile())
@@ -850,7 +853,7 @@ void MainWindow::onToolsEditConfig()
         file.open(QFile::ReadWrite | QFile::Text | QFile::Truncate);
         file.write(codecUtf8->fromUnicode(dlg.m_text));
         file.close();
-        theSln.LoadSettings();
+        theSln.loadSettings();
     }
     else {
         file.close();

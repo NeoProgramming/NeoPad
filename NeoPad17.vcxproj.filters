@@ -197,6 +197,9 @@
     <ClCompile Include="src\core\FavItem.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Documents.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp">
@@ -272,6 +275,9 @@
       <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\FavItem.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Documents.h">
       <Filter>src\core</Filter>
     </ClInclude>
   </ItemGroup>

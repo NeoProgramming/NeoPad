@@ -50,7 +50,6 @@ public:
 
     void EnsureVisible(DocItem* node);
 
-    void initialize();
     void UpdateBookTitles();
 
 	void Load();
@@ -69,8 +68,9 @@ private slots:
 	void onFindPrev();
 	void onSelNode();
 
-	void onItemDoubleClicked(QTreeWidgetItem* item, int column);
+	void onDocDoubleClicked(QTreeWidgetItem* item, int column);
     void onResDoubleClicked(QTreeWidgetItem* curItem, int column);
+	void onFavDoubleClicked(QTreeWidgetItem* curItem, int column);
 	int  onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m);
 
 	void onItemProperties();
@@ -97,15 +97,24 @@ private slots:
 	void onMoveItem();
 	void onAddToFavorites();
 	void onRemoveFromFavorites();
+	void onEditFavoriteRef();
+	void onAddSiblingGroup();
+	void onAddChildGroup();
+	void onEditGroup();
+	void onAddSiblingFav();
+	void onAddChildFav();
 
-    void onShowContentsMenu(const QPoint &pos);
+    void onDocContextMenu(const QPoint &pos);
+	void onFavContextMenu(const QPoint &pos);
       
     void processEvents();
 	
 private:
-   
+	void initColumns(QTreeWidget *tree);
 	QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);
     void showInitDoneMessage();
+	DocItem* currDoc();
+	FavItem* currFav();
             
     Ui::SlnForm ui;
     MainWindow *mw;
@@ -115,19 +124,16 @@ private:
 	
     bool initDoneMsgShown;
         
-	QAction *MakeAction(QString text, const char *slot);
-	QAction *MakeAction(QString text, QKeySequence skey, const char *slot);
-	QAction *MakeAction(QString text, QMenu *menu, const char *slot);
+	QAction *MakeAction(QString text, void (SlnPanel::*slot)());
+	QAction *MakeAction(QString text, QKeySequence skey, void (SlnPanel::*slot)());
+	QAction *MakeAction(QString text, QMenu *menu, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, const std::function<void()> &fn);
-	QAction *MakeAction(QString text, QKeySequence skey, QMenu *menu, const char *slot);
+	QAction *MakeAction(QString text, QKeySequence skey, QMenu *menu, void (SlnPanel::*slot)());
     
-	QMenu *menuPopupContents;
-		
-	QAction *actionOpenVmbaseInTextEditor;
-	QAction *actionOpenFolder;
-	QAction *actionItemProperties;
-	QAction *actionItemMove;
-
+	QMenu *menuPopupDoc;
+	QMenu *menuPopupGroup;
+	QMenu *menuPopupDangling;
+			
 	QMenu *submenuOpen0Ext;
 	QMenu *submenuOpen1Ext;
 

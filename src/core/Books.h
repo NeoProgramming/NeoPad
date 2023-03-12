@@ -4,7 +4,19 @@
 #include "vmbsrv.h"
 #include "../service/pugitools.h"
 
-class Books {
+
+struct NeopadBook
+{
+	QString suffix;
+	QString title;
+	QString rpath;			// path relative to NPBase
+	QString csspath;
+	QString load_prefix;	// for Jekyll
+	QString save_prefix;	// for Jekyll
+	bool path_is_unique;	// unique path requiring file operations
+};
+
+class BooksInfo {
 public:
     int     BCnt()
     {

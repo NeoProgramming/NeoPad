@@ -19,42 +19,9 @@ extern QTextCodec *codecUtf8;
 
 CSolution theSln;
 
-const char* csStatusNames[] = {
-	"unknown",
-	"normal",
-	"almost",
-	"75",
-	"50",
-	"25",
-	"unready",
-	"locked",
-	NULL
-};
-
-
-ETreeStatus CSolution::GetTreeStatus(const char* attr)
-{
-	if (IsBlank(attr))
-		return ETreeStatus::TS_UNKNOWN;
-	for (int i = 0; csStatusNames[i] && i < (int)ETreeStatus::TS_ITEMS_COUNT; i++)
-	{
-		if (!strcmp(attr, csStatusNames[i]))
-			return (ETreeStatus)i;
-	}
-	return ETreeStatus::TS_UNKNOWN;
-}
-
-const char* CSolution::GetTreeStatus(ETreeStatus status)
-{
-	if (status >= ETreeStatus::TS_ITEMS_COUNT)
-		return "";
-	if (!csStatusNames[(int)status])
-		return "";
-	return csStatusNames[(int)status];
-}
-
 CSolution::CSolution(void)
 {
+	m_BI = &Books;
 	// constructor - zeroing only! * otherwise conflict with other global constructors)
 	RemoveAll();
 	char buf[1024];
@@ -69,13 +36,11 @@ CSolution::CSolution(void)
 	m_bModify = 0;
 }
 
-
 CSolution::~CSolution(void)
 {
-
 }
 
-void CSolution::LoadSettings()
+void CSolution::loadSettings()
 {
 	XIni ini;
 	ini.Load(codecUtf8->fromUnicode(m_sProgDir + "/settings.xml"), INI::Main);
@@ -91,738 +56,10 @@ void CSolution::LoadSettings()
 		INI::ExplorePath = "explorer";
 }
 
-void CSolution::SaveSettings()
+void CSolution::saveSettings()
 {
 	XIni ini;
 	ini.Save(codecUtf8->fromUnicode(m_sProgDir + "/settings.xml"), INI::Main);
-}
-
-bool CSolution::SaveProject(bool recursive)
-{
-	// save project system to disk
-	if (!m_root)
-		return false;
-
-	// create document
-	pugi::xml_document xdoc;
-	pugi::xml_node xRoot, xBase;
-	MakeXmlDoc(xdoc, xRoot, xBase);
-
-	// save paths as attributes (deprecated)
-	set_attr(xRoot, "images").set_value(codecUtf8->fromUnicode(GetRelPath(m_ImageDir, m_RootDir, false)).constData());
-	set_attr(xRoot, "snippets").set_value(codecUtf8->fromUnicode(GetRelPath(m_Snippets.m_SnippDir, m_RootDir, false)).constData());
-
-	// save vmb content
-	if (!xBase)
-		return false;
-
-	// save item data
-	SaveItemData(xBase, m_root);
-	SaveSubTag(xBase, m_root, recursive);
-
-	// save books
-    m_Books.SaveBooksInfo(xRoot);
-
-	// save favorites
-	//m_Favs.SaveFavorites(xRoot);
-
-	// write file
-	QString path = m_root->GetVmbAbsPath();
-	if (SaveXmlDoc(path, xdoc)) {
-		m_root->ChangeModify(false, true);
-		return true;
-	}
-	return false;
-}
-
-void CSolution::CreateProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0)
-{
-	// create a new empty project with the given name at the given path
-	RemoveAll();
-	CreateRoot(name, dir);
-	m_Books.AddBook(btitle0, bsuffix0, "", "", "");
-	MakeDoc(m_root, 0);
-	
-	SaveProject(true);
-	QString s = m_root->GetVmbAbsPath();
-	addProjectToRecent(s);
-}
-
-void CSolution::SaveItemData(pugi::xml_node txItem, DocItem *item)
-{
-	// save titles & timestamps; save docs
-	set_attr(txItem, "guid").set_value(codecUtf8->fromUnicode(item->guid).constData());
-	for (int i = 0; i < theSln.m_Books.BCnt(); i++) {
-		char sbuf[32];
-		sprintf(sbuf, "title%d", i);
-		set_attr(txItem, sbuf).set_value(codecUtf8->fromUnicode(item->GetTitle(i)).constData());
-
-		char tbuf[50];
-		if (item->time[i] >= 0) {
-			QString tt = item->GetDocTimeStr(i);
-			sprintf(sbuf, "time%d", i);
-			set_attr(txItem, sbuf).set_value(codecUtf8->fromUnicode(tt).constData());
-		}
-	}
-
-	// save status
-	if (item->status != ETreeStatus::TS_UNKNOWN)
-		set_attr(txItem, "s").set_value(GetTreeStatus(item->status));
-}
-
-void CSolution::MakeXmlDoc(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase)
-{
-	pugi::xml_node decl = xdoc.prepend_child(pugi::node_declaration);
-	decl.append_attribute("version").set_value("1.0");
-	decl.append_attribute("encoding").set_value("utf-8");
-
-	// adding an enclosing <vmbase> element (root of xml)
-	xroot = xdoc.append_child("vmbase");
-	set_attr(xroot, "version").set_value("1.0");
-
-	// add the <node> element
-	xbase = xroot.append_child(MBA::node);
-}
-
-bool CSolution::SaveXmlDoc(const QString &path, const pugi::xml_document &xdoc)
-{
-	if (m_Password.isEmpty()) {
-		if (xdoc.save_file(codecUtf8->fromUnicode(path))) {
-			m_bModify = true;	//???
-			return true;
-		}
-	}
-	else {
-		QByteArray plain;
-		save_blob(xdoc, plain);
-		if (encryptFile(path, m_Password, plain)) {
-			m_bModify = true;	//???
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool CSolution::SaveSubBase(DocItem* tpPar, bool recursive)
-{
-	// save (sub) project
-	// if it is a root, additional tags need to be saved
-	if (tpPar == m_root)
-		return SaveProject(recursive);
-
-	pugi::xml_document xdoc;
-	pugi::xml_node xroot, xbase;
-
-	// prepare document 
-	MakeXmlDoc(xdoc, xroot, xbase);
-	
-	// save item data
-	SaveItemData(xbase, tpPar);
-
-	// recursively save the entire tree
-	SaveSubTag(xbase, tpPar, recursive);
-
-	// save
-	QString path = tpPar->GetVmbAbsPath();
-	if (SaveXmlDoc(path, xdoc)) {
-		tpPar->ChangeModify(false, true);
-		return true;
-	}
-	return false;
-}
-
-void CSolution::SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool recursive)
-{
-	// save VMBase project level
-	// recircive - recursive saving of all attached files (not needed for local modifications, 
-	// for example, when renaming an item in a tree)
-	for (auto pItem : tposParent->children)
-	{
-		// create a tag
-		pugi::xml_node pxElem = pxParent.append_child("node");
-		if (pxElem)
-		{
-			// if the item does not have its own vmbase file
-			if (!pItem->p_subbase)
-			{
-				SaveItemData(pxElem, pItem);
-				SaveSubTag(pxElem, pItem, recursive);
-			}
-			else
-			{
-				// id
-				set_attr(pxElem, MBA::id).set_value(codecUtf8->fromUnicode(pItem->GetId()).constData());
-				// recursive 
-				if (recursive)
-					SaveSubBase(pItem, true);
-			}
-		}
-	}
-}
-
-DocItem * CSolution::CreateRoot(const QString& name, const  QString& dir)
-{
-	// create root
-	if (!QDir::isAbsolutePath(dir))
-		m_RootDir = m_sProgDir + "/" + dir;
-	else
-		m_RootDir = dir;
-	DocItem *item = new DocItem;
-	AddRoot(item);
-	item->id = name;
-	NormalizeFName(item->id);
-	item->title[0] = !IsBlank(name) ? name : "noname";
-	item->rdir = "";
-	item->p_subbase = 1;
-	return item;
-}
-
-void CSolution::LoadItemData(pugi::xml_node txElem, DocItem *item)
-{
-	// element analysis
-	// load an element based on data from an xml node
-	const char *ct;
-	struct tm t;
-
-	item->guid = codecUtf8->toUnicode(txElem.attribute("guid").as_string());
-	if (item->guid.isEmpty())
-		item->guid = QUuid::createUuid().toRfc4122().toHex();
-	
-
-	for (int i = 0; i < theSln.m_Books.BCnt(); i++) {
-		char s[32];
-		sprintf(s, "title%d", i);
-		item->title[i] = codecUtf8->toUnicode(txElem.attribute(s).as_string());
-
-		sprintf(s, "time%d", i);
-		ct = txElem.attribute(s).as_string();
-		memset(&t, 0, sizeof(t));
-
-		item->SetDocTime(ct, i);
-	}
-
-	item->status = GetTreeStatus(txElem.attribute(MBA::status).as_string());
-}
-
-
-
-
-bool CSolution::LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot)
-{
-	// psw enc 
-	//  0   0  load_file
-	//  0   1  error
-	//  1   0  load_file
-	//  1   1  decrypt
-
-	if (isEncrypted(fpath)) {
-		if (m_Password.isEmpty()) {
-			return Fail("Password not set"), false;
-		}
-		else {
-			QByteArray data;
-			if (!decryptFile(fpath, m_Password, data))
-				return Fail("decryptFile() error"), false;
-			if (!xdoc.load_string(data.constData()))
-				return Fail("pugixml load_string() error"), false;
-		}
-	}
-	else {
-		if (!xdoc.load_file(codecUtf8->fromUnicode(fpath)))
-			return Fail("pugixml load_file() error"), false;
-	}
-	
-
-	// vmbase
-	xroot = xdoc.first_child();
-	if (!xroot)
-		return Fail("root not found"), false;
-	return true;
-}
-
-bool CSolution::LoadProject(const QString &fpath)
-{
-	// get extension
-	QString ext = QFileInfo(fpath).suffix().toLower();
-	if (ext != "neopad" && ext != "vmbase")
-		return Fail("Bad extension"), false;
-		
-	// load
-	pugi::xml_document xdoc;
-	pugi::xml_node xroot;
-	if (!LoadXmlDoc(fpath, xdoc, xroot))
-		return false;
-	
-	RemoveAll();
-	m_bModify = false;
-
-	// root directory
-	m_RootDir = QFileInfo(fpath).dir().canonicalPath();
-
-	// bases
-    if(!m_Books.LoadBooksInfo(xroot))
-        return Fail("No bases found"), false;
-	
-	// load content (only after downloading the bases!)
-	CreateRoot("", m_RootDir);
-	pugi::xml_node xelem = xroot.child(MBA::node);
-	if (!xelem)
-		return Fail("solution node not found"), false;
-	bool res = LoadSubTag(xelem, m_root);
-
-	// favorites (after main tree)
-	m_Favs.LoadFavorites(xroot);
-
-	// load paths
-	m_root->LoadItemPaths(fpath);
-
-	// load paths from attributes (deprecated)
-	m_ImageDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xroot.attribute("images").as_string()));
-	m_Snippets.m_SnippDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xroot.attribute("snippets").as_string()));
-	m_Snippets.LoadSnippets();
-
-	// add to recent projects
-	if (res)
-		addProjectToRecent(fpath);
-
-	return res;
-}
-
-bool CSolution::LoadSubBase(const QString &id, DocItem* tpNode)
-{
-	// load the SUBBASE recursively into the tpNode node
-	// ARGS: file - the file that we upload (DO NOT WAY !!!)
-	//     tpNode - where do we load in the tree
-	// fill in: while tpNode is not filled, you cannot use GetAbsDir!
-
-	// building absolute path to vmbase file
-	QString apath = tpNode->parent->GetAbsDir(-1) + "/" + id + "/" + id + MBA::extVmbase;
-
-	// load
-	pugi::xml_document xdoc;
-	pugi::xml_node txElem;
-	if (!LoadXmlDoc(apath, xdoc, txElem))
-		return false;
-	
-	tpNode->LoadItemPaths(apath);
-
-	tpNode->p_subbase = 1;
-	// <vmbase><node>
-	txElem = txElem.child(MBA::node);
-	if (!txElem)
-		return false;
-	return LoadSubTag(txElem, tpNode);
-}
-
-bool CSolution::LoadSubTag(pugi::xml_node txNode, DocItem* tpNode)
-{
-	// load INNER NODE recursively
-	// ARGS: txPar - root tag in open xml file
-	//       tpPar - the position of the parent in the single tree
-
-	// fetching the title
-	LoadItemData(txNode, tpNode);
-
-	// child reading loop
-	pugi::xml_node txElem = txNode.first_child();
-	while (txElem)
-	{
-		// adding an empty element to the tree
-		DocItem* tpItem = AddCTail(tpNode);
-
-		// see what kind of element is in xml
-		if (txElem.child(MBA::node))
-			LoadSubTag(txElem, tpItem);
-		else if (auto id = txElem.attribute(MBA::id).as_string())
-			LoadSubBase(id, tpItem);
-
-		// next item
-		txElem = txElem.next_sibling();
-	}
-
-	return true;
-}
-
-DocItem* CSolution::AddItem(DocItem* tpPar, DocItem* tpAfter, const QString& title, const QString& id)
-{
-	// add child to tree
-	if (!tpPar)
-		return nullptr;
-	if (IsBlank(id))
-		return nullptr;
-
-	// check to see if we overwrite something
-	QString adirVmb = tpPar->GetAbsDir(-1) + "/" + id;
-	QString adirDoc = tpPar->GetAbsDir(0) + "/" + id;
-
-	if (QFileInfo(adirVmb + "/" + id + ".vmbase").exists()) 
-		return Fail("vmbase file already exist!"), nullptr;
-	
-	if (QFileInfo(adirDoc + "/" + id + m_Books.GetDocExt(0)).exists())
-		return Fail("html file already exist!"), nullptr;
-		
-	DocItem *item = new DocItem;
-	item->p_subbase = 1;
-
-	if(INI::DefItemStatus != 0)
-		item->status = (ETreeStatus)INI::DefItemStatus;
-	
-	// identifier; just in case, normalize it
-	item->id = id;
-	NormalizeFName(item->id);
-
-	// guid
-	item->guid = QUuid::createUuid().toRfc4122().toHex();
-
-	// title
-	item->title[0] = IsBlank(title) ? id : title;
-
-	// subfolder starting from the root of the base
-	item->rdir = tpPar->GetBaseDir() + "/" + id;
-
-	// creating a folder for .vmbase
-	QDir().mkpath(adirVmb);
-
-	// insert into the tree; if tpAfter == null then end
-	bool r = false;
-	if (tpAfter == nullptr)
-		r = AddCTail(tpPar, item);
-	else
-		r = AddAfter(tpAfter, item);
-
-	if (!r)
-		return nullptr;
-	
-	// create a NEW document for bi = 0
-	MakeDoc(item, 0);
-
-	// update the creation time of the document
-	item->SetDocTime(0);
-
-	// save changes
-	HandleChanges(item, tpPar);
-	
-	return item;
-}
-
-void CSolution::RemoveNodeDoc(DocItem* tpItem, int bi)
-{
-	// deleting a node document
-	if (bi < 0 || bi >= theSln.m_Books.BCnt())
-		return;
-	QFile::remove(tpItem->GetDocAbsPath(bi));
-	tpItem->title[bi].clear();
-	tpItem->time[bi] = -1;
-}
-
-void CSolution::RemoveNodeFiles(DocItem* tpItem)
-{
-	// recursively deleting node files
-	std::vector<QString> d(theSln.m_Books.BCnt() + 1);
-	for (int bi = 0; bi <= theSln.m_Books.BCnt(); bi++)
-		d[bi] = tpItem->GetAbsDir(bi - 1);
-
-	for (int bi = 0; bi < theSln.m_Books.BCnt(); bi++)
-		QFile::remove(tpItem->GetDocAbsPath(bi));
-
-	QFile::remove(tpItem->GetVmbAbsPath());
-	for (auto tpChild : tpItem->children)
-	{
-		RemoveNodeFiles(tpChild);
-	}
-
-	for (int bi = 0; bi <= theSln.m_Books.BCnt(); bi++) {
-		QDir dir(d[bi]);
-		if (dir.count() == 2)
-			dir.removeRecursively();
-	}
-}
-
-bool CSolution::RemoveNode(DocItem* tpItem, bool del_files)
-{
-	DocItem* tpPar = tpItem->parent;
-	if (!tpPar)
-		return false;
-	if (del_files)
-		RemoveNodeFiles(tpItem);
-
-	tpItem->RemoveChildren();
-	if (tpItem->parent) {
-		tpItem->parent->children.remove(tpItem);
-	}
-	else {
-		m_root = nullptr;
-	}
-	delete tpItem;
-
-	HandleChanges(tpPar, false);
-	return true;
-}
-
-bool CSolution::MakeDoc(DocItem* tpItem, int bi)
-{
-	// ensure the folder exists for the document
-	QString path = tpItem->GetAbsDir(bi);
-	QDir().mkpath(path);
-
-	// create document
-	path = tpItem->GetDocAbsPath(bi);
-	QFile file(path);
-	if (!file.open(QIODevice::WriteOnly))
-		return false;
-
-	path = tpItem->GetCssRelPath(bi);
-	QByteArray a = U8a(m_Books.books[bi].save_prefix);
-	file.write(a);
-	file.write("<html>\n");
-	file.write("<head>\n");
-	file.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-	
-
-	file.write(U8a(path));
-
-	file.write("\">\n");
-	file.write("<meta content=\"text/html; charset=utf-8\" http-equiv=Content-Type>\n");
-	file.write("</head>\n");
-    file.write("<body><p>\n");
-    file.write("</p></body>\n");
-	file.write("</html>\n");
-	file.close();
-	return true;
-}
-
-bool CSolution::MoveUp(DocItem* tpItem)
-{
-	// move element up (swap with an overlying sibling)
-	DocItem* tpPrev = GetPrevSibling(tpItem);
-	if (tpPrev)
-	{
-		Exchange(tpItem, tpPrev);
-		DocItem* tpPar = GetAncestorWithFile(tpItem, false);
-		HandleChanges(tpPar, false);
-		return 1;
-	}
-	return 0;
-}
-
-bool CSolution::MoveDown(DocItem* tpItem)
-{
-	// move element down (swap with the underlying sibling)
-	DocItem* tpNext = GetNextSibling(tpItem);
-	if (tpNext)
-	{
-		Exchange(tpItem, tpNext);
-		DocItem* tpPar = GetAncestorWithFile(tpItem, false);
-		HandleChanges(tpPar, false);
-		return 1;
-	}
-	return 0;
-}
-
-
-bool CSolution::Move(DocItem* tpItem, DocItem* tpNewPar, DocItem* tpAfter)
-{
-	// move an element; make it OR the last child of tpNewPar, OR after tpAfter
-	// insertion as the first element or insertion before the selected one is deliberately excluded as unclaimed in real software
-	// moving an item includes moving the vmb file (if any) and moving documents
-
-	// there is no point in moving the node to itself
-	if (tpItem == tpNewPar)
-		return true;
-	// you cannot move an ancestor to its descendant
-	if (tpItem->IsAncestor(tpNewPar))
-		return Fail("Moved node is ancestor of new parent node"), false;	
-
-	// transfer files first
-	if (! MoveFiles(tpItem, tpNewPar))
-		return false;
-
-	// it should be understood that elements are pointers to structures;
-	// a temporary element tpNew is created and a pointer to it is returned;
-
-	// add a temporary element at the insertion position
-	DocItem* tpNew = tpAfter ?
-		AddAfter(tpAfter) :
-		AddCTail(tpNewPar);
-
-	// swap the added temporary element and the moved one in the tree
-	// after swapping, the tpItem element will be in the position of the tpNew element;
-	Exchange(tpNew, tpItem);
-
-	// adjust the rdir paths of the moved node
-	UpdateBaseDirs(tpItem);
-
-	// delete the old node; in the same place we set the Modify flag for the parent node
-	RemoveNode(tpNew, false);	
-		
-	// setting Modify for the node where you inserted
-	HandleChanges(tpItem, tpNewPar);
-	return true;
-}
-
-void CSolution::UpdateBaseDirs(DocItem* tpNode)
-{
-	// update base directories recursively for the whole node
-	tpNode->UpdateBaseDir();
-	for (auto tpChild : tpNode->children)
-		UpdateBaseDirs(tpChild);
-}
-
-bool CSolution::MoveChild(DocItem* tpItem)
-{
-	// attach the child to the upper sibling; make the element the last child of its previous one
-	DocItem* tpPrev = GetPrevSibling(tpItem);
-	if (tpPrev)
-		return Move(tpItem, tpPrev, NULL);
-	return false;
-}
-
-bool CSolution::MoveParent(DocItem* tpItem)
-{
-	// take out to the upper level; make it next after its parent
-	DocItem* tpPar = tpItem->parent;
-	if (tpPar && tpPar != m_root)
-		return Move(tpItem, tpPar->parent, tpPar);
-	return false;
-}
-
-void CSolution::MakeUnsavedList(std::list<DocItem*> &mpl)
-{
-	// generate a list of FILE elements that have changes
-	mpl.clear();
-	MakeUnsavedListR(mpl, GetRoot());
-}
-
-DocItem* CSolution::GetAncestorWithFile(DocItem* item, bool include_this)
-{
-	// find parent with file
-	if (!include_this)
-		item = item->parent;
-	while (item) {
-		if (item->p_subbase)
-			return item;
-		item = item->parent;
-	}
-	return GetRoot();
-}
-
-void CSolution::MakeUnsavedListR(std::list<DocItem*> &mpl, DocItem* mtNode)
-{
-	// recursively building a list of unsaved nodes
-	// if the node has the p_modify sign, and if this node corresponds to a unique file, then add its position to the list
-	// do not add the same node twice
-	if (!mtNode)
-		return;
-	if (mtNode->p_modify) {
-		DocItem* mtFileNode = GetAncestorWithFile(mtNode, true);
-		if (mtFileNode && std::find(mpl.begin(), mpl.end(), mtFileNode) == mpl.end())
-			mpl.push_back(mtFileNode);
-	}
-
-	for (auto mtChild : mtNode->children) {
-		MakeUnsavedListR(mpl, mtChild);
-	}
-}
-
-bool CSolution::IsFNamesAvailable(DocItem* tpos, const QString & id)
-{
-	// check if create/move/rename is possible
-	// doc dirs can match with vmbase dir and each other
-	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
-	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
-
-	if (QFileInfo(vmb).exists())
-		return Fail("vmbase file with the same name already exists"), false;
-	if (QFileInfo(dir).exists())
-		return Fail("directory with the same name already exists"), false;
-	
-	for (int bi = 0; bi < m_Books.BCnt(); bi++) {
-		QString doc = tpos->GetAbsDir(bi) + "/" + id + m_Books.GetDocExt(bi);
-		if (QFileInfo(doc).exists())
-			return Fail("document with the same name already exists"), false;
-		if (m_Books.books[bi].path_is_unique) {
-			QString dir = tpos->parent->GetAbsDir(bi) + "/" + id;
-			if (QFileInfo(dir).exists())
-				return Fail("directory with the same name already exists"), false;
-		}
-	}
-	return true;
-}
-
-bool CSolution::RenameItem(DocItem* tpos, const QString & id)
-{
-	if (id == tpos->GetId())
-		return true;
-	if (!IsFNamesAvailable(tpos, id))
-		return false;
-
-	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
-	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
-
-	// rename vmbase file
-	QFile::rename(tpos->GetVmbAbsPath(), vmb);
-	// rename docs & doc dirs
-	for (int bi = 0; bi < m_Books.BCnt(); bi++) {
-		QFile::rename(tpos->GetDocAbsPath(bi), tpos->GetAbsDir(bi) + "/" + id + m_Books.GetDocExt(bi));
-		if (m_Books.books[bi].path_is_unique)
-			QDir().rename(tpos->GetAbsDir(bi), tpos->parent->GetAbsDir(bi) + "/" + id);
-	}
-	// rename main dir
-	QDir().rename(tpos->GetAbsDir(-1), dir);
-	// change id
-	tpos->id = id;
-	UpdateBaseDirs(tpos);
-	HandleChanges(tpos, false);
-	HandleChanges(tpos->parent, false);
-	return true;
-}
-
-void  CSolution::RenameTitle(DocItem* item, const QString & title, int bi)
-{
-	// change title
-    if (bi < 0 || bi >= BCNT)
-		return;
-	item->title[bi] = title;
-	HandleChanges(item, false);
-}
-
-
-void CSolution::HandleChanges(DocItem* tpItem, bool recursive)
-{
-	tpItem->p_modify = 1;
-	if (INI::AutoSavePages)
-	{
-		tpItem = GetAncestorWithFile(tpItem, true);
-		SaveSubBase(tpItem, recursive);
-	}
-}
-
-void CSolution::HandleChanges(DocItem* tpItem1, DocItem* tpItem2)
-{
-	tpItem1->p_modify = 1;
-	tpItem2->p_modify = 1;
-	if (INI::AutoSavePages)
-	{
-		tpItem1 = GetAncestorWithFile(tpItem1, true);
-		tpItem2 = GetAncestorWithFile(tpItem2, true);
-		SaveSubBase(tpItem1, false);
-		if (tpItem1 != tpItem2)
-			SaveSubBase(tpItem2, false);
-	}
-}
-
-
-void CSolution::SetStatus(DocItem* item, ETreeStatus status, bool rec)
-{
-	item->status = status;
-	item->p_modify = 1;
-	if (rec) {
-		for (auto child : item->children) {
-			SetStatus(child, status, true);
-		}
-	}
-	HandleChanges(item, rec);
 }
 
 void CSolution::addProjectToRecent(const QString &path)
@@ -837,272 +74,88 @@ void CSolution::addProjectToRecent(const QString &path)
 	INI::CurrProjectPath = U8(path);
 }
 
-bool CSolution::MoveFiles(DocItem* tpItem, DocItem* tpNewPar)
+bool CSolution::CreateProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0)
 {
-	// move tpItem files to tpNewPar item folder
-	int d = 1, n = theSln.m_Books.BCnt();
+	// create document
+	pugi::xml_document xdoc;
+	pugi::xml_node xRoot, xBase;
+	MakeXmlDoc(xdoc, xRoot, xBase);
 
-	// first, let's just check that the target paths do not exist
-	for (int bi = -1; bi < n; bi++) {
-		QString pathOld = QDir::cleanPath(tpItem->GetAbsDir(bi));
-		QFileInfo fiOld = QFileInfo(pathOld);
-		QString pathNew = QDir::cleanPath(tpNewPar->GetAbsDir(bi) + "/" + tpItem->GetId());
-		QFileInfo fiNew = QFileInfo(pathNew);
-		if (fiNew.exists())
-			return Fail(QString("Path '%1' already exists").arg(pathNew)), false;
-		if (pathOld == pathNew)
-			return Fail(QString("Paths are equal ('%1')").arg(pathNew)), false;
-	}
-
-	// now we transfer
-	for (int bi = -1; bi != n; bi+=d) {
-		if (bi < 0 || m_Books.books[bi].path_is_unique) {
-			QDir dir;
-			QString from = QDir::cleanPath(tpItem->GetAbsDir(bi));
-			QString to = QDir::cleanPath(tpNewPar->GetAbsDir(bi));
-			if (QFileInfo(from).exists()) {
-				dir.mkpath(to);
-				to = to +"/" + tpItem->GetId();
-				if (!dir.rename(from, to)) {
-					// rollback
-				//	if (d > 0) {
-				//		d = -1;
-				//		n = -2;
-				//	}
-				//	else {
-						return Fail("Rename error"), false;
-				//	}
-				}
-			}
-		}
-	}
-
-	return true;
-}
-
-void CSolution::SaveItem(DocItem* tpItem, int di)
-{
-	// update file save date
-	tpItem->time[di] = time(NULL);
-	HandleChanges(tpItem, false);
-}
-
-void CSolution::GenContents(int bi, const QString &fpath, const QString &base)
-{
-	QFile file(fpath);
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-		return;
-	if (!m_root)
-		return;
-
-	GenContentsLevel(m_root, bi, file, base);
-
-	file.close();
-}
-
-void CSolution::GenContentsLevel(DocItem* node, int bi, QFile &file, const QString &base)
-{
-	int index = 0;
-	int count = node->GetPublicChildrenCount();
-	for (auto child : node->children) {
-        if (!child->title[bi].isEmpty() && child->IsPublic() ) {
-			
-			if (index==0)
-				file.write("\n<ul class='Container'>");
-
-			file.write("\n<li id='");
-			file.write(U8a(child->GetGuid()));
-			file.write("' ");
-			file.write("class='Node");
-			if (child->GetPublicChildrenCount())
-				file.write(" ExpandClosed");
-			else
-				file.write(" ExpandLeaf");
-			if (index == count - 1)
-				file.write(" IsLast");
-			file.write("'>\n");
-
-			file.write("<div class='Expand'></div>\n");
-			
-			file.write("<div class='Content'>");
-				file.write("<span class='NodeImage'></span>");
-				file.write("<a target='content' href='");
-				file.write(U8a(base));
-				file.write(U8a(child->GetDocRelPath(bi)));
-				file.write("'>");
-				file.write(U8a(child->GetTitle(bi)));
-				file.write("</a>");
-			file.write("</div>");
-			
-			GenContentsLevel(child, bi, file, base);
-
-			file.write("\n</li>");
-			index++;
-		}
-	}
-
-	if (index > 0)
-		file.write("\n</ul>");
-}
-
-QString CSolution::GetBookDir(int bi)
-{
- //   if (bi < 0 || bi >= BCNT)
- //       return m_RootDir + "/" + bdir;
- //   if(m_Bases[bi].rpath.isEmpty())
- //       return m_RootDir + "/" + bdir;
- //   return     m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
-
-    return theSln.m_RootDir + "/" + theSln.m_Books.books[bi].rpath;
-}
-
-QString CSolution::GetPrjTitle()
-{
-	DocItem* root = GetRoot();
-	if (!root)
-		return "";
-	if (m_Password.isEmpty())
-		return root->title[0];
-	return root->title[0] + " (ENCRYPTED)";
-}
-
-QString CSolution::GetCssAbsPath(int bi)
-{
-	if (QFileInfo(theSln.m_Books.books[bi].csspath).isAbsolute())
-		return theSln.m_Books.books[bi].csspath;
-    return GetBookDir(bi) + "/" + theSln.m_Books.books[bi].csspath;
-}
-
-void CSolution::EncryptDocs(DocItem* tposParent, const QString &oldPsw, const QString &newPsw)
-{
-	for (int bi = 0; bi < theSln.m_Books.BCnt(); bi++) {
-		recryptFile(tposParent->GetDocAbsPath(bi), oldPsw, newPsw);
-	}
-	for (auto pItem : tposParent->children) {
-		EncryptDocs(pItem, oldPsw, newPsw);
-	}
-}
-
-void CSolution::TransformDocs(int bi)
-{
-	ForEach([&](DocItem* pos) {
-		TransformFile(pos, bi);
-	});
-	m_Books.SetLPrefix(bi);	
-}
-
-DocItem* CSolution::Locate(const QString &guid)
-{
-	// recursive search on tree
-	DocItem* result = nullptr;
-	ForEach([&](DocItem* pos) {
-		// search in title
-		if (pos->guid == guid)
-			result = pos;
-	});
-	return result;
-}
-
-void CSolution::Search(const QString &text, unsigned int scope, DocItem* root, std::list<DocItem*> &results)
-{
-    // recursive search on tree
-    ForEach(root, [&](DocItem* pos) {
-        // search in title
-		if (scope & ESM_TREE) {
-			if (pos->GetTitle(0).contains(text, Qt::CaseInsensitive))
-				results.push_back(pos);
-		}
-        // search in file
-		if (scope & (ESM_TEXT|ESM_TAG|ESM_ATTR)) {
-			if (SearchInFile(pos, text, scope))
-				results.push_back(pos);
-		}
-    });
-}
-
-bool CSolution::TransformFile(DocItem* pos, int bi)
-{
-	QString html;
-	if (!LoadDoc(pos, bi, html))
+	// 
+	if (!Documents::CreateProject(name, dir, xBase))
 		return false;
-	if (!SaveDoc(pos, bi, html))
+
+	Books.AddBook(btitle0, bsuffix0, "", "", "");
+	Books.SaveBooksInfo(xRoot);
+	
+	return true;
+}
+
+bool CSolution::LoadProject(const QString &fpath)
+{
+	// get extension
+	QString ext = QFileInfo(fpath).suffix().toLower();
+	if (ext != "neopad" && ext != "vmbase")
+		return Fail("Bad extension"), false;
+
+	// load xml
+	pugi::xml_document xdoc;
+	pugi::xml_node xRoot;
+	if (!LoadXmlDoc(fpath, xdoc, xRoot))
 		return false;
-	return true;
-}
 
-bool CSolution::SearchInFile(DocItem* pos, const QString &text, unsigned int scope)
-{
-	QByteArray data;
-	QString html;
-	QString fpath = pos->GetDocAbsPath(0);
-	if (void *wnd = m_pCB->FindOpenedDoc(pos, 0)) {
-		m_pCB->GetDocData(wnd, html);
-	}
-	else if (!LoadDoc(pos, 0, html)) {
+	// load books info - before main tree
+	if (!Books.LoadBooksInfo(xRoot))
+		return Fail("No bases found"), false;
+
+	// load documents tree
+	if (!Documents::LoadProject(fpath, xRoot))
 		return false;
-	}
-    
-    return search(html, text, scope);
-}
+	
+	// load favorites (after main tree)
+	Favs.LoadFavorites(xRoot);
 
-bool CSolution::LoadDoc(DocItem* item, int bi, QString &content)
-{
-	QString fpath = item->GetDocAbsPath(bi);
-	fpath.replace("\\", "/");
+	// load paths from attributes (deprecated)
+	m_ImageDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("images").as_string()));
+	m_Snippets.m_SnippDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("snippets").as_string()));
+	m_Snippets.LoadSnippets();
 
-	// load file
-	QByteArray data;
-	if (isEncrypted(fpath)) {
-		if (m_Password.isEmpty())
-			return Fail("Password not set"), false;
-		if (!decryptFile(fpath, m_Password, data))
-			return Fail("decryptFile() error"), false;
-		content = QString::fromUtf8(data);
-	}
-	else {
-		QFile file(fpath);
-		if (!file.open(QIODevice::ReadOnly))
-			return Fail("file.open() error"), false;
-		data = file.readAll();
-		file.close();
-		content = QString::fromUtf8(data);
-	}
-
-	// remove prefix
-	m_Books.RemovePrefix(bi, content);	
+	// add to recent
+	theSln.addProjectToRecent(fpath);
 
 	return true;
 }
 
-bool CSolution::SaveDoc(DocItem* item, int bi, const QString &content)
+bool CSolution::SaveProject(bool recursive)
 {
-	QByteArray s;
+	// create document
+	pugi::xml_document xdoc;
+	pugi::xml_node xRoot, xBase;
+	MakeXmlDoc(xdoc, xRoot, xBase);
 
-	// get path
-	QString fpath = item->GetDocAbsPath(bi);
-	fpath.replace("\\", "/");
+	// save vmb content
+	if (!xBase)
+		return false;
 
-	// add prefix
-	if(!m_Books.books[bi].save_prefix.isEmpty())
-		s = (m_Books.books[bi].save_prefix + content).toUtf8();
-	else
-		s = content.toUtf8();
+	// save documents tree
+	Documents::SaveProject(recursive, xBase);
 
-	// save
-	bool success = false;
-	if (theSln.m_Password.isEmpty()) {
-		QFile file(fpath);
-		if (success = file.open(QIODevice::WriteOnly))
-			file.write(s);
+	// save books info
+	Books.SaveBooksInfo(xRoot);
+
+	// save paths as attributes (deprecated)
+	set_attr(xRoot, "images").set_value(codecUtf8->fromUnicode(GetRelPath(m_ImageDir, m_RootDir, false)).constData());
+	set_attr(xRoot, "snippets").set_value(codecUtf8->fromUnicode(GetRelPath(m_Snippets.m_SnippDir, m_RootDir, false)).constData());
+
+	// save favorites
+	//Favs.SaveFavorites(xRoot);
+
+	// write file
+	QString path = m_root->GetVmbAbsPath();
+	if (SaveXmlDoc(path, xdoc)) {
+		m_root->ChangeModify(false, true);
+		return true;
 	}
-	else {
-		success = encryptFile(fpath, m_Password, s);
-	}
-
-	if (success)
-		SaveItem(item, bi);
-
-	m_bModify = true;	//???
-	return true;
+	return false;
 }
 

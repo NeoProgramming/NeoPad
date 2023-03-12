@@ -7,9 +7,8 @@
 
 #include <QtGui>
 #include <QtDebug>
-#include <QFile>   		
-#include <QTextStream>	
 #include <QTreeWidgetItem>
+#include <QInputDialog>
 
 #include <stdlib.h>
 #include <limits.h>
@@ -41,17 +40,14 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	headerItem->setText(0, "Base 1");
 	headerItem->setText(1, "Base 2");
 	
-	QHeaderView * header = ui.treeContents->header();
-	header->setSectionResizeMode(QHeaderView::Interactive);
-	ui.treeContents->setColumnWidth(0, 220);
-	ui.treeContents->setColumnWidth(1, 220);
-	ui.treeContents->setIconSize(QSize(20, 20));
+	initColumns(ui.treeContents);
+	initColumns(ui.treeFavorites);
 
 	connect(ui.treeContents, SIGNAL(dropping(QTreeWidgetItem*, QTreeWidgetItem*, int)), this, SLOT(onDropping(QTreeWidgetItem*, QTreeWidgetItem*, int)));
-    connect(ui.pushSearch, &QPushButton::clicked, this, &SlnPanel::onSearch);
-	connect(ui.pushFindNext, &QPushButton::clicked, this, &SlnPanel::onFindNext);
-	connect(ui.pushFindPrev, &QPushButton::clicked, this, &SlnPanel::onFindPrev);
-	connect(ui.pushSelNode, &QPushButton::clicked, this, &SlnPanel::onSelNode);
+    connect(ui.pushSearch,		&QPushButton::clicked, this, &SlnPanel::onSearch);
+	connect(ui.pushFindNext,	&QPushButton::clicked, this, &SlnPanel::onFindNext);
+	connect(ui.pushFindPrev,	&QPushButton::clicked, this, &SlnPanel::onFindPrev);
+	connect(ui.pushSelNode,		&QPushButton::clicked, this, &SlnPanel::onSelNode);
 
 	m_TreeIcons[(int)ETreeStatus::TS_UNKNOWN] = QIcon(":/treeicons/images/ti-unknown.png");
 	m_TreeIcons[(int)ETreeStatus::TS_READY] = QIcon(":/treeicons/images/ti-html.png");
@@ -88,14 +84,159 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	ui.pushOptions->setMenu(menu);
 
 	ui.comboFavRoot->addItem("ALL FAVORITES");
+
+	// show tab titles, do not elide them by placing "..."
+	ui.tabWidget->setElideMode(Qt::ElideNone);
+
+	// trees
+	// you need to set 'CustomContextMenu' in 'ContextMenuPolicy' in form editor
+	connect(ui.treeContents,  &QTreeWidget::customContextMenuRequested, this, &SlnPanel::onDocContextMenu);
+	connect(ui.treeFavorites, &QTreeWidget::customContextMenuRequested, this, &SlnPanel::onFavContextMenu);
+	connect(ui.treeContents,  &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onDocDoubleClicked);
+	connect(ui.treeResults,	  &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onResDoubleClicked);
+	connect(ui.treeFavorites, &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onFavDoubleClicked);
+
+	ui.tabWidget->setCurrentIndex(0);
+
+	ui.treeContents->viewport()->installEventFilter(this);	// event filter - for mouse
+	ui.treeContents->installEventFilter(this);				// event filter - for keyboard
+	ui.treeFavorites->viewport()->installEventFilter(this);	// event filter - for mouse
+	ui.treeFavorites->installEventFilter(this);				// event filter - for keyboard
+
+	// toolbar buttons
+	connect(mw->ui.actionTreeMoveUp, &QAction::triggered, this, &SlnPanel::onMoveItemUp);
+	connect(mw->ui.actionTreeMoveDown, &QAction::triggered, this, &SlnPanel::onMoveItemDown);
+	connect(mw->ui.actionTreeMoveParent, &QAction::triggered, this, &SlnPanel::onMoveItemParent);
+	connect(mw->ui.actionTreeMoveChild, &QAction::triggered, this, &SlnPanel::onMoveItemChild);
+	connect(mw->ui.actionTreeAddChild, &QAction::triggered, this, &SlnPanel::onInsertNewChild);
+	connect(mw->ui.actionTreeAddSibling, &QAction::triggered, this, &SlnPanel::onInsertNewSibling);
+	connect(mw->ui.actionTreeRemoveItem, &QAction::triggered, this, &SlnPanel::onRemoveItem);
+
+	menuPopupDoc = new QMenu(this);
+	submenuOpen0Ext = new QMenu(tr("Doc0"), menuPopupDoc);
+	submenuOpen1Ext = new QMenu(tr("Doc1"), menuPopupDoc);
+
+	// doc0
+	MakeAction(tr("Open in New Tab"), submenuOpen0Ext, [this]() { onOpenInNewTab(0); });
+	MakeAction(tr("Open in External Doc Editor"), submenuOpen0Ext, [this]() { onOpenInExtDocEditor(0); });
+	MakeAction(tr("Open in External Browser"), submenuOpen0Ext, [this]() { onOpenInExtBrowser(0); });
+	MakeAction(tr("Open in External Text Editor"), submenuOpen0Ext, [this]() { onOpenInExtTextEditor(0); });
+	MakeAction(tr("Open Folder"), submenuOpen0Ext, [this]() { onOpenFolder(0); });
+
+	// doc1
+	MakeAction(tr("Open in New Tab"), submenuOpen1Ext, [this]() { onOpenInNewTab(1); });
+	MakeAction(tr("Open in External Doc Editor"), submenuOpen1Ext, [this]() { onOpenInExtDocEditor(1); });
+	MakeAction(tr("Open in External Browser"), submenuOpen1Ext, [this]() { onOpenInExtBrowser(1); });
+	MakeAction(tr("Open in External Text Editor"), submenuOpen1Ext, [this]() { onOpenInExtTextEditor(1); });
+	MakeAction(tr("Open Folder"), submenuOpen1Ext, [this]() { onOpenFolder(1); });
+
+	// common actions
+	QAction *actionOpenFolder = MakeAction(tr("Open Folder"), &SlnPanel::onOpenFolderVmb);
+	QAction *actionOpenVmbaseInTextEditor = MakeAction(tr("Open VMB in Text Editor"), &SlnPanel::onOpenVmbaseInExtTextEditor);
+	QAction *actionItemMove = MakeAction(tr("Move item..."), &SlnPanel::onMoveItem);
+
+	//!+! shortcuts does not trigger action, see eventFilter()
+	QAction *actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), &SlnPanel::onItemProperties);
+	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
+
+	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), menuPopupDoc);
+	MakeAction(tr("Ready"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_READY); });
+	MakeAction(tr("Almost ready"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_ALMOST); });
+	MakeAction(tr("75 %"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_75); });
+	MakeAction(tr("50 %"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_50); });
+	MakeAction(tr("25 %"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_25); });
+	MakeAction(tr("Under construction"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_UNREADY); });
+	MakeAction(tr("Locked"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_LOCKED); });
+
+	QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), menuPopupDoc);
+	MakeAction(tr("Ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY); });
+	MakeAction(tr("Almost ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST); });
+	MakeAction(tr("75 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75); });
+	MakeAction(tr("50 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_50); });
+	MakeAction(tr("25 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_25); });
+	MakeAction(tr("Under construction"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY); });
+	MakeAction(tr("Locked"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED); });
+
+	QMenu *submenuInsert = new QMenu(tr("Insert"), menuPopupDoc);
+	MakeAction(tr("New subitem"),      QKeySequence(Qt::Key_Insert), submenuInsert, &SlnPanel::onInsertNewChild);
+	MakeAction(tr("New sibling item"), QKeySequence(Qt::Key_Enter), submenuInsert,  &SlnPanel::onInsertNewSibling);
+
+	QMenu *submenuDelete = new QMenu(tr("Delete"), menuPopupDoc);
+	MakeAction(tr("Remove item (do not touch source files)"), QKeySequence(Qt::Key_Delete), submenuDelete, &SlnPanel::onRemoveItem);
+	MakeAction(tr("Delete item and source files"), submenuDelete, &SlnPanel::onDeleteItem);
+	MakeAction(tr("Delete document file"), submenuDelete, &SlnPanel::onDeleteDoc);
+
+	// formation of a context menu
+	menuPopupDoc->addAction(actionItemProperties);
+
+	menuPopupDoc->addSeparator();
+	menuPopupDoc->addMenu(submenuOpen0Ext);
+	menuPopupDoc->addMenu(submenuOpen1Ext);
+	menuPopupDoc->addAction(actionOpenVmbaseInTextEditor);
+	menuPopupDoc->addAction(actionOpenFolder);
+
+	menuPopupDoc->addSeparator();
+	menuPopupDoc->addMenu(submenuItemStatus);
+	menuPopupDoc->addMenu(submenuNodeStatus);
+
+	menuPopupDoc->addSeparator();
+	menuPopupDoc->addMenu(submenuInsert);
+	menuPopupDoc->addMenu(submenuDelete);
+	menuPopupDoc->addAction(actionItemMove);
+
+	QAction *actionAddSiblingGroup = MakeAction(tr("Add sibling group"), &SlnPanel::onAddSiblingGroup);
+	QAction *actionAddChildGroup = MakeAction(tr("Add child group"), &SlnPanel::onAddChildGroup);
+	QAction *actionAddSiblingFav = MakeAction(tr("Add sibling favorite"), &SlnPanel::onAddSiblingFav);
+	QAction *actionAddChildFav = MakeAction(tr("Add child favorite"), &SlnPanel::onAddChildFav);
+	QAction *actionRemoveFromFavs = MakeAction(tr("Remove from favorites"), &SlnPanel::onRemoveFromFavorites);
+	QAction *actionEditFavRef = MakeAction(tr("Change fav reference"), &SlnPanel::onEditFavoriteRef);
+	QAction *actionEditGroup = MakeAction(tr("Edit group name"), &SlnPanel::onEditGroup);
+
+	// favorites context menu
+	menuPopupGroup = new QMenu(this);
+	menuPopupGroup->addAction(actionAddSiblingGroup);
+	menuPopupGroup->addAction(actionAddChildGroup);
+	menuPopupGroup->addAction(actionRemoveFromFavs);
+	menuPopupGroup->addAction(actionEditGroup);
+
+	menuPopupDangling = new QMenu(this);
+	menuPopupDangling->addAction(actionRemoveFromFavs);
+	menuPopupDangling->addAction(actionEditFavRef);
 }
 
-QAction *SlnPanel::MakeAction(QString text, QMenu *menu, const char *slot)
+void SlnPanel::initColumns(QTreeWidget *tree)
+{
+	QHeaderView * header = tree->header();
+	header->setSectionResizeMode(QHeaderView::Interactive);
+	tree->setColumnWidth(0, 220);
+	tree->setColumnWidth(1, 220);
+	tree->setIconSize(QSize(20, 20));
+}
+
+DocItem* SlnPanel::currDoc()
+{
+	QTreeWidgetItem *item = ui.treeContents->currentItem();
+	if (!item)
+		return nullptr;
+	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
+	return tpos;
+}
+
+FavItem* SlnPanel::currFav()
+{
+	QTreeWidgetItem *item = ui.treeFavorites->currentItem();
+	if (!item)
+		return nullptr;
+	FavItem* tpos = item->data(0, Qt::UserRole).value<FavItem*>();
+	return tpos;
+}
+
+QAction *SlnPanel::MakeAction(QString text, QMenu *menu, void (SlnPanel::*slot)())
 {
 	QAction *action = new QAction(this);
 	action->setText(text);
 	menu->addAction(action);
-	connect(action, SIGNAL(triggered()), this, slot);
+	connect(action, &QAction::triggered, this, slot);
 	return action;
 }
 
@@ -108,125 +249,31 @@ QAction *SlnPanel::MakeAction(QString text, QMenu *menu, const std::function<voi
 	return action;
 }
 
-QAction *SlnPanel::MakeAction(QString text, const char *slot)
+QAction *SlnPanel::MakeAction(QString text, void (SlnPanel::*slot)())
 {
 	QAction *action = new QAction(this);
 	action->setText(text);
-	connect(action, SIGNAL(triggered()), this, slot);
+	connect(action, &QAction::triggered, this, slot);
 	return action;
 }
 
-QAction *SlnPanel::MakeAction(QString text, QKeySequence skey, const char *slot)
+QAction *SlnPanel::MakeAction(QString text, QKeySequence skey, void (SlnPanel::*slot)())
 {
 	QAction *action = new QAction(this);
 	action->setText(text);
 	action->setShortcut(skey);
-	connect(action, SIGNAL(triggered()), this, slot);
+	connect(action, &QAction::triggered, this, slot);
 	return action;
 }
 
-QAction *SlnPanel::MakeAction(QString text, QKeySequence skey, QMenu *menu, const char *slot)
+QAction *SlnPanel::MakeAction(QString text, QKeySequence skey, QMenu *menu, void (SlnPanel::*slot)())
 {
 	QAction *action = new QAction(this);
 	action->setText(text);
 	action->setShortcut(skey);
 	menu->addAction(action);
-	connect(action, SIGNAL(triggered()), this, slot);
+	connect(action, &QAction::triggered, this, slot);
 	return action;
-}
-
-void SlnPanel::initialize()
-{
-	ui.tabWidget->setElideMode(Qt::ElideNone);	//show tab titles, do not elide them by placing "..."
-
-	connect(ui.treeContents, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(onShowContentsMenu(QPoint)));
-	connect(ui.treeContents, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(onItemDoubleClicked(QTreeWidgetItem*, int)));
-    connect(ui.treeResults, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int)), this, SLOT(onResDoubleClicked(QTreeWidgetItem*, int)));
-
-    ui.tabWidget->setCurrentIndex(0);
-
-	ui.treeContents->viewport()->installEventFilter(this);	// event filter - for mouse
-	ui.treeContents->installEventFilter(this);				// event filter - for keyboard
-
-	connect(mw->ui.actionTreeMoveUp, SIGNAL(triggered()), this, SLOT(onMoveItemUp()));
-	connect(mw->ui.actionTreeMoveDown, SIGNAL(triggered()), this, SLOT(onMoveItemDown()));
-	connect(mw->ui.actionTreeMoveParent, SIGNAL(triggered()), this, SLOT(onMoveItemParent()));
-	connect(mw->ui.actionTreeMoveChild, SIGNAL(triggered()), this, SLOT(onMoveItemChild()));
-	connect(mw->ui.actionTreeAddChild, SIGNAL(triggered()), this, SLOT(onInsertNewChild()));
-	connect(mw->ui.actionTreeAddSibling, SIGNAL(triggered()), this, SLOT(onInsertNewSibling()));
-	connect(mw->ui.actionTreeRemoveItem, SIGNAL(triggered()), this, SLOT(onRemoveItem()));
-
-	menuPopupContents = new QMenu(this);  //for Contents tab
-	// formation of actions for the context menu
-	submenuOpen0Ext = new QMenu(tr("Doc0"), menuPopupContents);
-	submenuOpen1Ext = new QMenu(tr("Doc1"), menuPopupContents);
-	
-	// doc0
-	MakeAction(tr("Open in New Tab"), submenuOpen0Ext, [this](){ onOpenInNewTab(0); });
-	MakeAction(tr("Open in External Doc Editor"), submenuOpen0Ext, [this](){ onOpenInExtDocEditor(0); });
-	MakeAction(tr("Open in External Browser"), submenuOpen0Ext, [this](){ onOpenInExtBrowser(0); });
-	MakeAction(tr("Open in External Text Editor"), submenuOpen0Ext, [this](){ onOpenInExtTextEditor(0); });
-	MakeAction(tr("Open Folder"), submenuOpen0Ext, [this](){ onOpenFolder(0); });
-
-	// doc1
-	MakeAction(tr("Open in New Tab"), submenuOpen1Ext, [this](){ onOpenInNewTab(1); });
-	MakeAction(tr("Open in External Doc Editor"), submenuOpen1Ext, [this](){ onOpenInExtDocEditor(1); });
-	MakeAction(tr("Open in External Browser"), submenuOpen1Ext, [this](){ onOpenInExtBrowser(1); });
-	MakeAction(tr("Open in External Text Editor"), submenuOpen1Ext, [this](){ onOpenInExtTextEditor(1); });
-	MakeAction(tr("Open Folder"), submenuOpen1Ext, [this](){ onOpenFolder(1); });
-	
-	// common actions
-	actionOpenFolder = MakeAction(tr("Open Folder"), SLOT(onOpenFolderVmb()));
-	actionOpenVmbaseInTextEditor = MakeAction(tr("Open VMB in Text Editor"), SLOT(onOpenVmbaseInExtTextEditor()));
-	actionItemMove = MakeAction(tr("Move item..."), SLOT(onMoveItem()));
-
-	//!+! shortcuts does not trigger action, see eventFilter()
-	actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), SLOT(onItemProperties()));
-
-	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), menuPopupContents);
-	MakeAction(tr("Ready"),				submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_READY); });
-	MakeAction(tr("Almost ready"),		submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_ALMOST); });
-	MakeAction(tr("75 %"),				submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_75); });
-	MakeAction(tr("50 %"),				submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_50); });
-	MakeAction(tr("25 %"),				submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_25); });
-	MakeAction(tr("Under construction"),submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_UNREADY); });
-	MakeAction(tr("Locked"),			submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_LOCKED); });
-
-	QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), menuPopupContents);
-	MakeAction(tr("Ready"),				submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY); });
-	MakeAction(tr("Almost ready"),		submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST); });
-	MakeAction(tr("75 %"),				submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75); });
-	MakeAction(tr("50 %"),				submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_50); });
-	MakeAction(tr("25 %"),				submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_25); });
-	MakeAction(tr("Under construction"),submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY); });
-	MakeAction(tr("Locked"),			submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED); });
-	
-	QMenu *submenuInsert = new QMenu(tr("Insert"), menuPopupContents);
-	MakeAction(tr("New subitem"), QKeySequence(Qt::Key_Insert), submenuInsert, SLOT(onInsertNewChild()));
-	MakeAction(tr("New sibling item"), QKeySequence(Qt::Key_Enter), submenuInsert, SLOT(onInsertNewSibling()));
-	
-	QMenu *submenuDelete = new QMenu(tr("Delete"), menuPopupContents);
-	MakeAction(tr("Remove item (do not touch source files)"), QKeySequence(Qt::Key_Delete), submenuDelete, SLOT(onRemoveItem()));
-	MakeAction(tr("Delete item and source files"), submenuDelete, SLOT(onDeleteItem()));
-	MakeAction(tr("Delete document file"), submenuDelete, SLOT(onDeleteDoc()));
-
-	// formation of a context menu
-	menuPopupContents->addAction(actionItemProperties);
-
-	menuPopupContents->addSeparator();
-	menuPopupContents->addMenu(submenuOpen0Ext);
-	menuPopupContents->addMenu(submenuOpen1Ext);
-	menuPopupContents->addAction(actionOpenVmbaseInTextEditor);
-	menuPopupContents->addAction(actionOpenFolder);
-
-	menuPopupContents->addSeparator();
-	menuPopupContents->addMenu(submenuItemStatus);
-	menuPopupContents->addMenu(submenuNodeStatus);
-
-	menuPopupContents->addSeparator();
-	menuPopupContents->addMenu(submenuInsert);
-	menuPopupContents->addMenu(submenuDelete);
-	menuPopupContents->addAction(actionItemMove);
 }
 
 void SlnPanel::processEvents()
@@ -283,15 +330,15 @@ bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 void SlnPanel::UpdateBookTitles()
 {
 	QTreeWidgetItem* headerItem = ui.treeContents->headerItem();
-	headerItem->setText(0, theSln.m_Books.books[0].title);
-	headerItem->setText(1, theSln.m_Books.books[1].title);
+	headerItem->setText(0, theSln.Books.books[0].title);
+	headerItem->setText(1, theSln.Books.books[1].title);
 
     headerItem = ui.treeFavorites->headerItem();
-    headerItem->setText(0, theSln.m_Books.books[0].title);
-    headerItem->setText(1, theSln.m_Books.books[1].title);
+    headerItem->setText(0, theSln.Books.books[0].title);
+    headerItem->setText(1, theSln.Books.books[1].title);
 
-    submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.m_Books.books[0].title));
-    submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.m_Books.books[1].title));
+    submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.Books.books[0].title));
+    submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.Books.books[1].title));
 }
 
 void SlnPanel::LoadDocLevel(DocItem* tposNode, QTreeWidgetItem *parent)
@@ -335,7 +382,7 @@ void SlnPanel::LoadDocTree()
 
 void SlnPanel::LoadFavTree()
 {
-	FavItem* tposRoot = theSln.m_Favs.GetRoot();
+	FavItem* tposRoot = theSln.Favs.GetRoot();
 	if (!tposRoot)
 		return;
 
@@ -371,7 +418,7 @@ void SlnPanel::LoadFavLevel(FavItem* node, QTreeWidgetItem *parent)
 	}
 }
 
-void SlnPanel::onShowContentsMenu(const QPoint &pos)
+void SlnPanel::onDocContextMenu(const QPoint &pos)
 {
 	QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(sender());
 	if (!treeWidget)
@@ -380,8 +427,26 @@ void SlnPanel::onShowContentsMenu(const QPoint &pos)
 	if (!item)
 		return;
 
-	QAction *action;
-	action = menuPopupContents->exec(treeWidget->viewport()->mapToGlobal(pos)); //ContCur == ContTreeView
+	menuPopupDoc->exec(treeWidget->viewport()->mapToGlobal(pos));
+}
+
+void SlnPanel::onFavContextMenu(const QPoint &pos)
+{
+	QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(sender());
+	if (!treeWidget)
+		return;
+	QTreeWidgetItem *item = treeWidget->itemAt(pos);
+	if (!item)
+		return;
+	FavItem* fav = item->data(0, Qt::UserRole).value<FavItem*>();
+	if (!fav)
+		return;
+	if(fav->type==FavItem::T_GROUP)
+		menuPopupGroup->exec(treeWidget->viewport()->mapToGlobal(pos));
+	else if(fav->ref)
+		menuPopupDoc->exec(treeWidget->viewport()->mapToGlobal(pos));
+	else
+		menuPopupDangling->exec(treeWidget->viewport()->mapToGlobal(pos));
 }
 
 void SlnPanel::RemoveItemDontAsk(bool del_files)
@@ -421,23 +486,26 @@ void SlnPanel::OpenDoc(QTreeWidgetItem *item, int di)
 void SlnPanel::onResDoubleClicked(QTreeWidgetItem* curItem, int column)
 {
     // open document by double click
-    onItemDoubleClicked(curItem, column);
+    onDocDoubleClicked(curItem, column);
     // search first occurence
     onFindNext();
 }
 
-void SlnPanel::onItemDoubleClicked(QTreeWidgetItem* curItem, int column)
+void SlnPanel::onDocDoubleClicked(QTreeWidgetItem* curItem, int column)
 {
 	// open document by double click
 	OpenDoc(curItem, column);
 }
 
+void SlnPanel::onFavDoubleClicked(QTreeWidgetItem* curItem, int column)
+{
+
+}
+
 void SlnPanel::DoChangeTreeItemStatus(ETreeStatus status, bool rec)
 {
 	// change the status of the current tree item (and possibly all children)
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
+	DocItem* tpos = currDoc();
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, rec);
@@ -547,9 +615,6 @@ void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
 	UpdateNode(item);
 }
 
-//////////////////////////////////////////////////////////////////////////
-// item context menu
-
 void SlnPanel::onItemProperties()
 {
 	// rename item, document file and tree file
@@ -571,9 +636,6 @@ void SlnPanel::onItemProperties()
 		mw->UpdateTab(tpos);
 	}
 }
-
-//////////////////////////////////////////////////////////////////////////
-// external programs
 
 void SlnPanel::onOpenInNewTab(int di)
 {
@@ -669,9 +731,7 @@ void SlnPanel::onOpenFolder(int bi)
 		return;
 	}
 
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
+	DocItem* tpos = currDoc();
 	if (!tpos) return;
 
 	QString path = tpos->GetAbsDir(bi);
@@ -685,9 +745,7 @@ void SlnPanel::onOpenFolder(int bi)
 
 void SlnPanel::OpenInExtProgram(const QString& program, int di)
 {
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
+	DocItem* tpos = currDoc();
 	if (!tpos) return;
 
 	QString path;
@@ -992,10 +1050,77 @@ void SlnPanel::onSelNode()
 
 void SlnPanel::onAddToFavorites()
 {
-
+	DocItem* doc = currDoc();
+	if (!doc) return;
 }
 
 void SlnPanel::onRemoveFromFavorites()
 {
+	FavItem* fav = currFav();
+	if (!fav) return;
+	int ret = QMessageBox::question(this, AppTitle, tr("Remove favorite reference? Document will be untouched."),
+		QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+	if (ret == QMessageBox::Yes) {
 
+	}
+}
+
+void SlnPanel::onEditFavoriteRef()
+{
+	FavItem* fav = currFav();
+	if (!fav) return;
+	TopicChooser dlg(this, "Select favorite item");
+	if (dlg.DoModal()) {
+
+	}
+}
+
+void SlnPanel::onAddSiblingGroup()
+{
+	FavItem* fav = currFav();
+	if (!fav) return;
+	QString s = QInputDialog::getText(this, "Add group", "Input group name", QLineEdit::Normal, "");
+	if (!s.isEmpty()) {
+
+	}
+}
+
+void SlnPanel::onAddChildGroup()
+{
+	FavItem* fav = currFav();
+	if (!fav) return;
+	QString s = QInputDialog::getText(this, "Add group", "Input group name", QLineEdit::Normal, "");
+	if (!s.isEmpty()) {
+
+	}
+}
+
+void SlnPanel::onAddSiblingFav()
+{
+	FavItem* fav = currFav();
+	if (!fav) return;
+	TopicChooser dlg(this, "Select favorite item");
+	if (dlg.DoModal()) {
+
+	}
+}
+
+void SlnPanel::onAddChildFav()
+{
+	FavItem* fav = currFav();
+	if (!fav) return;
+	TopicChooser dlg(this, "Select favorite item");
+	if (dlg.DoModal()) {
+
+	}
+}
+
+void SlnPanel::onEditGroup()
+{
+	FavItem* fav = currFav();
+	if (!fav) return;
+	QString s = QInputDialog::getText(this, "Rename group", "Change group name", QLineEdit::Normal, fav->title);
+	if (!s.isEmpty()) {
+
+	}
 }

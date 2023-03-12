@@ -1,21 +1,11 @@
 #pragma once
 
-// maximal bases count
+// maximal books count
 #define BCNT	2
 
 const char AppTitle[] = "NeoPad";
 
 
-struct NeopadBook
-{
-	QString suffix;
-	QString title;
-	QString rpath;			// path relative to NPBase
-	QString csspath;
-	QString load_prefix;	// for Jekyll
-	QString save_prefix;	// for Jekyll
-	bool path_is_unique;	// unique path requiring file operations
-};
 
 namespace MBA
 {
