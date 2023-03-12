@@ -36,6 +36,7 @@ public:
 	bool    CreateProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0);
 	bool	LoadProject(const QString &fpath);
 	bool	SaveProject(bool recursive);
+protected:
 };
 
 extern CSolution theSln;

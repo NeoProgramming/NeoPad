@@ -148,7 +148,7 @@ bool CSolution::SaveProject(bool recursive)
 	set_attr(xRoot, "snippets").set_value(codecUtf8->fromUnicode(GetRelPath(m_Snippets.m_SnippDir, m_RootDir, false)).constData());
 
 	// save favorites
-	//Favs.SaveFavorites(xRoot);
+	Favs.SaveFavorites(xRoot);
 
 	// write file
 	QString path = m_root->GetVmbAbsPath();

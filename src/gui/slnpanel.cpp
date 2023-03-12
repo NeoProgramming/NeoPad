@@ -108,11 +108,11 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	connect(mw->ui.actionTreeMoveDown, &QAction::triggered, this, &SlnPanel::onMoveItemDown);
 	connect(mw->ui.actionTreeMoveParent, &QAction::triggered, this, &SlnPanel::onMoveItemParent);
 	connect(mw->ui.actionTreeMoveChild, &QAction::triggered, this, &SlnPanel::onMoveItemChild);
-	connect(mw->ui.actionTreeAddChild, &QAction::triggered, this, &SlnPanel::onInsertNewChild);
-	connect(mw->ui.actionTreeAddSibling, &QAction::triggered, this, &SlnPanel::onInsertNewSibling);
+	connect(mw->ui.actionTreeAddChild, &QAction::triggered, this, &SlnPanel::onAddChildDoc);
+	connect(mw->ui.actionTreeAddSibling, &QAction::triggered, this, &SlnPanel::onAddSiblingDoc);
 	connect(mw->ui.actionTreeRemoveItem, &QAction::triggered, this, &SlnPanel::onRemoveItem);
 
-	menuPopupDoc = new QMenu(this);
+	menuPopupDoc = new QMenu(tr("Document"), this);
 	submenuOpen0Ext = new QMenu(tr("Doc0"), menuPopupDoc);
 	submenuOpen1Ext = new QMenu(tr("Doc1"), menuPopupDoc);
 
@@ -139,7 +139,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), &SlnPanel::onItemProperties);
 	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
 
-	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), menuPopupDoc);
+	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), this);// menuPopupDoc);
 	MakeAction(tr("Ready"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_READY); });
 	MakeAction(tr("Almost ready"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_ALMOST); });
 	MakeAction(tr("75 %"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_75); });
@@ -148,7 +148,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	MakeAction(tr("Under construction"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_UNREADY); });
 	MakeAction(tr("Locked"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_LOCKED); });
 
-	QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), menuPopupDoc);
+	QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), this);//menuPopupDoc);
 	MakeAction(tr("Ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY); });
 	MakeAction(tr("Almost ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST); });
 	MakeAction(tr("75 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75); });
@@ -157,11 +157,11 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	MakeAction(tr("Under construction"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY); });
 	MakeAction(tr("Locked"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED); });
 
-	QMenu *submenuInsert = new QMenu(tr("Insert"), menuPopupDoc);
-	MakeAction(tr("New subitem"),      QKeySequence(Qt::Key_Insert), submenuInsert, &SlnPanel::onInsertNewChild);
-	MakeAction(tr("New sibling item"), QKeySequence(Qt::Key_Enter), submenuInsert,  &SlnPanel::onInsertNewSibling);
+	QMenu *submenuInsert = new QMenu(tr("Insert"), this);//menuPopupDoc);
+	MakeAction(tr("New subitem"),      QKeySequence(Qt::Key_Insert), submenuInsert, &SlnPanel::onAddChildDoc);
+	MakeAction(tr("New sibling item"), QKeySequence(Qt::Key_Enter), submenuInsert,  &SlnPanel::onAddSiblingDoc);
 
-	QMenu *submenuDelete = new QMenu(tr("Delete"), menuPopupDoc);
+	QMenu *submenuDelete = new QMenu(tr("Delete"), this);//menuPopupDoc);
 	MakeAction(tr("Remove item (do not touch source files)"), QKeySequence(Qt::Key_Delete), submenuDelete, &SlnPanel::onRemoveItem);
 	MakeAction(tr("Delete item and source files"), submenuDelete, &SlnPanel::onDeleteItem);
 	MakeAction(tr("Delete document file"), submenuDelete, &SlnPanel::onDeleteDoc);
@@ -192,16 +192,24 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionEditFavRef = MakeAction(tr("Change fav reference"), &SlnPanel::onEditFavoriteRef);
 	QAction *actionEditGroup = MakeAction(tr("Edit group name"), &SlnPanel::onEditGroup);
 
-	// favorites context menu
+	// favorites context menus
+
 	menuPopupGroup = new QMenu(this);
 	menuPopupGroup->addAction(actionAddSiblingGroup);
 	menuPopupGroup->addAction(actionAddChildGroup);
+	menuPopupGroup->addAction(actionAddSiblingFav);
+	menuPopupGroup->addAction(actionAddChildFav);
 	menuPopupGroup->addAction(actionRemoveFromFavs);
 	menuPopupGroup->addAction(actionEditGroup);
 
 	menuPopupDangling = new QMenu(this);
-	menuPopupDangling->addAction(actionRemoveFromFavs);
 	menuPopupDangling->addAction(actionEditFavRef);
+	menuPopupDangling->addAction(actionRemoveFromFavs);
+	
+	menuPopupRef = new QMenu(this);
+	menuPopupRef->addMenu(menuPopupDoc);
+	menuPopupRef->addAction(actionEditFavRef);
+	menuPopupRef->addAction(actionRemoveFromFavs);
 }
 
 void SlnPanel::initColumns(QTreeWidget *tree)
@@ -299,7 +307,7 @@ bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 			switch (key) {
 			case Qt::Key_Insert:
 				if (modifiers == Qt::NoModifier)
-					onInsertNewChild();
+					onAddChildDoc();
 				break;
 			case Qt::Key_Delete:
 				if (modifiers == Qt::ShiftModifier)
@@ -317,9 +325,34 @@ bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 			case Qt::Key_Enter:
 			case Qt::Key_Return:
 				if (modifiers == Qt::NoModifier)
-					onInsertNewSibling();
+					onAddSiblingDoc();
 				break;
 			default:
+				break;
+			}
+		}
+	}
+	else if (o == ui.treeFavorites) {
+		if (e->type() == QEvent::KeyPress) {
+			switch (key) {
+			case Qt::Key_Insert:
+				if (modifiers == Qt::NoModifier)
+					onAddChildGroup();
+				else if (modifiers == Qt::ShiftModifier)
+					onAddChildFav();
+				break;
+			case Qt::Key_Delete:
+			//	if (modifiers == Qt::ShiftModifier)
+			//		onDeleteItem();
+			//	else if (modifiers == Qt::NoModifier)
+			//		onRemoveItem();
+			//	break;
+			case Qt::Key_Enter:
+			case Qt::Key_Return:
+				if (modifiers == Qt::NoModifier)
+					onAddSiblingGroup();
+				else if (modifiers == Qt::ShiftModifier)
+					onAddSiblingFav();
 				break;
 			}
 		}
@@ -432,21 +465,21 @@ void SlnPanel::onDocContextMenu(const QPoint &pos)
 
 void SlnPanel::onFavContextMenu(const QPoint &pos)
 {
-	QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(sender());
-	if (!treeWidget)
-		return;
-	QTreeWidgetItem *item = treeWidget->itemAt(pos);
+//	QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(sender());
+//	if (!treeWidget)
+//		return;
+	QTreeWidgetItem *item = ui.treeFavorites->itemAt(pos);
 	if (!item)
 		return;
 	FavItem* fav = item->data(0, Qt::UserRole).value<FavItem*>();
 	if (!fav)
-		return;
-	if(fav->type==FavItem::T_GROUP)
-		menuPopupGroup->exec(treeWidget->viewport()->mapToGlobal(pos));
+		menuPopupDoc->exec(ui.treeFavorites->viewport()->mapToGlobal(pos));
+	else if(fav->type==FavItem::T_GROUP)
+		menuPopupGroup->exec(ui.treeFavorites->viewport()->mapToGlobal(pos));
 	else if(fav->ref)
-		menuPopupDoc->exec(treeWidget->viewport()->mapToGlobal(pos));
+		menuPopupRef->exec(ui.treeFavorites->viewport()->mapToGlobal(pos));
 	else
-		menuPopupDangling->exec(treeWidget->viewport()->mapToGlobal(pos));
+		menuPopupDangling->exec(ui.treeFavorites->viewport()->mapToGlobal(pos));
 }
 
 void SlnPanel::RemoveItemDontAsk(bool del_files)
@@ -472,17 +505,6 @@ void SlnPanel::RemoveItemDontAsk(bool del_files)
 	}
 }
 
-void SlnPanel::OpenDoc(QTreeWidgetItem *item, int di)
-{
-	if (!item)
-		item = ui.treeContents->currentItem();
-	if (!item)
-		return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-	mw->DoOpenDoc(tpos, di);
-	UpdateDocItem(item);
-}
-
 void SlnPanel::onResDoubleClicked(QTreeWidgetItem* curItem, int column)
 {
     // open document by double click
@@ -494,21 +516,15 @@ void SlnPanel::onResDoubleClicked(QTreeWidgetItem* curItem, int column)
 void SlnPanel::onDocDoubleClicked(QTreeWidgetItem* curItem, int column)
 {
 	// open document by double click
-	OpenDoc(curItem, column);
+	DocItem *item = currDoc();
+	mw->DoOpenDoc(item, column);
 }
 
 void SlnPanel::onFavDoubleClicked(QTreeWidgetItem* curItem, int column)
 {
-
-}
-
-void SlnPanel::DoChangeTreeItemStatus(ETreeStatus status, bool rec)
-{
-	// change the status of the current tree item (and possibly all children)
-	DocItem* tpos = currDoc();
-	if (!tpos) return;
-
-	theSln.SetStatus(tpos, status, rec);
+	FavItem *item = currFav();
+	if(item && item->ref)
+		mw->DoOpenDoc(item->ref, column);
 }
 
 QIcon& SlnPanel::GetTreeItemIcon(ETreeStatus i)
@@ -624,8 +640,7 @@ void SlnPanel::onItemProperties()
 	if (!tpos) return;
 
 	ItemProperties dlg(this);
-	if (dlg.DoModal(tpos) == QDialog::Accepted)	// inside the check for the correctness of renaming
-	{
+	if (dlg.DoModal(tpos) == QDialog::Accepted)	{
 		theSln.RenameTitle(tpos, dlg.m_title0, 0);
 		theSln.RenameTitle(tpos, dlg.m_title1, 1);
 		if (tpos->GetId() != dlg.m_id) {
@@ -639,7 +654,8 @@ void SlnPanel::onItemProperties()
 
 void SlnPanel::onOpenInNewTab(int di)
 {
-	OpenDoc(nullptr, di);
+	DocItem *item = currDoc();
+	mw->DoOpenDoc(item, di);
 }
 
 void SlnPanel::onOpenInExtBrowser(int di)
@@ -666,8 +682,7 @@ void SlnPanel::onDeleteDoc(int di)
 {
 	int ret = QMessageBox::warning(this, AppTitle, tr("Remove doc? Source file will be untouched."),
 		QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
-	if (ret == QMessageBox::Yes)
-	{
+	if (ret == QMessageBox::Yes) {
 		QTreeWidgetItem *item = ui.treeContents->currentItem();
 		if (di < 0)
 			di = ui.treeContents->currentColumn();
@@ -701,17 +716,13 @@ void SlnPanel::onMoveItem()
 	if (!tpDrag) return;
 
 	TopicChooser dlg(this, "Select new parent item");
-	if (dlg.DoModal())
-	{
-		if (!theSln.Move(tpDrag, dlg.m_posSelected, NULL))
-		{
+	if (dlg.DoModal()) {
+		if (!theSln.Move(tpDrag, dlg.m_posSelected, NULL)) {
 			QMessageBox::warning(this, "Move error", FailMsg, QMessageBox::Ok);
 		}
-		else
-		{
+		else {
 			QTreeWidgetItem *npar = FindItem(ui.treeContents->topLevelItem(0), dlg.m_posSelected);
-			if (npar)
-			{
+			if (npar) {
 				ui.treeContents->MoveItem(item, npar, 0);
 				ui.treeContents->setCurrentItem(item);
 			}
@@ -758,7 +769,27 @@ void SlnPanel::OpenInExtProgram(const QString& program, int di)
 
 //////////////////////////////////////////////////////////////////////////
 // insert & delete
-void SlnPanel::onInsertNewChild()
+QTreeWidgetItem *SlnPanel::AddWorkpieceItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &title, ETreeStatus st)
+{
+	QTreeWidgetItem *newitem = after ? new QTreeWidgetItem(par, after) : new QTreeWidgetItem(par);
+	newitem->setText(0, title);
+	newitem->setIcon(0, GetTreeItemIcon(st));
+	par->setExpanded(true);
+	QTreeWidget *tree = par->treeWidget();
+	tree->setCurrentItem(newitem);
+	return newitem;
+}
+
+void SlnPanel::RemoveWorkpieceItem(QTreeWidgetItem *newitem, QTreeWidgetItem *olditem)
+{
+	QTreeWidget *tree = olditem->treeWidget();
+	tree->setCurrentItem(olditem);
+	QTreeWidgetItem *par = newitem->parent();
+	int index = par->indexOfChild(newitem);
+	delete par->takeChild(index);
+}
+
+void SlnPanel::onAddChildDoc()
 {
 	// insert the blank into the tree
 	NewItemDlg dlg;
@@ -766,41 +797,33 @@ void SlnPanel::onInsertNewChild()
     dlg.m_open = INI::OpenNewDoc;
 
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) 
-		return;
+	if (!item) return;
 	DocItem* tpPar = item->data(0, Qt::UserRole).value<DocItem*>();
-	if (!tpPar) 
-		return;
+	if (!tpPar) return;
 
-	//dlg.m_title = dlg.m_id = GenerateUniqueFTitle(theSln.Get
+	// prepare workpiece
+	QTreeWidgetItem *newitem = AddWorkpieceItem(item, nullptr, dlg.m_title, ETreeStatus::TS_UNREADY);
 
-	QTreeWidgetItem *newitem = new QTreeWidgetItem(item);
-	newitem->setText(0, dlg.m_title);
-	newitem->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_UNREADY));
-	item->setExpanded(true);
-
-	if (dlg.DoModal() == QDialog::Accepted)
-	{
+	if (dlg.DoModal() == QDialog::Accepted) {
 		// ok - insert the element into the base and connect the workpiece
 		DocItem* tpNew = theSln.AddItem(tpPar, nullptr, dlg.m_title, dlg.m_id);
-		if (tpNew)
-		{
+		if (tpNew) {
 			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
 			UpdateDocItem(newitem);
-			ui.treeContents->setCurrentItem(newitem);
 			if (dlg.m_open) {
-				OpenDoc(newitem, 0);
+				mw->DoOpenDoc(tpNew, 0);
 			}
-			return;
+			return; // ok
+		}
+		else {
+			QMessageBox::warning(this, AppTitle, tr("Error creating node"), QMessageBox::Ok, QMessageBox::Ok);
 		}
 	}
-
 	// cancel - remove the workpiece
-	int index = item->indexOfChild(newitem);
-	delete item->takeChild(index);
+	RemoveWorkpieceItem(newitem, item);
 }
 
-void SlnPanel::onInsertNewSibling()
+void SlnPanel::onAddSiblingDoc()
 {
 	// insert a new item after the given one
 	NewItemDlg dlg;
@@ -816,32 +839,27 @@ void SlnPanel::onInsertNewSibling()
 	DocItem* tpPar = par->data(0, Qt::UserRole).value<DocItem*>();
 	if (!tpPar) return;
 
-	QTreeWidgetItem *newitem = new QTreeWidgetItem(par, item);
-	newitem->setText(0, dlg.m_title);
-	newitem->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_UNREADY));
-	item->setExpanded(true);
-
-	if (dlg.DoModal() == QDialog::Accepted)
-	{
+	// prepare workpiece
+	QTreeWidgetItem *newitem = AddWorkpieceItem(par, item, dlg.m_title, ETreeStatus::TS_UNREADY);
+		
+	if (dlg.DoModal() == QDialog::Accepted) {
 		// ok - insert the element into the base and connect the workpiece
 		DocItem* tpNew = theSln.AddItem(tpPar, tpAfter, dlg.m_title, dlg.m_id);
-		if (tpNew)
-		{
+		if (tpNew) {
 			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
 			UpdateDocItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
 			if(dlg.m_open) {
-				OpenDoc(newitem, 0);
+				mw->DoOpenDoc(tpNew, 0);
 			}
-			return;
+			return; // ok
 		}
 		else {
 			QMessageBox::warning(this, AppTitle, tr("Error creating node"), QMessageBox::Ok, QMessageBox::Ok);
 		}
 	}
 	// cancel - remove the workpiece
-	int index = par->indexOfChild(newitem);
-	delete par->takeChild(index);
+	RemoveWorkpieceItem(newitem, item);
 }
 
 void SlnPanel::onRemoveItem()
@@ -1011,7 +1029,8 @@ void SlnPanel::onSearch()
 		QMessageBox::warning(this, "Search", "Search scope not defined!");
 		return;
 	}
-    theSln.Search(text, scope, searchRoot, results);
+	DocItem *root = theSln.Locate(searchRoot);
+    theSln.Search(text, scope, root, results);
     ui.treeResults->clear();
     for(auto pos : results) {
         QTreeWidgetItem *item = new QTreeWidgetItem();
@@ -1041,9 +1060,9 @@ void SlnPanel::onSelNode()
 	TopicChooser dlg(this, "Select node to search");
 	if (!dlg.DoModal())
 		return;
-	searchRoot = dlg.m_posSelected;
-	if (searchRoot)
-		ui.lineNode->setText(searchRoot->GetTitles(0));
+	searchRoot = dlg.m_posSelected->GetGuid();
+	if (dlg.m_posSelected)
+		ui.lineNode->setText(dlg.m_posSelected->GetTitles(0));
 	else
 		ui.lineNode->setText("");
 }
@@ -1077,41 +1096,127 @@ void SlnPanel::onEditFavoriteRef()
 
 void SlnPanel::onAddSiblingGroup()
 {
-	FavItem* fav = currFav();
-	if (!fav) return;
-	QString s = QInputDialog::getText(this, "Add group", "Input group name", QLineEdit::Normal, "");
-	if (!s.isEmpty()) {
+	QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+	if (!qitem) return;
+	FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
+	if (!sel) return;
+	QTreeWidgetItem *qpar = qitem->parent();
+	if (!qpar) return;
+	FavItem* par = qpar->data(0, Qt::UserRole).value<FavItem*>();
+	if (!par) return;
 
+	// prepare workpiece
+	QTreeWidgetItem *qnewitem = AddWorkpieceItem(qpar, qitem, "NEW GROUP", ETreeStatus::TS_FOLDER);
+
+	QString s = QInputDialog::getText(this, "Add group", "Input group name", QLineEdit::Normal, "NEW GROUP");
+	if (!s.isEmpty()) {
+		// ok - insert folder
+		FavItem* item = theSln.Favs.AddGroup(par, sel, s);
+		if (item) {
+			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+			UpdateFavItem(qnewitem);
+			return; // ok
+		}
+		else {
+			QMessageBox::warning(this, AppTitle, tr("Error creating group"), QMessageBox::Ok, QMessageBox::Ok);
+		}
+	}
+	else {
+		// cancel - remove workpiece
+		RemoveWorkpieceItem(qnewitem, qitem);
 	}
 }
 
 void SlnPanel::onAddChildGroup()
 {
-	FavItem* fav = currFav();
-	if (!fav) return;
-	QString s = QInputDialog::getText(this, "Add group", "Input group name", QLineEdit::Normal, "");
-	if (!s.isEmpty()) {
+	QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+	if (!qitem) return;
+	FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
+	if (!sel) return;
 
+	// prepare workpiece
+	QTreeWidgetItem *qnewitem = AddWorkpieceItem(qitem, nullptr, "NEW GROUP", ETreeStatus::TS_FOLDER);
+
+	QString s = QInputDialog::getText(this, "Add group", "Input group name", QLineEdit::Normal, "NEW GROUP");
+	if (!s.isEmpty()) {
+		// ok - insert folder
+		FavItem* item = theSln.Favs.AddGroup(sel, nullptr, s);
+		if (item) {
+			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+			UpdateFavItem(qnewitem);
+			return; // ok
+		}
+		else {
+			QMessageBox::warning(this, AppTitle, tr("Error creating group"), QMessageBox::Ok, QMessageBox::Ok);
+		}
+	}
+	else {
+		// cancel - remove workpiece
+		RemoveWorkpieceItem(qnewitem, qitem);
 	}
 }
 
 void SlnPanel::onAddSiblingFav()
 {
-	FavItem* fav = currFav();
-	if (!fav) return;
+	QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+	if (!qitem) return;
+	FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
+	if (!sel) return;
+	QTreeWidgetItem *qpar = qitem->parent();
+	if (!qpar) return;
+	FavItem* par = qpar->data(0, Qt::UserRole).value<FavItem*>();
+	if (!par) return;
+
+	// prepare workpiece
+	QTreeWidgetItem *qnewitem = AddWorkpieceItem(qpar, qitem, "NEW REF", ETreeStatus::TS_UNREADY);
+
 	TopicChooser dlg(this, "Select favorite item");
 	if (dlg.DoModal()) {
-
+		// ok - insert subtree
+		FavItem* item = theSln.Favs.AddRef(par, sel, dlg.m_posSelected);
+		if (item) {
+			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+			UpdateFavItem(qnewitem);
+			LoadDocLevel(item->ref, qnewitem);
+			return; // ok
+		}
+		else {
+			QMessageBox::warning(this, AppTitle, tr("Error adding reference"), QMessageBox::Ok, QMessageBox::Ok);
+		}
+	}
+	else {
+		// cancel - remove workpiece
+		RemoveWorkpieceItem(qnewitem, qitem);
 	}
 }
 
 void SlnPanel::onAddChildFav()
 {
-	FavItem* fav = currFav();
-	if (!fav) return;
+	QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+	if (!qitem) return;
+	FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
+	if (!sel) return;
+
+	// prepare workpiece
+	QTreeWidgetItem *qnewitem = AddWorkpieceItem(qitem, nullptr, "NEW REF", ETreeStatus::TS_UNREADY);
+	
 	TopicChooser dlg(this, "Select favorite item");
 	if (dlg.DoModal()) {
-
+		// ok - insert subtree
+		FavItem* item = theSln.Favs.AddRef(sel, nullptr, dlg.m_posSelected);
+		if (item) {
+			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+			UpdateFavItem(qnewitem);
+			LoadDocLevel(item->ref, qnewitem);
+			return; // ok
+		}
+		else {
+			QMessageBox::warning(this, AppTitle, tr("Error adding reference"), QMessageBox::Ok, QMessageBox::Ok);
+		}
+	}
+	else {
+		// cancel - remove workpiece
+		RemoveWorkpieceItem(qnewitem, qitem);
 	}
 }
 
@@ -1121,6 +1226,7 @@ void SlnPanel::onEditGroup()
 	if (!fav) return;
 	QString s = QInputDialog::getText(this, "Rename group", "Change group name", QLineEdit::Normal, fav->title);
 	if (!s.isEmpty()) {
-
+		fav->SetTitle(s);
+		theSln.Favs.m_bModify = true;
 	}
 }

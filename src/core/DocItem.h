@@ -1,5 +1,8 @@
 #pragma once
+#include <QString>
+#include <QMetaType>
 #include "BaseItem.h"
+#include "vmbsrv.h"
 
 // statuses (pictures) of the main items in the tree
 enum class ETreeStatus

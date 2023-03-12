@@ -1,13 +1,15 @@
 #include "Favorites.h"
 #include "Solution.h"
+#include <QTextCodec>
 
+extern QTextCodec *codecUtf8;
 
 void Favorites::LoadFavorites(pugi::xml_node txRoot)
 {
 	pugi::xml_node txFavs = txRoot.child("favorites");
 	if (!txFavs)
 		return;
-	if (!AddRoot(new FavItem))
+	if (!AddRoot())
 		return;
 	m_root->type = FavItem::T_GROUP;
 	m_root->title = "ALL FAVORITES";
@@ -28,7 +30,7 @@ void Favorites::LoadFavoritesLevel(pugi::xml_node txNode, FavItem *node)
 			LoadFavoritesLevel(txElem, item);
 		}
 		else if (!strcmp(name, "ref")) {
-			item->type = FavItem::R_REF;
+			item->type = FavItem::T_REF;
 			item->title = txElem.attribute("guid").as_string();
 			item->ref = theSln.Locate(item->title);
 		}
@@ -49,7 +51,56 @@ void Favorites::SaveFavorites(pugi::xml_node txRoot)
 
 void Favorites::SaveFavoritesLevel(pugi::xml_node txNode, FavItem *node)
 {
-	for (auto elem : node->children) {
-		
+	for (auto item : node->children) {
+		if (item->type == FavItem::T_GROUP) {
+			pugi::xml_node txItem = txNode.append_child("group");
+			set_attr(txItem, "title").set_value(codecUtf8->fromUnicode(item->title).constData());
+			SaveFavoritesLevel(txItem, item);
+		}
+		else {
+			pugi::xml_node txItem = txNode.append_child("ref");
+			set_attr(txItem, "guid").set_value(codecUtf8->fromUnicode(item->title).constData());
+		}
 	}
 }
+
+FavItem* Favorites::AddGroup(FavItem* tpPar, FavItem* tpAfter, const QString& title)
+{
+	FavItem* item = tpAfter ? AddAfter(tpAfter) : AddCTail(tpPar);
+	item->type = FavItem::T_GROUP;
+	item->title = title;
+	return item;
+}
+
+FavItem* Favorites::AddRef(FavItem* tpPar, FavItem* tpAfter, DocItem *ref)
+{
+	FavItem* item = tpAfter ? AddAfter(tpAfter) : AddCTail(tpPar);
+	item->type = FavItem::T_REF;
+	item->ref = ref;
+	return item;
+}
+
+bool Favorites::RemoveNode(FavItem* tpItem)
+{
+	FavItem* tpPar = tpItem->parent;
+	if (!tpPar)
+		return false;
+	PrjTree::RemoveNode(tpItem);
+	return true;
+}
+
+void Favorites::RenameTitle(FavItem* item, const QString & title)
+{
+	item->title = title;
+	//HandleChanges(item);
+}
+/*
+void Favorites::HandleChanges(FavItem* tpItem)
+{
+	tpItem->p_modify = 1;
+	if (INI::AutoSavePages)
+	{
+		tpItem = GetAncestorWithFile(tpItem, true);
+		SaveSubBase(tpItem, recursive);
+	}
+}*/

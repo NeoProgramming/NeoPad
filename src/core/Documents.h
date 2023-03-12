@@ -12,8 +12,8 @@ public:
 	static const char*	GetTreeStatus(ETreeStatus status);
 
 public:
-	BooksInfo *m_BI;
-	bool m_bModify;			// an indication that the tree or files have been modified at least once since the start of the program
+	BooksInfo *m_BI = nullptr;
+	bool m_bModify = false;	// an indication that the tree or files have been modified at least once since the start of the program
 	QString m_RootDir;		// main base for xml files
 	QString m_Password;
 	NeopadCallback *m_pCB = nullptr;
@@ -67,6 +67,7 @@ public:
 protected:
 	bool    IsFNamesAvailable(DocItem* pos, const QString &id);
 
+	// todo: move to solution?
 	bool    LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot);
 	void	MakeXmlDoc(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase);
 	bool	SaveXmlDoc(const QString &path, const pugi::xml_document &xdoc);

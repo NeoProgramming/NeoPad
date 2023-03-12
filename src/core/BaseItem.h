@@ -1,10 +1,5 @@
 #pragma once
-
 #include <list>
-#include <QString>
-#include <QMetaType>
-#include "vmbsrv.h"
-
 
 template<class T>
 struct BaseItem

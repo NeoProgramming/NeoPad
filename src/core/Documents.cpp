@@ -195,8 +195,7 @@ DocItem * Documents::CreateRoot(const QString& name, const  QString& dir)
 		return nullptr;	// error
 	else
 		m_RootDir = dir;
-	DocItem *item = new DocItem;
-	AddRoot(item);
+	DocItem *item = AddRoot();
 	item->id = name;
 	NormalizeFName(item->id);
 	item->title[0] = !IsBlank(name) ? name : "noname";
@@ -359,7 +358,11 @@ DocItem* Documents::AddItem(DocItem* tpPar, DocItem* tpAfter, const QString& tit
 	if (QFileInfo(adirDoc + "/" + id + m_BI->GetDocExt(0)).exists())
 		return Fail("html file already exist!"), nullptr;
 
-	DocItem *item = new DocItem;
+	// insert into the tree; if tpAfter == null then end
+	DocItem *item = (tpAfter == nullptr) ? AddCTail(tpPar) : AddAfter(tpAfter);
+	if (!item)
+		return Fail("error creating node in memory"), nullptr;
+
 	item->p_subbase = 1;
 
 	if (INI::DefItemStatus != 0)
@@ -379,17 +382,7 @@ DocItem* Documents::AddItem(DocItem* tpPar, DocItem* tpAfter, const QString& tit
 	item->rdir = tpPar->GetBaseDir() + "/" + id;
 
 	// creating a folder for .vmbase
-	QDir().mkpath(adirVmb);
-
-	// insert into the tree; if tpAfter == null then end
-	bool r = false;
-	if (tpAfter == nullptr)
-		r = AddCTail(tpPar, item);
-	else
-		r = AddAfter(tpAfter, item);
-
-	if (!r)
-		return nullptr;
+	QDir().mkpath(adirVmb);	
 
 	// create a NEW document for bi = 0
 	MakeDoc(item, 0);
@@ -443,16 +436,9 @@ bool Documents::RemoveNode(DocItem* tpItem, bool del_files)
 		return false;
 	if (del_files)
 		RemoveNodeFiles(tpItem);
-
-	tpItem->RemoveChildren();
-	if (tpItem->parent) {
-		tpItem->parent->children.remove(tpItem);
-	}
-	else {
-		m_root = nullptr;
-	}
-	delete tpItem;
-
+	
+	PrjTree::RemoveNode(tpItem);
+	
 	HandleChanges(tpPar, false);
 	return true;
 }

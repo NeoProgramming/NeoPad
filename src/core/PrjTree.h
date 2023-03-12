@@ -60,57 +60,44 @@ public:
 		ForEach(m_root, fn);
 	}
 
-	bool AddRoot(T *item)
-	{
-		if (!item)
-			return false;
-		if (!m_root)
-			m_root = item;
-		return true;
-	}
-
-	bool AddCTail(T* pos, T* item)
-	{
-		if (!pos || !item)
-			return false;
-		pos->children.push_back(item);
-		item->parent = pos;
-		return true;
-	}
-
-	bool AddAfter(T* pos, T* item)
-	{
-		if (!pos || !pos->parent || !item)
-			return false;
-
-		std::list<T*>::iterator i = std::find(pos->parent->children.begin(), pos->parent->children.end(), pos);
-		if (i == pos->parent->children.end())
-			return false;
-		++i;
-
-		pos->parent->children.insert(i, item);
-		item->parent = pos->parent;
-		return true;
-	}
-	
-	T* AddCTail(T* pos)
+	T* AddRoot()
 	{
 		T* item = new T;
-		if (!AddCTail(pos, item)) {
-			delete item;
+		if (!item)
 			return nullptr;
-		}
+		if (!m_root)
+			m_root = item;
 		return item;
 	}
 
-	template<class T>
+	T* AddCTail(T* par)
+	{
+		if (!par)
+			return nullptr;
+		T* item = new T;
+		if (!item)
+			return nullptr;
+		par->children.push_back(item);
+		item->parent = par;
+		return item;
+	}
+
 	T* AddAfter(T* pos)
 	{
-		T* item = new T;
-		if (!AddAfter(pos, item)) {
-			delete item;
+		if (!pos || !pos->parent)
 			return nullptr;
-		}
+		
+		std::list<T*>::iterator i = std::find(pos->parent->children.begin(), pos->parent->children.end(), pos);
+		if (i == pos->parent->children.end())
+			return nullptr;
+		++i;
+
+		T* item = new T;
+		if (!item)
+			return nullptr;
+
+		pos->parent->children.insert(i, item);
+		item->parent = pos->parent;
 		return item;
 	}
 	
@@ -133,6 +120,18 @@ public:
 		if (pos1->IsAncestor(pos2) || pos2->IsAncestor(pos1))
 			return false;
 		return true;
+	}
+
+	void  RemoveNode(T *node)
+	{
+		node->RemoveChildren();
+		if (node->parent) {
+			node->parent->children.remove(node);
+		}
+		else {
+			m_root = nullptr;
+		}
+		delete node;
 	}
 
 	void  RemoveAll()
