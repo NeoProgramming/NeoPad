@@ -142,7 +142,7 @@ bool WebEditView::SaveHtml(bool update_tree)
 		setWindowModified(false);
 	
 	if(update_tree)
-		m_wMain->getSln()->UpdateTreeItem(m_Item);
+		m_wMain->getSln()->UpdateDocItem(m_Item);
 	return success;
 }
 

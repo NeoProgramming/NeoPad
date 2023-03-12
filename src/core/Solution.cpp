@@ -124,7 +124,7 @@ bool CSolution::SaveProject(bool recursive)
     m_Books.SaveBooksInfo(xRoot);
 
 	// save favorites
-	m_Favs.SaveFavorites(xRoot);
+	//m_Favs.SaveFavorites(xRoot);
 
 	// write file
 	QString path = m_root->GetVmbAbsPath();
@@ -239,7 +239,6 @@ void CSolution::SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool re
 	// for example, when renaming an item in a tree)
 	for (auto pItem : tposParent->children)
 	{
-		DocItem* pDocItem = pItem->This<DocItem>();
 		// create a tag
 		pugi::xml_node pxElem = pxParent.append_child("node");
 		if (pxElem)
@@ -247,8 +246,8 @@ void CSolution::SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool re
 			// if the item does not have its own vmbase file
 			if (!pItem->p_subbase)
 			{
-				SaveItemData(pxElem, pDocItem);
-				SaveSubTag(pxElem, pDocItem, recursive);
+				SaveItemData(pxElem, pItem);
+				SaveSubTag(pxElem, pItem, recursive);
 			}
 			else
 			{
@@ -256,7 +255,7 @@ void CSolution::SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool re
 				set_attr(pxElem, MBA::id).set_value(codecUtf8->fromUnicode(pItem->GetId()).constData());
 				// recursive 
 				if (recursive)
-					SaveSubBase(pDocItem, true);
+					SaveSubBase(pItem, true);
 			}
 		}
 	}
@@ -364,16 +363,16 @@ bool CSolution::LoadProject(const QString &fpath)
 	// bases
     if(!m_Books.LoadBooksInfo(xroot))
         return Fail("No bases found"), false;
-
-	// favorites
-	m_Favs.LoadFavorites(xroot);
-
+	
 	// load content (only after downloading the bases!)
 	CreateRoot("", m_RootDir);
 	pugi::xml_node xelem = xroot.child(MBA::node);
 	if (!xelem)
 		return Fail("solution node not found"), false;
 	bool res = LoadSubTag(xelem, m_root);
+
+	// favorites (after main tree)
+	m_Favs.LoadFavorites(xroot);
 
 	// load paths
 	m_root->LoadItemPaths(fpath);
@@ -398,7 +397,7 @@ bool CSolution::LoadSubBase(const QString &id, DocItem* tpNode)
 	// fill in: while tpNode is not filled, you cannot use GetAbsDir!
 
 	// building absolute path to vmbase file
-	QString apath = tpNode->Par<DocItem>()->GetAbsDir(-1) + "/" + id + "/" + id + MBA::extVmbase;
+	QString apath = tpNode->parent->GetAbsDir(-1) + "/" + id + "/" + id + MBA::extVmbase;
 
 	// load
 	pugi::xml_document xdoc;
@@ -530,7 +529,7 @@ void CSolution::RemoveNodeFiles(DocItem* tpItem)
 	QFile::remove(tpItem->GetVmbAbsPath());
 	for (auto tpChild : tpItem->children)
 	{
-		RemoveNodeFiles(tpChild->This<DocItem>());
+		RemoveNodeFiles(tpChild);
 	}
 
 	for (int bi = 0; bi <= theSln.m_Books.BCnt(); bi++) {
@@ -542,7 +541,7 @@ void CSolution::RemoveNodeFiles(DocItem* tpItem)
 
 bool CSolution::RemoveNode(DocItem* tpItem, bool del_files)
 {
-	DocItem* tpPar = tpItem->Par<DocItem>();
+	DocItem* tpPar = tpItem->parent;
 	if (!tpPar)
 		return false;
 	if (del_files)
@@ -667,7 +666,7 @@ void CSolution::UpdateBaseDirs(DocItem* tpNode)
 	// update base directories recursively for the whole node
 	tpNode->UpdateBaseDir();
 	for (auto tpChild : tpNode->children)
-		UpdateBaseDirs(tpChild->This<DocItem>());
+		UpdateBaseDirs(tpChild);
 }
 
 bool CSolution::MoveChild(DocItem* tpItem)
@@ -682,9 +681,9 @@ bool CSolution::MoveChild(DocItem* tpItem)
 bool CSolution::MoveParent(DocItem* tpItem)
 {
 	// take out to the upper level; make it next after its parent
-	DocItem* tpPar = tpItem->Par<DocItem>();
+	DocItem* tpPar = tpItem->parent;
 	if (tpPar && tpPar != m_root)
-		return Move(tpItem, tpPar->Par<DocItem>(), tpPar);
+		return Move(tpItem, tpPar->parent, tpPar);
 	return false;
 }
 
@@ -699,11 +698,11 @@ DocItem* CSolution::GetAncestorWithFile(DocItem* item, bool include_this)
 {
 	// find parent with file
 	if (!include_this)
-		item = item->Par<DocItem>();
+		item = item->parent;
 	while (item) {
 		if (item->p_subbase)
 			return item;
-		item = item->Par<DocItem>();
+		item = item->parent;
 	}
 	return GetRoot();
 }
@@ -722,7 +721,7 @@ void CSolution::MakeUnsavedListR(std::list<DocItem*> &mpl, DocItem* mtNode)
 	}
 
 	for (auto mtChild : mtNode->children) {
-		MakeUnsavedListR(mpl, mtChild->This<DocItem>());
+		MakeUnsavedListR(mpl, mtChild);
 	}
 }
 
@@ -731,7 +730,7 @@ bool CSolution::IsFNamesAvailable(DocItem* tpos, const QString & id)
 	// check if create/move/rename is possible
 	// doc dirs can match with vmbase dir and each other
 	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
-	QString dir = tpos->Par<DocItem>()->GetAbsDir(-1) + "/" + id;
+	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
 
 	if (QFileInfo(vmb).exists())
 		return Fail("vmbase file with the same name already exists"), false;
@@ -743,7 +742,7 @@ bool CSolution::IsFNamesAvailable(DocItem* tpos, const QString & id)
 		if (QFileInfo(doc).exists())
 			return Fail("document with the same name already exists"), false;
 		if (m_Books.books[bi].path_is_unique) {
-			QString dir = tpos->Par<DocItem>()->GetAbsDir(bi) + "/" + id;
+			QString dir = tpos->parent->GetAbsDir(bi) + "/" + id;
 			if (QFileInfo(dir).exists())
 				return Fail("directory with the same name already exists"), false;
 		}
@@ -759,7 +758,7 @@ bool CSolution::RenameItem(DocItem* tpos, const QString & id)
 		return false;
 
 	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
-	QString dir = tpos->Par<DocItem>()->GetAbsDir(-1) + "/" + id;
+	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
 
 	// rename vmbase file
 	QFile::rename(tpos->GetVmbAbsPath(), vmb);
@@ -767,7 +766,7 @@ bool CSolution::RenameItem(DocItem* tpos, const QString & id)
 	for (int bi = 0; bi < m_Books.BCnt(); bi++) {
 		QFile::rename(tpos->GetDocAbsPath(bi), tpos->GetAbsDir(bi) + "/" + id + m_Books.GetDocExt(bi));
 		if (m_Books.books[bi].path_is_unique)
-			QDir().rename(tpos->GetAbsDir(bi), tpos->Par<DocItem>()->GetAbsDir(bi) + "/" + id);
+			QDir().rename(tpos->GetAbsDir(bi), tpos->parent->GetAbsDir(bi) + "/" + id);
 	}
 	// rename main dir
 	QDir().rename(tpos->GetAbsDir(-1), dir);
@@ -775,7 +774,7 @@ bool CSolution::RenameItem(DocItem* tpos, const QString & id)
 	tpos->id = id;
 	UpdateBaseDirs(tpos);
 	HandleChanges(tpos, false);
-	HandleChanges(tpos->Par<DocItem>(), false);
+	HandleChanges(tpos->parent, false);
 	return true;
 }
 
@@ -819,8 +818,8 @@ void CSolution::SetStatus(DocItem* item, ETreeStatus status, bool rec)
 	item->status = status;
 	item->p_modify = 1;
 	if (rec) {
-		for (MTPOS child : item->children) {
-			SetStatus(child->This<DocItem>(), status, true);
+		for (auto child : item->children) {
+			SetStatus(child, status, true);
 		}
 	}
 	HandleChanges(item, rec);
@@ -905,8 +904,7 @@ void CSolution::GenContentsLevel(DocItem* node, int bi, QFile &file, const QStri
 {
 	int index = 0;
 	int count = node->GetPublicChildrenCount();
-	for (MTPOS ch : node->children) {
-		DocItem *child = ch->This<DocItem>();
+	for (auto child : node->children) {
         if (!child->title[bi].isEmpty() && child->IsPublic() ) {
 			
 			if (index==0)
@@ -981,7 +979,7 @@ void CSolution::EncryptDocs(DocItem* tposParent, const QString &oldPsw, const QS
 		recryptFile(tposParent->GetDocAbsPath(bi), oldPsw, newPsw);
 	}
 	for (auto pItem : tposParent->children) {
-		EncryptDocs(pItem->This<DocItem>(), oldPsw, newPsw);
+		EncryptDocs(pItem, oldPsw, newPsw);
 	}
 }
 

@@ -49,7 +49,7 @@ public:
     void Search(const QString &text);
 	MainWindow *newWindow();
 public:
-	void* FindOpenedDoc(MTPOS pos, int di) override;
+	void* FindOpenedDoc(DocItem* pos, int di) override;
 	void  GetDocData(void* wnd, QString &html) override;
 	
 public slots:

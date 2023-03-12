@@ -56,9 +56,9 @@ int NEOPAD_STAT::CalcStatistics(DocItem* node)
 		break;
 	}
 
-	for (MTPOS tpos : node->children)
+	for (auto tpos : node->children)
 	{
-		total += CalcStatistics(tpos->This<DocItem>());
+		total += CalcStatistics(tpos);
 	}
 	return total;
 }

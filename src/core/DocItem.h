@@ -1,13 +1,50 @@
 #pragma once
 #include "BaseItem.h"
 
+// statuses (pictures) of the main items in the tree
+enum class ETreeStatus
+{
+	TS_UNKNOWN,		// unknown what ...
+	TS_READY,		// regular document
+	TS_ALMOST,
+	TS_75,
+	TS_50,
+	TS_25,
+	TS_UNREADY,		// unfinished document
+	TS_LOCKED,		// ready but blocked for publication
+	TS_FOLDER,
+
+	TS_ITEMS_COUNT
+};
+
+// statuses (pictures) of transfers in the tree
+enum class ELangStatus
+{
+	LS_NONE,	// no translation
+	LS_OK,		// translation is newer than the original
+	LS_OLD,		// the original is newer than the translation - you need to translate
+	LS_QOK,     // the translation is newer than the original, one of the dates is unreliable
+	LS_QOLD,    // the original is newer than the translation, one of the dates is unreliable
+	LS_ITEMS_COUNT
+};
+
 // tree element (main structural element of the base)
-struct DocItem : public BaseItem
+struct DocItem : public BaseItem<DocItem>
 {
 public:
 	// move all BCNT-items to struct
 	// persistent variables
-
+	union {
+		unsigned long attrs = 0;	// object attributes : 32
+		struct {
+			unsigned p_subbase : 1;	// own file or not
+			unsigned p_modify : 1;	// modification sign
+			unsigned check : 1;		// some document mark
+		};
+	};
+	ETreeStatus status = ETreeStatus::TS_UNREADY;    // status
+	QString		id;
+	QString     guid;
 	QString		title[BCNT];// custom title
 	time_t		time[BCNT]; // times of last modification
 
@@ -18,6 +55,13 @@ public:
 	DocItem();
 	DocItem(const char *text);
 	DocItem(const DocItem &obj);
+
+	bool    IsPublic();
+	int     GetPublicChildrenCount();
+	void    SetCheck(bool check);
+	bool    GetCheck();
+	QString GetId();
+	void    ChangeModify(bool modify, bool recursive);
 		
 	void    LoadItemPaths(const QString &apath);
 	void    SetDocTime(const char *tstr, int bi);
@@ -49,3 +93,10 @@ public:
 	QString GetRelUrl(DocItem *item, int di);
 };
 Q_DECLARE_METATYPE(DocItem*)
+
+struct NeopadCallback
+{
+	virtual void* FindOpenedDoc(DocItem* pos, int di) = 0;
+	virtual void  GetDocData(void* wnd, QString &html) = 0;
+};
+

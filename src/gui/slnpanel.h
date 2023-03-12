@@ -27,15 +27,18 @@ class SlnPanel : public QWidget
 public:
     SlnPanel(QWidget *parent, MainWindow *h);
 
-    inline QTabWidget *tabWidget() const  { return ui.tabWidget; }
     bool eventFilter(QObject *, QEvent *);
 	
 	void DoChangeTreeItemStatus(ETreeStatus status, bool rec);
-	void UpdateItem(QTreeWidgetItem * item);
+	void UpdateDocItem(QTreeWidgetItem * item);
+	void UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos);
+	void UpdateFavItem(QTreeWidgetItem * item);
 	void UpdateNode(QTreeWidgetItem * item);
 
+	void UpdateDocNode(QTreeWidgetItem * node, DocItem *inode);
+
 	void UpdateTree();
-	void UpdateTreeItem(DocItem* item);
+	void UpdateDocItem(DocItem* item);
 
 	void SetCurrItemStatus(ETreeStatus status);
 	void SetCurrNodeStatus(ETreeStatus status);
@@ -48,9 +51,13 @@ public:
     void EnsureVisible(DocItem* node);
 
     void initialize();
-    void UpdateBases();
-    void LoadTree();
-	void LoadTreeLevel(MTPOS node, QTreeWidgetItem *parent);
+    void UpdateBookTitles();
+
+	void Load();
+    void LoadDocTree();
+	void LoadDocLevel(DocItem* node, QTreeWidgetItem *parent);
+	void LoadFavTree();
+	void LoadFavLevel(FavItem* node, QTreeWidgetItem *parent);
 	
 	void OpenDoc(QTreeWidgetItem *item, int di);
 	void OpenInExtProgram(const QString& program, int di);
@@ -88,6 +95,8 @@ private slots:
 	void onMoveItemParent();
 	void onMoveItemChild();
 	void onMoveItem();
+	void onAddToFavorites();
+	void onRemoveFromFavorites();
 
     void onShowContentsMenu(const QPoint &pos);
       

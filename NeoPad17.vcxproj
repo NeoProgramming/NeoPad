@@ -214,13 +214,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\3rdparty\pugixml\pugixml.cpp" />
-    <ClCompile Include="src\core\BaseItem.cpp" />
     <ClCompile Include="src\core\Books.cpp" />
     <ClCompile Include="src\core\Cryptor.cpp" />
     <ClCompile Include="src\core\DocItem.cpp" />
     <ClCompile Include="src\core\Favorites.cpp" />
     <ClCompile Include="src\core\PrjStat.cpp" />
-    <ClCompile Include="src\core\RefItem.cpp" />
+    <ClCompile Include="src\core\FavItem.cpp" />
     <ClCompile Include="src\core\Snippets.cpp" />
     <ClCompile Include="src\core\Solution.cpp" />
     <ClCompile Include="src\gui\htmllink.cpp" />
@@ -267,7 +266,7 @@
     <ClInclude Include="src\core\Favorites.h" />
     <ClInclude Include="src\core\PrjStat.h" />
     <ClInclude Include="src\core\PrjTree.h" />
-    <ClInclude Include="src\core\RefItem.h" />
+    <ClInclude Include="src\core\FavItem.h" />
     <ClInclude Include="src\core\Snippets.h" />
     <ClInclude Include="src\core\Solution.h" />
     <ClInclude Include="src\gui\htmllink.h" />

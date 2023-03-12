@@ -49,13 +49,12 @@ void TopicChooser::LoadLevel(QTreeWidgetItem *treeNode, DocItem* tposNode)
 		tposNode->SetCheck(1);
 	}
 
-	for(MTPOS tpos : tposNode->children )
+	for(auto tpos : tposNode->children )
 	{
-		DocItem* docItem = tpos->This<DocItem>();
 		QTreeWidgetItem *item = new QTreeWidgetItem(treeNode);
-		item->setText(0, docItem->title[0]);
+		item->setText(0, tpos->title[0]);
 		item->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
-		LoadLevel(item, docItem);
+		LoadLevel(item, tpos);
 	}
 }
 

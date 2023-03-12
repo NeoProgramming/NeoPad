@@ -5,15 +5,19 @@
 #include "Solution.h"
 #include "../service/tools.h"
 
-DocItem::DocItem() : BaseItem()
+DocItem::DocItem() : BaseItem<DocItem>()
 {
 	//for (int i = 0; i<theSln.BCnt(); i++)
    //	time[i] = -1;
 	for (auto &v : time)
 		v = -1;
+
+	attrs = 0;
+	status = ETreeStatus::TS_UNREADY;
+	check = 1;
 }
 
-DocItem::DocItem(const char *text) : BaseItem()
+DocItem::DocItem(const char *text) : BaseItem<DocItem>()
 {
 	attrs = 0;
 	title[0] = text;
@@ -39,6 +43,46 @@ DocItem::DocItem(const DocItem &obj)
 	parent = obj.parent;
 	children = obj.children;
 }
+
+bool DocItem::IsPublic()
+{
+	// check if the document is published
+	return status == ETreeStatus::TS_READY || status == ETreeStatus::TS_ALMOST;
+}
+
+int DocItem::GetPublicChildrenCount()
+{
+	int count = 0;
+	for (auto child : children) {
+		if (child->IsPublic())
+			count++;
+	}
+	return count;
+}
+
+void DocItem::SetCheck(bool _check)
+{
+	this->check = _check;
+}
+
+bool DocItem::GetCheck()
+{
+	return check;
+}
+
+QString DocItem::GetId()
+{
+	return id;
+}
+
+void DocItem::ChangeModify(bool modify, bool recursive)
+{
+	p_modify = modify;
+	if (recursive)
+		for (auto child : children)
+			child->ChangeModify(modify, recursive);
+}
+
 
 QString DocItem::GetInfo()
 {
@@ -84,7 +128,7 @@ QString DocItem::GetTitles(int bi)
 		return QString();
 	if (!parent)
 		return GetTitle(bi);
-	return GetTitle(bi) + QChar(0x26AB) + Par<DocItem>()->GetTitles(bi);
+	return GetTitle(bi) + QChar(0x26AB) + parent->GetTitles(bi);
 }
 
 QString DocItem::GetDocLocPath(int bi)
@@ -198,7 +242,7 @@ QString DocItem::GetBaseDir()
 	while (item) {
 		if (!item->rdir.isEmpty())
 			return item->rdir;
-		item = item->Par<DocItem>();
+		item = item->parent;
 	}
 	return ".";
 }
@@ -208,10 +252,10 @@ void DocItem::UpdateBaseDir()
 	// regenerate rdir based on id
 	// there is a certain node; to regenerate rdir, you need to go through all the nodes
 	rdir = id;
-	DocItem* item = Par<DocItem>();
+	DocItem* item = parent;
 	while (item && item->parent) {
 		rdir = item->id + "/" + rdir;
-		item = item->Par<DocItem>();
+		item = item->parent;
 	}
 }
 

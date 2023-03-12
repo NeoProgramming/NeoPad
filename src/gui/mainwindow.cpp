@@ -84,8 +84,6 @@ MainWindow::MainWindow()
 	m_wArea->setTabsMovable(true);
 
 	QTabWidget *tabWidget = m_wArea->findChild<QTabWidget*>();
-//	tabWidget->setTabBar(new CustomTabBar(tabWidget));
-//	m_wArea->setTabBar(new TabBar(m_wArea));
 
 	QList<QTabBar *> tabBarList = m_wArea->findChildren<QTabBar*>();
 	m_tabBar = tabBarList.at(0);
@@ -428,7 +426,7 @@ void MainWindow::onProjectOpen(QString fileName)
 {
 	if (!fileName.isEmpty())
 	{
-		m_wSln->LoadTree();
+		m_wSln->Load();
     	projectModified(false);
 	}
 }
@@ -495,7 +493,7 @@ void MainWindow::onProjectNew()
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
 		theSln.CreateProject(dlg.m_name, dlg.m_base, dlg.m_suffixes[0], dlg.m_suffixes[0]);
-		m_wSln->LoadTree();
+		m_wSln->Load();
 		UpdateTitle();
 	}
 }
@@ -550,7 +548,7 @@ void MainWindow::onProjectProperties()
 				setCursor(Qt::ArrowCursor);
 			}
 		}
-		m_wSln->UpdateBases();
+		m_wSln->UpdateBookTitles();
 	}
 }
 
@@ -668,7 +666,7 @@ bool MainWindow::DoPrjOpen(const QString& fpath)
 	}
 
 	bool res = theSln.LoadProject(fpath);
-	m_wSln->LoadTree();
+	m_wSln->Load();
 	if(!res) {
 		QMessageBox::warning(this, "Error", 
 			QString("Error loading file %1\r\n%2").arg(fpath).arg(FailMsg));
@@ -1023,9 +1021,9 @@ void MainWindow::MakePagesListForPdfPrinting(DocItem* tpos, int level, int &page
 	toc += s;
 	page++;
 		
-	for(MTPOS tchild : tpos->children)
+	for(auto tchild : tpos->children)
 	{
-		MakePagesListForPdfPrinting(tchild->This<DocItem>(), level + 1, page, args, toc);
+		MakePagesListForPdfPrinting(tchild, level + 1, page, args, toc);
 	}
 }
 
@@ -1064,7 +1062,7 @@ void MainWindow::EditCss(int bi)
 		OpenInExternalApplication(this, cmd, cssPath);
 }
 
-void* MainWindow::FindOpenedDoc(MTPOS pos, int di)
+void* MainWindow::FindOpenedDoc(DocItem* pos, int di)
 {
 	QList<QMdiSubWindow *> wl = m_wArea->subWindowList();
 	QList<QMdiSubWindow *>::Iterator i = wl.begin();

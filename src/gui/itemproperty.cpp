@@ -37,7 +37,7 @@ int ItemProperties::DoModal(DocItem* tpos)
 	ui.lineTime1->setText(tpos->GetDocTimeStr(1));
 
 	ui.lineParent->setText(tpos->parent ? tpos->parent->id : "");
-    for(MTPOS tchild : tpos->children)
+    for(auto tchild : tpos->children)
     {
 		ui.listChildren->addItem(tchild->GetId());
     }

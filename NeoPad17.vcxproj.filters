@@ -191,13 +191,10 @@
     <ClCompile Include="src\core\Favorites.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\BaseItem.cpp">
-      <Filter>src\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\DocItem.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\RefItem.cpp">
+    <ClCompile Include="src\core\FavItem.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
   </ItemGroup>
@@ -274,7 +271,7 @@
     <ClInclude Include="src\core\DocItem.h">
       <Filter>src\core</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\RefItem.h">
+    <ClInclude Include="src\core\FavItem.h">
       <Filter>src\core</Filter>
     </ClInclude>
   </ItemGroup>

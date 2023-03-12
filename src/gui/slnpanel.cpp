@@ -22,8 +22,6 @@
 extern QTextCodec *codecUtf8;
 
 
-
-//==================== class HelpDialog ====================
 SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 : QWidget(parent), mw(h)
 {
@@ -137,8 +135,6 @@ QAction *SlnPanel::MakeAction(QString text, QKeySequence skey, QMenu *menu, cons
 	return action;
 }
 
-
-//-------------------------------------------------
 void SlnPanel::initialize()
 {
 	ui.tabWidget->setElideMode(Qt::ElideNone);	//show tab titles, do not elide them by placing "..."
@@ -284,19 +280,7 @@ bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 	return QWidget::eventFilter(o, e);
 }
 
-void SlnPanel::LoadTreeLevel(MTPOS tposNode, QTreeWidgetItem *parent)
-{
-	for (MTPOS tpos : tposNode->children)
-	{
-		QTreeWidgetItem *item = new QTreeWidgetItem(parent);
-        item->setData(0, Qt::UserRole, QVariant::fromValue(tpos->This<DocItem>()));
-    //    item->setBackgroundColor(0,  QColor(255,255,0));
-		UpdateItem(item);
-		LoadTreeLevel(tpos, item);
-	}
-}
-
-void SlnPanel::UpdateBases()
+void SlnPanel::UpdateBookTitles()
 {
 	QTreeWidgetItem* headerItem = ui.treeContents->headerItem();
 	headerItem->setText(0, theSln.m_Books.books[0].title);
@@ -310,32 +294,83 @@ void SlnPanel::UpdateBases()
     submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.m_Books.books[1].title));
 }
 
-void SlnPanel::LoadTree()
+void SlnPanel::LoadDocLevel(DocItem* tposNode, QTreeWidgetItem *parent)
+{
+	for (auto tpos : tposNode->children)
+	{
+		QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+		item->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
+		UpdateDocItem(item);
+		LoadDocLevel(tpos, item);
+	}
+}
+
+void SlnPanel::Load()
+{
+	setCursor(Qt::WaitCursor);
+	LoadDocTree();
+	LoadFavTree();
+	UpdateBookTitles();
+	setCursor(Qt::ArrowCursor);
+	showInitDoneMessage();
+}
+
+void SlnPanel::LoadDocTree()
 {
 	DocItem* tposRoot = theSln.GetRoot();
 	if (!tposRoot)
 		return;
-
-	setCursor(Qt::WaitCursor);
-
+	
 	ui.treeContents->clear();
 	QTreeWidgetItem *root = new QTreeWidgetItem();
 	root->setText(0, tposRoot->title[0]);
     root->setData(0, Qt::UserRole, QVariant::fromValue(tposRoot));
 
 	ui.treeContents->addTopLevelItem(root);
-	UpdateItem(root);
+	UpdateDocItem(root);
 
-	LoadTreeLevel(tposRoot, root);
+	LoadDocLevel(tposRoot, root);
 	root->setExpanded(true);
-
-	UpdateBases();	
-
-	setCursor(Qt::ArrowCursor);
-	showInitDoneMessage();
 }
 
-//-------------------------------------------------
+void SlnPanel::LoadFavTree()
+{
+	FavItem* tposRoot = theSln.m_Favs.GetRoot();
+	if (!tposRoot)
+		return;
+
+	ui.treeFavorites->clear();
+	QTreeWidgetItem *root = new QTreeWidgetItem();
+	root->setText(0, tposRoot->title);
+	root->setData(0, Qt::UserRole, QVariant::fromValue(tposRoot));
+
+	ui.treeFavorites->addTopLevelItem(root);
+	UpdateFavItem(root);
+
+	LoadFavLevel(tposRoot, root);
+	root->setExpanded(true);
+}
+
+void SlnPanel::LoadFavLevel(FavItem* node, QTreeWidgetItem *parent)
+{
+	for (auto tpos : node->children)
+	{
+		QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+		item->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
+		if (tpos->type==FavItem::T_GROUP) {
+			UpdateFavItem(item);
+			LoadFavLevel(tpos, item);
+		}
+		else if(tpos->ref) {
+			UpdateDocItem(tpos->ref);
+			LoadDocLevel(tpos->ref, item);
+		}
+		else {
+			UpdateFavItem(item);
+		}
+	}
+}
+
 void SlnPanel::onShowContentsMenu(const QPoint &pos)
 {
 	QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(sender());
@@ -349,7 +384,6 @@ void SlnPanel::onShowContentsMenu(const QPoint &pos)
 	action = menuPopupContents->exec(treeWidget->viewport()->mapToGlobal(pos)); //ContCur == ContTreeView
 }
 
-//-------------------------------------------------
 void SlnPanel::RemoveItemDontAsk(bool del_files)
 {
 	// remove item from tree
@@ -381,7 +415,7 @@ void SlnPanel::OpenDoc(QTreeWidgetItem *item, int di)
 		return;
 	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	mw->DoOpenDoc(tpos, di);
-	UpdateItem(item);
+	UpdateDocItem(item);
 }
 
 void SlnPanel::onResDoubleClicked(QTreeWidgetItem* curItem, int column)
@@ -424,11 +458,15 @@ QIcon& SlnPanel::GetLangItemIcon(ELangStatus i)
 }
 
 
-void SlnPanel::UpdateItem(QTreeWidgetItem * item)
+void SlnPanel::UpdateDocItem(QTreeWidgetItem * item)
 {
 	// set the text and picture of the node depending on its state and attributes
 	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
+	UpdateDocItem(item, tpos);
+}
 
+void SlnPanel::UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos)
+{
 	item->setText(0, tpos->GetTitle(0));
 	ETreeStatus im = tpos->GetTreeStatus();
 	item->setIcon(0, GetTreeItemIcon(im));
@@ -438,10 +476,35 @@ void SlnPanel::UpdateItem(QTreeWidgetItem * item)
 	item->setIcon(1, GetLangItemIcon(ls));
 }
 
+void SlnPanel::UpdateFavItem(QTreeWidgetItem * item)
+{
+	// set the text and picture of the node depending on its state and attributes
+	FavItem* tpos = item->data(0, Qt::UserRole).value<FavItem*>();
+
+	if (tpos->type == FavItem::T_GROUP) {
+		item->setText(0, tpos->title);
+		item->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_FOLDER));
+	}
+	else {
+		if(!tpos->ref) {
+			item->setText(0, tpos->title);
+			item->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_UNKNOWN));
+		}
+		else {
+			UpdateDocItem(item, tpos->ref);
+		}
+	}
+}
+
+void SlnPanel::UpdateDocNode(QTreeWidgetItem * node, DocItem *inode)
+{
+
+}
+
 void SlnPanel::UpdateNode(QTreeWidgetItem * item)
 {
 	// recursively update all pictures of the whole tree
-	UpdateItem(item);
+	UpdateDocItem(item);
 	int n = item->childCount();
 	for (int i = 0; i < n; i++)
 	{
@@ -450,11 +513,11 @@ void SlnPanel::UpdateNode(QTreeWidgetItem * item)
 	}
 }
 
-void SlnPanel::UpdateTreeItem(DocItem* pos)
+void SlnPanel::UpdateDocItem(DocItem* pos)
 {
 	QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), pos);
 	if (item)
-		UpdateItem(item);
+		UpdateDocItem(item);
 }
 
 void SlnPanel::UpdateTree()
@@ -470,7 +533,7 @@ void SlnPanel::SetCurrItemStatus(ETreeStatus status)
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, false);
-	UpdateItem(item);
+	UpdateDocItem(item);
 }
 
 void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
@@ -504,7 +567,7 @@ void SlnPanel::onItemProperties()
 			if (!theSln.RenameItem(tpos, dlg.m_id))
 				QMessageBox::warning(this, "Rename error", FailMsg);
 		}
-		UpdateItem(item);
+		UpdateDocItem(item);
 		mw->UpdateTab(tpos);
 	}
 }
@@ -548,7 +611,7 @@ void SlnPanel::onDeleteDoc(int di)
 			di = ui.treeContents->currentColumn();
 		DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 		theSln.RemoveNodeDoc(tpos, di);
-		UpdateItem(item);
+		UpdateDocItem(item);
 		mw->projectModified(true);
 	}
 }
@@ -665,7 +728,7 @@ void SlnPanel::onInsertNewChild()
 		if (tpNew)
 		{
 			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
-			UpdateItem(newitem);
+			UpdateDocItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
 			if (dlg.m_open) {
 				OpenDoc(newitem, 0);
@@ -707,7 +770,7 @@ void SlnPanel::onInsertNewSibling()
 		if (tpNew)
 		{
 			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
-			UpdateItem(newitem);
+			UpdateDocItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
 			if(dlg.m_open) {
 				OpenDoc(newitem, 0);
@@ -896,7 +959,7 @@ void SlnPanel::onSearch()
         QTreeWidgetItem *item = new QTreeWidgetItem();
         item->setData(0, Qt::UserRole, QVariant::fromValue(pos));
         ui.treeResults->addTopLevelItem(item);
-        UpdateItem(item);
+        UpdateDocItem(item);
     }
 	setCursor(QCursor(Qt::ArrowCursor));
 }
@@ -925,4 +988,14 @@ void SlnPanel::onSelNode()
 		ui.lineNode->setText(searchRoot->GetTitles(0));
 	else
 		ui.lineNode->setText("");
+}
+
+void SlnPanel::onAddToFavorites()
+{
+
+}
+
+void SlnPanel::onRemoveFromFavorites()
+{
+
 }

@@ -4,6 +4,10 @@
 #include <algorithm>
 #include "BaseItem.h"
 
+// usage:
+// 1. CRTP for items: class MyItem : public BaseItem<MyItem> { ... }
+// 2. PrjTree for tree: PrjTree<MyItem> my_tree;
+
 template<class T>
 class PrjTree
 {
@@ -23,7 +27,7 @@ public:
 		if (i == pos->parent->children.begin())
 			return nullptr;
 		--i;
-		return (*i)->This<T>();
+		return (*i);
 	}
 
 	T* GetNextSibling(T* pos)
@@ -36,7 +40,7 @@ public:
 		i++;
 		if (i == pos->parent->children.end())
 			return nullptr;
-		return (*i)->This<T>();
+		return (*i);
 	}
 	
     
@@ -44,9 +48,11 @@ public:
 	{
 		if (!node)
 			node = m_root;
+		if (!m_root)
+			return;
 		fn(node);
 		for (auto ch : node->children)
-			ForEach(ch->This<T>(), fn);
+			ForEach(ch, fn);
 	}
 
 	void ForEach(const std::function<void(T*)> &fn)
@@ -77,7 +83,7 @@ public:
 		if (!pos || !pos->parent || !item)
 			return false;
 
-		std::list<BaseItem*>::iterator i = std::find(pos->parent->children.begin(), pos->parent->children.end(), pos);
+		std::list<T*>::iterator i = std::find(pos->parent->children.begin(), pos->parent->children.end(), pos);
 		if (i == pos->parent->children.end())
 			return false;
 		++i;
@@ -147,7 +153,7 @@ public:
 		auto i1 = std::find(pos1->parent->children.begin(), pos1->parent->children.end(), pos1);
 		auto i2 = std::find(pos2->parent->children.begin(), pos2->parent->children.end(), pos2);
 		// just change the contents of the list cells
-		MTPOS pos = *i1;
+		T* pos = *i1;
 		*i1 = *i2;
 		*i2 = pos;
 		// change parent pointers
