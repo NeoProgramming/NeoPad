@@ -26,22 +26,13 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 {
 	ui.setupUi(this);
 
-	ui.treeContents->setRootIsDecorated(false);
-	ui.treeContents->setUniformRowHeights(true);			// all lines are the same height
-	ui.treeContents->header()->setStretchLastSection(false);// the last section is NOT the full available width
-	ui.treeContents->header()->setSectionResizeMode(QHeaderView::ResizeToContents);	// header resizing mode
-
 	QString fmt;
 	fmt.sprintf("background-color: #%06X; alternate-background-color: #%06X", INI::BackColor1, INI::BackColor2);
 	ui.treeContents->setStyleSheet(fmt);//"background-color: #FFC782; alternate-background-color: #F0CF72");
-
-	ui.treeContents->setColumnCount(2);
-	QTreeWidgetItem* headerItem = ui.treeContents->headerItem();
-	headerItem->setText(0, "Base 1");
-	headerItem->setText(1, "Base 2");
-	
-	initColumns(ui.treeContents);
-	initColumns(ui.treeFavorites);
+	//ui.treeContents->setColumnCount(2);
+		
+	initTree(ui.treeContents);
+	initTree(ui.treeFavorites);
 
 	connect(ui.treeContents, SIGNAL(dropping(QTreeWidgetItem*, QTreeWidgetItem*, int)), this, SLOT(onDropping(QTreeWidgetItem*, QTreeWidgetItem*, int)));
     connect(ui.pushSearch,		&QPushButton::clicked, this, &SlnPanel::onSearch);
@@ -261,9 +252,15 @@ FavItem* SlnPanel::currFav()
 	return tpos;
 }
 
-void SlnPanel::initColumns(QTreeWidget *tree)
+void SlnPanel::initTree(QTreeWidget *tree)
 {
+	tree->setRootIsDecorated(false);
+	tree->setUniformRowHeights(true);			// all lines are the same height
+	
 	QHeaderView * header = tree->header();
+
+	header->setStretchLastSection(false);		// the last section is NOT the full available width
+//	header->setSectionResizeMode(QHeaderView::ResizeToContents);	// header resizing mode
 	header->setSectionResizeMode(QHeaderView::Interactive);
 	tree->setColumnWidth(0, 220);
 	tree->setColumnWidth(1, 220);

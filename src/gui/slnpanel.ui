@@ -112,6 +112,12 @@
               <height>16</height>
              </size>
             </property>
+            <property name="rootIsDecorated">
+             <bool>false</bool>
+            </property>
+            <property name="uniformRowHeights">
+             <bool>true</bool>
+            </property>
             <property name="expandsOnDoubleClick">
              <bool>false</bool>
             </property>
@@ -226,6 +232,15 @@
           <widget class="QTreeWidget" name="treeFavorites">
            <property name="contextMenuPolicy">
             <enum>Qt::CustomContextMenu</enum>
+           </property>
+           <property name="rootIsDecorated">
+            <bool>false</bool>
+           </property>
+           <property name="uniformRowHeights">
+            <bool>true</bool>
+           </property>
+           <property name="expandsOnDoubleClick">
+            <bool>false</bool>
            </property>
            <column>
             <property name="text">

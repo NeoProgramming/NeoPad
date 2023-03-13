@@ -22,12 +22,11 @@ void Favorites::MakeRoot()
 
 void Favorites::LoadFavorites(pugi::xml_node txRoot)
 {
-	pugi::xml_node txFavs = txRoot.child("favorites");
-	if (!txFavs)
-		return;
 	MakeRoot();
-	
-	LoadFavoritesLevel(txFavs, m_root);
+
+	pugi::xml_node txFavs = txRoot.child("favorites");
+	if (txFavs)
+		LoadFavoritesLevel(txFavs, m_root);
 }
 
 void Favorites::LoadFavoritesLevel(pugi::xml_node txNode, FavItem *node)

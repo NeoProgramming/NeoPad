@@ -117,7 +117,7 @@ private:
 
     void OpenInExtProgram(const QString& program, int di);
     void RemoveItemDontAsk(bool del_files);	//remove item without asking
-	void initColumns(QTreeWidget *tree);
+	void initTree(QTreeWidget *tree);
 	QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);
     void showInitDoneMessage();
 	DocItem* currDoc();
