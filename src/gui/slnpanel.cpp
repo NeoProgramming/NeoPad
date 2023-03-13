@@ -29,8 +29,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QString fmt;
 	fmt.sprintf("background-color: #%06X; alternate-background-color: #%06X", INI::BackColor1, INI::BackColor2);
 	ui.treeContents->setStyleSheet(fmt);//"background-color: #FFC782; alternate-background-color: #F0CF72");
-	//ui.treeContents->setColumnCount(2);
-		
+			
 	initTree(ui.treeContents);
 	initTree(ui.treeFavorites);
 
@@ -388,18 +387,28 @@ bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 	return QWidget::eventFilter(o, e);
 }
 
-void SlnPanel::UpdateBookTitles()
+void SlnPanel::LoadBookTitles()
 {
-	QTreeWidgetItem* headerItem = ui.treeContents->headerItem();
+	QTreeWidgetItem* headerItem;
+	int n = theSln.Books.BCnt();
+	ui.treeContents->setColumnCount(n); 
+	ui.treeFavorites->setColumnCount(n);
+
+	headerItem  = ui.treeContents->headerItem();
 	headerItem->setText(0, theSln.Books.books[0].title);
-	headerItem->setText(1, theSln.Books.books[1].title);
+	if(n>=2)
+		headerItem->setText(1, theSln.Books.books[1].title);
 
     headerItem = ui.treeFavorites->headerItem();
     headerItem->setText(0, theSln.Books.books[0].title);
-    headerItem->setText(1, theSln.Books.books[1].title);
+	if(n>=2)
+		headerItem->setText(1, theSln.Books.books[1].title);
 
     submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.Books.books[0].title));
-    submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.Books.books[1].title));
+	if(n>=2)
+		submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.Books.books[1].title));
+	else
+		submenuOpen1Ext->setTitle(tr("Doc1 (---)"));
 }
 
 void SlnPanel::LoadDocLevel(DocItem* tposNode, QTreeWidgetItem *parent)
@@ -419,7 +428,7 @@ void SlnPanel::Load()
 	LoadDocTree();
     LoadFavTree(theSln.Favs.GetRoot());
     LoadFavCombo();
-	UpdateBookTitles();
+	LoadBookTitles();
 	setCursor(Qt::ArrowCursor);
 	showInitDoneMessage();
 }

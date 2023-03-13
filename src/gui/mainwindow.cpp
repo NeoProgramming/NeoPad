@@ -551,7 +551,7 @@ void MainWindow::onProjectProperties()
 				setCursor(Qt::ArrowCursor);
 			}
 		}
-		m_wSln->UpdateBookTitles();
+		m_wSln->LoadBookTitles();
 	}
 }
 

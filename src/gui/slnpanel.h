@@ -49,8 +49,8 @@ public:
 
     void Search(const QString &text);
     void EnsureVisible(DocItem* node);
-    void UpdateBookTitles();
 	void Load();
+	void LoadBookTitles();	
 
 private slots:
     void onSearch();
