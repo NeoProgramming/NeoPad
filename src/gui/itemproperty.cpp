@@ -23,20 +23,22 @@ ItemProperties::ItemProperties(QWidget *parent)
 
 int ItemProperties::DoModal(DocItem* tpos)
 {
-	ui.lineTitle0->setText(tpos->GetTitle(0));
-	ui.lineTitle1->setText(tpos->GetTitle(1));
-
 	ui.lineID->setText(tpos->GetId());
-	ui.lineDoc0Path->setText(tpos->GetDocAbsPath(0));
-	ui.lineDoc1Path->setText(tpos->GetDocAbsPath(1));
 	ui.lineXmlPath->setText(tpos->GetVmbAbsPath());
-
 	ui.lineInfo->setText(tpos->GetInfo());
 	ui.lineSrvInfo->setText(tpos->GetInfo2());
-	ui.lineTime0->setText(tpos->GetDocTimeStr(0));
-	ui.lineTime1->setText(tpos->GetDocTimeStr(1));
-
 	ui.lineParent->setText(tpos->parent ? tpos->parent->id : "");
+
+	ui.lineTitle0->setText(tpos->GetTitle(0));
+	ui.lineDoc0Path->setText(tpos->GetDocAbsPath(0));
+	ui.lineTime0->setText(tpos->GetDocTimeStr(0));
+
+	if (theSln.Books.BCnt() >= 2) {
+		ui.lineTitle1->setText(tpos->GetTitle(1));
+		ui.lineDoc1Path->setText(tpos->GetDocAbsPath(1));
+		ui.lineTime1->setText(tpos->GetDocTimeStr(1));
+	}
+	
     for(auto tchild : tpos->children)
     {
 		ui.listChildren->addItem(tchild->GetId());

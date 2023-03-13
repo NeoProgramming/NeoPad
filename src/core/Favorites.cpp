@@ -6,15 +6,27 @@
 
 extern QTextCodec *codecUtf8;
 
+Favorites::Favorites()
+{
+	MakeRoot();
+}
+
+void Favorites::MakeRoot()
+{
+	RemoveAll();
+	if (!AddRoot())
+		return;
+	m_root->type = FavItem::T_GROUP;
+	m_root->title = "ALL FAVORITES";
+}
+
 void Favorites::LoadFavorites(pugi::xml_node txRoot)
 {
 	pugi::xml_node txFavs = txRoot.child("favorites");
 	if (!txFavs)
 		return;
-	if (!AddRoot())
-		return;
-	m_root->type = FavItem::T_GROUP;
-	m_root->title = "ALL FAVORITES";
+	MakeRoot();
+	
 	LoadFavoritesLevel(txFavs, m_root);
 }
 

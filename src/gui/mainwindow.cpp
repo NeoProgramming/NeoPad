@@ -495,7 +495,7 @@ void MainWindow::onProjectNew()
 			dlg.m_base = theSln.m_sProgDir + "/" + dlg.m_base;
         bool res = theSln.MakeProject(dlg.m_name, dlg.m_base, dlg.m_suffixes[0], dlg.m_suffixes[0]);
 		if (res)
-			theSln.addProjectToRecent(dlg.m_base);
+			theSln.addProjectToRecent( theSln.GetRoot()->GetVmbAbsPath() );
 		m_wSln->Load();
 		UpdateTitle();
 	}

@@ -219,13 +219,28 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupRef->addAction(actionRemoveFromFavs);
 }
 
-void SlnPanel::initColumns(QTreeWidget *tree)
+TREEITEM SlnPanel::CurrItem()
 {
-	QHeaderView * header = tree->header();
-	header->setSectionResizeMode(QHeaderView::Interactive);
-	tree->setColumnWidth(0, 220);
-	tree->setColumnWidth(1, 220);
-	tree->setIconSize(QSize(20, 20));
+	TREEITEM item;
+	int tab = ui.tabWidget->currentIndex();
+	if (tab == 0) {
+		item.qitem = ui.treeContents->currentItem();
+		if (item.qitem) {
+			item.fav = nullptr;
+			item.doc = item.qitem->data(0, Qt::UserRole).value<DocItem*>();
+		}
+	}
+	else if (tab == 2) {
+		item.qitem = ui.treeFavorites->currentItem();
+		if (item.qitem) {
+			item.fav = item.qitem->data(0, Qt::UserRole).value<FavItem*>();
+			if (item.fav && item.fav->ref)
+				item.doc = item.fav->ref;
+			else
+				item.doc = item.qitem->data(0, Qt::UserRole).value<DocItem*>();
+		}
+	}
+	return item;
 }
 
 DocItem* SlnPanel::currDoc()
@@ -244,6 +259,15 @@ FavItem* SlnPanel::currFav()
 		return nullptr;
 	FavItem* tpos = item->data(0, Qt::UserRole).value<FavItem*>();
 	return tpos;
+}
+
+void SlnPanel::initColumns(QTreeWidget *tree)
+{
+	QHeaderView * header = tree->header();
+	header->setSectionResizeMode(QHeaderView::Interactive);
+	tree->setColumnWidth(0, 220);
+	tree->setColumnWidth(1, 220);
+	tree->setIconSize(QSize(20, 20));
 }
 
 QAction *SlnPanel::MakeAction(QString text, QMenu *menu, void (SlnPanel::*slot)())
@@ -465,16 +489,17 @@ void SlnPanel::LoadFavCombo()
     ui.comboFavRoot->clear();
     FavItem *root = theSln.Favs.GetRoot();
     ui.comboFavRoot->addItem("ALL FAVORITES", QVariant::fromValue(root));
-    for (auto fav : root->children)
-    {
-        if(fav->ref)
-            ui.comboFavRoot->addItem(fav->ref->GetTitle(0), QVariant::fromValue(fav));
-        else
-            ui.comboFavRoot->addItem(fav->title, QVariant::fromValue(fav));
-        if(fav == curr)
-            sel = i;
-        i++;
-    }
+	if (root) {
+		for (auto fav : root->children) {
+			if (fav->ref)
+				ui.comboFavRoot->addItem(fav->ref->GetTitle(0), QVariant::fromValue(fav));
+			else
+				ui.comboFavRoot->addItem(fav->title, QVariant::fromValue(fav));
+			if (fav == curr)
+				sel = i;
+			i++;
+		}
+	}
     ui.comboFavRoot->setCurrentIndex(sel);
 }
 
@@ -592,10 +617,11 @@ void SlnPanel::UpdateItem(QTreeWidgetItem * item, DocItem* tpos)
 	item->setText(0, tpos->GetTitle(0));
 	ETreeStatus im = tpos->GetTreeStatus();
 	item->setIcon(0, GetTreeItemIcon(im));
-
-	item->setText(1, tpos->GetTitle(1));
-	ELangStatus ls = tpos->GetLangStatus(1);
-	item->setIcon(1, GetLangItemIcon(ls));
+	if (theSln.Books.BCnt() >= 2) {
+		item->setText(1, tpos->GetTitle(1));
+		ELangStatus ls = tpos->GetLangStatus(1);
+		item->setIcon(1, GetLangItemIcon(ls));
+	}
 }
 
 void SlnPanel::UpdateFavItem(QTreeWidgetItem * item)
@@ -673,28 +699,27 @@ void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
 void SlnPanel::onItemProperties()
 {
 	// rename item, document file and tree file
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-	if (!tpos) return;
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
 
 	ItemProperties dlg(this);
-	if (dlg.DoModal(tpos) == QDialog::Accepted)	{
-		theSln.RenameTitle(tpos, dlg.m_title0, 0);
-		theSln.RenameTitle(tpos, dlg.m_title1, 1);
-		if (tpos->GetId() != dlg.m_id) {
-			if (!theSln.RenameItem(tpos, dlg.m_id))
+	if (dlg.DoModal(item.doc) == QDialog::Accepted)	{
+		theSln.RenameTitle(item.doc, dlg.m_title0, 0);
+		theSln.RenameTitle(item.doc, dlg.m_title1, 1);
+		if (item.doc->GetId() != dlg.m_id) {
+			if (!theSln.RenameItem(item.doc, dlg.m_id))
 				QMessageBox::warning(this, "Rename error", FailMsg);
 		}
-        UpdateDocItem(item);
-		mw->UpdateTab(tpos);
+        UpdateDocItem(item.qitem);
+		mw->UpdateTab(item.doc);
 	}
 }
 
 void SlnPanel::onOpenInNewTab(int di)
 {
-	DocItem *item = currDoc();
-	mw->DoOpenDoc(item, di);
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
+	mw->DoOpenDoc(item.doc, di);
 }
 
 void SlnPanel::onOpenInExtBrowser(int di)
@@ -722,25 +747,23 @@ void SlnPanel::onDeleteDoc(int di)
 	int ret = QMessageBox::warning(this, AppTitle, tr("Remove doc? Source file will be untouched."),
 		QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 	if (ret == QMessageBox::Yes) {
-		QTreeWidgetItem *item = ui.treeContents->currentItem();
+		TREEITEM item = CurrItem();
+		if (item.badDoc()) return;
 		if (di < 0)
 			di = ui.treeContents->currentColumn();
-		DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-		theSln.RemoveNodeDoc(tpos, di);
-        UpdateDocItem(item);
+		theSln.RemoveNodeDoc(item.doc, di);
+        UpdateDocItem(item.qitem);
 		mw->projectModified(true);
 	}
 }
 
 void SlnPanel::onOpenVmbaseInExtTextEditor()
 {
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-	if (!tpos) return;
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
 
 	QString path;
-	path = tpos->GetVmbAbsPath();
+	path = item.doc->GetVmbAbsPath();
 	if (!QFileInfo(path).isFile())
 		QMessageBox::warning(this, AppTitle, tr("VMBase file not found"), QMessageBox::Ok);
 	else
@@ -795,11 +818,11 @@ void SlnPanel::onOpenFolder(int bi)
 
 void SlnPanel::OpenInExtProgram(const QString& program, int di)
 {
-	DocItem* tpos = currDoc();
-	if (!tpos) return;
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
 
 	QString path;
-	path = tpos->GetDocAbsPath(di);
+	path = item.doc->GetDocAbsPath(di);
 	if (!QFileInfo(path).isFile())
 		QMessageBox::warning(this, AppTitle, tr("Document %1 not found").arg(path), QMessageBox::Ok);
 	else

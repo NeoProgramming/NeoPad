@@ -168,6 +168,7 @@ DocItem * Documents::CreateRoot(const QString& name, const  QString& dir)
 		m_RootDir = dir;
 	DocItem *item = AddRoot();
 	item->id = name;
+	item->guid = QUuid::createUuid().toRfc4122().toHex();
 	NormalizeFName(item->id);
 	item->title[0] = !IsBlank(name) ? name : "noname";
 	item->rdir = "";

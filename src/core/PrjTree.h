@@ -62,12 +62,9 @@ public:
 
 	T* AddRoot()
 	{
-		T* item = new T;
-		if (!item)
-			return nullptr;
 		if (!m_root)
-			m_root = item;
-		return item;
+			m_root = new T;
+		return m_root;
 	}
 
 	T* AddCTail(T* par)

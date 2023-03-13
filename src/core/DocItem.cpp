@@ -170,6 +170,7 @@ QString DocItem::GetVmbAbsPath()
 	c += "/";
 	c += id;
 	c += ".vmbase";
+	c = QDir::cleanPath(c);
 	return c;
 }
 

@@ -8,6 +8,8 @@ class Favorites : public PrjTree<FavItem>
 public:
 	bool	m_bModify = false;
 public:
+	Favorites();
+	void	MakeRoot();
 	void	LoadFavorites(pugi::xml_node txRoot);
 	void	SaveFavorites(pugi::xml_node txRoot);
 	FavItem*AddGroup(FavItem* tpPar, FavItem* tpAfter, const QString& title);

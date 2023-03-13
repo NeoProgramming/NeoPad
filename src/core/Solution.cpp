@@ -76,19 +76,20 @@ void CSolution::addProjectToRecent(const QString &path)
 
 bool CSolution::MakeProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0)
 {
+	// add book before creating root node
+	Books.AddBook(btitle0, bsuffix0, "", "", "");
+
 	// create document
 	pugi::xml_document xdoc;
 	pugi::xml_node xRoot, xBase;
     MakeXml(xdoc, xRoot, xBase);
 
-    // ---must be:load root vmbase & project data
     if (!Documents::MakeRootBase(name, dir, xBase))
 		return false;
 
-	Books.AddBook(btitle0, bsuffix0, "", "", "");
-	Books.SaveBooksInfo(xRoot);
-	
-	return true;
+	Favs.MakeRoot();
+
+	return SaveProject(true);
 }
 
 bool CSolution::LoadProject(const QString &fpath)

@@ -18,8 +18,17 @@
 
 #include "../core/Solution.h"
 
-class QProgressBar;
 class MainWindow;
+
+struct TREEITEM {
+	QTreeWidgetItem *qitem = nullptr;
+	DocItem *doc = nullptr;
+	FavItem *fav = nullptr;
+
+	bool bad()    { return !qitem || (!doc && !fav); }
+	bool badDoc() { return !qitem || !doc; }
+	bool badFav() { return !qitem || !fav; }
+};
 
 class SlnPanel : public QWidget
 {
@@ -91,6 +100,8 @@ private slots:
     void processEvents();
 	
 private:
+	TREEITEM CurrItem();
+
     void SetCurrItemStatus(ETreeStatus status);
     void SetCurrNodeStatus(ETreeStatus status);
 
