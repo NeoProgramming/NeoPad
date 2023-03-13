@@ -29,36 +29,20 @@ public:
 
     bool eventFilter(QObject *, QEvent *);
 	
-	void UpdateDocItem(QTreeWidgetItem * item);
-	void UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos);
+    void UpdateItem(QTreeWidgetItem * item, DocItem* tpos);
+    void UpdateDocItem(QTreeWidgetItem * item);
     void UpdateDocItemByObj(DocItem* item);
-	void UpdateFavItem(QTreeWidgetItem * item);
-	void UpdateNode(QTreeWidgetItem * item);
+    void UpdateFavItem(QTreeWidgetItem * item);
+    void UpdateNode(QTreeWidgetItem * item);
+    void UpdateTree();
 
-	void UpdateDocNode(QTreeWidgetItem * node, DocItem *inode);
-	void UpdateTree();	
-
-	void SetCurrItemStatus(ETreeStatus status);
-	void SetCurrNodeStatus(ETreeStatus status);
+    void UpdateDocNode(QTreeWidgetItem * node, DocItem *inode);
 
     void Search(const QString &text);
-
-	QIcon& GetTreeItemIcon(ETreeStatus i);
-	QIcon& GetLangItemIcon(ELangStatus i);
-
     void EnsureVisible(DocItem* node);
-
     void UpdateBookTitles();
-
 	void Load();
-    void LoadDocTree();
-	void LoadDocLevel(DocItem* node, QTreeWidgetItem *parent);
-    void LoadFavTree(FavItem* root);
-	void LoadFavLevel(FavItem* node, QTreeWidgetItem *parent);
-	
-	void OpenInExtProgram(const QString& program, int di);
-	void RemoveItemDontAsk(bool del_files);	//remove item without asking
-	
+
 private slots:
     void onSearch();
 	void onFindNext();
@@ -78,20 +62,23 @@ private slots:
 	void onOpenInExtBrowser(int bi);
 	void onOpenInExtDocEditor(int bi);
 	void onOpenInExtTextEditor(int bi);
-	void onOpenFolder(int bi);
+    void onOpenVmbaseInExtTextEditor();
+    void onOpenFolder(int bi);
 	void onOpenFolderVmb();
-	void onDeleteDoc();
-	void onDeleteDoc(int bi);
-	void onOpenVmbaseInExtTextEditor();
-	void onAddChildDoc();
+
+    void onAddChildDoc();
 	void onAddSiblingDoc();
 	void onRemoveItem();
 	void onDeleteItem();
+    void onDeleteDoc();
+    void onDeleteDoc(int bi);
+
 	void onMoveItemUp();
 	void onMoveItemDown();
 	void onMoveItemParent();
 	void onMoveItemChild();
 	void onMoveItem();
+
 	void onAddToFavorites();
 	void onRemoveFromFavorites();
 	void onEditFavoriteRef();
@@ -104,14 +91,27 @@ private slots:
     void processEvents();
 	
 private:
+    void SetCurrItemStatus(ETreeStatus status);
+    void SetCurrNodeStatus(ETreeStatus status);
+
+    QIcon& GetTreeItemIcon(ETreeStatus i);
+    QIcon& GetLangItemIcon(ELangStatus i);
+
+    void LoadDocTree();
+    void LoadDocLevel(DocItem* node, QTreeWidgetItem *parent);
+    void LoadFavTree(FavItem* root);
+    void LoadFavLevel(FavItem* node, QTreeWidgetItem *parent);
     void LoadFavCombo();
+    void ReloadFavCombo(FavItem *item);
+
+    void OpenInExtProgram(const QString& program, int di);
+    void RemoveItemDontAsk(bool del_files);	//remove item without asking
 	void initColumns(QTreeWidget *tree);
 	QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);
     void showInitDoneMessage();
 	DocItem* currDoc();
 	FavItem* currFav();
-    QTreeWidgetItem *AddWorkpieceItem(QTreeWidgetItem *par, QTreeWidgetItem *after,
-                                      const QString &text = "", ETreeStatus st = ETreeStatus::TS_UNREADY);
+    QTreeWidgetItem *AddWorkpieceItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &text, ETreeStatus st);
 	void RemoveWorkpieceItem(QTreeWidgetItem *newitem, QTreeWidgetItem *olditem);
 	       
 	QAction *MakeAction(QString text, void (SlnPanel::*slot)());

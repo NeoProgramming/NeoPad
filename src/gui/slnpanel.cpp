@@ -387,7 +387,7 @@ void SlnPanel::LoadDocLevel(DocItem* tposNode, QTreeWidgetItem *parent)
 	{
 		QTreeWidgetItem *item = new QTreeWidgetItem(parent);
 		item->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
-		UpdateDocItem(item);
+        UpdateDocItem(item);
 		LoadDocLevel(tpos, item);
 	}
 }
@@ -415,7 +415,7 @@ void SlnPanel::LoadDocTree()
     root->setData(0, Qt::UserRole, QVariant::fromValue(tposRoot));
 
 	ui.treeContents->addTopLevelItem(root);
-	UpdateDocItem(root);
+    UpdateDocItem(root);
 
 	LoadDocLevel(tposRoot, root);
 	root->setExpanded(true);
@@ -449,7 +449,7 @@ void SlnPanel::LoadFavLevel(FavItem* node, QTreeWidgetItem *parent)
             LoadFavLevel(tpos, qitem);
 		}
 		else if(tpos->ref) {
-            UpdateDocItem(qitem, tpos->ref);
+            UpdateItem(qitem, tpos->ref);
             LoadDocLevel(tpos->ref, qitem);
 		}
 		else {
@@ -460,6 +460,8 @@ void SlnPanel::LoadFavLevel(FavItem* node, QTreeWidgetItem *parent)
 
 void SlnPanel::LoadFavCombo()
 {
+    int sel = 0, i = 1;
+    FavItem *curr = ui.comboFavRoot->currentData().value<FavItem*>();
     ui.comboFavRoot->clear();
     FavItem *root = theSln.Favs.GetRoot();
     ui.comboFavRoot->addItem("ALL FAVORITES", QVariant::fromValue(root));
@@ -469,7 +471,18 @@ void SlnPanel::LoadFavCombo()
             ui.comboFavRoot->addItem(fav->ref->GetTitle(0), QVariant::fromValue(fav));
         else
             ui.comboFavRoot->addItem(fav->title, QVariant::fromValue(fav));
+        if(fav == curr)
+            sel = i;
+        i++;
     }
+    ui.comboFavRoot->setCurrentIndex(sel);
+}
+
+void SlnPanel::ReloadFavCombo(FavItem *item)
+{
+    // for root and top-level items
+    if(!item->parent || !item->parent->parent)
+        LoadFavCombo();
 }
 
 void SlnPanel::onDocContextMenu(const QPoint &pos)
@@ -571,10 +584,10 @@ void SlnPanel::UpdateDocItem(QTreeWidgetItem * item)
 {
 	// set the text and picture of the node depending on its state and attributes
 	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-	UpdateDocItem(item, tpos);
+    UpdateItem(item, tpos);
 }
 
-void SlnPanel::UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos)
+void SlnPanel::UpdateItem(QTreeWidgetItem * item, DocItem* tpos)
 {
 	item->setText(0, tpos->GetTitle(0));
 	ETreeStatus im = tpos->GetTreeStatus();
@@ -600,7 +613,7 @@ void SlnPanel::UpdateFavItem(QTreeWidgetItem * item)
 			item->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_UNKNOWN));
 		}
 		else {
-			UpdateDocItem(item, tpos->ref);
+            UpdateItem(item, tpos->ref);
 		}
 	}
 }
@@ -613,12 +626,12 @@ void SlnPanel::UpdateDocNode(QTreeWidgetItem * node, DocItem *inode)
 void SlnPanel::UpdateNode(QTreeWidgetItem * item)
 {
 	// recursively update all pictures of the whole tree
-	UpdateDocItem(item);
+    UpdateDocItem(item);
 	int n = item->childCount();
 	for (int i = 0; i < n; i++)
 	{
 		QTreeWidgetItem *child = item->child(i);
-		UpdateNode(child);
+        UpdateNode(child);
 	}
 }
 
@@ -627,12 +640,12 @@ void SlnPanel::UpdateDocItemByObj(DocItem* pos)
     // for update language status from 'SaveHtml' function
     QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), pos);
 	if (item)
-		UpdateDocItem(item);
+        UpdateDocItem(item);
 }
 
 void SlnPanel::UpdateTree()
 {
-	UpdateNode(ui.treeContents->topLevelItem(0));
+    UpdateNode(ui.treeContents->topLevelItem(0));
 }
 
 void SlnPanel::SetCurrItemStatus(ETreeStatus status)
@@ -643,7 +656,7 @@ void SlnPanel::SetCurrItemStatus(ETreeStatus status)
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, false);
-	UpdateDocItem(item);
+    UpdateDocItem(item);
 }
 
 void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
@@ -654,7 +667,7 @@ void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, true);
-	UpdateNode(item);
+    UpdateNode(item);
 }
 
 void SlnPanel::onItemProperties()
@@ -673,7 +686,7 @@ void SlnPanel::onItemProperties()
 			if (!theSln.RenameItem(tpos, dlg.m_id))
 				QMessageBox::warning(this, "Rename error", FailMsg);
 		}
-		UpdateDocItem(item);
+        UpdateDocItem(item);
 		mw->UpdateTab(tpos);
 	}
 }
@@ -714,7 +727,7 @@ void SlnPanel::onDeleteDoc(int di)
 			di = ui.treeContents->currentColumn();
 		DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 		theSln.RemoveNodeDoc(tpos, di);
-		UpdateDocItem(item);
+        UpdateDocItem(item);
 		mw->projectModified(true);
 	}
 }
@@ -835,7 +848,7 @@ void SlnPanel::onAddChildDoc()
 		DocItem* tpNew = theSln.AddItem(tpPar, nullptr, dlg.m_title, dlg.m_id);
 		if (tpNew) {
 			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
-			UpdateDocItem(newitem);
+            UpdateDocItem(newitem);
 			if (dlg.m_open) {
 				mw->DoOpenDoc(tpNew, 0);
 			}
@@ -873,7 +886,7 @@ void SlnPanel::onAddSiblingDoc()
 		DocItem* tpNew = theSln.AddItem(tpPar, tpAfter, dlg.m_title, dlg.m_id);
 		if (tpNew) {
 			newitem->setData(0, Qt::UserRole, QVariant::fromValue(tpNew));
-			UpdateDocItem(newitem);
+            UpdateDocItem(newitem);
 			ui.treeContents->setCurrentItem(newitem);
 			if(dlg.m_open) {
 				mw->DoOpenDoc(tpNew, 0);
@@ -1102,10 +1115,11 @@ void SlnPanel::onAddToFavorites()
     FavItem* item = theSln.Favs.AddRef(root, nullptr, doc);
     if (item) {
         QTreeWidgetItem *qpar = ui.treeFavorites->topLevelItem(0);
-        QTreeWidgetItem *qnewitem = AddWorkpieceItem(qpar, nullptr);
+        QTreeWidgetItem *qnewitem = AddWorkpieceItem(qpar, nullptr, "", ETreeStatus::TS_UNREADY);
         qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
         UpdateFavItem(qnewitem);
         LoadDocLevel(item->ref, qnewitem);
+        ReloadFavCombo(item);
         return; // ok
     }
     else {
@@ -1119,11 +1133,15 @@ void SlnPanel::onRemoveFromFavorites()
     if (!qitem) return;
     FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
     if (!sel) return;
+    bool rc = !sel->parent || !sel->parent->parent;
 	int ret = QMessageBox::question(this, AppTitle, tr("Remove favorite reference? Document will be untouched."),
 		QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 	if (ret == QMessageBox::Yes) {
-        if(theSln.Favs.RemoveNode(sel))
+        if(theSln.Favs.RemoveNode(sel)) {
             RemoveTreeNode(qitem);
+            if(rc)
+                LoadFavCombo();
+        }
 	}
 }
 
@@ -1138,6 +1156,7 @@ void SlnPanel::onEditFavoriteRef()
         theSln.Favs.ChangeRef(sel, dlg.m_posSelected);
         UpdateFavItem(qitem);
         LoadDocLevel(sel->ref, qitem);
+        ReloadFavCombo(sel);
 	}
 }
 
@@ -1161,7 +1180,8 @@ void SlnPanel::onAddSiblingGroup()
 		FavItem* item = theSln.Favs.AddGroup(par, sel, s);
 		if (item) {
 			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
-			UpdateFavItem(qnewitem);
+            UpdateFavItem(qnewitem);
+            ReloadFavCombo(item);
 			return; // ok
 		}
 		else {
@@ -1190,7 +1210,8 @@ void SlnPanel::onAddChildGroup()
 		FavItem* item = theSln.Favs.AddGroup(sel, nullptr, s);
 		if (item) {
 			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
-			UpdateFavItem(qnewitem);
+            UpdateFavItem(qnewitem);
+            ReloadFavCombo(item);
 			return; // ok
 		}
 		else {
@@ -1223,8 +1244,9 @@ void SlnPanel::onAddSiblingFav()
 		FavItem* item = theSln.Favs.AddRef(par, sel, dlg.m_posSelected);
 		if (item) {
 			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
-			UpdateFavItem(qnewitem);
+            UpdateFavItem(qnewitem);
 			LoadDocLevel(item->ref, qnewitem);
+            ReloadFavCombo(item);
 			return; // ok
 		}
 		else {
@@ -1253,8 +1275,10 @@ void SlnPanel::onAddChildFav()
 		FavItem* item = theSln.Favs.AddRef(sel, nullptr, dlg.m_posSelected);
 		if (item) {
 			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
-			UpdateFavItem(qnewitem);
+            UpdateFavItem(qnewitem);
 			LoadDocLevel(item->ref, qnewitem);
+            ReloadFavCombo(item);
+            qnewitem->setSelected(true);
 			return; // ok
 		}
 		else {
@@ -1269,10 +1293,15 @@ void SlnPanel::onAddChildFav()
 
 void SlnPanel::onEditGroup()
 {
-	FavItem* fav = currFav();
-	if (!fav) return;
-	QString s = QInputDialog::getText(this, "Rename group", "Change group name", QLineEdit::Normal, fav->title);
+    QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+    if (!qitem) return;
+    FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
+    if (!sel) return;
+    QString s = QInputDialog::getText(this, "Rename group", "Change group name", QLineEdit::Normal, sel->title);
 	if (!s.isEmpty()) {
-        theSln.Favs.ChangeTitle(fav, s);
+        theSln.Favs.ChangeTitle(sel, s);
+        ReloadFavCombo(sel);
+        UpdateFavItem(qitem);
+        //qitem->setSelected(true);
 	}
 }

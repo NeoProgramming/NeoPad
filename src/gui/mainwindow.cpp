@@ -523,7 +523,7 @@ void MainWindow::onProjectSaveAll()
 		}
 		++i;
 	}
-	getSln()->UpdateTree();
+    getSln()->UpdateTree();
 }
 
 void MainWindow::onProjectProperties()
