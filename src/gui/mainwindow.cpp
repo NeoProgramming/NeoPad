@@ -445,7 +445,7 @@ void MainWindow::onProjectEncrypt()
 				theSln.EncryptDocs(theSln.GetRoot(), "", dlg.m_psw1);
 				// xmls
 				theSln.m_Password = dlg.m_psw1;
-				theSln.SaveProject(true);
+                theSln.SaveProject(true);
 			}
 		//}
 	}
@@ -458,7 +458,7 @@ void MainWindow::onProjectEncrypt()
 				theSln.EncryptDocs(theSln.GetRoot(), theSln.m_Password, dlg.m_psw2);
 				// xmls
 				theSln.m_Password = dlg.m_psw2;
-				theSln.SaveProject(true);
+                theSln.SaveProject(true);
 			}
 		//}
 	}
@@ -493,7 +493,7 @@ void MainWindow::onProjectNew()
 	{
 		if(!QDir::isAbsolutePath(dlg.m_base))
 			dlg.m_base = theSln.m_sProgDir + "/" + dlg.m_base;
-		bool res = theSln.CreateProject(dlg.m_name, dlg.m_base, dlg.m_suffixes[0], dlg.m_suffixes[0]);
+        bool res = theSln.MakeProject(dlg.m_name, dlg.m_base, dlg.m_suffixes[0], dlg.m_suffixes[0]);
 		if (res)
 			theSln.addProjectToRecent(dlg.m_base);
 		m_wSln->Load();
@@ -504,7 +504,7 @@ void MainWindow::onProjectNew()
 void MainWindow::onProjectSave()
 {
 	if(QMessageBox::Yes == QMessageBox::question(this, "Save all vmbases?", "Save all vmbases?")) {
-		theSln.SaveProject(true);
+        theSln.SaveProject(true);
 	}
 }
 
@@ -634,7 +634,6 @@ qreal MainWindow::UpdateZoom(int percent)
 bool MainWindow::DoSaveAll()
 {
 	SaveAllDlg dlg(this);	
-
 	theSln.MakeUnsavedList(dlg.mpl);
 	dlg.wl = m_wArea->subWindowList();
 	if(dlg.wl.count() <= 0)
@@ -668,7 +667,7 @@ bool MainWindow::DoPrjOpen(const QString& fpath)
 		theSln.m_Password = "";
 	}
 
-	bool res = theSln.LoadProject(fpath);
+    bool res = theSln.LoadProject(fpath);
 	m_wSln->Load();
 	if(!res) {
 		QMessageBox::warning(this, "Error", 

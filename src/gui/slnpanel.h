@@ -31,13 +31,12 @@ public:
 	
 	void UpdateDocItem(QTreeWidgetItem * item);
 	void UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos);
+    void UpdateDocItemByObj(DocItem* item);
 	void UpdateFavItem(QTreeWidgetItem * item);
 	void UpdateNode(QTreeWidgetItem * item);
 
 	void UpdateDocNode(QTreeWidgetItem * node, DocItem *inode);
-
-	void UpdateTree();
-	void UpdateDocItem(DocItem* item);
+	void UpdateTree();	
 
 	void SetCurrItemStatus(ETreeStatus status);
 	void SetCurrNodeStatus(ETreeStatus status);
@@ -54,7 +53,7 @@ public:
 	void Load();
     void LoadDocTree();
 	void LoadDocLevel(DocItem* node, QTreeWidgetItem *parent);
-	void LoadFavTree();
+    void LoadFavTree(FavItem* root);
 	void LoadFavLevel(FavItem* node, QTreeWidgetItem *parent);
 	
 	void OpenInExtProgram(const QString& program, int di);
@@ -71,6 +70,7 @@ private slots:
 	void onFavDoubleClicked(QTreeWidgetItem* item, int column);
 	void onDocContextMenu(const QPoint &pos);
 	void onFavContextMenu(const QPoint &pos);
+    void onFavRootChanged(int index);
 	int  onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m);
 
 	void onItemProperties();
@@ -104,12 +104,14 @@ private slots:
     void processEvents();
 	
 private:
+    void LoadFavCombo();
 	void initColumns(QTreeWidget *tree);
 	QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);
     void showInitDoneMessage();
 	DocItem* currDoc();
 	FavItem* currFav();
-	QTreeWidgetItem *AddWorkpieceItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &text, ETreeStatus st);
+    QTreeWidgetItem *AddWorkpieceItem(QTreeWidgetItem *par, QTreeWidgetItem *after,
+                                      const QString &text = "", ETreeStatus st = ETreeStatus::TS_UNREADY);
 	void RemoveWorkpieceItem(QTreeWidgetItem *newitem, QTreeWidgetItem *olditem);
 	       
 	QAction *MakeAction(QString text, void (SlnPanel::*slot)());
@@ -128,6 +130,7 @@ private:
 	bool initDoneMsgShown;
 
 	QMenu *menuPopupDoc;
+    QMenu *menuPopupAllFav;
 	QMenu *menuPopupGroup;
 	QMenu *menuPopupRef;
 	QMenu *menuPopupDangling;

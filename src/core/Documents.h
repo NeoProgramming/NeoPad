@@ -18,14 +18,19 @@ public:
 	QString m_Password;
 	NeopadCallback *m_pCB = nullptr;
 
+public:
 	// work with the project
-	bool	CreateProject(const QString &name, const QString& dir, pugi::xml_node xBase);
-	bool	LoadProject(const QString &fpath, pugi::xml_node xRoot);
-	bool	SaveProject(bool recursive, pugi::xml_node xBase);
+    bool	LoadSubBase(const QString &id, DocItem* tpParNode);
 	bool	SaveSubBase(DocItem* tpPar, bool recursive);
 
+    bool	LoadRootBase(const QString &fpath, pugi::xml_node xRoot);
+    bool	SaveRootBase(bool recursive, pugi::xml_node xBase);
+    bool	MakeRootBase(const QString &name, const QString& dir, pugi::xml_node xBase);
+
+    // load/save html documents
 	bool    LoadDoc(DocItem* item, int bi, QString &content);
 	bool    SaveDoc(DocItem* item, int bi, const QString &content);
+    bool	MakeDoc(DocItem* tpItem, int bi);
 
 	DocItem*AddItem(DocItem* tpPar, DocItem* tpAfter, const QString& title, const QString& id);
 	bool	RenameItem(DocItem* tpos, const QString & id);
@@ -34,9 +39,7 @@ public:
 
 	bool	RemoveNode(DocItem* tpItem, bool del_files);
 	void    RemoveNodeFiles(DocItem* tpItem);
-	void	RemoveNodeDoc(DocItem* tpItem, int bi);
-
-	bool	MakeDoc(DocItem* tpItem, int bi);
+	void	RemoveNodeDoc(DocItem* tpItem, int bi);	
 
 	bool    Move(DocItem* tpItem, DocItem* tpNewPar, DocItem* tpAfter);
 	bool    MoveUp(DocItem* tpItem);
@@ -47,7 +50,7 @@ public:
 	void    SaveItem(DocItem* tpItem, int bi);
 	void    MakeUnsavedList(std::list<DocItem*> &mpl);
 	void	GenContents(int bi, const QString &fpath, const QString &base);
-	QString GetCssAbsPath(int bi);
+
 	void    EncryptDocs(DocItem* tposParent, const QString &oldPsw, const QString &newPsw);
 	void    TransformDocs(int bi);
 	bool	TransformFile(DocItem* tpos, int bi);
@@ -56,33 +59,20 @@ public:
 	void    Search(const QString &text, unsigned int scope, DocItem* root, std::list<DocItem*> &results);
 	bool    SearchInFile(DocItem* pos, const QString &text, unsigned int scope);
 
-	QString GetBookDir(int bi);
-	QString GetPrjTitle();
-
 	void    HandleChanges(DocItem* tpItem, bool recursive);
 	void    HandleChanges(DocItem* tpItem1, DocItem* tpItem2);
 	bool    MoveFiles(DocItem* tpItem, DocItem* tpNewPar);
-	void	MakeUnsavedListR(std::list<DocItem*> &mpl, DocItem* mtNode);
+    void	MakeUnsavedLevel(DocItem* mtNode, std::list<DocItem*> &mpl);
 	void    GenContentsLevel(DocItem* node, int bi, QFile &file, const QString &base);
 protected:
 	bool    IsFNamesAvailable(DocItem* pos, const QString &id);
+    DocItem*GetAncestorWithFile(DocItem* item, bool include_this = false);
+    void	UpdateRelDirs(DocItem* tpNode);
+    DocItem*CreateRoot(const QString& name, const QString& dir);
 
-	// todo: move to solution?
-	bool    LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot);
-	void	MakeXmlDoc(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase);
-	bool	SaveXmlDoc(const QString &path, const pugi::xml_document &xdoc);
-
-	DocItem*   GetAncestorWithFile(DocItem* item, bool include_this = false);
-
-	void	UpdateBaseDirs(DocItem* tpNode);
-	DocItem* CreateRoot(const QString& name, const QString& dir);
-
-	bool	LoadSubTag(pugi::xml_node txPar, DocItem* tpPar);
-	bool	LoadSubBase(const QString &id, DocItem* tpParNode);
-	void	LoadItemData(pugi::xml_node txItem, DocItem *item);
+    bool	LoadSubTag(pugi::xml_node txPar, DocItem* tpPar);
+    void	LoadItemData(pugi::xml_node txItem, DocItem *item);
 
 	void	SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool recursive);
 	void    SaveItemData(pugi::xml_node txItem, DocItem *item);
-
-
 };

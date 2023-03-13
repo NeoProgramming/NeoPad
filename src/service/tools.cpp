@@ -9,6 +9,7 @@
 #include <QTextCodec>
 #include <QMessageBox>
 
+
 extern QTextCodec *codecUtf8;
 
 bool IsBlank(const QString &s)
@@ -144,4 +145,19 @@ QString GetRelPath(const QString &path, const QString &base, bool base_is_file)
 QString GetRelDir(const QString &path, const QString &base, bool base_is_file)
 {
 	return QFileInfo(GetRelPath(path, base, base_is_file)).dir().path();
+}
+
+void RemoveTreeNode(QTreeWidgetItem *item)
+{
+    QTreeWidgetItem *parent = item->parent();
+    int index;
+    if (parent) {
+        index = parent->indexOfChild(item);
+        delete parent->takeChild(index);
+    }
+    else {
+        QTreeWidget *tree = item->treeWidget();
+        index = tree->indexOfTopLevelItem(item);
+        delete tree->takeTopLevelItem(index);
+    }
 }

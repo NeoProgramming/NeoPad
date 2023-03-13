@@ -33,9 +33,21 @@ public:
 	void	saveSettings();
 	void	addProjectToRecent(const QString &path);
 
-	bool    CreateProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0);
-	bool	LoadProject(const QString &fpath);
-	bool	SaveProject(bool recursive);
+    bool    MakeProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0);
+    bool	LoadProject(const QString &fpath);
+    bool	SaveProject(bool recursive);
+
+    void    SaveProjectData(pugi::xml_node xRoot);
+
+    // xml helpers, including base sructure and encryption/decryption
+    bool    LoadXml(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot);
+    void	MakeXml(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase);
+    bool	SaveXml(const QString &path, const pugi::xml_document &xdoc);
+
+    // helpers
+    QString GetPrjTitle();
+    QString GetBookDir(int bi);
+    QString GetCssAbsPath(int bi);
 protected:
 };
 

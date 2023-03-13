@@ -10,7 +10,6 @@ struct FavItem : public BaseItem<FavItem>
 		T_GROUP,
 		T_REF
 	} type;	
-public:
-	void SetTitle(const QString &t);
+
 };
 Q_DECLARE_METATYPE(FavItem*)

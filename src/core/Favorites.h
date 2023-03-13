@@ -13,9 +13,12 @@ public:
 	FavItem*AddGroup(FavItem* tpPar, FavItem* tpAfter, const QString& title);
 	FavItem*AddRef(FavItem* tpPar, FavItem* tpAfter, DocItem *ref);
 	bool	RemoveNode(FavItem* tpItem);
-	void    RenameTitle(FavItem* item, const QString & title);
+    void    ChangeTitle(FavItem* item, const QString & title);
+    void    ChangeRef(FavItem* item, DocItem *ref);
 protected:
 	void	LoadFavoritesLevel(pugi::xml_node txNode, FavItem *node);
 	void    SaveFavoritesLevel(pugi::xml_node txNode, FavItem *node);
+
+    void    HandleChanges();
 };
 

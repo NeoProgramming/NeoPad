@@ -1,7 +1,3 @@
 #include "FavItem.h"
+#include "Solution.h"
 
-void FavItem::SetTitle(const QString &t)
-{
-	title = t;
-
-}

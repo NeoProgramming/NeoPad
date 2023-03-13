@@ -1,6 +1,8 @@
+#include <QTextCodec>
+#include <QDebug>
 #include "Favorites.h"
 #include "Solution.h"
-#include <QTextCodec>
+#include "ini.h"
 
 extern QTextCodec *codecUtf8;
 
@@ -69,6 +71,7 @@ FavItem* Favorites::AddGroup(FavItem* tpPar, FavItem* tpAfter, const QString& ti
 	FavItem* item = tpAfter ? AddAfter(tpAfter) : AddCTail(tpPar);
 	item->type = FavItem::T_GROUP;
 	item->title = title;
+    HandleChanges();
 	return item;
 }
 
@@ -77,6 +80,8 @@ FavItem* Favorites::AddRef(FavItem* tpPar, FavItem* tpAfter, DocItem *ref)
 	FavItem* item = tpAfter ? AddAfter(tpAfter) : AddCTail(tpPar);
 	item->type = FavItem::T_REF;
 	item->ref = ref;
+    item->title = ref->guid;
+    HandleChanges();
 	return item;
 }
 
@@ -86,21 +91,29 @@ bool Favorites::RemoveNode(FavItem* tpItem)
 	if (!tpPar)
 		return false;
 	PrjTree::RemoveNode(tpItem);
+    HandleChanges();
 	return true;
 }
 
-void Favorites::RenameTitle(FavItem* item, const QString & title)
+void Favorites::ChangeTitle(FavItem* item, const QString & title)
 {
 	item->title = title;
-	//HandleChanges(item);
+    HandleChanges();
 }
-/*
-void Favorites::HandleChanges(FavItem* tpItem)
+
+void Favorites::ChangeRef(FavItem* item, DocItem *ref)
 {
-	tpItem->p_modify = 1;
+    item->ref = ref;
+    item->title = ref->guid;
+    HandleChanges();
+}
+
+void Favorites::HandleChanges()
+{
+    theSln.Favs.m_bModify = true;
 	if (INI::AutoSavePages)
 	{
-		tpItem = GetAncestorWithFile(tpItem, true);
-		SaveSubBase(tpItem, recursive);
+        qDebug() << "auto save";
+        theSln.SaveSubBase(theSln.GetRoot(), false);
 	}
-}*/
+}

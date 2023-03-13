@@ -93,7 +93,7 @@ protected:
     
 private:
 	WebEditView *GetActiveMdiChild();
-	void MainWindow::onChild(void (WebEditView::*pHandler)());
+    void onChild(void (WebEditView::*pHandler)());
 	void GenContents(int bi);
 	void EditCss(int bi);
 	bool DoSaveAll();

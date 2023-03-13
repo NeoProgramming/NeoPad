@@ -87,7 +87,7 @@ public:
 		if (!pos || !pos->parent)
 			return nullptr;
 		
-		std::list<T*>::iterator i = std::find(pos->parent->children.begin(), pos->parent->children.end(), pos);
+        typename std::list<T*>::iterator i = std::find(pos->parent->children.begin(), pos->parent->children.end(), pos);
 		if (i == pos->parent->children.end())
 			return nullptr;
 		++i;

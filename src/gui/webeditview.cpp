@@ -141,8 +141,10 @@ bool WebEditView::SaveHtml(bool update_tree)
 	if (success) 
 		setWindowModified(false);
 	
-	if(update_tree)
-		m_wMain->getSln()->UpdateDocItem(m_Item);
+    // update language status
+    if(update_tree) {
+        m_wMain->getSln()->UpdateDocItemByObj(m_Item);
+    }
 	return success;
 }
 

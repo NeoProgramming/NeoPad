@@ -2,6 +2,7 @@
 #include <string>
 #include <QString>
 #include <QToolBar>
+#include <QTreeWidgetItem>
 
 bool IsBlank(const QString &s);
 void AddSlash(QString &path);
@@ -23,3 +24,5 @@ void SetAutoRaiseToolBar( QToolBar *toolbar, bool value );
 
 QString GetRelPath(const QString &path, const QString &base, bool base_is_file);
 QString GetRelDir(const QString &path, const QString &base, bool base_is_file);
+
+void RemoveTreeNode(QTreeWidgetItem *item);

@@ -74,15 +74,15 @@ void CSolution::addProjectToRecent(const QString &path)
 	INI::CurrProjectPath = U8(path);
 }
 
-bool CSolution::CreateProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0)
+bool CSolution::MakeProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0)
 {
 	// create document
 	pugi::xml_document xdoc;
 	pugi::xml_node xRoot, xBase;
-	MakeXmlDoc(xdoc, xRoot, xBase);
+    MakeXml(xdoc, xRoot, xBase);
 
-	// 
-	if (!Documents::CreateProject(name, dir, xBase))
+    // ---must be:load root vmbase & project data
+    if (!Documents::MakeRootBase(name, dir, xBase))
 		return false;
 
 	Books.AddBook(btitle0, bsuffix0, "", "", "");
@@ -101,21 +101,21 @@ bool CSolution::LoadProject(const QString &fpath)
 	// load xml
 	pugi::xml_document xdoc;
 	pugi::xml_node xRoot;
-	if (!LoadXmlDoc(fpath, xdoc, xRoot))
+    if (!LoadXml(fpath, xdoc, xRoot))
 		return false;
 
-	// load books info - before main tree
+    // load books info - before main tree!
 	if (!Books.LoadBooksInfo(xRoot))
 		return Fail("No bases found"), false;
 
 	// load documents tree
-	if (!Documents::LoadProject(fpath, xRoot))
+    if (!Documents::LoadRootBase(fpath, xRoot))
 		return false;
 	
-	// load favorites (after main tree)
+    // load favorites - after main tree!
 	Favs.LoadFavorites(xRoot);
 
-	// load paths from attributes (deprecated)
+    // load paths from attributes (deprecated, refactor to Settings.SaveSettings(xRoot) )
 	m_ImageDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("images").as_string()));
 	m_Snippets.m_SnippDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("snippets").as_string()));
 	m_Snippets.LoadSnippets();
@@ -126,36 +126,142 @@ bool CSolution::LoadProject(const QString &fpath)
 	return true;
 }
 
+
+void CSolution::SaveProjectData(pugi::xml_node xRoot)
+{
+    // needs for save project data from Documents.SaveSubBase
+
+    // save books info
+    Books.SaveBooksInfo(xRoot);
+
+    // save paths as attributes ( deprecated, refactor to Settings.SaveSettings(xRoot) )
+    set_attr(xRoot, "images").set_value(codecUtf8->fromUnicode(GetRelPath(m_ImageDir, m_RootDir, false)).constData());
+    set_attr(xRoot, "snippets").set_value(codecUtf8->fromUnicode(GetRelPath(m_Snippets.m_SnippDir, m_RootDir, false)).constData());
+
+    // save favorites
+    Favs.SaveFavorites(xRoot);
+}
+
 bool CSolution::SaveProject(bool recursive)
 {
 	// create document
 	pugi::xml_document xdoc;
 	pugi::xml_node xRoot, xBase;
-	MakeXmlDoc(xdoc, xRoot, xBase);
+
+    MakeXml(xdoc, xRoot, xBase);
 
 	// save vmb content
 	if (!xBase)
 		return false;
 
 	// save documents tree
-	Documents::SaveProject(recursive, xBase);
+    Documents::SaveRootBase(recursive, xBase);
 
-	// save books info
-	Books.SaveBooksInfo(xRoot);
-
-	// save paths as attributes (deprecated)
-	set_attr(xRoot, "images").set_value(codecUtf8->fromUnicode(GetRelPath(m_ImageDir, m_RootDir, false)).constData());
-	set_attr(xRoot, "snippets").set_value(codecUtf8->fromUnicode(GetRelPath(m_Snippets.m_SnippDir, m_RootDir, false)).constData());
-
-	// save favorites
-	Favs.SaveFavorites(xRoot);
+    // save project-specific data
+    SaveProjectData(xRoot);
 
 	// write file
 	QString path = m_root->GetVmbAbsPath();
-	if (SaveXmlDoc(path, xdoc)) {
+    if (SaveXml(path, xdoc)) {
 		m_root->ChangeModify(false, true);
 		return true;
 	}
 	return false;
 }
 
+bool CSolution::LoadXml(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot)
+{
+    // psw enc
+    //  0   0  load_file
+    //  0   1  error
+    //  1   0  load_file
+    //  1   1  decrypt
+
+    if (isEncrypted(fpath)) {
+        if (m_Password.isEmpty()) {
+            return Fail("Password not set"), false;
+        }
+        else {
+            QByteArray data;
+            if (!decryptFile(fpath, m_Password, data))
+                return Fail("decryptFile() error"), false;
+            if (!xdoc.load_string(data.constData()))
+                return Fail("pugixml load_string() error"), false;
+        }
+    }
+    else {
+        if (!xdoc.load_file(codecUtf8->fromUnicode(fpath)))
+            return Fail("pugixml load_file() error"), false;
+    }
+
+
+    // vmbase
+    xroot = xdoc.first_child();
+    if (!xroot)
+        return Fail("root not found"), false;
+    return true;
+}
+
+void CSolution::MakeXml(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase)
+{
+    pugi::xml_node decl = xdoc.prepend_child(pugi::node_declaration);
+    decl.append_attribute("version").set_value("1.0");
+    decl.append_attribute("encoding").set_value("utf-8");
+
+    // adding an enclosing <vmbase> element (root of xml)
+    xroot = xdoc.append_child("vmbase");
+    set_attr(xroot, "version").set_value("1.0");
+
+    // add the main <node> element
+    xbase = xroot.append_child(MBA::node);
+}
+
+
+bool CSolution::SaveXml(const QString &path, const pugi::xml_document &xdoc)
+{
+    if (m_Password.isEmpty()) {
+        if (xdoc.save_file(codecUtf8->fromUnicode(path))) {
+        //   m_bModify = true;	//???
+            return true;
+        }
+    }
+    else {
+        QByteArray plain;
+        save_blob(xdoc, plain);
+        if (encryptFile(path, m_Password, plain)) {
+        //    m_bModify = true;	//???
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+QString CSolution::GetPrjTitle()
+{
+    DocItem* root = GetRoot();
+    if (!root)
+        return "";
+    if (m_Password.isEmpty())
+        return root->title[0];
+    return root->title[0] + " (ENCRYPTED)";
+}
+
+QString CSolution::GetBookDir(int bi)
+{
+    //   if (bi < 0 || bi >= BCNT)
+    //       return m_RootDir + "/" + bdir;
+    //   if(m_Bases[bi].rpath.isEmpty())
+    //       return m_RootDir + "/" + bdir;
+    //   return     m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
+
+    return theSln.m_RootDir + "/" + theSln.Books.books[bi].rpath;
+}
+
+QString CSolution::GetCssAbsPath(int bi)
+{
+    if (QFileInfo(Books.books[bi].csspath).isAbsolute())
+        return Books.books[bi].csspath;
+    return GetBookDir(bi) + "/" + Books.books[bi].csspath;
+}

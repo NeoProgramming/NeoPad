@@ -51,7 +51,7 @@ const char* Documents::GetTreeStatus(ETreeStatus status)
 	return csStatusNames[(int)status];
 }
 
-bool Documents::SaveProject(bool recursive, pugi::xml_node xBase)
+bool Documents::SaveRootBase(bool recursive, pugi::xml_node xBase)
 {
 	// save project system to disk
 	if (!m_root)
@@ -64,7 +64,7 @@ bool Documents::SaveProject(bool recursive, pugi::xml_node xBase)
 	return false;
 }
 
-bool Documents::CreateProject(const QString& name, const QString& dir, pugi::xml_node xBase)
+bool Documents::MakeRootBase(const QString& name, const QString& dir, pugi::xml_node xBase)
 {
 	// create a new empty project with the given name at the given path
 	RemoveAll();
@@ -74,7 +74,10 @@ bool Documents::CreateProject(const QString& name, const QString& dir, pugi::xml
 	if (!MakeDoc(m_root, 0))
 		return false;
 
-	SaveProject(true, xBase);
+    // save item data
+    SaveItemData(xBase, m_root);
+    SaveSubTag(xBase, m_root, true);
+
 	return true;
 }
 
@@ -100,64 +103,32 @@ void Documents::SaveItemData(pugi::xml_node txItem, DocItem *item)
 		set_attr(txItem, "s").set_value(GetTreeStatus(item->status));
 }
 
-void Documents::MakeXmlDoc(pugi::xml_document &xdoc, pugi::xml_node &xroot, pugi::xml_node &xbase)
-{
-	pugi::xml_node decl = xdoc.prepend_child(pugi::node_declaration);
-	decl.append_attribute("version").set_value("1.0");
-	decl.append_attribute("encoding").set_value("utf-8");
-
-	// adding an enclosing <vmbase> element (root of xml)
-	xroot = xdoc.append_child("vmbase");
-	set_attr(xroot, "version").set_value("1.0");
-
-	// add the main <node> element
-	xbase = xroot.append_child(MBA::node);
-}
 
 
-bool Documents::SaveXmlDoc(const QString &path, const pugi::xml_document &xdoc)
-{
-	if (m_Password.isEmpty()) {
-		if (xdoc.save_file(codecUtf8->fromUnicode(path))) {
-			m_bModify = true;	//???
-			return true;
-		}
-	}
-	else {
-		QByteArray plain;
-		save_blob(xdoc, plain);
-		if (encryptFile(path, m_Password, plain)) {
-			m_bModify = true;	//???
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool Documents::SaveSubBase(DocItem* tpPar, bool recursive)
+bool Documents::SaveSubBase(DocItem* node, bool recursive)
 {
 	// save (sub) project
 	pugi::xml_document xdoc;
 	pugi::xml_node xroot, xbase;
 
 	// prepare document 
-	MakeXmlDoc(xdoc, xroot, xbase);
+    theSln.MakeXml(xdoc, xroot, xbase);
 
-//	// if it is a root, additional tags need to be saved
-//	if (tpPar == m_root)
-//		return SaveProject(recursive);
+    // if it is a root, additional tags need to be saved!
+    // otherwise, all BooksInfo and Favorites will be lost!
+    if (node == m_root)
+        theSln.SaveProjectData(xroot);
 
 	// save item data
-	SaveItemData(xbase, tpPar);
+    SaveItemData(xbase, node);
 
 	// recursively save the entire tree
-	SaveSubTag(xbase, tpPar, recursive);
+    SaveSubTag(xbase, node, recursive);
 
 	// save
-	QString path = tpPar->GetVmbAbsPath();
-	if (SaveXmlDoc(path, xdoc)) {
-		tpPar->ChangeModify(false, true);
+    QString path = node->GetVmbAbsPath();
+    if (theSln.SaveXml(path, xdoc)) {
+        node->ChangeModify(false, recursive);
 		return true;
 	}
 	return false;
@@ -230,40 +201,8 @@ void Documents::LoadItemData(pugi::xml_node txElem, DocItem *item)
 	item->status = GetTreeStatus(txElem.attribute(MBA::status).as_string());
 }
 
-bool Documents::LoadXmlDoc(const QString &fpath, pugi::xml_document &xdoc, pugi::xml_node &xroot)
-{
-	// psw enc 
-	//  0   0  load_file
-	//  0   1  error
-	//  1   0  load_file
-	//  1   1  decrypt
 
-	if (isEncrypted(fpath)) {
-		if (m_Password.isEmpty()) {
-			return Fail("Password not set"), false;
-		}
-		else {
-			QByteArray data;
-			if (!decryptFile(fpath, m_Password, data))
-				return Fail("decryptFile() error"), false;
-			if (!xdoc.load_string(data.constData()))
-				return Fail("pugixml load_string() error"), false;
-		}
-	}
-	else {
-		if (!xdoc.load_file(codecUtf8->fromUnicode(fpath)))
-			return Fail("pugixml load_file() error"), false;
-	}
-
-
-	// vmbase
-	xroot = xdoc.first_child();
-	if (!xroot)
-		return Fail("root not found"), false;
-	return true;
-}
-
-bool Documents::LoadProject(const QString &fpath, pugi::xml_node xRoot)
+bool Documents::LoadRootBase(const QString &fpath, pugi::xml_node xRoot)
 {
 	// remove previous tree
 	RemoveAll();
@@ -288,7 +227,7 @@ bool Documents::LoadProject(const QString &fpath, pugi::xml_node xRoot)
 bool Documents::LoadSubBase(const QString &id, DocItem* tpNode)
 {
 	// load the SUBBASE recursively into the tpNode node
-	// ARGS: file - the file that we upload (DO NOT WAY !!!)
+    // ARGS: id   - the file that we upload ( NOT PATH !!! )
 	//     tpNode - where do we load in the tree
 	// fill in: while tpNode is not filled, you cannot use GetAbsDir!
 
@@ -298,9 +237,10 @@ bool Documents::LoadSubBase(const QString &id, DocItem* tpNode)
 	// load
 	pugi::xml_document xdoc;
 	pugi::xml_node txElem;
-	if (!LoadXmlDoc(apath, xdoc, txElem))
+    if (!theSln.LoadXml(apath, xdoc, txElem))
 		return false;
 
+    // rdir, id
 	tpNode->LoadItemPaths(apath);
 
 	tpNode->p_subbase = 1;
@@ -533,7 +473,7 @@ bool Documents::Move(DocItem* tpItem, DocItem* tpNewPar, DocItem* tpAfter)
 	Exchange(tpNew, tpItem);
 
 	// adjust the rdir paths of the moved node
-	UpdateBaseDirs(tpItem);
+    UpdateRelDirs(tpItem);
 
 	// delete the old node; in the same place we set the Modify flag for the parent node
 	RemoveNode(tpNew, false);
@@ -543,12 +483,12 @@ bool Documents::Move(DocItem* tpItem, DocItem* tpNewPar, DocItem* tpAfter)
 	return true;
 }
 
-void Documents::UpdateBaseDirs(DocItem* tpNode)
+void Documents::UpdateRelDirs(DocItem* tpNode)
 {
-	// update base directories recursively for the whole node
+    // update relative directories ('rdir' fields) recursively for the whole node
 	tpNode->UpdateBaseDir();
 	for (auto tpChild : tpNode->children)
-		UpdateBaseDirs(tpChild);
+        UpdateRelDirs(tpChild);
 }
 
 bool Documents::MoveChild(DocItem* tpItem)
@@ -573,7 +513,9 @@ void Documents::MakeUnsavedList(std::list<DocItem*> &mpl)
 {
 	// generate a list of FILE elements that have changes
 	mpl.clear();
-	MakeUnsavedListR(mpl, GetRoot());
+    if(theSln.Favs.m_bModify)
+        mpl.push_back(m_root);
+    MakeUnsavedLevel(GetRoot(), mpl);
 }
 
 DocItem* Documents::GetAncestorWithFile(DocItem* item, bool include_this)
@@ -589,7 +531,7 @@ DocItem* Documents::GetAncestorWithFile(DocItem* item, bool include_this)
 	return GetRoot();
 }
 
-void Documents::MakeUnsavedListR(std::list<DocItem*> &mpl, DocItem* mtNode)
+void Documents::MakeUnsavedLevel(DocItem* mtNode, std::list<DocItem*> &mpl)
 {
 	// recursively building a list of unsaved nodes
 	// if the node has the p_modify sign, and if this node corresponds to a unique file, then add its position to the list
@@ -603,7 +545,7 @@ void Documents::MakeUnsavedListR(std::list<DocItem*> &mpl, DocItem* mtNode)
 	}
 
 	for (auto mtChild : mtNode->children) {
-		MakeUnsavedListR(mpl, mtChild);
+        MakeUnsavedLevel(mtChild, mpl);
 	}
 }
 
@@ -654,7 +596,7 @@ bool Documents::RenameItem(DocItem* tpos, const QString & id)
 	QDir().rename(tpos->GetAbsDir(-1), dir);
 	// change id
 	tpos->id = id;
-	UpdateBaseDirs(tpos);
+    UpdateRelDirs(tpos);
 	HandleChanges(tpos, false);
 	HandleChanges(tpos->parent, false);
 	return true;
@@ -811,34 +753,6 @@ void Documents::GenContentsLevel(DocItem* node, int bi, QFile &file, const QStri
 
 	if (index > 0)
 		file.write("\n</ul>");
-}
-
-QString Documents::GetBookDir(int bi)
-{
-	//   if (bi < 0 || bi >= BCNT)
-	//       return m_RootDir + "/" + bdir;
-	//   if(m_Bases[bi].rpath.isEmpty())
-	//       return m_RootDir + "/" + bdir;
-	//   return     m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
-
-	return theSln.m_RootDir + "/" + theSln.m_BI->books[bi].rpath;
-}
-
-QString Documents::GetPrjTitle()
-{
-	DocItem* root = GetRoot();
-	if (!root)
-		return "";
-	if (m_Password.isEmpty())
-		return root->title[0];
-	return root->title[0] + " (ENCRYPTED)";
-}
-
-QString Documents::GetCssAbsPath(int bi)
-{
-	if (QFileInfo(theSln.m_BI->books[bi].csspath).isAbsolute())
-		return theSln.m_BI->books[bi].csspath;
-	return GetBookDir(bi) + "/" + theSln.m_BI->books[bi].csspath;
 }
 
 void Documents::EncryptDocs(DocItem* tposParent, const QString &oldPsw, const QString &newPsw)

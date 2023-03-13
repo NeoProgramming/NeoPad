@@ -58,9 +58,13 @@ FORMS += \
 
 HEADERS += \
     ./src/core/ini.h \
+    ./src/core/BaseItem.h \
     ./src/core/Books.h \
     ./src/core/Cryptor.h \
-    ./src/core/PrjItem.h \
+    ./src/core/DocItem.h \
+    ./src/core/Documents.h \
+    ./src/core/FavItem.h \
+    ./src/core/Favorites.h \
     ./src/core/PrjStat.h \
     ./src/core/PrjTree.h \
     ./src/core/Snippets.h \
@@ -101,10 +105,12 @@ SOURCES += \
     ./src/main.cpp \
     ./src/core/Books.cpp \
     ./src/core/Cryptor.cpp \
+    ./src/core/DocItem.cpp \
+    ./src/core/Documents.cpp \
+    ./src/core/FavItem.cpp \
+    ./src/core/Favorites.cpp \
     ./src/core/ini.cpp \
-    ./src/core/PrjItem.cpp \
     ./src/core/PrjStat.cpp \
-    ./src/core/PrjTree.cpp \
     ./src/core/Snippets.cpp \
     ./src/core/Solution.cpp \
     ./src/gui/mainwindow.cpp \

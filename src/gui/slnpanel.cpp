@@ -95,6 +95,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	connect(ui.treeContents,  &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onDocDoubleClicked);
 	connect(ui.treeResults,	  &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onResDoubleClicked);
 	connect(ui.treeFavorites, &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onFavDoubleClicked);
+    connect(ui.comboFavRoot,  static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SlnPanel::onFavRootChanged);
 
 	ui.tabWidget->setCurrentIndex(0);
 
@@ -168,18 +169,21 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 
 	// formation of a context menu
 	menuPopupDoc->addAction(actionItemProperties);
+    menuPopupDoc->addSeparator();
 
+    menuPopupDoc->addAction(actionItemAddToFavs);
 	menuPopupDoc->addSeparator();
+
 	menuPopupDoc->addMenu(submenuOpen0Ext);
 	menuPopupDoc->addMenu(submenuOpen1Ext);
 	menuPopupDoc->addAction(actionOpenVmbaseInTextEditor);
 	menuPopupDoc->addAction(actionOpenFolder);
-
 	menuPopupDoc->addSeparator();
+
 	menuPopupDoc->addMenu(submenuItemStatus);
 	menuPopupDoc->addMenu(submenuNodeStatus);
-
 	menuPopupDoc->addSeparator();
+
 	menuPopupDoc->addMenu(submenuInsert);
 	menuPopupDoc->addMenu(submenuDelete);
 	menuPopupDoc->addAction(actionItemMove);
@@ -193,6 +197,9 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionEditGroup = MakeAction(tr("Edit group name"), &SlnPanel::onEditGroup);
 
 	// favorites context menus
+    menuPopupAllFav = new QMenu(this);
+    menuPopupAllFav->addAction(actionAddChildGroup);
+    menuPopupAllFav->addAction(actionAddChildFav);
 
 	menuPopupGroup = new QMenu(this);
 	menuPopupGroup->addAction(actionAddSiblingGroup);
@@ -389,7 +396,8 @@ void SlnPanel::Load()
 {
 	setCursor(Qt::WaitCursor);
 	LoadDocTree();
-	LoadFavTree();
+    LoadFavTree(theSln.Favs.GetRoot());
+    LoadFavCombo();
 	UpdateBookTitles();
 	setCursor(Qt::ArrowCursor);
 	showInitDoneMessage();
@@ -413,42 +421,55 @@ void SlnPanel::LoadDocTree()
 	root->setExpanded(true);
 }
 
-void SlnPanel::LoadFavTree()
+void SlnPanel::LoadFavTree(FavItem* root)
 {
-	FavItem* tposRoot = theSln.Favs.GetRoot();
-	if (!tposRoot)
+    if (!root)
 		return;
 
 	ui.treeFavorites->clear();
-	QTreeWidgetItem *root = new QTreeWidgetItem();
-	root->setText(0, tposRoot->title);
-	root->setData(0, Qt::UserRole, QVariant::fromValue(tposRoot));
+    QTreeWidgetItem *qroot = new QTreeWidgetItem();
+    qroot->setText(0, root->title);
+    qroot->setData(0, Qt::UserRole, QVariant::fromValue(root));
 
-	ui.treeFavorites->addTopLevelItem(root);
-	UpdateFavItem(root);
+    ui.treeFavorites->addTopLevelItem(qroot);
+    UpdateFavItem(qroot);
 
-	LoadFavLevel(tposRoot, root);
-	root->setExpanded(true);
+    LoadFavLevel(root, qroot);
+    qroot->setExpanded(true);
 }
 
 void SlnPanel::LoadFavLevel(FavItem* node, QTreeWidgetItem *parent)
 {
 	for (auto tpos : node->children)
 	{
-		QTreeWidgetItem *item = new QTreeWidgetItem(parent);
-		item->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
+        QTreeWidgetItem *qitem = new QTreeWidgetItem(parent);
+        qitem->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
 		if (tpos->type==FavItem::T_GROUP) {
-			UpdateFavItem(item);
-			LoadFavLevel(tpos, item);
+            UpdateFavItem(qitem);
+            LoadFavLevel(tpos, qitem);
 		}
 		else if(tpos->ref) {
-			UpdateDocItem(tpos->ref);
-			LoadDocLevel(tpos->ref, item);
+            UpdateDocItem(qitem, tpos->ref);
+            LoadDocLevel(tpos->ref, qitem);
 		}
 		else {
-			UpdateFavItem(item);
+            UpdateFavItem(qitem);
 		}
 	}
+}
+
+void SlnPanel::LoadFavCombo()
+{
+    ui.comboFavRoot->clear();
+    FavItem *root = theSln.Favs.GetRoot();
+    ui.comboFavRoot->addItem("ALL FAVORITES", QVariant::fromValue(root));
+    for (auto fav : root->children)
+    {
+        if(fav->ref)
+            ui.comboFavRoot->addItem(fav->ref->GetTitle(0), QVariant::fromValue(fav));
+        else
+            ui.comboFavRoot->addItem(fav->title, QVariant::fromValue(fav));
+    }
 }
 
 void SlnPanel::onDocContextMenu(const QPoint &pos)
@@ -474,6 +495,8 @@ void SlnPanel::onFavContextMenu(const QPoint &pos)
 	FavItem* fav = item->data(0, Qt::UserRole).value<FavItem*>();
 	if (!fav)
 		menuPopupDoc->exec(ui.treeFavorites->viewport()->mapToGlobal(pos));
+    else if(!fav->parent)
+        menuPopupAllFav->exec(ui.treeFavorites->viewport()->mapToGlobal(pos));
 	else if(fav->type==FavItem::T_GROUP)
 		menuPopupGroup->exec(ui.treeFavorites->viewport()->mapToGlobal(pos));
 	else if(fav->ref)
@@ -489,18 +512,7 @@ void SlnPanel::RemoveItemDontAsk(bool del_files)
 	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
 	if (theSln.RemoveNode(tpos, del_files))
 	{
-		QTreeWidgetItem *parent = item->parent();
-		int index;
-		if (parent)
-		{
-			index = parent->indexOfChild(item);
-			delete parent->takeChild(index);
-		}
-		else
-		{
-			index = ui.treeContents->indexOfTopLevelItem(item);
-			delete ui.treeContents->takeTopLevelItem(index);
-		}
+        RemoveTreeNode(item);
 		mw->projectModified(true);
 	}
 }
@@ -522,9 +534,22 @@ void SlnPanel::onDocDoubleClicked(QTreeWidgetItem* curItem, int column)
 
 void SlnPanel::onFavDoubleClicked(QTreeWidgetItem* curItem, int column)
 {
-	FavItem *item = currFav();
-	if(item && item->ref)
-		mw->DoOpenDoc(item->ref, column);
+    QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+    if (!qitem) return;
+    FavItem* fav = qitem->data(0, Qt::UserRole).value<FavItem*>();
+    if (fav && fav->ref) {
+        mw->DoOpenDoc(fav->ref, column);
+    }
+    else {
+        DocItem* doc = qitem->data(0, Qt::UserRole).value<DocItem*>();
+        mw->DoOpenDoc(doc, column);
+    }
+}
+
+void SlnPanel::onFavRootChanged(int index)
+{
+    FavItem *root = ui.comboFavRoot->currentData().value<FavItem*>();
+    LoadFavTree(root);
 }
 
 QIcon& SlnPanel::GetTreeItemIcon(ETreeStatus i)
@@ -597,9 +622,10 @@ void SlnPanel::UpdateNode(QTreeWidgetItem * item)
 	}
 }
 
-void SlnPanel::UpdateDocItem(DocItem* pos)
+void SlnPanel::UpdateDocItemByObj(DocItem* pos)
 {
-	QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), pos);
+    // for update language status from 'SaveHtml' function
+    QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), pos);
 	if (item)
 		UpdateDocItem(item);
 }
@@ -1071,26 +1097,47 @@ void SlnPanel::onAddToFavorites()
 {
 	DocItem* doc = currDoc();
 	if (!doc) return;
+    FavItem *root = ui.comboFavRoot->currentData().value<FavItem*>();
+    if(!root) return;
+    FavItem* item = theSln.Favs.AddRef(root, nullptr, doc);
+    if (item) {
+        QTreeWidgetItem *qpar = ui.treeFavorites->topLevelItem(0);
+        QTreeWidgetItem *qnewitem = AddWorkpieceItem(qpar, nullptr);
+        qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+        UpdateFavItem(qnewitem);
+        LoadDocLevel(item->ref, qnewitem);
+        return; // ok
+    }
+    else {
+        QMessageBox::warning(this, AppTitle, tr("Error adding reference"), QMessageBox::Ok, QMessageBox::Ok);
+    }
 }
 
 void SlnPanel::onRemoveFromFavorites()
 {
-	FavItem* fav = currFav();
-	if (!fav) return;
+    QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+    if (!qitem) return;
+    FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
+    if (!sel) return;
 	int ret = QMessageBox::question(this, AppTitle, tr("Remove favorite reference? Document will be untouched."),
 		QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 	if (ret == QMessageBox::Yes) {
-
+        if(theSln.Favs.RemoveNode(sel))
+            RemoveTreeNode(qitem);
 	}
 }
 
 void SlnPanel::onEditFavoriteRef()
 {
-	FavItem* fav = currFav();
-	if (!fav) return;
+    QTreeWidgetItem *qitem = ui.treeFavorites->currentItem();
+    if (!qitem) return;
+    FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
+    if (!sel) return;
 	TopicChooser dlg(this, "Select favorite item");
 	if (dlg.DoModal()) {
-
+        theSln.Favs.ChangeRef(sel, dlg.m_posSelected);
+        UpdateFavItem(qitem);
+        LoadDocLevel(sel->ref, qitem);
 	}
 }
 
@@ -1226,7 +1273,6 @@ void SlnPanel::onEditGroup()
 	if (!fav) return;
 	QString s = QInputDialog::getText(this, "Rename group", "Change group name", QLineEdit::Normal, fav->title);
 	if (!s.isEmpty()) {
-		fav->SetTitle(s);
-		theSln.Favs.m_bModify = true;
+        theSln.Favs.ChangeTitle(fav, s);
 	}
 }
