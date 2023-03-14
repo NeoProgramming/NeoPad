@@ -94,9 +94,6 @@ MainWindow::MainWindow()
 
 	setCentralWidget(m_wArea);
 
-	windowMapper = new QSignalMapper(this);
-	connect(windowMapper, SIGNAL(mapped(QWidget*)),  this, SLOT(setActiveSubWindow(QWidget*)));
-
 	createSpecialToolWidgets();
 
     m_wDock = new QDockWidget(this);
@@ -1105,4 +1102,8 @@ void MainWindow::Search(const QString &text)
     m_wSln->Search(text);
 }
 
+void MainWindow::setStatus(const QString &str)
+{
+    statusBar()->showMessage(str);
+}
 

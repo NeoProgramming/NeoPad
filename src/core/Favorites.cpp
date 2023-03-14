@@ -124,7 +124,6 @@ void Favorites::HandleChanges()
     theSln.Favs.m_bModify = true;
 	if (INI::AutoSavePages)
 	{
-        qDebug() << "auto save";
         theSln.SaveSubBase(theSln.GetRoot(), false);
 	}
 }

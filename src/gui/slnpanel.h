@@ -38,14 +38,18 @@ public:
 
     bool eventFilter(QObject *, QEvent *);
 	
-    void UpdateItem(QTreeWidgetItem * item, DocItem* tpos);
+    void UpdateDocItemsByObj(DocItem* item);
+
+    void UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos);
     void UpdateDocItem(QTreeWidgetItem * item);
-    void UpdateDocItemByObj(DocItem* item);
     void UpdateFavItem(QTreeWidgetItem * item);
+
     void UpdateNode(QTreeWidgetItem * item);
     void UpdateTree();
 
-    void UpdateDocNode(QTreeWidgetItem * node, DocItem *inode);
+    void UpdateDocNode(QTreeWidgetItem * qnode, DocItem *node);
+    void UpdateDocTree();
+    void UpdateFavTree();
 
     void Search(const QString &text);
     void EnsureVisible(DocItem* node);
@@ -119,7 +123,9 @@ private:
     void RemoveItemDontAsk(bool del_files);	//remove item without asking
 	void initTree(QTreeWidget *tree);
 	QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);
-    void showInitDoneMessage();
+    void ForEachItem(QTreeWidgetItem *par, const std::function<bool(QTreeWidgetItem *)> fn);
+    int  FindChildItemIndex(QTreeWidgetItem *par, DocItem* item, int startIndex);
+
 	DocItem* currDoc();
 	FavItem* currFav();
     QTreeWidgetItem *AddWorkpieceItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &text, ETreeStatus st);
@@ -134,11 +140,11 @@ private:
 private:
 	Ui::SlnForm ui;
 	MainWindow *mw;
+    bool m_contentsChanged = false;
+    bool m_favoritesChanged = false;
 	QString searchRoot;	// guid
 	QIcon m_TreeIcons[(int)ETreeStatus::TS_ITEMS_COUNT];
 	QIcon m_LangIcons[(int)ELangStatus::LS_ITEMS_COUNT];
-
-	bool initDoneMsgShown;
 
 	QMenu *menuPopupDoc;
     QMenu *menuPopupAllFav;

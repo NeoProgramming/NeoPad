@@ -48,6 +48,7 @@ public:
 	void projectModified(bool modified);
     void Search(const QString &text);
 	MainWindow *newWindow();
+    void setStatus(const QString &str);
 public:
 	void* FindOpenedDoc(DocItem* pos, int di) override;
 	void  GetDocData(void* wnd, QString &html) override;
@@ -115,11 +116,8 @@ private:
 private:	
 	QMdiArea      *m_wArea;
 	QTabBar       *m_tabBar;			// extract from m_wArea
-	QSignalMapper *windowMapper;
-	
 	SlnPanel	  *m_wSln;
 	QDockWidget   *m_wDock;
-
 	QToolButton	  *tbtnInsertTable;	// table picker
 };
 

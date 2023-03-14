@@ -316,14 +316,6 @@ void SlnPanel::processEvents()
 	qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 }
 
-void SlnPanel::showInitDoneMessage()
-{
-	if (initDoneMsgShown)
-		return;
-	initDoneMsgShown = true;
-	mw->statusBar()->showMessage(tr("Done"), 3000);
-}
-
 bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 {
 	QString objName = o->objectName();
@@ -430,7 +422,6 @@ void SlnPanel::Load()
     LoadFavCombo();
 	LoadBookTitles();
 	setCursor(Qt::ArrowCursor);
-	showInitDoneMessage();
 }
 
 void SlnPanel::LoadDocTree()
@@ -479,7 +470,7 @@ void SlnPanel::LoadFavLevel(FavItem* node, QTreeWidgetItem *parent)
             LoadFavLevel(tpos, qitem);
 		}
 		else if(tpos->ref) {
-            UpdateItem(qitem, tpos->ref);
+            UpdateDocItem(qitem, tpos->ref);
             LoadDocLevel(tpos->ref, qitem);
 		}
 		else {
@@ -611,22 +602,23 @@ QIcon& SlnPanel::GetLangItemIcon(ELangStatus i)
 }
 
 
-void SlnPanel::UpdateDocItem(QTreeWidgetItem * item)
+void SlnPanel::UpdateDocItem(QTreeWidgetItem * qitem)
 {
-	// set the text and picture of the node depending on its state and attributes
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-    UpdateItem(item, tpos);
+    // set the text and picture of the view node by associated model node
+    DocItem* tpos = qitem->data(0, Qt::UserRole).value<DocItem*>();
+    UpdateDocItem(qitem, tpos);
 }
 
-void SlnPanel::UpdateItem(QTreeWidgetItem * item, DocItem* tpos)
+void SlnPanel::UpdateDocItem(QTreeWidgetItem * qitem, DocItem* tpos)
 {
-	item->setText(0, tpos->GetTitle(0));
+    // set the text and picture of the view node by explicitly specified model node
+    qitem->setText(0, tpos->GetTitle(0));
 	ETreeStatus im = tpos->GetTreeStatus();
-	item->setIcon(0, GetTreeItemIcon(im));
+    qitem->setIcon(0, GetTreeItemIcon(im));
 	if (theSln.Books.BCnt() >= 2) {
-		item->setText(1, tpos->GetTitle(1));
+        qitem->setText(1, tpos->GetTitle(1));
 		ELangStatus ls = tpos->GetLangStatus(1);
-		item->setIcon(1, GetLangItemIcon(ls));
+        qitem->setIcon(1, GetLangItemIcon(ls));
 	}
 }
 
@@ -645,34 +637,131 @@ void SlnPanel::UpdateFavItem(QTreeWidgetItem * item)
 			item->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_UNKNOWN));
 		}
 		else {
-            UpdateItem(item, tpos->ref);
+            UpdateDocItem(item, tpos->ref);
 		}
 	}
 }
 
-void SlnPanel::UpdateDocNode(QTreeWidgetItem * node, DocItem *inode)
+int SlnPanel::FindChildItemIndex(QTreeWidgetItem *qnode, DocItem* item, int startIndex)
 {
-
+    for(int i = startIndex, n = qnode->childCount(); i<n; i++) {
+        QTreeWidgetItem *qchild = qnode->child(i);
+        DocItem *doc = qchild->data(0, Qt::UserRole).value<DocItem*>();
+        if(doc == item)
+            return i;
+    }
+    return -1;
 }
 
-void SlnPanel::UpdateNode(QTreeWidgetItem * item)
+void SlnPanel::UpdateDocNode(QTreeWidgetItem * qnode, DocItem *node)
+{
+    // update text and icons
+    UpdateDocItem(qnode, node);
+
+    // loop by model children; the model is not modified!
+    int i = 0, n = qnode->childCount();
+    QTreeWidgetItem *qprevchild = nullptr;
+    for(DocItem* item : node->children) {
+        // get view item and associated model item
+        QTreeWidgetItem *qchild = qnode->child(i);
+        DocItem *adoc = qchild->data(0, Qt::UserRole).value<DocItem*>();
+        // compare pair
+        if(adoc == item) {
+            // ok, recursive update
+            UpdateDocNode(qchild, item);
+        }
+        else {
+            // dismatch, find item next to node
+            int j = FindChildItemIndex(qnode, item, i+1);
+            // if found - move it to qchild position (exchange view nodes)
+            if(j>=0) {
+                // j is always greater than i
+                QTreeWidgetItem *qchild2 = qnode->takeChild(j); // take item at higher (found) index
+                QTreeWidgetItem *qchild1 = qnode->takeChild(i); // take item at lower (current) index
+                qnode->insertChild(i, qchild2);                 // insert found item at lower index
+                qnode->insertChild(j, qchild1);                 // insert this item at higher index
+                // recursive update
+                qchild = qchild2;
+                UpdateDocNode(qchild, item);
+            }
+            // else create and load from model; because load, no recursive update required
+            else {
+                QTreeWidgetItem *qitem = new QTreeWidgetItem(qnode, qprevchild);
+                qitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+                UpdateDocItem(qitem);
+                LoadDocLevel(item, qitem);
+            }
+        }
+        // next view item
+        i++;
+        qprevchild = qchild;
+    }
+    // remove the remaining items in the view
+    for(int j=i; i<n; i++) {
+        delete qnode->takeChild(j);
+    }
+}
+
+void SlnPanel::UpdateDocTree()
+{
+    UpdateDocNode(ui.treeContents->topLevelItem(0), theSln.GetRoot());
+}
+
+void SlnPanel::UpdateFavTree()
+{
+    ForEachItem(ui.treeFavorites->topLevelItem(0), [&](QTreeWidgetItem * qitem) {
+        FavItem* fav = qitem->data(0, Qt::UserRole).value<FavItem*>();
+        if(fav->type == FavItem::T_REF) {
+            // check ref validity
+            DocItem *doc = theSln.Locate(fav->title);
+            if(!doc)
+                fav->ref = nullptr;
+            else
+                UpdateDocNode(qitem, fav->ref);
+            // don't deepen recursively
+            return true;
+        }
+        return false;
+    });
+}
+
+void SlnPanel::UpdateNode(QTreeWidgetItem * qitem)
 {
 	// recursively update all pictures of the whole tree
-    UpdateDocItem(item);
-	int n = item->childCount();
+    UpdateDocItem(qitem);
+    int n = qitem->childCount();
 	for (int i = 0; i < n; i++)
 	{
-		QTreeWidgetItem *child = item->child(i);
-        UpdateNode(child);
+        QTreeWidgetItem *qchild = qitem->child(i);
+        UpdateNode(qchild);
 	}
 }
 
-void SlnPanel::UpdateDocItemByObj(DocItem* pos)
+void SlnPanel::UpdateDocItemsByObj(DocItem* pos)
 {
     // for update language status from 'SaveHtml' function
+    // single object in Contents
     QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), pos);
-	if (item)
-        UpdateDocItem(item);
+    if (item)
+       UpdateDocItem(item);
+
+    //ForEachItem(ui.treeContents->topLevelItem(0), [&](QTreeWidgetItem *item){
+    //    DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
+    //    if(doc == pos)
+    //        UpdateDocItem(item);
+    //});
+
+    // multiple objects in Favorites
+    ForEachItem(ui.treeFavorites->topLevelItem(0), [&](QTreeWidgetItem *item){
+        DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
+        if(doc == pos)
+            UpdateDocItem(item);
+        FavItem* fav = item->data(0, Qt::UserRole).value<FavItem*>();
+        if(fav && fav->ref == pos)
+            UpdateDocItem(item);
+        return false;
+    });
+
 }
 
 void SlnPanel::UpdateTree()
@@ -710,14 +799,24 @@ void SlnPanel::onItemProperties()
 
 	ItemProperties dlg(this);
 	if (dlg.DoModal(item.doc) == QDialog::Accepted)	{
-		theSln.RenameTitle(item.doc, dlg.m_title0, 0);
-		theSln.RenameTitle(item.doc, dlg.m_title1, 1);
+        bool changed = false;
+        if(item.doc->GetTitle(0) != dlg.m_title0) {
+            theSln.RenameTitle(item.doc, dlg.m_title0, 0);
+            changed = true;
+        }
+        if(item.doc->GetTitle(1) != dlg.m_title1) {
+            theSln.RenameTitle(item.doc, dlg.m_title1, 1);
+            changed = true;
+        }
 		if (item.doc->GetId() != dlg.m_id) {
-			if (!theSln.RenameItem(item.doc, dlg.m_id))
-				QMessageBox::warning(this, "Rename error", FailMsg);
+            if (!theSln.RenameItem(item.doc, dlg.m_id))
+                QMessageBox::warning(this, "Rename error", FailMsg);
 		}
-        UpdateDocItem(item.qitem);
-		mw->UpdateTab(item.doc);
+        if(changed) {
+            UpdateDocItem(item.qitem);
+            UpdateFavTree();
+            mw->UpdateTab(item.doc);
+        }
 	}
 }
 
@@ -1041,6 +1140,16 @@ int SlnPanel::onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m)
 	return 0;
 }
 
+void SlnPanel::ForEachItem(QTreeWidgetItem *par, const std::function<bool(QTreeWidgetItem *)> fn)
+{
+    if(fn(par))
+        return; // don't deepen recursively
+    int n = par->childCount();
+    for (int i = 0; i < n; i++) {
+        ForEachItem(par->child(i), fn);
+    }
+}
+
 QTreeWidgetItem* SlnPanel::FindItem(QTreeWidgetItem *par, DocItem* mtpos)
 {
 	// recursive search for an element with a given identifier
@@ -1051,8 +1160,7 @@ QTreeWidgetItem* SlnPanel::FindItem(QTreeWidgetItem *par, DocItem* mtpos)
 
 	// recursive traversal of the rest
 	int n = par->childCount();
-	for (int i = 0; i < n; i++)
-	{
+    for (int i = 0; i < n; i++) {
 		QTreeWidgetItem* found = FindItem(par->child(i), mtpos);
 		if (found)
 			return found;
@@ -1168,8 +1276,9 @@ void SlnPanel::onRemoveFromFavorites()
 	if (ret == QMessageBox::Yes) {
         if(theSln.Favs.RemoveNode(sel)) {
             RemoveTreeNode(qitem);
-            if(rc)
+            if(rc) {
                 LoadFavCombo();
+            }
         }
 	}
 }
@@ -1306,8 +1415,8 @@ void SlnPanel::onAddChildFav()
 			qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
             UpdateFavItem(qnewitem);
 			LoadDocLevel(item->ref, qnewitem);
-            ReloadFavCombo(item);
             qnewitem->setSelected(true);
+            ReloadFavCombo(item);
 			return; // ok
 		}
 		else {
@@ -1329,8 +1438,8 @@ void SlnPanel::onEditGroup()
     QString s = QInputDialog::getText(this, "Rename group", "Change group name", QLineEdit::Normal, sel->title);
 	if (!s.isEmpty()) {
         theSln.Favs.ChangeTitle(sel, s);
-        ReloadFavCombo(sel);
         UpdateFavItem(qitem);
-        //qitem->setSelected(true);
+        qitem->setSelected(true);
+        ReloadFavCombo(sel);    // this causes the entire list to be reloaded, and therefore the tree! and qitem becomes invalid
 	}
 }
