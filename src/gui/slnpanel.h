@@ -39,7 +39,6 @@ public:
     bool eventFilter(QObject *, QEvent *);
 	
     void UpdateDocItemsByObj(DocItem* item);
-
     void UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos);
     void UpdateDocItem(QTreeWidgetItem * item);
     void UpdateFavItem(QTreeWidgetItem * item);

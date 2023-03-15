@@ -346,9 +346,10 @@ bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 				else if (modifiers == Qt::NoModifier)
 					onRemoveItem();
 				break;
-			case Qt::Key_F2:
-				ui.treeContents->openPersistentEditor(ui.treeContents->currentItem(), 0);
-				break;
+			// open in-plce edit
+			//case Qt::Key_F2:
+			//	ui.treeContents->openPersistentEditor(ui.treeContents->currentItem(), 0);
+			//	break;
 			case Qt::Key_Space:
 				if (modifiers == Qt::ControlModifier)
 					onItemProperties();
