@@ -1037,6 +1037,27 @@ void MainWindow::UpdateTab(DocItem* tpos)
 		subwnd->setWindowTitle(tpos->GetTitle(1));
 }
 
+void MainWindow::CloseTab(DocItem* tpos, bool clear_modify)
+{
+    QMdiSubWindow * subwnd;
+    subwnd = FindTab(tpos, 0);
+    if (subwnd) {
+        if(clear_modify) {
+            WebEditView *view = qobject_cast<WebEditView *>(subwnd->widget());
+            view->setWindowModified(false);
+        }
+        subwnd->close();
+    }
+    subwnd = FindTab(tpos, 1);
+    if (subwnd) {
+        if(clear_modify) {
+            WebEditView *view = qobject_cast<WebEditView *>(subwnd->widget());
+            view->setWindowModified(false);
+        }
+        subwnd->close();
+    }
+}
+
 void MainWindow::GenContents(int bi)
 {
 	bool ok = true;

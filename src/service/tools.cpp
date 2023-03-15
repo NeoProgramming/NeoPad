@@ -147,17 +147,31 @@ QString GetRelDir(const QString &path, const QString &base, bool base_is_file)
 	return QFileInfo(GetRelPath(path, base, base_is_file)).dir().path();
 }
 
-void RemoveTreeNode(QTreeWidgetItem *item)
+QTreeWidgetItem* AddTreeItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &title, const QIcon &icon)
 {
-    QTreeWidgetItem *parent = item->parent();
-    int index;
-    if (parent) {
-        index = parent->indexOfChild(item);
-        delete parent->takeChild(index);
+    QTreeWidgetItem *newitem = after ? new QTreeWidgetItem(par, after) : new QTreeWidgetItem(par);
+    newitem->setText(0, title);
+    newitem->setIcon(0, icon);
+    par->setExpanded(true);
+    QTreeWidget *tree = par->treeWidget();
+    tree->setCurrentItem(newitem);
+    return newitem;
+}
+
+void RemoveTreeNode(QTreeWidgetItem *newitem, QTreeWidgetItem *olditem)
+{
+    QTreeWidget *tree = newitem->treeWidget();
+    if(olditem)
+        tree->setCurrentItem(olditem);
+    QTreeWidgetItem *par = newitem->parent();
+    if(par) {
+        int index = par->indexOfChild(newitem);
+        delete par->takeChild(index);
     }
     else {
-        QTreeWidget *tree = item->treeWidget();
-        index = tree->indexOfTopLevelItem(item);
+        int index = tree->indexOfTopLevelItem(newitem);
         delete tree->takeTopLevelItem(index);
     }
 }
+
+

@@ -25,4 +25,5 @@ void SetAutoRaiseToolBar( QToolBar *toolbar, bool value );
 QString GetRelPath(const QString &path, const QString &base, bool base_is_file);
 QString GetRelDir(const QString &path, const QString &base, bool base_is_file);
 
-void RemoveTreeNode(QTreeWidgetItem *item);
+QTreeWidgetItem* AddTreeItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &title, const QIcon &icon);
+void RemoveTreeNode(QTreeWidgetItem *newitem, QTreeWidgetItem *olditem);

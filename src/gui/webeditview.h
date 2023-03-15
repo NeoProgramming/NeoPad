@@ -143,8 +143,6 @@ public slots:
     
 public:
 	bool LoadHtml(DocItem* tpos, int di);
-	
-	
 	bool SaveHtml(bool update_tree);
 	void Find(const QString &text, bool backward);
 protected:

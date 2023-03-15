@@ -40,6 +40,7 @@ public:
 
 	SlnPanel *getSln() const;
 	void  UpdateTab(DocItem* tpos);
+    void  CloseTab(DocItem* tpos, bool clear_modify);
     qreal UpdateZoom(int percent);
 	void  OpenLocalLink(const QString &url, int di);
 	void saveSettings();

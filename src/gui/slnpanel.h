@@ -44,12 +44,15 @@ public:
     void UpdateDocItem(QTreeWidgetItem * item);
     void UpdateFavItem(QTreeWidgetItem * item);
 
-    void UpdateNode(QTreeWidgetItem * item);
-    void UpdateTree();
+    void UpdateNode(QTreeWidgetItem * item);    // to remove?
+    void UpdateTree();  // to remove?
 
     void UpdateDocNode(QTreeWidgetItem * qnode, DocItem *node);
     void UpdateDocTree();
     void UpdateFavTree();
+    void Update(TREEITEM &item);
+    void Update(QTreeWidgetItem *qitem);
+    void Update();
 
     void Search(const QString &text);
     void EnsureVisible(DocItem* node);
@@ -62,6 +65,7 @@ private slots:
 	void onFindPrev();
 	void onSelNode();
 
+    void onTabChanged(int tab);
 	void onDocDoubleClicked(QTreeWidgetItem* item, int column);
     void onResDoubleClicked(QTreeWidgetItem* item, int column);
 	void onFavDoubleClicked(QTreeWidgetItem* item, int column);
@@ -105,6 +109,7 @@ private slots:
 	
 private:
 	TREEITEM CurrItem();
+    TREEITEM ParItem(TREEITEM &item);
 
     void SetCurrItemStatus(ETreeStatus status);
     void SetCurrNodeStatus(ETreeStatus status);
@@ -128,9 +133,7 @@ private:
 
 	DocItem* currDoc();
 	FavItem* currFav();
-    QTreeWidgetItem *AddWorkpieceItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &text, ETreeStatus st);
-	void RemoveWorkpieceItem(QTreeWidgetItem *newitem, QTreeWidgetItem *olditem);
-	       
+
 	QAction *MakeAction(QString text, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QKeySequence skey, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, void (SlnPanel::*slot)());
@@ -140,8 +143,8 @@ private:
 private:
 	Ui::SlnForm ui;
 	MainWindow *mw;
-    bool m_contentsChanged = false;
-    bool m_favoritesChanged = false;
+    bool m_contentsNeedsToRefresh = false;
+    bool m_favoritesNeedsToRefresh = false;
 	QString searchRoot;	// guid
 	QIcon m_TreeIcons[(int)ETreeStatus::TS_ITEMS_COUNT];
 	QIcon m_LangIcons[(int)ELangStatus::LS_ITEMS_COUNT];
