@@ -455,9 +455,11 @@ void SlnPanel::LoadFavTree(FavItem* root)
 
     ui.treeFavorites->addTopLevelItem(qroot);
     UpdateFavItem(qroot);
-
-    LoadFavLevel(root, qroot);
-    qroot->setExpanded(true);
+	if (root->type == FavItem::T_REF && root->ref) 
+		LoadDocLevel(root->ref, qroot);
+	else 
+		LoadFavLevel(root, qroot);
+	qroot->setExpanded(true);
 }
 
 void SlnPanel::LoadFavLevel(FavItem* node, QTreeWidgetItem *parent)
@@ -499,11 +501,18 @@ void SlnPanel::LoadFavCombo()
 			i++;
 		}
 	}
-    ui.comboFavRoot->setCurrentIndex(sel);
-    connect(ui.comboFavRoot, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SlnPanel::onFavRootChanged);
-    // reload if we removed visible root
-    if(curr != ui.comboFavRoot->currentData().value<FavItem*>())
-        onFavRootChanged(sel);
+        
+	// reload 'ALL FAVs' if vis.tree is empty, or if we removed visible root
+	if (ui.treeFavorites->topLevelItem(0) == nullptr || curr != ui.comboFavRoot->currentData().value<FavItem*>()) {
+		ui.comboFavRoot->setCurrentIndex(0);
+		onFavRootChanged(0);
+	}
+	// don't reload fav.tree, restore old selection
+	else {
+		ui.comboFavRoot->setCurrentIndex(sel);
+	}
+
+	connect(ui.comboFavRoot, static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SlnPanel::onFavRootChanged);
 }
 
 void SlnPanel::ReloadFavCombo(FavItem *item)
@@ -620,12 +629,10 @@ void SlnPanel::RemoveItemDontAsk(bool del_files)
     item.doc->p_modify = 0;
 
     mw->CloseTabs(item.doc, true);
-    if (theSln.RemoveNode(item.doc, del_files))
-    {
-        if(item.fav)
-            item.fav->ref = nullptr;
+    if (theSln.RemoveNode(item.doc, del_files)) {
         RemoveTreeNode(item.qitem, nullptr);
         Update(nullptr, nullptr);
+		LoadFavCombo(); // perhaps we removed local root in favs
         mw->projectModified(true);
     }
 }
@@ -1293,7 +1300,7 @@ void SlnPanel::onRemoveFromFavorites()
     if (!qitem) return;
     FavItem* sel = qitem->data(0, Qt::UserRole).value<FavItem*>();
     if (!sel) return;
-    bool rc = !sel->parent || !sel->parent->parent;
+    bool rc = !sel->parent || !sel->parent->parent; // local root or first-level item
 	int ret = QMessageBox::question(this, AppTitle, tr("Remove favorite reference? Document will be untouched."),
 		QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 	if (ret == QMessageBox::Yes) {
