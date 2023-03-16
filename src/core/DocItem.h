@@ -43,6 +43,7 @@ public:
 			unsigned p_subbase : 1;	// own file or not
 			unsigned p_modify : 1;	// modification sign
 			unsigned check : 1;		// some document mark
+            unsigned p_remove : 1;  // mark for removed, used in clear-favorites algirithm
 		};
 	};
 	ETreeStatus status = ETreeStatus::TS_UNREADY;    // status

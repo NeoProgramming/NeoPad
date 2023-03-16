@@ -370,17 +370,26 @@ void Documents::RemoveNodeFiles(DocItem* tpItem)
 	}
 }
 
-bool Documents::RemoveNode(DocItem* tpItem, bool del_files)
+bool Documents::RemoveNode(DocItem* node, bool del_files)
 {
-	DocItem* tpPar = tpItem->parent;
-	if (!tpPar)
+    DocItem* par = node->parent;
+    if (!par)
 		return false;
 	if (del_files)
-		RemoveNodeFiles(tpItem);
+        RemoveNodeFiles(node);
+
+    // nullify all fav-refs referring to node items
+    ForEach(node, [](DocItem* item) {
+        item->p_remove = 1;
+    });
+    theSln.Favs.ForEach(theSln.Favs.GetRoot(), [](FavItem * fav) {
+       if(fav->ref && fav->ref->p_remove)
+           fav->ref = nullptr;
+    });
 	
-	PrjTree::RemoveNode(tpItem);
+    PrjTree::RemoveNode(node);
 	
-	HandleChanges(tpPar, false);
+    HandleChanges(par, false);
 	return true;
 }
 

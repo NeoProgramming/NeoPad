@@ -49,9 +49,7 @@ public:
     void UpdateDocNode(QTreeWidgetItem * qnode, DocItem *node);
     void UpdateDocTree();
     void UpdateFavTree();
-    void Update(TREEITEM &item);
-    void Update(QTreeWidgetItem *qitem);
-    void Update();
+    void Update(QTreeWidgetItem *qitem, DocItem *doc);
 
     void Search(const QString &text);
     void EnsureVisible(DocItem* node);
@@ -107,8 +105,9 @@ private slots:
     void processEvents();
 	
 private:
+
 	TREEITEM CurrItem();
-    TREEITEM ParItem(TREEITEM &item);
+    DocItem* currDoc();
 
     void SetCurrItemStatus(ETreeStatus status);
     void SetCurrNodeStatus(ETreeStatus status);
@@ -130,10 +129,7 @@ private:
     void ForEachItem(QTreeWidgetItem *par, const std::function<bool(QTreeWidgetItem *)> fn);
     int  FindChildItemIndex(QTreeWidgetItem *par, DocItem* item, int startIndex);
 
-	DocItem* currDoc();
-	FavItem* currFav();
-
-	QAction *MakeAction(QString text, void (SlnPanel::*slot)());
+    QAction *MakeAction(QString text, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QKeySequence skey, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, const std::function<void()> &fn);

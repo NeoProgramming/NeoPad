@@ -1058,6 +1058,13 @@ void MainWindow::CloseTab(DocItem* tpos, bool clear_modify)
     }
 }
 
+void MainWindow::CloseTabs(DocItem* tpos, bool clear_modify)
+{
+    theSln.ForEach(tpos, [&](DocItem *item){
+        CloseTab(item, clear_modify);
+    });
+}
+
 void MainWindow::GenContents(int bi)
 {
 	bool ok = true;

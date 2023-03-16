@@ -46,48 +46,5 @@ void SlnTreeWidget::dropEvent ( QDropEvent * e )
 		QTreeWidget::dropEvent(e);
 }
 
-QTreeWidgetItem *SlnTreeWidget::GetPrevSibling(QTreeWidgetItem *item)
-{
-	QTreeWidgetItem *parent = item->parent();
-	QTreeWidgetItem *sibling;
-	if(parent)
-		sibling = parent->child(parent->indexOfChild(item)-1);
-	else 
-		sibling = topLevelItem(indexOfTopLevelItem(item)-1);
-	return sibling;
-}
 
-QTreeWidgetItem *SlnTreeWidget::GetNextSibling(QTreeWidgetItem *item)
-{
-	QTreeWidgetItem *parent = item->parent();
-	QTreeWidgetItem *sibling;
-	if(parent)
-		sibling = parent->child(parent->indexOfChild(item)+1);
-	else 
-		sibling = topLevelItem(indexOfTopLevelItem(item)+1);
-	return sibling;
-}
 
-void SlnTreeWidget::MoveItem(QTreeWidgetItem *item, QTreeWidgetItem *insparent, QTreeWidgetItem *insafter)
-{
-	// move item element - Child of insparent, after insafter (or to the end if null)
-	QTreeWidgetItem *oldparent = item->parent();
-	if(oldparent)
-	{
-		// take
-		int oldindex = oldparent->indexOfChild(item);
-		QTreeWidgetItem *i = oldparent->takeChild(oldindex); // should be i == item
-
-		// put in a new place
-		if(insafter)
-		{
-			int insindex = insparent->indexOfChild(insafter) + 1;
-			insparent->insertChild(insindex, item);
-		}
-		else
-		{
-			int insindex = insparent->childCount();
-			insparent->insertChild(insindex, item);
-		}
-	}
-}

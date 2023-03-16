@@ -27,3 +27,7 @@ QString GetRelDir(const QString &path, const QString &base, bool base_is_file);
 
 QTreeWidgetItem* AddTreeItem(QTreeWidgetItem *par, QTreeWidgetItem *after, const QString &title, const QIcon &icon);
 void RemoveTreeNode(QTreeWidgetItem *newitem, QTreeWidgetItem *olditem);
+QTreeWidgetItem* GetPrevSibling(QTreeWidgetItem *item);
+QTreeWidgetItem* GetNextSibling(QTreeWidgetItem *item);
+void MoveItem(QTreeWidgetItem *item, QTreeWidgetItem *insparent, QTreeWidgetItem *insafter);
+void SetCurrentItem(QTreeWidgetItem *item);
