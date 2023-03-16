@@ -66,7 +66,6 @@
    <addaction name="actionEditCopyText"/>
    <addaction name="actionEditPaste"/>
    <addaction name="actionEditPasteText"/>
-   <addaction name="actionEditPasteImage"/>
    <addaction name="actionEditPasteAsTable"/>
    <addaction name="actionEditPasteCell"/>
    <addaction name="actionEditUntag"/>
@@ -124,7 +123,6 @@
     <addaction name="actionEditCopyText"/>
     <addaction name="actionEditPaste"/>
     <addaction name="actionEditPasteText"/>
-    <addaction name="actionEditPasteImage"/>
     <addaction name="actionEditPasteAsTable"/>
     <addaction name="separator"/>
     <addaction name="actionEditUntag"/>
@@ -599,15 +597,6 @@
    </property>
    <property name="text">
     <string>Paste</string>
-   </property>
-  </action>
-  <action name="actionEditPasteImage">
-   <property name="icon">
-    <iconset resource="../neopad.qrc">
-     <normaloff>:/edit/images/edit-pasteimage.png</normaloff>:/edit/images/edit-pasteimage.png</iconset>
-   </property>
-   <property name="text">
-    <string>Paste Image</string>
    </property>
   </action>
   <action name="actionEditCut">

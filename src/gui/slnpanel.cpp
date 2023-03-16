@@ -811,7 +811,7 @@ void SlnPanel::UpdateDocItemsByObj(DocItem* pos)
             UpdateDocItem(item);
         FavItem* fav = item->data(0, Qt::UserRole).value<FavItem*>();
         if(fav && fav->ref == pos)
-            UpdateDocItem(item);
+            UpdateDocItem(item, pos);
         return false;
     });
 }
@@ -1275,18 +1275,19 @@ void SlnPanel::onSelNode()
 
 void SlnPanel::onAddToFavorites()
 {
-	DocItem* doc = currDoc();
-	if (!doc) return;
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
+	
     FavItem *root = ui.comboFavRoot->currentData().value<FavItem*>();
     if(!root) return;
-    FavItem* item = theSln.Favs.AddRef(root, nullptr, doc);
-    if (item) {
+    FavItem* fav = theSln.Favs.AddRef(root, nullptr, item.doc);
+    if (fav) {
         QTreeWidgetItem *qpar = ui.treeFavorites->topLevelItem(0);
         QTreeWidgetItem *qnewitem = AddTreeItem(qpar, nullptr, "", GetTreeItemIcon(ETreeStatus::TS_UNREADY));
-        qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(item));
+        qnewitem->setData(0, Qt::UserRole, QVariant::fromValue(fav));
         UpdateFavItem(qnewitem);
-        LoadDocLevel(item->ref, qnewitem);
-        ReloadFavCombo(item);
+        LoadDocLevel(fav->ref, qnewitem);
+        ReloadFavCombo(fav);
         return; // ok
     }
     else {

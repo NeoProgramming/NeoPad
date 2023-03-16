@@ -39,7 +39,6 @@ public slots:
 	void onEditPaste();
 	void onEditPasteText();
     void onEditPasteAsTable();
-	void onEditPasteImage();
 	void onEditPasteCell();
 	void onEditPasteSpecial();
 

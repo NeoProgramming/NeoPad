@@ -91,7 +91,6 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	m_menuContext.addAction(mw->ui.actionEditCopy);
     m_menuContext.addAction(mw->ui.actionEditCopyText);
 	m_menuContext.addAction(mw->ui.actionEditPaste);
-	m_menuContext.addAction(mw->ui.actionEditPasteImage);
 	m_menuContext.addAction(mw->ui.actionEditPasteText);
     m_menuContext.addAction(mw->ui.actionEditPasteAsTable);
 	m_menuContext.addSeparator();
@@ -469,7 +468,20 @@ void WebEditView::onEditCopyText()
 
 void WebEditView::onEditPaste()
 {
-	triggerPageAction(QWebPage::Paste);
+	const QClipboard *clipboard = QApplication::clipboard();
+	if (!clipboard)
+		return;
+	const QMimeData *mimeData = clipboard->mimeData();
+	if (mimeData && mimeData->hasImage()) {
+		QImage img = clipboard->image();
+		if (!img.isNull()) {
+			QString html = HtmlImage::MakeHtml(img);
+			InsertHtml(html);
+		}
+	}
+	else {
+		triggerPageAction(QWebPage::Paste);
+	}
 }
 
 void WebEditView::onEditPasteText()
@@ -489,25 +501,6 @@ void WebEditView::onEditPasteAsTable()
 
 	QString html = HtmlTable::MakeHtml(originalText);
     InsertHtml(html);
-}
-
-void WebEditView::onEditPasteImage()
-{
-	const QClipboard *clipboard = QApplication::clipboard();
-	if (!clipboard)
-		return;
-	const QMimeData *mimeData = clipboard->mimeData();
-	if (!mimeData)
-		return;
-	if (!mimeData->hasImage())
-		return;
-
-	
-	QImage img = clipboard->image();
-	if (!img.isNull()) {
-		QString html = HtmlImage::MakeHtml(img);
-		InsertHtml(html);
-	}
 }
 
 void WebEditView::onEditPasteCell()
