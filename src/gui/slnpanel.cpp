@@ -234,15 +234,6 @@ TREEITEM SlnPanel::CurrItem()
 	return item;
 }
 
-DocItem* SlnPanel::currDoc()
-{
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item)
-		return nullptr;
-    DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
-    return doc;
-}
-
 void SlnPanel::initTree(QTreeWidget *tree)
 {
 	tree->setRootIsDecorated(false);
@@ -579,10 +570,10 @@ void SlnPanel::onResDoubleClicked(QTreeWidgetItem* curItem, int column)
     onFindNext();
 }
 
-void SlnPanel::onDocDoubleClicked(QTreeWidgetItem* curItem, int column)
+void SlnPanel::onDocDoubleClicked(QTreeWidgetItem* qitem, int column)
 {
-	// open document by double click
-	DocItem *item = currDoc();
+	// open document by double click in Contents and SearchResults
+	DocItem *item = qitem->data(0, Qt::UserRole).value<DocItem*>();
 	mw->DoOpenDoc(item, column);
 }
 
@@ -1236,6 +1227,8 @@ void SlnPanel::onSearch()
 		return;
 	}
 	DocItem *root = theSln.Locate(searchRoot);
+	if (!root)
+		root = theSln.GetRoot();
     theSln.Search(text, scope, root, results);
     ui.treeResults->clear();
     for(auto pos : results) {

@@ -107,7 +107,6 @@ private slots:
 private:
 
 	TREEITEM CurrItem();
-    DocItem* currDoc();
 
     void SetCurrItemStatus(ETreeStatus status);
     void SetCurrNodeStatus(ETreeStatus status);

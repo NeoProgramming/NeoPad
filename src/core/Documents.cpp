@@ -239,7 +239,7 @@ bool Documents::LoadSubBase(const QString &id, DocItem* tpNode)
 	pugi::xml_document xdoc;
 	pugi::xml_node txElem;
     if (!theSln.LoadXml(apath, xdoc, txElem))
-		return false;
+		return Fail("Error open xml file"), false;
 
     // rdir, id
 	tpNode->LoadItemPaths(apath);
@@ -786,6 +786,8 @@ void Documents::TransformDocs(int bi)
 DocItem* Documents::Locate(const QString &guid)
 {
 	// recursive search on tree
+	if (guid.isEmpty())
+		return nullptr;
 	DocItem* result = nullptr;
 	ForEach([&](DocItem* pos) {
 		// search in title
