@@ -62,6 +62,7 @@ public:
 
 	bool    IsPublic();
 	int     GetPublicChildrenCount();
+	int     GetDescendantsCount();
 	void    SetCheck(bool check);
 	bool    GetCheck();
 	QString GetId();

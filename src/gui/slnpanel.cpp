@@ -1257,8 +1257,11 @@ void SlnPanel::onFindPrev()
 void SlnPanel::onSelNode()
 {
 	TopicChooser dlg(this, "Select node to search");
-	if (!dlg.DoModal())
+	if (!dlg.DoModal()) {
+		searchRoot = "";
+		ui.lineNode->setText("");
 		return;
+	}
 	searchRoot = dlg.m_posSelected->GetGuid();
 	if (dlg.m_posSelected)
 		ui.lineNode->setText(dlg.m_posSelected->GetTitles(0));

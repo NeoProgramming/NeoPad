@@ -60,6 +60,16 @@ int DocItem::GetPublicChildrenCount()
 	return count;
 }
 
+int DocItem::GetDescendantsCount()
+{
+	int count = 0;
+	for (auto child : children) {
+		count ++;
+		count += child->GetDescendantsCount();
+	}
+	return count;
+}
+
 void DocItem::SetCheck(bool _check)
 {
 	this->check = _check;
@@ -87,8 +97,8 @@ void DocItem::ChangeModify(bool modify, bool recursive)
 QString DocItem::GetInfo()
 {
 	// generate an information string with the element status
-	QString info = QString("SubBase: %1, Modify: %2, OwnRDir: %3")
-		.arg(p_subbase).arg(p_modify).arg(rdir);
+	QString info = QString("SubBase: %1, Modify: %2, OwnRDir: %3, SubItems: %4")
+		.arg(p_subbase).arg(p_modify).arg(rdir).arg(GetDescendantsCount());
 	return info;
 }
 
