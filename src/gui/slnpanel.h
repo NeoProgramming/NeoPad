@@ -153,6 +153,7 @@ private:
 	QMenu *submenuOpen1Ext;
 
 	QAction *actionCheckTree;
+	QAction *actionCheckIds;
 	QAction *actionCheckText;
 	QAction *actionCheckTags;
 	QAction *actionCheckAttrs;

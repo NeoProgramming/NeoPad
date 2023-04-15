@@ -56,7 +56,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	m_LangIcons[(int)ELangStatus::LS_QOLD] = QIcon(":/langicons/images/li-qold.png");
 
 	QMenu *menu = new QMenu(this);	
-	actionCheckTree = menu->addAction("Search in Tree");
+	actionCheckTree = menu->addAction("Search in Tree Titles");
+	actionCheckIds  = menu->addAction("Search in Tree Ids");
 	actionCheckText = menu->addAction("Search in Text");
 	actionCheckTags = menu->addAction("Search in HTML Tags");
 	actionCheckAttrs= menu->addAction("Search in HTML Attributes");
@@ -65,9 +66,11 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 //	menu->addAction("Whole words");
 
 	actionCheckTree->setCheckable(true);
+	actionCheckIds->setCheckable(true);
 	actionCheckText->setCheckable(true);
 	actionCheckTags->setCheckable(true);
 	actionCheckAttrs->setCheckable(true);
+
 	actionCheckTree->setChecked(true);
 	actionCheckText->setChecked(true);
 
@@ -1216,6 +1219,8 @@ void SlnPanel::onSearch()
 	unsigned int scope = 0;
 	if (actionCheckTree->isChecked())
 		scope |= ESM_TREE;
+	if (actionCheckIds->isChecked())
+		scope |= ESM_ID;
 	if (actionCheckText->isChecked())
 		scope |= ESM_TEXT;
 	if (actionCheckTags->isChecked())

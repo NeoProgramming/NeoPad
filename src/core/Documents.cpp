@@ -801,9 +801,13 @@ void Documents::Search(const QString &text, unsigned int scope, DocItem* root, s
 {
 	// recursive search on tree
 	ForEach(root, [&](DocItem* pos) {
-		// search in title
+		// search in tree
 		if (scope & ESM_TREE) {
 			if (pos->GetTitle(0).contains(text, Qt::CaseInsensitive))
+				results.push_back(pos);
+		}
+		if(scope & ESM_ID) {
+			if (pos->GetId().contains(text, Qt::CaseInsensitive))
 				results.push_back(pos);
 		}
 		// search in file
