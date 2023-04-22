@@ -1110,8 +1110,17 @@ void WebEditView::onImageProperties()
 			HtmlImage::ConvertToFile(image.GetSrc(), dlg.m_fpath);
 		
 		if ((!dlg.m_fpath.isEmpty() && dlg.m_fpath != image.GetSrc()) || dlg.m_action != a) {
-			dlg.m_fpath = PrepareImage(dlg.m_action, dlg.m_adir + "/" + dlg.m_fpath);
-			image.SetSrc(dlg.m_fpath);
+			QString localpath = QUrl(dlg.m_fpath).toLocalFile();
+			if (localpath.isEmpty())
+				localpath = dlg.m_fpath;
+			if(QFileInfo(localpath).isAbsolute())
+				dlg.m_fpath = PrepareImage(dlg.m_action, localpath);
+			else
+				dlg.m_fpath = PrepareImage(dlg.m_action, dlg.m_adir + "/" + localpath);
+			if(dlg.m_fpath.isEmpty())
+				QMessageBox::warning(this, AppTitle, tr("Bad new img src!"), QMessageBox::Ok);
+			else
+				image.SetSrc(dlg.m_fpath);
 		}
 
 		if (dlg.m_delete && !dlg.m_embedded)
