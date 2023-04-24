@@ -578,6 +578,7 @@ void SlnPanel::onDocDoubleClicked(QTreeWidgetItem* qitem, int column)
 	// open document by double click in Contents and SearchResults
 	DocItem *item = qitem->data(0, Qt::UserRole).value<DocItem*>();
 	mw->DoOpenDoc(item, column);
+	UpdateDocItem(qitem);
 }
 
 void SlnPanel::onFavDoubleClicked(QTreeWidgetItem* curItem, int column)
