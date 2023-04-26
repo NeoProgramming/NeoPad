@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>295</width>
-    <height>98</height>
+    <width>297</width>
+    <height>121</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -43,13 +43,6 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3" colspan="2">
-    <widget class="QPushButton" name="pushCancel">
-     <property name="text">
-      <string>Cancel</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <widget class="QLabel" name="label_2">
      <property name="minimumSize">
@@ -76,6 +69,35 @@
     <widget class="QCheckBox" name="checkOpen">
      <property name="text">
       <string>Open file</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="minimumSize">
+      <size>
+       <width>41</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>41</width>
+       <height>16</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Status&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" colspan="4">
+    <widget class="QComboBox" name="comboStatus"/>
+   </item>
+   <item row="3" column="3">
+    <widget class="QPushButton" name="pushCancel">
+     <property name="text">
+      <string>Cancel</string>
      </property>
     </widget>
    </item>

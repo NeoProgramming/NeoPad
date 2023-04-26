@@ -984,9 +984,10 @@ void SlnPanel::OpenInExtProgram(const QString& program, int di)
 void SlnPanel::onAddChildDoc()
 {
 	// insert the blank into the tree
-	NewItemDlg dlg;
+	NewItemDlg dlg(m_TreeIcons);
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
     dlg.m_open = INI::OpenNewDoc;
+	dlg.m_status = INI::DefItemStatus;
 
     TREEITEM item = CurrItem();
     if(item.badDoc()) return;
@@ -995,6 +996,9 @@ void SlnPanel::onAddChildDoc()
     QTreeWidgetItem *nqitem = AddTreeItem(item.qitem, nullptr, dlg.m_title, GetTreeItemIcon(ETreeStatus::TS_UNREADY));
 
 	if (dlg.DoModal() == QDialog::Accepted) {
+		INI::OpenNewDoc = dlg.m_open;
+		INI::DefItemStatus = dlg.m_status;
+
 		// ok - insert the element into the base and connect the workpiece
         DocItem* tpNew = theSln.AddItem(item.doc, nullptr, dlg.m_title, dlg.m_id);
 		if (tpNew) {
@@ -1015,9 +1019,10 @@ void SlnPanel::onAddChildDoc()
 void SlnPanel::onAddSiblingDoc()
 {
 	// insert a new item after the given one
-	NewItemDlg dlg;
+	NewItemDlg dlg(m_TreeIcons);
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
     dlg.m_open = INI::OpenNewDoc;
+	dlg.m_status = INI::DefItemStatus;
 
     TREEITEM item = CurrItem();
     if(item.badDoc() || !item.doc->parent || item.fav) return;
@@ -1026,6 +1031,9 @@ void SlnPanel::onAddSiblingDoc()
     QTreeWidgetItem *nqitem = AddTreeItem(item.qitem->parent(), item.qitem, dlg.m_title, GetTreeItemIcon(ETreeStatus::TS_UNREADY));
 		
 	if (dlg.DoModal() == QDialog::Accepted) {
+		INI::OpenNewDoc = dlg.m_open;
+		INI::DefItemStatus = dlg.m_status;
+
 		// ok - insert the element into the base and connect the workpiece
         DocItem* tpNew = theSln.AddItem(item.doc->parent, item.doc, dlg.m_title, dlg.m_id);
 		if (tpNew) {
