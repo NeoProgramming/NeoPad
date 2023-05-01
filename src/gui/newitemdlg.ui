@@ -41,6 +41,9 @@
      <property name="text">
       <string>OK</string>
      </property>
+     <property name="default">
+      <bool>true</bool>
+     </property>
     </widget>
    </item>
    <item row="0" column="0">
@@ -104,6 +107,14 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>lineId</tabstop>
+  <tabstop>lineTitle</tabstop>
+  <tabstop>comboStatus</tabstop>
+  <tabstop>checkOpen</tabstop>
+  <tabstop>pushOk</tabstop>
+  <tabstop>pushCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
