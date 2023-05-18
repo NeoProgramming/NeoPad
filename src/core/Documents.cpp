@@ -615,7 +615,7 @@ bool Documents::RenameItem(DocItem* tpos, const QString & id)
 void  Documents::RenameTitle(DocItem* item, const QString & title, int bi)
 {
 	// change title
-	if (bi < 0 || bi >= BCNT)
+    if (bi < 0 || bi >= theSln.Cols.BCnt())
 		return;
 	item->title[bi] = title;
 	HandleChanges(item, false);

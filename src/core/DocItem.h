@@ -35,7 +35,6 @@ enum class ELangStatus
 struct DocItem : public BaseItem<DocItem>
 {
 public:
-	// move all BCNT-items to struct
 	// persistent variables
 	union {
 		unsigned long attrs = 0;	// object attributes : 32
@@ -49,12 +48,13 @@ public:
 	ETreeStatus status = ETreeStatus::TS_UNREADY;    // status
 	QString		id;
 	QString     guid;
-	QString		title[BCNT];// custom title
-	time_t		time[BCNT]; // times of last modification
+    // move to struct?
+    std::vector<QString> title;
+    std::vector<time_t> time;
 
 	// internal (non-persistent) variables - for ease of use
 	QString     rdir;		// path to the folder where THIS vmbase file is located, relative to the base root (not used for all MY_ITEMs)
-
+    float       progress;   // calculated proress for this node
 public:
 	DocItem();
 	DocItem(const char *text);
@@ -87,13 +87,13 @@ public:
 	QString GetDocTimeStr(int bi);
 	QString GetCssRelPath(int bi);
 
-	ETreeStatus GetTreeStatus();
+    ETreeStatus GetTreeStatus();
 	ELangStatus GetLangStatus(int di2);
 	   
 	QString GetAbsDir(int bi);
 	QString GetBaseDir();
 	void	UpdateBaseDir();
-
+    void    UpdateProgress(int ci);
 	QString GetRelPath(DocItem *item, int di);
 	QString GetRelUrl(DocItem *item, int di);
 };

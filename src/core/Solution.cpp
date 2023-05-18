@@ -21,7 +21,7 @@ CSolution theSln;
 
 CSolution::CSolution(void)
 {
-	m_BI = &Books;
+    m_BI = &Cols;
 	// constructor - zeroing only! * otherwise conflict with other global constructors)
 	RemoveAll();
 	char buf[1024];
@@ -77,7 +77,7 @@ void CSolution::addProjectToRecent(const QString &path)
 bool CSolution::MakeProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0)
 {
 	// add book before creating root node
-	Books.AddBook(btitle0, bsuffix0, "", "", "");
+    Cols.AddBook(CT_BASE, btitle0, bsuffix0, "", "", "");
 
 	// create document
 	pugi::xml_document xdoc;
@@ -106,12 +106,17 @@ bool CSolution::LoadProject(const QString &fpath)
 		return false;
 
     // load books info - before main tree!
-	if (!Books.LoadBooksInfo(xRoot))
+    if (!Cols.LoadBooksInfo(xRoot))
 		return Fail("No bases found"), false;
 
 	// load documents tree
     if (!Documents::LoadRootBase(fpath, xRoot))
 		return false;
+
+    // update progress
+    int ci = Cols.ProgressCol();
+    if(ci>=0)
+        GetRoot()->UpdateProgress(ci);
 	
     // load favorites - after main tree!
 	Favs.LoadFavorites(xRoot);
@@ -133,7 +138,7 @@ void CSolution::SaveProjectData(pugi::xml_node xRoot)
     // needs for save project data from Documents.SaveSubBase
 
     // save books info
-    Books.SaveBooksInfo(xRoot);
+    Cols.SaveBooksInfo(xRoot);
 
     // save paths as attributes ( deprecated, refactor to Settings.SaveSettings(xRoot) )
     set_attr(xRoot, "images").set_value(codecUtf8->fromUnicode(GetRelPath(m_ImageDir, m_RootDir, false)).constData());
@@ -251,18 +256,12 @@ QString CSolution::GetPrjTitle()
 
 QString CSolution::GetBookDir(int bi)
 {
-    //   if (bi < 0 || bi >= BCNT)
-    //       return m_RootDir + "/" + bdir;
-    //   if(m_Bases[bi].rpath.isEmpty())
-    //       return m_RootDir + "/" + bdir;
-    //   return     m_RootDir + "/" + theSln.m_Bases[bi].rpath + "/" + bdir;
-
-    return theSln.m_RootDir + "/" + theSln.Books.books[bi].rpath;
+    return theSln.m_RootDir + "/" + theSln.Cols.books[bi].rpath;
 }
 
 QString CSolution::GetCssAbsPath(int bi)
 {
-    if (QFileInfo(Books.books[bi].csspath).isAbsolute())
-        return Books.books[bi].csspath;
-    return GetBookDir(bi) + "/" + Books.books[bi].csspath;
+    if (QFileInfo(Cols.books[bi].csspath).isAbsolute())
+        return Cols.books[bi].csspath;
+    return GetBookDir(bi) + "/" + Cols.books[bi].csspath;
 }

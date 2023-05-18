@@ -33,7 +33,7 @@ int ItemProperties::DoModal(DocItem* tpos)
 	ui.lineDoc0Path->setText(tpos->GetDocAbsPath(0));
 	ui.lineTime0->setText(tpos->GetDocTimeStr(0));
 
-	if (theSln.Books.BCnt() >= 2) {
+	if (theSln.Cols.BCnt() >= 2) {
 		ui.lineTitle1->setText(tpos->GetTitle(1));
 		ui.lineDoc1Path->setText(tpos->GetDocAbsPath(1));
 		ui.lineTime1->setText(tpos->GetDocTimeStr(1));

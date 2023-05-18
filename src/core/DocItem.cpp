@@ -7,8 +7,9 @@
 
 DocItem::DocItem() : BaseItem<DocItem>()
 {
-	//for (int i = 0; i<theSln.BCnt(); i++)
-   //	time[i] = -1;
+    title.resize(theSln.Cols.BCnt());
+    time.resize(theSln.Cols.BCnt());
+
 	for (auto &v : time)
 		v = -1;
 
@@ -19,19 +20,23 @@ DocItem::DocItem() : BaseItem<DocItem>()
 
 DocItem::DocItem(const char *text) : BaseItem<DocItem>()
 {
+    title.resize(theSln.Cols.BCnt());
+    time.resize(theSln.Cols.BCnt());
+
 	attrs = 0;
 	title[0] = text;
 	status = ETreeStatus::TS_UNREADY;
-	//for (int i = 0; i<theSln.BCnt(); i++)
-	//	time[i] = -1;
 	for (auto &v : time)
 		v = -1;
 }
 
 DocItem::DocItem(const DocItem &obj) 
 {
+    title.resize(theSln.Cols.BCnt());
+    time.resize(theSln.Cols.BCnt());
+
 	attrs = obj.attrs;
-	for (int i = 0; i < BCNT; i++) {
+    for (int i = 0; i < theSln.Cols.BCnt(); i++) {
 		title[i] = obj.title[i];
 		time[i] = obj.time[i];
 	}
@@ -127,14 +132,14 @@ QString DocItem::GetGuid()
 
 QString DocItem::GetTitle(int bi)
 {
-	if (bi < 0 || bi >= BCNT)
-		return QString();
-	return title[bi];
+    if (bi >= 0 && bi < theSln.Cols.BCnt())
+        return title[bi];
+    return QString();
 }
 
 QString DocItem::GetTitles(int bi)
 {
-	if (bi < 0 || bi >= BCNT)
+    if (bi < 0 || bi >= theSln.Cols.BCnt())
 		return QString();
 	if (!parent)
 		return GetTitle(bi);
@@ -143,14 +148,14 @@ QString DocItem::GetTitles(int bi)
 
 QString DocItem::GetDocLocPath(int bi)
 {
-	QString c = id + theSln.Books.GetDocExt(bi);
+	QString c = id + theSln.Cols.GetDocExt(bi);
 	return c;
 }
 
 QString DocItem::GetDocRelPath(int bi)
 {
 	// get document path
-	if (bi < 0 || bi >= BCNT)
+    if (bi < 0 || bi >= theSln.Cols.BCnt() || !theSln.Cols.books[bi].isBook())
 		return QString();
 
 	QString c = GetBaseDir();
@@ -162,7 +167,7 @@ QString DocItem::GetDocRelPath(int bi)
 QString DocItem::GetDocAbsPath(int bi)
 {
 	// get document path
-	if (bi < 0 || bi >= BCNT)
+    if (bi < 0 || bi >= theSln.Cols.BCnt() || !theSln.Cols.books[bi].isBook())
 		return QString();
 
 	QString c = GetAbsDir(bi);
@@ -193,17 +198,17 @@ QString DocItem::GetVmbLocPath()
 time_t DocItem::GetDocTime(int bi)
 {
 	// get document time from vmbase tags
-	if (bi < 0 || bi >= BCNT)
+    if (bi < 0 || bi >= theSln.Cols.BCnt() || !theSln.Cols.books[bi].isBook() )
 		return 0;
 	return time[bi];
 }
 
 ETreeStatus DocItem::GetTreeStatus()
 {
-	QString path = GetDocAbsPath(0);
-	if (!QFileInfo(path).isFile())
-		return ETreeStatus::TS_UNKNOWN;
-	return status;
+    QString path = GetDocAbsPath(0);
+    if (!QFileInfo(path).isFile())
+        return ETreeStatus::TS_UNKNOWN;
+    return status;
 }
 
 ELangStatus DocItem::GetLangStatus(int di2)
@@ -238,11 +243,11 @@ QString DocItem::GetAbsDir(int bi)
 	// c:/users/user1/project/base1/dir1/dir2/dir3"
 	QString bdir = GetBaseDir();
 
-	if (bi < 0 || bi >= BCNT)
+    if (bi < 0 || bi >= theSln.Cols.BCnt() || !theSln.Cols.books[bi].isBook())
 		return theSln.m_RootDir + "/" + bdir;
-	if (theSln.Books.books[bi].rpath.isEmpty())
+	if (theSln.Cols.books[bi].rpath.isEmpty())
 		return theSln.m_RootDir + "/" + bdir;
-	return     theSln.m_RootDir + "/" + theSln.Books.books[bi].rpath + "/" + bdir;
+	return     theSln.m_RootDir + "/" + theSln.Cols.books[bi].rpath + "/" + bdir;
 }
 
 QString DocItem::GetBaseDir()
@@ -268,6 +273,23 @@ void DocItem::UpdateBaseDir()
 		rdir = item->id + "/" + rdir;
 		item = item->parent;
 	}
+}
+
+void DocItem::UpdateProgress(int ci)
+{
+    static const float weighs[] = {0, 100, 95, 75, 50, 25, 0, 100, 0};
+    progress = weighs[(int)status];
+
+    int count = 1;
+    for (auto child : children) {
+        child->UpdateProgress(ci);
+        if(child->progress >= 0) {
+            progress += child->progress;
+            count++;
+        }
+    }
+    progress /= count;    
+    title[ci].sprintf("%.0f", progress);
 }
 
 const char csTimeFormat[] = "yyyy-MM-dd HH:mm:ss";

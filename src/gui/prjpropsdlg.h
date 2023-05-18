@@ -27,7 +27,7 @@ public:
 
 	QString m_images;
 	QString m_snippets;
-	NeopadBook m_bases[BCNT];
+    std::vector<NeopadCol> m_bases;
 private:
 	Ui::PrjPropsDlg ui;
 };

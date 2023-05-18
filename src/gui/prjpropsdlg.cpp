@@ -33,12 +33,13 @@ int PrjPropsDlg::DoModal()
 	ui.lineBCSS1->setText(m_bases[0].csspath);
 	ui.plainPrefix1->setPlainText(m_bases[0].save_prefix);
 
-	ui.lineBName2->setText(m_bases[1].title);
-	ui.lineBSuffix2->setText(m_bases[1].suffix);
-	ui.lineBPath2->setText(m_bases[1].rpath);
-	ui.lineBCSS2->setText(m_bases[1].csspath);
-	ui.plainPrefix2->setPlainText(m_bases[1].save_prefix);
-	
+    if(m_bases.size()>=2) {
+        ui.lineBName2->setText(m_bases[1].title);
+        ui.lineBSuffix2->setText(m_bases[1].suffix);
+        ui.lineBPath2->setText(m_bases[1].rpath);
+        ui.lineBCSS2->setText(m_bases[1].csspath);
+        ui.plainPrefix2->setPlainText(m_bases[1].save_prefix);
+    }
 	return this->exec();
 }
 
@@ -52,13 +53,13 @@ void PrjPropsDlg::onOk()
 	m_bases[0].rpath = ui.lineBPath1->text();
 	m_bases[0].csspath = ui.lineBCSS1->text();
 	m_bases[0].save_prefix = ui.plainPrefix1->toPlainText();
-	
-	m_bases[1].title = ui.lineBName2->text();
-	m_bases[1].suffix = ui.lineBSuffix2->text();
-	m_bases[1].rpath = ui.lineBPath2->text();
-	m_bases[1].csspath = ui.lineBCSS2->text();
-	m_bases[1].save_prefix = ui.plainPrefix2->toPlainText();
-
+    if(m_bases.size()>=2) {
+        m_bases[1].title = ui.lineBName2->text();
+        m_bases[1].suffix = ui.lineBSuffix2->text();
+        m_bases[1].rpath = ui.lineBPath2->text();
+        m_bases[1].csspath = ui.lineBCSS2->text();
+        m_bases[1].save_prefix = ui.plainPrefix2->toPlainText();
+    }
 	accept();
 }
 

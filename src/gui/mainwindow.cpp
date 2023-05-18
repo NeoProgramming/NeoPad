@@ -528,8 +528,7 @@ void MainWindow::onProjectProperties()
 
 	dlg.m_images   = theSln.m_ImageDir;
 	dlg.m_snippets = theSln.m_Snippets.m_SnippDir;
-	dlg.m_bases[0] = theSln.Books.books[0];
-	dlg.m_bases[1] = theSln.Books.books[1];
+    dlg.m_bases    = theSln.Cols.books;
 		
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
@@ -538,14 +537,16 @@ void MainWindow::onProjectProperties()
 		theSln.m_Snippets.m_SnippDir = dlg.m_snippets;
 		// bases
 		int cnt = std::max(1, !dlg.m_bases[0].suffix.isEmpty() + !dlg.m_bases[1].suffix.isEmpty());
-		theSln.Books.booksCnt = cnt;
-		for (int bi = 0; bi < BCNT; bi++) {
-			theSln.Books.books[bi] = dlg.m_bases[bi];
-			if (theSln.Books.books[bi].load_prefix != theSln.Books.books[bi].save_prefix) {
-				setCursor(Qt::WaitCursor);
-				theSln.TransformDocs(bi);
-				setCursor(Qt::ArrowCursor);
-			}
+        theSln.Cols.booksCnt = cnt;
+        for (int bi = 0; bi < theSln.Cols.BCnt(); bi++) {
+            if(theSln.Cols.books[bi].isBook()) {
+                theSln.Cols.books[bi] = dlg.m_bases[bi];
+                if (theSln.Cols.books[bi].load_prefix != theSln.Cols.books[bi].save_prefix) {
+                    setCursor(Qt::WaitCursor);
+                    theSln.TransformDocs(bi);
+                    setCursor(Qt::ArrowCursor);
+                }
+            }
 		}
 		m_wSln->LoadBookTitles();
 	}

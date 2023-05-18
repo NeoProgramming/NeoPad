@@ -1,11 +1,6 @@
 #pragma once
 
-// maximal books count
-#define BCNT	2
-
 const char AppTitle[] = "NeoPad";
-
-
 
 namespace MBA
 {

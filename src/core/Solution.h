@@ -23,7 +23,7 @@ public:
 	Snippets  m_Snippets;
 	QString   m_RecentClipboard;
 
-	BooksInfo Books;
+    Columns   Cols;
 	//Documents Docs; // temporary commented
 	Favorites Favs;
 public:

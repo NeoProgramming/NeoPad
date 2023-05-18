@@ -12,7 +12,7 @@ public:
 	static const char*	GetTreeStatus(ETreeStatus status);
 
 public:
-	BooksInfo *m_BI = nullptr;
+	Columns *m_BI = nullptr;
 	bool m_bModify = false;	// an indication that the tree or files have been modified at least once since the start of the program
 	QString m_RootDir;		// main base for xml files
 	QString m_Password;

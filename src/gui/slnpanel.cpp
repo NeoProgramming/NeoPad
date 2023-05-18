@@ -130,7 +130,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionOpenVmbaseInTextEditor = MakeAction(tr("Open VMB in Text Editor"), &SlnPanel::onOpenVmbaseInExtTextEditor);
 	QAction *actionItemMove = MakeAction(tr("Move item..."), &SlnPanel::onMoveItem);
 
-	//!+! shortcuts does not trigger action, see eventFilter()
+    // shortcuts does not trigger action, see eventFilter()
 	QAction *actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), &SlnPanel::onItemProperties);
 	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
 
@@ -377,23 +377,22 @@ bool SlnPanel::eventFilter(QObject * o, QEvent * e)
 void SlnPanel::LoadBookTitles()
 {
 	QTreeWidgetItem* headerItem;
-	int n = theSln.Books.BCnt();
+	int n = theSln.Cols.BCnt();
 	ui.treeContents->setColumnCount(n); 
 	ui.treeFavorites->setColumnCount(n);
 
-	headerItem  = ui.treeContents->headerItem();
-	headerItem->setText(0, theSln.Books.books[0].title);
-	if(n>=2)
-		headerItem->setText(1, theSln.Books.books[1].title);
-
+    headerItem  = ui.treeContents->headerItem();
+    for(int i=0; i<n; i++) {
+        headerItem->setText(i, theSln.Cols.books[i].title);
+    }
     headerItem = ui.treeFavorites->headerItem();
-    headerItem->setText(0, theSln.Books.books[0].title);
-	if(n>=2)
-		headerItem->setText(1, theSln.Books.books[1].title);
+    for(int i=0; i<n; i++) {
+        headerItem->setText(i, theSln.Cols.books[i].title);
+    }
 
-    submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.Books.books[0].title));
+    submenuOpen0Ext->setTitle(tr("Doc0 (%1)").arg(theSln.Cols.books[0].title));
 	if(n>=2)
-		submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.Books.books[1].title));
+		submenuOpen1Ext->setTitle(tr("Doc1 (%1)").arg(theSln.Cols.books[1].title));
 	else
 		submenuOpen1Ext->setTitle(tr("Doc1 (---)"));
 }
@@ -642,14 +641,17 @@ void SlnPanel::UpdateDocItem(QTreeWidgetItem * qitem)
 void SlnPanel::UpdateDocItem(QTreeWidgetItem * qitem, DocItem* tpos)
 {
     // set the text and picture of the view node by explicitly specified model node
-    qitem->setText(0, tpos->GetTitle(0));
-	ETreeStatus im = tpos->GetTreeStatus();
-    qitem->setIcon(0, GetTreeItemIcon(im));
-	if (theSln.Books.BCnt() >= 2) {
-        qitem->setText(1, tpos->GetTitle(1));
-		ELangStatus ls = tpos->GetLangStatus(1);
-        qitem->setIcon(1, GetLangItemIcon(ls));
-	}
+    for(int i=0; i<theSln.Cols.BCnt(); i++) {
+        qitem->setText(i, tpos->GetTitle(i));
+        if(theSln.Cols.GetColType(i) == CT_BASE) {
+            ETreeStatus im = tpos->GetTreeStatus();
+            qitem->setIcon(0, GetTreeItemIcon(im));
+        }
+        else if(theSln.Cols.GetColType(i) == CT_BOOK) {
+            ELangStatus ls = tpos->GetLangStatus(1);
+            qitem->setIcon(1, GetLangItemIcon(ls));
+        }
+    }
 }
 
 void SlnPanel::UpdateFavItem(QTreeWidgetItem * item)
@@ -826,6 +828,13 @@ void SlnPanel::SetCurrItemStatus(ETreeStatus status)
 
 	theSln.SetStatus(tpos, status, false);
     UpdateDocItem(item);
+
+    // update progress
+    int ci = theSln.Cols.ProgressCol();
+    if(ci>=0) {
+        theSln.GetRoot()->UpdateProgress(ci);
+        UpdateTree();
+    }
 }
 
 void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
