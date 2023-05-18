@@ -628,6 +628,7 @@ void SlnPanel::RemoveItemDontAsk(bool del_files)
         Update(nullptr, nullptr);
 		LoadFavCombo(); // perhaps we removed local root in favs
         mw->projectModified(true);
+		UpdateTreesIfNeeded(true);
     }
 }
 
@@ -774,19 +775,6 @@ void SlnPanel::UpdateFavTree()
     });    
 }
 
-void SlnPanel::UpdateNode(QTreeWidgetItem * qitem)
-{
-    // to remove?
-	// recursively update all pictures of the whole tree
-    UpdateDocItem(qitem);
-    int n = qitem->childCount();
-	for (int i = 0; i < n; i++)
-	{
-        QTreeWidgetItem *qchild = qitem->child(i);
-        UpdateNode(qchild);
-	}
-}
-
 void SlnPanel::UpdateDocItemsByObj(DocItem* pos)
 {
     // for update language status from 'SaveHtml' function
@@ -813,12 +801,6 @@ void SlnPanel::UpdateDocItemsByObj(DocItem* pos)
     });
 }
 
-void SlnPanel::UpdateTree()
-{
-    // to remove
-    UpdateNode(ui.treeContents->topLevelItem(0));
-}
-
 void SlnPanel::SetCurrItemStatus(ETreeStatus status)
 {
 	QTreeWidgetItem *item = ui.treeContents->currentItem();
@@ -829,12 +811,7 @@ void SlnPanel::SetCurrItemStatus(ETreeStatus status)
 	theSln.SetStatus(tpos, status, false);
     UpdateDocItem(item);
 
-    // update progress
-    int ci = theSln.Cols.ProgressCol();
-    if(ci>=0) {
-        theSln.GetRoot()->UpdateProgress(ci);
-        UpdateTree();
-    }
+	UpdateTreesIfNeeded(false);
 }
 
 void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
@@ -845,8 +822,23 @@ void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
 	if (!tpos) return;
 
 	theSln.SetStatus(tpos, status, true);
-    UpdateNode(item);
+	UpdateTreesIfNeeded(true);
 }
+
+void SlnPanel::UpdateTreesIfNeeded(bool all)
+{
+	// update progress
+	int ci = theSln.Cols.ProgressCol();
+	if (ci >= 0) {
+		theSln.GetRoot()->UpdateProgress(ci);
+		all = true;
+	}
+	if(all) {
+		UpdateDocTree();
+		UpdateFavTree();
+	}
+}
+
 
 void SlnPanel::Update(QTreeWidgetItem *qitem, DocItem *doc)
 {
@@ -1015,6 +1007,7 @@ void SlnPanel::onAddChildDoc()
             Update(nqitem, nullptr);
             if (dlg.m_open)
 				mw->DoOpenDoc(tpNew, 0);
+			UpdateTreesIfNeeded(true);
 			return; // ok
 		}
 		else {
@@ -1050,6 +1043,7 @@ void SlnPanel::onAddSiblingDoc()
             Update(nqitem, nullptr);
             if(dlg.m_open)
 				mw->DoOpenDoc(tpNew, 0);
+			UpdateTreesIfNeeded(true);
 			return; // ok
 		}
 		else {
@@ -1122,6 +1116,7 @@ void SlnPanel::onMoveItemParent()
         QTreeWidgetItem *parpar = parent->parent();
         MoveItem(item.qitem, parpar, parent);
         Update(item.qitem, item.doc);
+		UpdateTreesIfNeeded(true);
 	}
 }
 
@@ -1136,6 +1131,7 @@ void SlnPanel::onMoveItemChild()
         QTreeWidgetItem *prev = GetPrevSibling(item.qitem);
         MoveItem(item.qitem, prev, 0);
         Update(item.qitem, item.doc);
+		UpdateTreesIfNeeded(true);
 	}
 }
 
@@ -1156,6 +1152,7 @@ void SlnPanel::onMoveItem()
                 SetCurrentItem(item.qitem);
             }
             Update(item.qitem, item.doc);
+			UpdateTreesIfNeeded(true);
         }
     }
 }

@@ -38,14 +38,13 @@ public:
 
     bool eventFilter(QObject *, QEvent *);
 	
+	void UpdateTreesIfNeeded(bool all);
+
     void UpdateDocItemsByObj(DocItem* item);
     void UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos);
     void UpdateDocItem(QTreeWidgetItem * item);
     void UpdateFavItem(QTreeWidgetItem * item);
-
-    void UpdateNode(QTreeWidgetItem * item);    // to remove?
-    void UpdateTree();  // to remove?
-
+   
     void UpdateDocNode(QTreeWidgetItem * qnode, DocItem *node);
     void UpdateDocTree();
     void UpdateFavTree();

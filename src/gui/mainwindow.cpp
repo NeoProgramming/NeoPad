@@ -519,7 +519,9 @@ void MainWindow::onProjectSaveAll()
 		}
 		++i;
 	}
-    getSln()->UpdateTree();
+	// update language status
+    getSln()->UpdateDocTree();
+	getSln()->UpdateFavTree();
 }
 
 void MainWindow::onProjectProperties()
