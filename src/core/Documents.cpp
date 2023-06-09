@@ -162,8 +162,8 @@ void Documents::SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool re
 DocItem * Documents::CreateRoot(const QString& id, const  QString& dir)
 {
 	// create root
-    if (!IsLegalFileName(id))
-        return nullptr;
+   // if (!IsLegalFileName(id))
+   //     return nullptr;
 	if (!QDir::isAbsolutePath(dir))
 		return nullptr;	// error
 
