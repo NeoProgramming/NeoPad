@@ -7,6 +7,8 @@
 bool IsBlank(const QString &s);
 void AddSlash(QString &path);
 void NormalizeFName(QString &c);
+bool IsLegalFileName(QString fname);
+
 unsigned int GenerateUniqueFNum(const QString& path, const QString& name, const QString& ext);
 QString	GenerateUniqueFTitle(const QString& path, const QString& name, const QString& ext);
 QString	GenerateUniqueFName(const QString& path, const QString& name, const QString& ext);

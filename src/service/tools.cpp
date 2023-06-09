@@ -26,14 +26,39 @@ void AddSlash(QString &path)
 		path += '/';
 }
 
-void NormalizeFName(QString &c)
+void NormalizeFName(QString &fname)
 {
 	// normalization of the name, replacement of any curved characters like *? / \ on underscores
-	c.replace('/', '_');
-	c.replace('\\', '_');
-	c.replace('*', '_');
-	c.replace('?', '_');
-	c.replace(':', '_');
+    QString illegal="<>:\"|?*/\\ .";
+    for(int i=0; i<fname.length(); i++)  {
+        if (fname[i].toLatin1() >= 0 && fname[i].toLatin1() < 32)
+            fname[i] = '_';
+        if (illegal.contains(fname[i]))
+            fname[i] = '_';
+    }
+}
+
+bool IsLegalFileName(QString fname)
+{
+    if (!fname.length())
+        return false;
+    QString illegal="<>:\"|?*/\\ .";
+    foreach (const QChar& c, fname) {
+        if (c.toLatin1() >= 0 && c.toLatin1() < 32)
+            return false;
+        if (illegal.contains(c))
+            return false;
+    }
+    fname = fname.toUpper();
+    static QStringList devices;
+    if (!devices.count())
+        devices << "CON" << "PRN" << "AUX" << "NUL"
+                << "COM0" << "COM1" << "COM2" << "COM3" << "COM4" << "COM5" << "COM6" << "COM7" << "COM8" << "COM9"
+                << "LPT0" << "LPT1" << "LPT2" << "LPT3" << "LPT4" << "LPT5" << "LPT6" << "LPT7" << "LPT8" << "LPT9";
+    foreach (const QString& d, devices)
+        if (fname == d)
+            return false;
+    return true;
 }
 
 unsigned int GenerateUniqueFNum(const QString& path, const QString& name, const QString& ext)
@@ -226,3 +251,5 @@ void SetCurrentItem(QTreeWidgetItem *item)
 {
     item->treeWidget()->setCurrentItem(item);
 }
+
+

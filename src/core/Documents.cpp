@@ -159,18 +159,20 @@ void Documents::SaveSubTag(pugi::xml_node pxParent, DocItem* tposParent, bool re
 	}
 }
 
-DocItem * Documents::CreateRoot(const QString& name, const  QString& dir)
+DocItem * Documents::CreateRoot(const QString& id, const  QString& dir)
 {
 	// create root
+    if (!IsLegalFileName(id))
+        return nullptr;
 	if (!QDir::isAbsolutePath(dir))
 		return nullptr;	// error
-	else
-		m_RootDir = dir;
+
+    m_RootDir = dir;
 	DocItem *item = AddRoot();
-	item->id = name;
+    item->id = id;
 	item->guid = QUuid::createUuid().toRfc4122().toHex();
 	NormalizeFName(item->id);
-	item->title[0] = !IsBlank(name) ? name : "noname";
+    item->title[0] = !IsBlank(id) ? id : "noname";
 	item->rdir = "";
 	item->p_subbase = 1;
 	return item;
@@ -286,7 +288,7 @@ DocItem* Documents::AddItem(DocItem* tpPar, DocItem* tpAfter, const QString& tit
 	// add child to tree
 	if (!tpPar)
 		return nullptr;
-	if (IsBlank(id))
+    if (!IsLegalFileName(id))
 		return nullptr;
 
 	// check to see if we overwrite something
@@ -588,8 +590,10 @@ bool Documents::RenameItem(DocItem* tpos, const QString & id)
 {
 	if (id == tpos->GetId())
 		return true;
+    if (!IsLegalFileName(id))
+        return false;
 	if (!IsFNamesAvailable(tpos, id))
-		return false;
+        return false;
 
 	QString vmb = tpos->GetAbsDir(-1) + "/" + id + ".vmbase";
 	QString dir = tpos->parent->GetAbsDir(-1) + "/" + id;
