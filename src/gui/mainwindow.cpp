@@ -667,12 +667,12 @@ bool MainWindow::DoPrjOpen(const QString& fpath)
 	}
 
     bool res = theSln.LoadProject(fpath);
-	m_wSln->Load();
 	if(!res) {
 		QMessageBox::warning(this, "Error", 
-			QString("Error loading file %1\r\n%2").arg(fpath).arg(FailMsg));
+			QString("Error loading project %1\r\n%2").arg(fpath).arg(FailMsg));
 		return false;
 	}
+	m_wSln->Load();
 	UpdateTitle();
 	return res;
 }
