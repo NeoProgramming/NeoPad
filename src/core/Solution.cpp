@@ -74,6 +74,12 @@ void CSolution::addProjectToRecent(const QString &path)
 	INI::CurrProjectPath = U8(path);
 }
 
+void CSolution::QuitProject()
+{
+	if (m_root)
+		WS.Save(theSln.m_root->GetVmbAbsPath());
+}
+
 bool CSolution::MakeProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0)
 {
 	// add book before creating root node
@@ -88,6 +94,7 @@ bool CSolution::MakeProject(const QString& name, const QString& dir, const QStri
 		return false;
 
 	Favs.MakeRoot();
+	WS.Init();
 
 	return SaveProject(true);
 }
@@ -128,6 +135,8 @@ bool CSolution::LoadProject(const QString &fpath)
 
 	// add to recent
 	theSln.addProjectToRecent(fpath);
+	// load workspace
+	WS.Load(fpath);
 
 	return true;
 }
@@ -165,10 +174,12 @@ bool CSolution::SaveProject(bool recursive)
 
     // save project-specific data
     SaveProjectData(xRoot);
-
+		
+	QString fpath = m_root->GetVmbAbsPath();
+	// save workspace
+	WS.Save(fpath);
 	// write file
-	QString path = m_root->GetVmbAbsPath();
-    if (SaveXml(path, xdoc)) {
+    if (SaveXml(fpath, xdoc)) {
 		m_root->ChangeModify(false, true);
 		return true;
 	}

@@ -17,7 +17,6 @@ int  TableProperties::DoModal(int rowsCount, int colsCount, const QString &cls)
 	return this->exec();
 }
 
-//-------------------------------------------------
 void TableProperties::accept()
 {	
 	// transfer the selected data to the table structure

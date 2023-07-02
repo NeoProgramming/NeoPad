@@ -223,6 +223,7 @@
     <ClCompile Include="src\core\FavItem.cpp" />
     <ClCompile Include="src\core\Snippets.cpp" />
     <ClCompile Include="src\core\Solution.cpp" />
+    <ClCompile Include="src\core\Workspace.cpp" />
     <ClCompile Include="src\gui\htmllink.cpp" />
     <ClCompile Include="src\gui\passworddlg.cpp" />
     <ClCompile Include="src\service\cstr.cpp" />
@@ -271,6 +272,7 @@
     <ClInclude Include="src\core\FavItem.h" />
     <ClInclude Include="src\core\Snippets.h" />
     <ClInclude Include="src\core\Solution.h" />
+    <ClInclude Include="src\core\Workspace.h" />
     <ClInclude Include="src\gui\htmllink.h" />
     <ClInclude Include="src\service\search.h" />
     <ClInclude Include="src\service\xini.h" />

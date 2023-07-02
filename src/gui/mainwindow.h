@@ -95,6 +95,9 @@ protected:
     void closeEvent(QCloseEvent *);
     
 private:
+	void QuitProject();
+	void OpenTabs();
+	void SaveTabs();
 	WebEditView *GetActiveMdiChild();
     void onChild(void (WebEditView::*pHandler)());
 	void GenContents(int bi);

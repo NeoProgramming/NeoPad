@@ -11,6 +11,7 @@
 #include "vmbsrv.h"
 #include "Documents.h"
 #include "Favorites.h"
+#include "Workspace.h"
 
 class CSolution 
 	: public Documents // temporary
@@ -22,7 +23,7 @@ public:
 	QString   m_ImageDir;		// path to the directory with pictures
 	Snippets  m_Snippets;
 	QString   m_RecentClipboard;
-
+	Workspace WS;
     Columns   Cols;
 	//Documents Docs; // temporary commented
 	Favorites Favs;
@@ -33,6 +34,7 @@ public:
 	void	saveSettings();
 	void	addProjectToRecent(const QString &path);
 
+	void    QuitProject();
     bool    MakeProject(const QString& name, const QString& dir, const QString &btitle0, const QString &bsuffix0);
     bool	LoadProject(const QString &fpath);
     bool	SaveProject(bool recursive);

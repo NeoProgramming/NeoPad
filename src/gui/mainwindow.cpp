@@ -50,7 +50,6 @@ extern Q_CORE_EXPORT int qt_ntfs_permission_lookup;
 
 extern QTextCodec *codecUtf8;
 
-//-------------------------------------------------
 MainWindow::MainWindow()
 {
 	theSln.m_pCB = this;
@@ -284,16 +283,24 @@ void MainWindow::onPostInit()
 	onProjectQuickStart();
 }
 
-//-------------------------------------------------
 MainWindow::~MainWindow()
 {
 }
 
-//-------------------------------------------------
+void MainWindow::QuitProject()
+{
+	m_wSln->SaveDocs();
+	m_wSln->SaveFavs();
+	SaveTabs();
+	theSln.QuitProject();
+}
+
 void MainWindow::closeEvent(QCloseEvent *e)
 {
 	if (DoSaveAll())
 	{
+		QuitProject();
+
 		saveSettings();
 		if(theSln.m_bModify && !m_doCommit)
 		{
@@ -313,8 +320,30 @@ void MainWindow::closeEvent(QCloseEvent *e)
 	}
 }
 
+void MainWindow::OpenTabs()
+{
+	for(auto guid : theSln.WS.TabItems) {
+		DocItem* pos = theSln.Locate(guid);
+		if (!pos)
+			return;
+		OpenDoc(pos, 0);
+	}
+}
 
-//-------------------------------------------------
+void MainWindow::SaveTabs()
+{
+	QList<QMdiSubWindow *> wl = m_wArea->subWindowList();
+	QList<QMdiSubWindow *>::Iterator i = wl.begin();
+	QList<QMdiSubWindow *>::Iterator e = wl.end();
+	theSln.WS.TabItems.clear();
+	while (i != e) {
+		QMdiSubWindow *subwnd = *i;
+		WebEditView *view = qobject_cast<WebEditView *>(subwnd->widget());
+		theSln.WS.TabItems.push_back(view->m_Item->guid);
+		++i;
+	}
+}
+
 void MainWindow::onAppAbout()
 {
     QMessageBox box(this);
@@ -345,7 +374,6 @@ void MainWindow::onAppAboutQt()
     QMessageBox::aboutQt(this);
 }
 
-//-------------------------------------------------
 MainWindow* MainWindow::newWindow()
 {
 	qDebug()<< "newWindow()";
@@ -359,7 +387,6 @@ MainWindow* MainWindow::newWindow()
     return mw;
 }
 
-//-------------------------------------------------
 void MainWindow::saveSettings()
 {
 	QByteArray ba, ha;
@@ -409,14 +436,11 @@ void MainWindow::loadScripts()
 	file.close();
 }
 
-
-//-------------------------------------------------
 SlnPanel* MainWindow::getSln() const
 {
     return m_wSln;
 }
 
-//-------------------------------------------------
 void MainWindow::onProjectOpen(QString fileName)
 {
 	if (!fileName.isEmpty())
@@ -460,7 +484,6 @@ void MainWindow::onProjectEncrypt()
 	}
 }
 
-//-------------------------------------------------
 void MainWindow::onAppExit()
 {
 	m_doCommit = true;
@@ -481,7 +504,6 @@ void MainWindow::onTreeSync()
     }
 }
 
-//-------------------------------------------------
 void MainWindow::onProjectNew()
 {
 	NewProjectDlg dlg;
@@ -578,7 +600,6 @@ void MainWindow::onProjectStatistics()
     QMessageBox::information(this, tr("Statistics"), str );
 }
 
-//-------------------------------------------------
 void MainWindow::projectModified(bool modified)
 {
 	ui.actionFileSave->setEnabled(modified);
@@ -655,6 +676,9 @@ void MainWindow::DoQuickStart(int code)
 
 bool MainWindow::DoPrjOpen(const QString& fpath)
 {
+	// save previous project workspace
+	QuitProject();
+
 	// is encrypted
 	if (isEncrypted(fpath)) {
 		PasswordDlg dlg;
@@ -674,6 +698,7 @@ bool MainWindow::DoPrjOpen(const QString& fpath)
 	}
 	m_wSln->Load();
 	UpdateTitle();
+	OpenTabs();
 	return res;
 }
 

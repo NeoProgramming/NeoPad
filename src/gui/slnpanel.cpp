@@ -406,6 +406,8 @@ void SlnPanel::LoadDocLevel(DocItem* tposNode, QTreeWidgetItem *parent)
         UpdateDocItem(item);
 		LoadDocLevel(tpos, item);
 	}
+	if(theSln.WS.DocItems.contains(tposNode->guid))
+		parent->setExpanded(true);
 }
 
 void SlnPanel::Load()
@@ -1489,4 +1491,41 @@ void SlnPanel::onEditGroup()
         qitem->setSelected(true);
         ReloadFavCombo(sel);    // this causes the entire list to be reloaded, and therefore the tree! and qitem becomes invalid
 	}
+}
+
+void SlnPanel::SaveDocs()
+{
+	theSln.WS.DocItems.clear();
+	auto r = ui.treeContents->topLevelItem(0);
+	if (!r)
+		return;
+	ForEachItem(r, [&](QTreeWidgetItem *item) {
+		if (item && item->isExpanded()) {
+			DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
+			if(doc)
+				theSln.WS.DocItems.insert(doc->guid);
+		}
+		return false;
+	});
+}
+
+void SlnPanel::SaveFavs()
+{
+	theSln.WS.FavItems.clear();
+	auto r = ui.treeFavorites->topLevelItem(0);
+	if (!r)
+		return;
+	ForEachItem(r, [&](QTreeWidgetItem *item) {
+		if (item && item->isExpanded()) {
+			FavItem* fav = item->data(0, Qt::UserRole).value<FavItem*>();
+			if (fav) {
+				//theSln.WS.DocItems.insert(fav->guid);
+			}
+			else {
+				DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
+				if (doc) theSln.WS.DocItems.insert(doc->guid);
+			}
+		}
+		return false;
+	});
 }

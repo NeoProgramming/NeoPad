@@ -54,7 +54,8 @@ public:
     void EnsureVisible(DocItem* node);
 	void Load();
 	void LoadBookTitles();	
-
+	void SaveDocs();
+	void SaveFavs();
 private slots:
     void onSearch();
 	void onFindNext();
@@ -104,7 +105,7 @@ private slots:
     void processEvents();
 	
 private:
-
+	
 	TREEITEM CurrItem();
 
     void SetCurrItemStatus(ETreeStatus status);

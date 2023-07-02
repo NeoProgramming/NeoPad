@@ -111,7 +111,6 @@ QByteArray U8a(const QString &s)
 	return codecUtf8->fromUnicode(s);
 }
 
-//-------------------------------------------------
 bool OpenInExternalApplication(QWidget *par, const QString &app, const QString &fpath)
 {
 	QStringList arguments;
