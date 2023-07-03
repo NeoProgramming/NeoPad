@@ -1510,7 +1510,7 @@ void SlnPanel::SaveDocs()
 }
 
 void SlnPanel::SaveFavs()
-{
+{/*
 	theSln.WS.FavItems.clear();
 	auto r = ui.treeFavorites->topLevelItem(0);
 	if (!r)
@@ -1527,5 +1527,5 @@ void SlnPanel::SaveFavs()
 			}
 		}
 		return false;
-	});
+	});*/
 }

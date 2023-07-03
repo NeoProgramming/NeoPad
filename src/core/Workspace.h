@@ -6,8 +6,9 @@
 class Workspace {
 public:
 	QSet<QString> DocItems;
-	QSet<QString> FavItems;
+	//QSet<QString> FavItems;
 	QList<QString> TabItems;
+	QString TabActive;
 public:
 	void Init();
 	bool Load(const QString &basePath);

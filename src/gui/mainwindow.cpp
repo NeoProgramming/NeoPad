@@ -322,8 +322,31 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::OpenTabs()
 {
-	for(auto guid : theSln.WS.TabItems) {
-		DocItem* pos = theSln.Locate(guid);
+	for(auto s : theSln.WS.TabItems) {
+		QStringList parts = s.split(":");
+		if (parts.count() == 2) {
+			DocItem* pos = theSln.Locate(parts.front());
+			if (!pos)
+				return;
+			OpenDoc(pos, parts.back().toInt());
+		}
+		else {
+			DocItem* pos = theSln.Locate(s);
+			if (!pos)
+				return;
+			OpenDoc(pos, 0);
+		}
+	}
+
+	QStringList parts = theSln.WS.TabActive.split(":");
+	if (parts.count() == 2) {
+		DocItem* pos = theSln.Locate(parts.front());
+		if (!pos)
+			return;
+		OpenDoc(pos, parts.back().toInt());
+	}
+	else {
+		DocItem* pos = theSln.Locate(theSln.WS.TabActive);
 		if (!pos)
 			return;
 		OpenDoc(pos, 0);
@@ -339,8 +362,18 @@ void MainWindow::SaveTabs()
 	while (i != e) {
 		QMdiSubWindow *subwnd = *i;
 		WebEditView *view = qobject_cast<WebEditView *>(subwnd->widget());
-		theSln.WS.TabItems.push_back(view->m_Item->guid);
+		if(view)
+			theSln.WS.TabItems.push_back(view->m_Item->guid + ":" + QString::number(view->m_di));
 		++i;
+	}
+	QMdiSubWindow *active = m_wArea->activeSubWindow();
+	if (active) {
+		WebEditView *view = qobject_cast<WebEditView *>(active->widget());
+		if (view)
+			theSln.WS.TabActive = view->m_Item->guid + ":" + QString::number(view->m_di);
+	}
+	else {
+		theSln.WS.TabActive = "";
 	}
 }
 
