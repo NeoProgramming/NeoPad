@@ -3,6 +3,7 @@
 #include <QString>
 #include <QToolBar>
 #include <QTreeWidgetItem>
+#include "../core/DocItem.h"
 
 bool IsBlank(const QString &s);
 void AddSlash(QString &path);
@@ -33,3 +34,5 @@ QTreeWidgetItem* GetPrevSibling(QTreeWidgetItem *item);
 QTreeWidgetItem* GetNextSibling(QTreeWidgetItem *item);
 void MoveItem(QTreeWidgetItem *item, QTreeWidgetItem *insparent, QTreeWidgetItem *insafter);
 void SetCurrentItem(QTreeWidgetItem *item);
+
+QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);

@@ -8,7 +8,7 @@
 #include <QDateTime>
 #include <QTextCodec>
 #include <QMessageBox>
-
+#include "../core/DocItem.h"
 
 extern QTextCodec *codecUtf8;
 
@@ -251,4 +251,20 @@ void SetCurrentItem(QTreeWidgetItem *item)
     item->treeWidget()->setCurrentItem(item);
 }
 
+QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos)
+{
+	// recursive search for an element with a given identifier
+	// checking this item
+	DocItem* pos = par->data(0, Qt::UserRole).value<DocItem*>();
+	if (pos == mtpos)
+		return par;
 
+	// recursive traversal of the rest
+	int n = par->childCount();
+	for (int i = 0; i < n; i++) {
+		QTreeWidgetItem* found = FindItem(par->child(i), mtpos);
+		if (found)
+			return found;
+	}
+	return 0;
+}

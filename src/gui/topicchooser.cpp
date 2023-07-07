@@ -1,5 +1,6 @@
 #include "topicchooser.h"
 #include <QTextCodec>
+#include "../service/tools.h"
 
 extern QTextCodec *codecUtf8;
 
@@ -14,7 +15,7 @@ TopicChooser::TopicChooser(QWidget *parent, const QString &title)
 	headerItem->setText(0, "Items");
 }
 
-bool TopicChooser::DoModal(bool checks)
+bool TopicChooser::DoModal(bool checks, DocItem *defsel)
 {
 	DocItem* tposRoot = theSln.GetRoot();
 	if(!tposRoot) 
@@ -31,6 +32,14 @@ bool TopicChooser::DoModal(bool checks)
 
 	LoadLevel(root, tposRoot);
 	root->setExpanded(true);
+
+	if(defsel) {
+		QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), defsel);
+		if (item) {
+			ui.treeContents->scrollToItem(item);
+			ui.treeContents->setCurrentItem(item);
+		}
+	}
 
 	setCursor(Qt::ArrowCursor);
 

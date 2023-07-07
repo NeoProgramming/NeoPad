@@ -12,7 +12,7 @@ class TopicChooser : public QDialog
     Q_OBJECT
 public:
     TopicChooser(QWidget *parent, const QString& title);
-	bool DoModal(bool checks=false);
+	bool DoModal(bool checks=false, DocItem *defsel=nullptr);
 	DocItem* m_posSelected;
 private slots:
 	void onOk();

@@ -1143,7 +1143,7 @@ void SlnPanel::onMoveItem()
     if (item.badDoc()) return;
 
     TopicChooser dlg(this, "Select new parent item");
-    if (dlg.DoModal()) {
+    if (dlg.DoModal(false, item.doc)) {
         if (!theSln.Move(item.doc, dlg.m_posSelected, NULL)) {
             QMessageBox::warning(this, "Move error", FailMsg, QMessageBox::Ok);
         }
@@ -1191,23 +1191,7 @@ void SlnPanel::ForEachItem(QTreeWidgetItem *par, const std::function<bool(QTreeW
     }
 }
 
-QTreeWidgetItem* SlnPanel::FindItem(QTreeWidgetItem *par, DocItem* mtpos)
-{
-	// recursive search for an element with a given identifier
-	// checking this item
-	DocItem* pos = par->data(0, Qt::UserRole).value<DocItem*>();
-	if (pos == mtpos)
-		return par;
 
-	// recursive traversal of the rest
-	int n = par->childCount();
-    for (int i = 0; i < n; i++) {
-		QTreeWidgetItem* found = FindItem(par->child(i), mtpos);
-		if (found)
-			return found;
-	}
-	return 0;
-}
 
 void SlnPanel::EnsureVisible(DocItem* node)
 {
