@@ -70,6 +70,7 @@ HEADERS += \
     ./src/core/Snippets.h \
     ./src/core/Solution.h \
     ./src/core/vmbsrv.h \
+    ./src/core/Workspace.h \
     ./src/gui/mainwindow.h \
     ./src/gui/slnpanel.h \
     ./src/gui/slntreewidget.h \
@@ -113,6 +114,7 @@ SOURCES += \
     ./src/core/PrjStat.cpp \
     ./src/core/Snippets.cpp \
     ./src/core/Solution.cpp \
+    ./src/core/Workspace.cpp \
     ./src/gui/mainwindow.cpp \
     ./src/gui/slnpanel.cpp \
     ./src/gui/slntreewidget.cpp \
