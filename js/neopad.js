@@ -112,6 +112,62 @@ function isValidAttr(a)
 	return false;
 }
 
+function isTextNodeWithContent(node) 
+{
+  return node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== '';
+}
+
+function deepNext(node) {
+  // If the node has a child, return the leftmost child
+  if (node.firstChild) {
+    return node.firstChild;
+  }
+  
+  // If the node has a sibling, return the sibling
+  if (node.nextSibling) {
+    return node.nextSibling;
+  }
+  
+  // If the node has a parent, find the next sibling of the parent
+  let par = node.parentNode;
+  while(par!==null && par.nextSibling===null) {
+	par = par.parentNode;
+  }
+  
+  if (par!==null && par.nextSibling!==null) {
+    return par.nextSibling;
+  }
+  
+  // If none of the above conditions are met, return null
+  return null;
+}
+
+function encloseSubtextWithSpan(textNode, span, start, end) {
+
+  if(end<0)
+	end = textNode.nodeValue.length;
+  
+  // Get the text content from the text node
+  let text = textNode.textContent;
+
+  // Extract the substring between start and end positions
+  let substring = text.substring(start, end);
+
+  // Wrap the extracted substring with a <span> tag
+  let modifiedSubstring = '<' + span + '>' + substring + '</' + span + '>';
+
+  // Replace the original substring with the modified substring
+  let newText = text.substring(0, start) + modifiedSubstring + text.substring(end);
+  
+  // Create a new element to hold the HTML code
+  let newElement = document.createElement("span");
+  newElement.innerHTML = newText;
+
+  // Update the text content of the text node
+  textNode.replaceWith(newElement);
+}
+
+
 // debug - display the string in a special tag
 function debugMsg(msg)
 {
@@ -318,7 +374,7 @@ function isSelectionInSameLevel()
 
 
 // wrap selected text in an inline tag if possible
-function makeSpan(spanName) 
+function makeSpan_old(spanName) 
 {
     //console.log("makeSpan: " + spanName);
 	// if there is a selection, then check its correctness
@@ -338,6 +394,50 @@ function makeSpan(spanName)
 	}
 	else
 		return "no caret or one-level selection"
+}
+
+function makeSpan(spanName)
+{
+	var se = getCaretElement();
+	if (se) {
+	    console.log("caret");
+		if(se.tagName == spanName)
+			return false;//unwrapTag(se);
+		else if(isSpanTag(se.tagName))
+			return replaceTag(se, spanName)
+		return "not span tag";
+	}
+	else {
+		// get selected range
+		const selection = window.getSelection();
+		if(selection.rangeCount===0)
+			return "no selection";
+		const range = selection.getRangeAt(0);
+		
+		// single node
+		if(range.startContainer == range.endContainer) {
+			encloseSubtextWithSpan(range.startContainer, spanName, range.startOffset, range.endOffset);
+		}
+		// multiple nodes
+		else {
+			let node = deepNext(range.startContainer);
+				
+			// make span in first node
+			encloseSubtextWithSpan(range.startContainer, spanName, range.startOffset, -1);
+					
+			// handle intermediate nodes
+			while(node != null && node != range.endContainer) {
+				let nextnode = deepNext(node);
+				if(isTextNodeWithContent(node)) 
+					encloseSubtextWithSpan(node, spanName, 0, -1);
+				node = nextnode;
+			}
+			
+			// make span in last node
+			encloseSubtextWithSpan(range.endContainer, spanName, 0, range.endOffset);
+		}
+		return true;
+	}
 }
 
 // wrap selected text in a block tag if possible
