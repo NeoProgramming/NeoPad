@@ -966,6 +966,7 @@ void WebEditView::onTableProperties()
 
 void WebEditView::onTableInsAbove()
 {
+    GetCaretContext();
 	if (m_elTable.isNull()) {
 		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
 		return;
@@ -977,6 +978,7 @@ void WebEditView::onTableInsAbove()
 
 void WebEditView::onTableInsBelow()
 {
+    GetCaretContext();
 	if (m_elTable.isNull()) {
 		QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
 		return;

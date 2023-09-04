@@ -46,7 +46,7 @@
         <file>images/edit-erase.png</file>
         <file>images/edit-pastetable.png</file>
         <file>images/edit-pastecell.png</file>
-		<file>images/edit-pasteimage.png</file>
+        <file>images/edit-pasteimage.png</file>
     </qresource>
     <qresource prefix="/file">
         <file>images/file-saveas.png</file>
@@ -122,6 +122,8 @@
         <file>images/table-deleterow.png</file>
         <file>images/table-rowdown.png</file>
         <file>images/table-rowup.png</file>
+        <file>images/table-insert-row-above.png</file>
+        <file>images/table-insert-row-below.png</file>
     </qresource>
     <qresource prefix="/treeicons">
         <file>images/ti-html25.png</file>
@@ -132,7 +134,7 @@
         <file>images/ti-unknown.png</file>
         <file>images/ti-locked.png</file>
         <file>images/ti-htmlx.png</file>
-		<file>images/ti-folder.png</file>
+        <file>images/ti-folder.png</file>
     </qresource>
     <qresource prefix="/langicons">
         <file>images/li-none.png</file>

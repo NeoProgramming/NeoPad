@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>18</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -373,6 +373,8 @@
    <addaction name="actionTableInsertData"/>
    <addaction name="actionTableExpand"/>
    <addaction name="actionTableCollapse"/>
+   <addaction name="actionInsertRowAbove"/>
+   <addaction name="actionInsertRowBelow"/>
    <addaction name="actionTableDeleteRow"/>
    <addaction name="actionTableMoveRowAbove"/>
    <addaction name="actionTableMoveRowBelow"/>
@@ -696,6 +698,10 @@
    <property name="enabled">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/table/images/table-insert-row-above.png</normaloff>:/table/images/table-insert-row-above.png</iconset>
+   </property>
    <property name="text">
     <string>Row Above</string>
    </property>
@@ -703,6 +709,10 @@
   <action name="actionInsertRowBelow">
    <property name="enabled">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/table/images/table-insert-row-below.png</normaloff>:/table/images/table-insert-row-below.png</iconset>
    </property>
    <property name="text">
     <string>Row Below</string>
