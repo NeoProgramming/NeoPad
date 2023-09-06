@@ -142,6 +142,12 @@ function deepNext(node) {
   return null;
 }
 
+function replaceSpecialChars(str) {
+    return str.replace(/[<>&]/gim, function(i) {
+        return '&#'+i.charCodeAt(0)+';';
+    });
+}
+
 function encloseSubtextWithSpan(textNode, span, start, end) {
 
   if(end<0)
@@ -154,10 +160,10 @@ function encloseSubtextWithSpan(textNode, span, start, end) {
   let substring = text.substring(start, end);
 
   // Wrap the extracted substring with a <span> tag
-  let modifiedSubstring = '<' + span + '>' + substring + '</' + span + '>';
+  let modifiedSubstring = '<' + span + '>' + replaceSpecialChars(substring) + '</' + span + '>';
 
   // Replace the original substring with the modified substring
-  let newText = text.substring(0, start) + modifiedSubstring + text.substring(end);
+  let newText = replaceSpecialChars(text.substring(0, start)) + modifiedSubstring + replaceSpecialChars(text.substring(end));
   
   // Create a new element to hold the HTML code
   let newElement = document.createElement("span");
