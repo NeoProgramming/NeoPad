@@ -52,9 +52,10 @@ public:
     std::vector<QString> title;
     std::vector<time_t> time;
 
-	// internal (non-persistent) variables - for ease of use
-	QString     rdir;		// path to the folder where THIS vmbase file is located, relative to the base root (not used for all MY_ITEMs)
+    // internal (non-persistent) variables - for ease of use
+    QString     rdir;	    // path to the folder where THIS vmbase file is located, relative to the base root (not used for all MY_ITEMs)
     float       progress;   // calculated proress for this node
+    int         procount;   // count of nodes in progress calculation
 public:
 	DocItem();
 	DocItem(const char *text);

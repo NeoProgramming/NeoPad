@@ -279,16 +279,15 @@ void DocItem::UpdateProgress(int ci)
 {
     static const float weighs[] = {0, 100, 95, 75, 50, 25, 0, 100, 0};
     progress = weighs[(int)status];
-
-    int count = 1;
+    procount = 1;
     for (auto child : children) {
         child->UpdateProgress(ci);
         if(child->progress >= 0) {
-            progress += child->progress;
-            count++;
+            progress += child->progress*child->procount;
+            procount += child->procount;
         }
     }
-    progress /= count;    
+    progress /= procount;
     title[ci].sprintf("%.0f", progress);
 }
 
