@@ -210,6 +210,7 @@ MainWindow::MainWindow()
 
 	CONN_CHILD(ui.actionFileReload,	onFileReload);
 	CONN_CHILD(ui.actionFileSave,	onFileSave);
+	CONN_CHILD(ui.actionFileSaveAs, onFileSaveAs);
 	
 	CONN_CHILD(ui.actionParaH1,			onParaHeading1);
 	CONN_CHILD(ui.actionParaH2,			onParaHeading2);

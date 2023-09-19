@@ -30,6 +30,7 @@ private:
 public slots:
 
 	void onFileSave();
+	void onFileSaveAs();
 	void onFileReload();
 		
 	void onEditCut();

@@ -152,6 +152,21 @@ void WebEditView::onFileSave()
 	SaveHtml(true);
 }
 
+void WebEditView::onFileSaveAs()
+{
+	QString fpath = QFileDialog::getSaveFileName(this, tr("Save File As..."),
+		m_Item->GetId(),
+		tr("Documents (*.htm *.html);;All Files (*)"));
+	if (!fpath.isEmpty())
+	{
+		QString content = this->page()->mainFrame()->toHtml();
+		QByteArray s = content.toUtf8();
+		QFile file(fpath);
+		if (file.open(QIODevice::WriteOnly))
+			file.write(s);
+	}
+}
+
 void WebEditView::onZoomOut()
 {
 	int percent = static_cast<int>(this->zoomFactor() * 100);
