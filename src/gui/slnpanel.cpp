@@ -406,7 +406,7 @@ void SlnPanel::LoadDocLevel(DocItem* tposNode, QTreeWidgetItem *parent)
         UpdateDocItem(item);
 		LoadDocLevel(tpos, item);
 	}
-	if(theSln.WS.DocItems.contains(tposNode->guid))
+	if(theSln.WS.Curr.DocItems.contains(tposNode->guid))
 		parent->setExpanded(true);
 }
 
@@ -1479,7 +1479,7 @@ void SlnPanel::onEditGroup()
 
 void SlnPanel::SaveDocs()
 {
-	theSln.WS.DocItems.clear();
+	theSln.WS.Curr.DocItems.clear();
 	auto r = ui.treeContents->topLevelItem(0);
 	if (!r)
 		return;
@@ -1487,7 +1487,7 @@ void SlnPanel::SaveDocs()
 		if (item && item->isExpanded()) {
 			DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
 			if(doc)
-				theSln.WS.DocItems.insert(doc->guid);
+				theSln.WS.Curr.DocItems.insert(doc->guid);
 		}
 		return false;
 	});

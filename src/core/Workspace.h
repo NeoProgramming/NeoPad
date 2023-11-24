@@ -5,10 +5,12 @@
 
 class Workspace {
 public:
-	QSet<QString> DocItems;
-	//QSet<QString> FavItems;
-	QList<QString> TabItems;
-	QString TabActive;
+	struct {
+		QSet<QString> DocItems;
+		//QSet<QString> FavItems;
+		QList<QString> TabItems;
+		QString TabActive;
+	} Curr, Loaded;
 public:
 	void Init();
 	bool Load(const QString &basePath);

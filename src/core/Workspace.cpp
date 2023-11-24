@@ -6,10 +6,15 @@ extern QTextCodec *codecUtf8;
 
 void Workspace::Init()
 {
-	DocItems.clear();
-//	FavItems.clear();
-	TabItems.clear();
-	TabActive = "";
+	Curr.DocItems.clear();
+//	Curr.FavItems.clear();
+	Curr.TabItems.clear();
+	Curr.TabActive = "";
+
+	Loaded.DocItems.clear();
+	//	Loaded.FavItems.clear();
+	Loaded.TabItems.clear();
+	Loaded.TabActive = "";
 }
 
 bool Workspace::Load(const QString &basePath)
@@ -27,7 +32,7 @@ bool Workspace::Load(const QString &basePath)
 	xbase = xroot.child("doc_items");
 	xitem = xbase.first_child();
 	while (xitem) {
-		DocItems.insert(codecUtf8->toUnicode(xitem.text().as_string()));
+		Curr.DocItems.insert(codecUtf8->toUnicode(xitem.text().as_string()));
 		xitem = xitem.next_sibling();
 	}
 
@@ -41,21 +46,28 @@ bool Workspace::Load(const QString &basePath)
 	xbase = xroot.child("tab_items");
 	xitem = xbase.first_child();
 	while (xitem) {
-		TabItems.push_back(codecUtf8->toUnicode(xitem.text().as_string()));
+		Curr.TabItems.push_back(codecUtf8->toUnicode(xitem.text().as_string()));
 		xitem = xitem.next_sibling();
 	}
 
 	xbase = xroot.child("tab_active");
 	xitem = xbase.first_child();
 	if (xitem) {
-		TabActive = codecUtf8->toUnicode(xitem.text().as_string());
+		Curr.TabActive = codecUtf8->toUnicode(xitem.text().as_string());
 	}
 
+	Loaded = Curr;
 	return true;
 }
 
 bool Workspace::Save(const QString &basePath)
 {
+	// compare loaded with current
+	if (Loaded.DocItems == Curr.DocItems &&
+		Loaded.TabActive == Curr.TabActive &&
+		Loaded.TabItems == Curr.TabItems)
+		return true;
+
 	// save workspace
 	pugi::xml_document xdoc;
 	pugi::xml_node xroot, xbase, xitem;
@@ -68,7 +80,7 @@ bool Workspace::Save(const QString &basePath)
 	set_attr(xroot, "version").set_value("1.0");
 
 	xbase = xroot.append_child("doc_items");
-	for (auto &i : DocItems) {
+	for (auto &i : Curr.DocItems) {
 		xitem = xbase.append_child("item");
 		xitem.text().set(codecUtf8->fromUnicode(i).constData());
 	}
@@ -80,14 +92,14 @@ bool Workspace::Save(const QString &basePath)
 //	}
 
 	xbase = xroot.append_child("tab_items");
-	for (auto &i : TabItems) {
+	for (auto &i : Curr.TabItems) {
 		xitem = xbase.append_child("item");
 		xitem.text().set(codecUtf8->fromUnicode(i).constData());
 	}
 
 	xbase = xroot.append_child("tab_active");
 	xitem = xbase.append_child("item");
-	xitem.text().set(codecUtf8->fromUnicode(TabActive).constData());
+	xitem.text().set(codecUtf8->fromUnicode(Curr.TabActive).constData());
 
 	QString fpath = basePath + ".workspace";
 	if (xdoc.save_file(codecUtf8->fromUnicode(fpath))) {
