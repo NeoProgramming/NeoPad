@@ -79,6 +79,7 @@ private slots:
     void onOpenVmbaseInExtTextEditor();
     void onOpenFolder(int bi);
 	void onOpenFolderVmb();
+	void onCloseDocs(bool recursive, bool invert);
 
     void onAddChildDoc();
 	void onAddSiblingDoc();
@@ -151,6 +152,7 @@ private:
 			
 	QMenu *submenuOpen0Ext;
 	QMenu *submenuOpen1Ext;
+	QMenu *submenuClose;
 
 	QAction *actionCheckTree;
 	QAction *actionCheckIds;

@@ -110,6 +110,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupDoc = new QMenu(tr("Document"), this);
 	submenuOpen0Ext = new QMenu(tr("Doc0"), menuPopupDoc);
 	submenuOpen1Ext = new QMenu(tr("Doc1"), menuPopupDoc);
+	submenuClose = new QMenu(tr("Close"), menuPopupDoc);
 
 	// doc0
 	MakeAction(tr("Open in New Tab"), submenuOpen0Ext, [this]() { onOpenInNewTab(0); });
@@ -124,6 +125,12 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	MakeAction(tr("Open in External Browser"), submenuOpen1Ext, [this]() { onOpenInExtBrowser(1); });
 	MakeAction(tr("Open in External Text Editor"), submenuOpen1Ext, [this]() { onOpenInExtTextEditor(1); });
 	MakeAction(tr("Open Folder"), submenuOpen1Ext, [this]() { onOpenFolder(1); });
+
+	// close
+	MakeAction(tr("This item"), submenuClose, [this]() { onCloseDocs(false, false); });
+	MakeAction(tr("This node"), submenuClose, [this]() { onCloseDocs(true, false); });
+	MakeAction(tr("All but this item"), submenuClose, [this]() { onCloseDocs(false, true); });
+	MakeAction(tr("All but this node"), submenuClose, [this]() { onCloseDocs(true, true); });
 
 	// common actions
 	QAction *actionOpenFolder = MakeAction(tr("Open Folder"), &SlnPanel::onOpenFolderVmb);
@@ -172,6 +179,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupDoc->addMenu(submenuOpen1Ext);
 	menuPopupDoc->addAction(actionOpenVmbaseInTextEditor);
 	menuPopupDoc->addAction(actionOpenFolder);
+	menuPopupDoc->addMenu(submenuClose);
 	menuPopupDoc->addSeparator();
 
 	menuPopupDoc->addMenu(submenuItemStatus);
@@ -947,6 +955,11 @@ void SlnPanel::onOpenVmbaseInExtTextEditor()
 void SlnPanel::onOpenFolderVmb()
 {
 	onOpenFolder(-1);
+}
+
+void SlnPanel::onCloseDocs(bool recursive, bool invert)
+{
+
 }
 
 void SlnPanel::onOpenFolder(int bi)
