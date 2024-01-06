@@ -124,6 +124,8 @@ public slots:
 	void onTableRemoveEmptyRows();
 	void onTableInsLeft();
 	void onTableInsRight();
+	void onTableClearColumn();
+	void onTableClearRow();
 	void onTableDeleteColumn();
 	void onTableDeleteRow();
 	void onTableInsertData();
@@ -182,6 +184,8 @@ private:
 	QAction *actionTablePasteData;
 	QAction *actionImageProps;
 	QAction *actionLinkProps;
+	QAction *actionTableClearCol;
+	QAction *actionTableClearRow;
     
 	QWebElement m_elTable;
 	QWebElement m_elTR;

@@ -510,3 +510,26 @@ void HtmlTable::Collapse(QWebElement &td)
 		td = tdn;
 	}
 }
+
+void HtmlTable::ClearColumn(QWebElement &td)
+{
+	// insert
+	QWebElement tri = FirstTR();
+	int col = GetColIndex(td);
+	while(!tri.isNull()) {
+		QWebElement tdi = GetColByIndex(tri, col);
+		tdi.setPlainText("");
+		tri = tri.nextSibling();
+	}
+}
+
+void HtmlTable::ClearRow(QWebElement &td)
+{
+	QWebElement tr = td.parent();
+	QWebElement tdi = tr.firstChild();
+	while(!tdi.isNull()) {
+		tdi.setPlainText("");
+		tdi = tdi.nextSibling();
+	}
+}
+

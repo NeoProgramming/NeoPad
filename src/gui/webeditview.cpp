@@ -60,6 +60,8 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	actionTableDelRow   = new QAction(tr("Delete row"), 0);
 	actionTableDelCol   = new QAction(tr("Delete column"), 0);
 	actionTablePasteData= new QAction(tr("Paste Data"), 0);
+	actionTableClearCol = new QAction(tr("Clear column"), 0);
+	actionTableClearRow = new QAction(tr("Clear row"), 0);
 
 	connect(actionTableInsAbove, &QAction::triggered, this, &WebEditView::onTableInsAbove);
 	connect(actionTableInsBelow, &QAction::triggered, this, &WebEditView::onTableInsBelow);
@@ -67,6 +69,8 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	connect(actionTableOptTable, &QAction::triggered, this, &WebEditView::onTableRemoveEmptyRows);
 	connect(actionTableInsLeft, &QAction::triggered, this, &WebEditView::onTableInsLeft);
 	connect(actionTableInsRight, &QAction::triggered, this, &WebEditView::onTableInsRight);
+	connect(actionTableClearRow, &QAction::triggered, this, &WebEditView::onTableClearRow);
+	connect(actionTableClearCol, &QAction::triggered, this, &WebEditView::onTableClearColumn);
 	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDeleteRow);
 	connect(actionTableDelCol, &QAction::triggered, this, &WebEditView::onTableDeleteColumn);
 	connect(actionTablePasteData, &QAction::triggered, this, &WebEditView::onTableInsertData);
@@ -81,6 +85,8 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	m_menuTable.addAction(actionTableInsRight);
 	m_menuTable.addSeparator();
 	m_menuTable.addAction(actionTablePasteData);
+	m_menuTable.addAction(actionTableClearCol);
+	m_menuTable.addAction(actionTableClearRow);
 	m_menuTable.addSeparator();
 	m_menuTable.addAction(actionTableDelRow);
 	m_menuTable.addAction(actionTableDelCol);
@@ -1044,6 +1050,20 @@ void WebEditView::onTableInsRight()
 	}
 	HtmlTable table(m_elTable);
 	table.InsertColRight(m_elTD);
+	setWindowModified(true);
+}
+
+void WebEditView::onTableClearColumn()
+{
+	HtmlTable table(m_elTable);
+	table.ClearColumn(m_elTD);
+	setWindowModified(true);
+}
+
+void WebEditView::onTableClearRow()
+{
+	HtmlTable table(m_elTable);
+	table.ClearRow(m_elTD);
 	setWindowModified(true);
 }
 

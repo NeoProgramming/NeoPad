@@ -136,6 +136,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionOpenFolder = MakeAction(tr("Open Folder"), &SlnPanel::onOpenFolderVmb);
 	QAction *actionOpenVmbaseInTextEditor = MakeAction(tr("Open VMB in Text Editor"), &SlnPanel::onOpenVmbaseInExtTextEditor);
 	QAction *actionItemMove = MakeAction(tr("Move item..."), &SlnPanel::onMoveItem);
+	actionImportant = MakeAction(tr("Mark as important"), &SlnPanel::onMarkAsImportant);
+	actionImportant->setCheckable(true);
 
     // shortcuts does not trigger action, see eventFilter()
 	QAction *actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), &SlnPanel::onItemProperties);
@@ -189,6 +191,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupDoc->addMenu(submenuInsert);
 	menuPopupDoc->addMenu(submenuDelete);
 	menuPopupDoc->addAction(actionItemMove);
+	menuPopupDoc->addAction(actionImportant);
 
 	QAction *actionAddSiblingGroup = MakeAction(tr("Add sibling group"), &SlnPanel::onAddSiblingGroup);
 	QAction *actionAddChildGroup = MakeAction(tr("Add child group"), &SlnPanel::onAddChildGroup);
@@ -549,6 +552,11 @@ void SlnPanel::onDocContextMenu(const QPoint &pos)
 	QTreeWidgetItem *item = treeWidget->itemAt(pos);
 	if (!item)
 		return;
+	// checkboxes
+	DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
+	if (doc) {
+		actionImportant->setChecked(theSln.Imps.Contains(doc->guid));
+	}
 
 	menuPopupDoc->exec(treeWidget->viewport()->mapToGlobal(pos));
 }
@@ -1286,6 +1294,15 @@ void SlnPanel::onSelNode()
 		ui.lineNode->setText(dlg.m_posSelected->GetTitles(0));
 	else
 		ui.lineNode->setText("");
+}
+
+void SlnPanel::onMarkAsImportant()
+{
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
+
+	theSln.Imps.Toggle(item.doc->guid);	
+	theSln.HandleChanges(theSln.GetRoot(), false);
 }
 
 void SlnPanel::onAddToFavorites()

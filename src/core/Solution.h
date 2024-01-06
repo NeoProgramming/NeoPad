@@ -12,6 +12,7 @@
 #include "Documents.h"
 #include "Favorites.h"
 #include "Workspace.h"
+#include "Importants.h"
 
 class CSolution 
 	: public Documents // temporary
@@ -27,6 +28,7 @@ public:
     Columns   Cols;
 	//Documents Docs; // temporary commented
 	Favorites Favs;
+	Importants Imps;
 public:
 	CSolution(void);
 	~CSolution(void);

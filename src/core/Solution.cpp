@@ -128,6 +128,9 @@ bool CSolution::LoadProject(const QString &fpath)
     // load favorites - after main tree!
 	Favs.LoadFavorites(xRoot);
 
+	// load importants
+	Imps.Load(xRoot);
+
     // load paths from attributes (deprecated, refactor to Settings.SaveSettings(xRoot) )
 	m_ImageDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("images").as_string()));
 	m_Snippets.m_SnippDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("snippets").as_string()));
@@ -155,6 +158,9 @@ void CSolution::SaveProjectData(pugi::xml_node xRoot)
 
     // save favorites
     Favs.SaveFavorites(xRoot);
+
+	// save importants
+	Imps.Save(xRoot);
 }
 
 bool CSolution::SaveProject(bool recursive)

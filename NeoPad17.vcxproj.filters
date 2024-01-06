@@ -203,6 +203,9 @@
     <ClCompile Include="src\core\Workspace.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Importants.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp">
@@ -284,6 +287,9 @@
       <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\Workspace.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Importants.h">
       <Filter>src\core</Filter>
     </ClInclude>
   </ItemGroup>

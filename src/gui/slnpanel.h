@@ -93,9 +93,10 @@ private slots:
 	void onMoveItemParent();
 	void onMoveItemChild();
 	void onMoveItem();
-
+	
 	void onAddToFavorites();
 	void onRemoveFromFavorites();
+	void onMarkAsImportant();
 	void onEditFavoriteRef();
 	void onAddSiblingGroup();
 	void onAddChildGroup();
@@ -153,6 +154,8 @@ private:
 	QMenu *submenuOpen0Ext;
 	QMenu *submenuOpen1Ext;
 	QMenu *submenuClose;
+
+	QAction *actionImportant;
 
 	QAction *actionCheckTree;
 	QAction *actionCheckIds;
