@@ -65,6 +65,7 @@ HEADERS += \
     ./src/core/Documents.h \
     ./src/core/FavItem.h \
     ./src/core/Favorites.h \
+    ./src/core/Importants.h \
     ./src/core/PrjStat.h \
     ./src/core/PrjTree.h \
     ./src/core/Snippets.h \
@@ -110,6 +111,7 @@ SOURCES += \
     ./src/core/Documents.cpp \
     ./src/core/FavItem.cpp \
     ./src/core/Favorites.cpp \
+    ./src/core/Importants.cpp \
     ./src/core/ini.cpp \
     ./src/core/PrjStat.cpp \
     ./src/core/Snippets.cpp \

@@ -330,37 +330,32 @@ void MainWindow::OpenTabs()
 		QStringList parts = s.split(":");
 		if (parts.count() == 2) {
 			DocItem* pos = theSln.Locate(parts.front());
-			if (!pos)
-				return;
-			OpenDoc(pos, parts.back().toInt());
+            if (pos)
+                OpenDoc(pos, parts.back().toInt());
 		}
 		else {
 			DocItem* pos = theSln.Locate(s);
-			if (!pos)
-				return;
-			OpenDoc(pos, 0);
+            if (pos)
+                OpenDoc(pos, 0);
 		}
 	}
 	// active tab
 	QStringList parts = theSln.WS.Curr.TabActive.split(":");
 	if (parts.count() == 2) {
 		DocItem* pos = theSln.Locate(parts.front());
-		if (!pos)
-			return;
-		OpenDoc(pos, parts.back().toInt());
+        if (pos)
+            OpenDoc(pos, parts.back().toInt());
 	}
 	else {
 		DocItem* pos = theSln.Locate(theSln.WS.Curr.TabActive);
-		if (!pos)
-			return;
-		OpenDoc(pos, 0);
+        if (pos)
+            OpenDoc(pos, 0);
 	}
 	// autoload 
 	for (auto &guid : theSln.Imps.AutoLoadedItems) {
 		DocItem* pos = theSln.Locate(guid);
-		if (!pos)
-			return;
-		OpenDoc(pos, 0);
+        if (pos)
+            OpenDoc(pos, 0);
 	}
 }
 
