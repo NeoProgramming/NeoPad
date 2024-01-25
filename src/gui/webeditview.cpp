@@ -493,10 +493,21 @@ void WebEditView::onEditPaste()
 	if (!clipboard)
 		return;
 	const QMimeData *mimeData = clipboard->mimeData();
-	if (mimeData && mimeData->hasImage()) {
+	if (!mimeData)
+		return;
+	QList<QString> formats = mimeData->formats();
+	if (mimeData->hasImage()) {
 		QImage img = clipboard->image();
 		if (!img.isNull()) {
 			QString html = HtmlImage::MakeHtml(img);
+			InsertHtml(html);
+		}
+	}
+	else if (formats.contains("application/x-myformat-doc-uid")) {
+		QByteArray uid = mimeData->data("application/x-myformat-doc-uid");
+		DocItem* doc = theSln.Locate(uid);
+		if (doc) {
+			QString html = "<a href=" + doc->GetRelUrl(m_Item, m_di) + ">" + doc->GetTitle(0) + "</a>";
 			InsertHtml(html);
 		}
 	}
@@ -610,6 +621,12 @@ void WebEditView::onEditUntable()
 bool WebEditView::onEditDeflist()
 {
 	return execScript("makeDefItem()");
+}
+
+void WebEditView::onEditCopyLink()
+{
+	QString uid = m_Item->GetGuid();
+	CopyLink(uid.toLocal8Bit().constData());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -848,12 +865,19 @@ void WebEditView::onInsertImage()
 	}
 }
 
+void WebEditView::InsertLink(const QString &url, const QString &text)
+{
+	execCommand("createLink", url);
+	execCommand("insertText", text);
+//	InsertHtml(QString::asprintf("<a href='%s'>%s</a>", url, text));
+}
+
 void WebEditView::onInsertHyperlink()
 {
     QString sel = page()->selectedText();
 	LinkProperties dlg;
-    if(dlg.DoModal(false, sel, sel.startsWith("http") ? sel : "", m_Item, m_di))	{
-        execCommand("createLink", dlg.m_url);
+    if(dlg.DoModal(false, sel, sel.startsWith("http") ? sel : "", m_Item, m_di)) {
+		InsertLink(dlg.m_url, dlg.m_text);
 	}
 }
 

@@ -53,6 +53,8 @@ public slots:
 	void onEditUndo();
 	void onEditRedo();
 
+	void onEditCopyLink();
+
 	void onTextBold();
 	void onTextItalic();
 	void onTextUnderline();
@@ -164,6 +166,7 @@ private:
 	bool GetCaretContext();
 	void OpenLink(const QUrl&);
 	void InsertHtml(QString html);
+	void InsertLink(const QString &url, const QString &text);
 	QString PrepareImage(ImageAction action, const QString &fpath);
 	void InsertImage(const QString &fpath, int w, int h);
 

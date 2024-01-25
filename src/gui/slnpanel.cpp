@@ -138,6 +138,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionItemMove = MakeAction(tr("Move item..."), &SlnPanel::onMoveItem);
 	actionImportant = MakeAction(tr("Mark as important"), &SlnPanel::onMarkAsImportant);
 	actionImportant->setCheckable(true);
+	actionCopyLink = MakeAction(tr("Copy Link"), &SlnPanel::onCopyLink);
 
     // shortcuts does not trigger action, see eventFilter()
 	QAction *actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), &SlnPanel::onItemProperties);
@@ -192,6 +193,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupDoc->addMenu(submenuDelete);
 	menuPopupDoc->addAction(actionItemMove);
 	menuPopupDoc->addAction(actionImportant);
+	menuPopupDoc->addAction(actionCopyLink);
 
 	QAction *actionAddSiblingGroup = MakeAction(tr("Add sibling group"), &SlnPanel::onAddSiblingGroup);
 	QAction *actionAddChildGroup = MakeAction(tr("Add child group"), &SlnPanel::onAddChildGroup);
@@ -1303,6 +1305,15 @@ void SlnPanel::onMarkAsImportant()
 
 	theSln.Imps.Toggle(item.doc->guid);	
 	theSln.HandleChanges(theSln.GetRoot(), false);
+}
+
+void SlnPanel::onCopyLink()
+{
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
+
+	QString uid = item.doc->GetGuid();
+	CopyLink(uid.toLocal8Bit().constData());
 }
 
 void SlnPanel::onAddToFavorites()

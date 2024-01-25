@@ -224,6 +224,7 @@
     <ClCompile Include="src\core\FavItem.cpp" />
     <ClCompile Include="src\core\Snippets.cpp" />
     <ClCompile Include="src\core\Solution.cpp" />
+    <ClCompile Include="src\core\vmbsrv.cpp" />
     <ClCompile Include="src\core\Workspace.cpp" />
     <ClCompile Include="src\gui\htmllink.cpp" />
     <ClCompile Include="src\gui\passworddlg.cpp" />

@@ -25,3 +25,4 @@ enum class ImageAction : int {
 	Extract
 };
 
+void CopyLink(const char *uid);

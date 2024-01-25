@@ -162,6 +162,7 @@ MainWindow::MainWindow()
 	CONN_CHILD(ui.actionEditOutside,		onEditOutside);
 	CONN_CHILD(ui.actionEditInfo,			onEditTagInfo);
 	CONN_CHILD(ui.actionEditUntable,		onEditUntable);	
+	CONN_CHILD(ui.actionCopyLink,           onEditCopyLink);
 
 	CONN_CHILD(ui.actionTextBold,		onTextBold);
 	CONN_CHILD(ui.actionTextItalic,		onTextItalic);
@@ -813,8 +814,12 @@ void MainWindow::LoadToCurrentDoc(DocItem* mtPos, int di)
 void MainWindow::CreateNewDoc(DocItem* mtPos, int di)
 {
 	WebEditView *child = new WebEditView(this, mtPos, di);
-	m_wArea->addSubWindow(child);
-			
+	QMdiSubWindow *subWindow = m_wArea->addSubWindow(child);
+
+	// modify system menu
+	QMenu *menu = subWindow->systemMenu();
+	menu->addAction(ui.actionCopyLink);
+				
 	child->LoadHtml(mtPos, di);
 	child->show();
 }

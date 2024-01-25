@@ -97,6 +97,7 @@ private slots:
 	void onAddToFavorites();
 	void onRemoveFromFavorites();
 	void onMarkAsImportant();
+	void onCopyLink();
 	void onEditFavoriteRef();
 	void onAddSiblingGroup();
 	void onAddChildGroup();
@@ -156,6 +157,7 @@ private:
 	QMenu *submenuClose;
 
 	QAction *actionImportant;
+	QAction *actionCopyLink;
 
 	QAction *actionCheckTree;
 	QAction *actionCheckIds;
