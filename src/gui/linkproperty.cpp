@@ -29,7 +29,7 @@ void LinkProperties::onChooseNode()
 	TopicChooser dlg(this, "Select node to link");
 	if (!dlg.DoModal() || !dlg.m_posSelected)
 		return;
-    if (ui.lineText->text().isEmpty() && !ui.lineText->isReadOnly());
+    if (ui.lineText->text().isEmpty() && !ui.lineText->isReadOnly())
 		ui.lineText->setText(dlg.m_posSelected->GetTitle(0));
 	ui.lineUrl->setText(dlg.m_posSelected->GetRelUrl(m_item, m_di));
 }

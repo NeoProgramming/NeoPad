@@ -116,6 +116,7 @@ SOURCES += \
     ./src/core/PrjStat.cpp \
     ./src/core/Snippets.cpp \
     ./src/core/Solution.cpp \
+    ./src/core/vmbsrv.cpp \
     ./src/core/Workspace.cpp \
     ./src/gui/mainwindow.cpp \
     ./src/gui/slnpanel.cpp \
