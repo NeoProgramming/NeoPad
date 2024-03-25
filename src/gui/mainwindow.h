@@ -62,6 +62,7 @@ public slots:
     void onProjectQuickStart();
 	void onProjectNew();
 	void onProjectSave();
+    void ProjectOpenImportant();
 	void onProjectProperties();
     void onProjectStatistics();
 	void onProjectPrintPdfBundle();
@@ -95,6 +96,7 @@ protected:
     void closeEvent(QCloseEvent *);
     
 private:
+    void OpenImportants();
 	void QuitProject();
 	void OpenTabs();
 	void SaveTabs();

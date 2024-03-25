@@ -176,6 +176,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
     menuPopupDoc->addSeparator();
 
     menuPopupDoc->addAction(actionItemAddToFavs);
+    menuPopupDoc->addAction(actionImportant);
 	menuPopupDoc->addSeparator();
 
 	menuPopupDoc->addMenu(submenuOpen0Ext);
@@ -192,8 +193,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupDoc->addMenu(submenuInsert);
 	menuPopupDoc->addMenu(submenuDelete);
 	menuPopupDoc->addAction(actionItemMove);
-	menuPopupDoc->addAction(actionImportant);
-	menuPopupDoc->addAction(actionCopyLink);
+    menuPopupDoc->addAction(actionCopyLink);
 
 	QAction *actionAddSiblingGroup = MakeAction(tr("Add sibling group"), &SlnPanel::onAddSiblingGroup);
 	QAction *actionAddChildGroup = MakeAction(tr("Add child group"), &SlnPanel::onAddChildGroup);

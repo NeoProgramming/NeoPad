@@ -246,6 +246,7 @@ MainWindow::MainWindow()
 	connect(ui.actionProjectStatistics, &QAction::triggered, this, &MainWindow::onProjectStatistics);
 	connect(ui.actionProjectPrinfPdf, &QAction::triggered, this, &MainWindow::onProjectPrintPdfBundle);
 	connect(ui.actionExportPdfFiles, &QAction::triggered, this, &MainWindow::onProjectPrintPdfFiles);
+    connect(ui.actionFileOpenImportant, &QAction::triggered, this, &MainWindow::ProjectOpenImportant);
 
 	connect(ui.actionGenContents1, &QAction::triggered, this, [this]() { GenContents(0); });
 	connect(ui.actionGenContents2, &QAction::triggered, this, [this]() { GenContents(1); });
@@ -353,11 +354,16 @@ void MainWindow::OpenTabs()
             OpenDoc(pos, 0);
 	}
 	// autoload 
-	for (auto &guid : theSln.Imps.AutoLoadedItems) {
-		DocItem* pos = theSln.Locate(guid);
+    OpenImportants();
+}
+
+void MainWindow::OpenImportants()
+{
+    for (auto &guid : theSln.Imps.AutoLoadedItems) {
+        DocItem* pos = theSln.Locate(guid);
         if (pos)
             OpenDoc(pos, 0);
-	}
+    }
 }
 
 void MainWindow::SaveTabs()
@@ -557,6 +563,11 @@ void MainWindow::onProjectNew()
 		m_wSln->Load();
 		UpdateTitle();
 	}
+}
+
+void MainWindow::ProjectOpenImportant()
+{
+    OpenImportants();
 }
 
 void MainWindow::onProjectSave()

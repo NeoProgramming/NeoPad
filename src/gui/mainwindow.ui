@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>18</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -97,6 +97,7 @@
     <addaction name="actionFileSaveAs"/>
     <addaction name="actionFileSaveAll"/>
     <addaction name="separator"/>
+    <addaction name="actionFileOpenImportant"/>
     <addaction name="actionFileReload"/>
     <addaction name="separator"/>
     <addaction name="actionClearDoc"/>
@@ -1784,6 +1785,11 @@
   <action name="actionCopyLink">
    <property name="text">
     <string>Copy Link</string>
+   </property>
+  </action>
+  <action name="actionFileOpenImportant">
+   <property name="text">
+    <string>Open Important</string>
    </property>
   </action>
  </widget>
