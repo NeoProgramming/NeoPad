@@ -9,6 +9,7 @@
 #include "imageproperty.h"
 #include "linkproperty.h"
 #include "snippetsdlg.h"
+#include "symbolsdlg.h"
 #include "htmltable.h"
 #include "htmlimage.h"
 #include "htmllink.h"
@@ -905,7 +906,13 @@ void WebEditView::onInsertSymbol()
 {
 	// insert a special dialog for selecting a unicode character here
 	//triggerPageAction(QWebPage::InspectElement);
-	
+	SymbolsDlg dlg;
+	if (dlg.DoModal() == QDialog::Accepted)
+	{
+		// snippet name
+		QString s = dlg.m_Symbol;
+		InsertHtml(s);
+	}
 }
 
 void WebEditView::onInsertNumList()

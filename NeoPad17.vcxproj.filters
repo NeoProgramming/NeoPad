@@ -209,6 +209,9 @@
     <ClCompile Include="src\core\vmbsrv.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\gui\symbolsdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp">
@@ -353,6 +356,9 @@
     <QtUic Include="src\gui\passworddlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="src\gui\symbolsdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="src\neopad.qrc">
@@ -422,6 +428,9 @@
     </QtMoc>
     <QtMoc Include="src\gui\tableproperty.h">
       <Filter>src\gui\html</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\symbolsdlg.h">
+      <Filter>src\gui\dlg</Filter>
     </QtMoc>
   </ItemGroup>
 </Project>
