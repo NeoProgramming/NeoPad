@@ -272,6 +272,13 @@ MainWindow::MainWindow()
 
 	UpdateZoom(100);
 
+    // load unicode
+    theUnicode.Load("js/UnicodeData.txt");
+    theUnicode.All.LoadGroups("js/Blocks.txt");
+   // theUnicode.Root.AddGroup("Favorites");
+   // theUnicode.Root.AddGroup("Recent");
+    //theUnicode.Root.LoadGroup("Std", "js/Blocks.txt");
+
 	QTimer::singleShot(0, this, SLOT(onPostInit()));
 }
 

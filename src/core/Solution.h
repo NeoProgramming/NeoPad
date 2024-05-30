@@ -5,7 +5,7 @@
 #include "../service/pugitools.h"
 #include "../service/numerator.h"
 #include "../service/fail.h"
-
+#include "../service/unicode.h"
 
 #include "Snippets.h"
 #include "vmbsrv.h"
@@ -14,10 +14,13 @@
 #include "Workspace.h"
 #include "Importants.h"
 
+
+
 class CSolution 
 	: public Documents // temporary
 {
 public:
+
 	QString   m_sProgDir;		// directory with program and settings files
     QString   m_sPargPath;		// path to exe module (for display in 'about' dialog)
 	Numerator m_fnum;			// file numbering
@@ -56,4 +59,4 @@ protected:
 };
 
 extern CSolution theSln;
-
+extern Unicode   theUnicode;

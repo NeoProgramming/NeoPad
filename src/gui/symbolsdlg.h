@@ -4,14 +4,14 @@
 #include <QWidget>
 #include <QListWidgetItem>
 #include "ui_symbolsdlg.h"
-
+#include "../service/unicode.h"
 
 class SymbolsDlg : public QDialog
 {
 	Q_OBJECT
 
 public:
-	SymbolsDlg(QWidget *parent = 0);
+    SymbolsDlg(int cols, QWidget *parent = 0);
 	~SymbolsDlg();
 	int DoModal();
 
@@ -19,9 +19,13 @@ public:
 public slots:
 	void onOk();
 	void onEdit();
-	void onSelect(QListWidgetItem *item);
+    void onSelect(QTreeWidgetItem *item);
 private:
+    void LoadLevel(QTreeWidgetItem *node, Unicode::Group *group);
+
 	Ui::SymbolsDlg ui;
+    int m_cols, m_rows;		// total cells
+    int m_col, m_row;		// last cell
 };
 
 #endif // SYMBOLSDLG_H

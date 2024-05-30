@@ -18,6 +18,7 @@
 extern QTextCodec *codecUtf8;
 
 CSolution theSln;
+Unicode   theUnicode;
 
 CSolution::CSolution(void)
 {
@@ -33,7 +34,7 @@ CSolution::CSolution(void)
 		m_sProgDir = QDir::currentPath();
         m_sPargPath = "<<<UNDEFINED>>>";
     }
-	m_bModify = 0;
+	m_bModify = 0;   
 }
 
 CSolution::~CSolution(void)

@@ -906,7 +906,7 @@ void WebEditView::onInsertSymbol()
 {
 	// insert a special dialog for selecting a unicode character here
 	//triggerPageAction(QWebPage::InspectElement);
-	SymbolsDlg dlg;
+    SymbolsDlg dlg(16);
 	if (dlg.DoModal() == QDialog::Accepted)
 	{
 		// snippet name

@@ -51,6 +51,7 @@ FORMS += \
     ./src/gui/selectdocdlg.ui \
     ./src/gui/slnpanel.ui \
     ./src/gui/snippetsdlg.ui \
+    ./src/gui/symbolsdlg.ui \
     ./src/gui/tableproperty.ui \
     ./src/gui/topicchooser.ui \
     ./src/gui/prjpropsdlg.ui \
@@ -84,6 +85,7 @@ HEADERS += \
     ./src/gui/savealldlg.h \
     ./src/gui/selectdocdlg.h \
     ./src/gui/snippetsdlg.h \
+    ./src/gui/symbolsdlg.h \
     ./src/gui/topicchooser.h \
     ./src/gui/imageproperty.h \
     ./src/gui/linkproperty.h \
@@ -100,6 +102,7 @@ HEADERS += \
     ./src/service/numerator.h \
     ./src/service/sys.h \
     ./src/service/tools.h \
+    ./src/service/unicode.h \
     ./src/3rdparty/pugixml/pugixml.hpp \
     ./src/3rdparty/pugixml/pugiconfig.hpp
     
@@ -130,6 +133,7 @@ SOURCES += \
     ./src/gui/savealldlg.cpp \
     ./src/gui/selectdocdlg.cpp \
     ./src/gui/snippetsdlg.cpp \
+    ./src/gui/symbolsdlg.cpp \
     ./src/gui/topicchooser.cpp \
     ./src/gui/imageproperty.cpp \
     ./src/gui/linkproperty.cpp \
@@ -146,6 +150,7 @@ SOURCES += \
     ./src/service/numerator.cpp \
     ./src/service/sys.cpp \
     ./src/service/tools.cpp \
+    ./src/service/unicode.cpp \
     ./src/service/xini.cpp \
     ./src/service/cstr.cpp \
     ./src/service/pugitools.cpp \

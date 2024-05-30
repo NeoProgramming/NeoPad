@@ -33,6 +33,7 @@ int main( int argc, char ** argv )
     QCoreApplication::setLibraryPaths(paths);
 
  	codecUtf8 = QTextCodec::codecForName("Utf-8");
+
     theSln.loadSettings();
 
     bool ok = true;
@@ -42,12 +43,13 @@ int main( int argc, char ** argv )
         psw = QInputDialog::getText(NULL, "Input PIN",  "PIN:", QLineEdit::Password, "", &ok);
 
     if(ok && desired_psw == psw)
-	{
-		QPointer<MainWindow> mw = new MainWindow();
+    {
+        QPointer<MainWindow> mw = new MainWindow();
 		mw->show();
 		a.connect( &a, SIGNAL(lastWindowClosed()), &a, SLOT(quit()) );
 
 		appExec = a.exec();
+
         theSln.saveSettings();
 	}
         	
