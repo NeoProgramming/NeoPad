@@ -259,6 +259,7 @@
     <ClCompile Include="src\service\tools.cpp" />
     <ClCompile Include="src\gui\topicchooser.cpp" />
     <ClCompile Include="src\gui\webeditview.cpp" />
+    <ClCompile Include="src\service\unicode.cpp" />
     <ClCompile Include="src\service\xini.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +281,7 @@
     <ClInclude Include="src\gui\htmllink.h" />
     <QtMoc Include="src\gui\symbolsdlg.h" />
     <ClInclude Include="src\service\search.h" />
+    <ClInclude Include="src\service\unicode.h" />
     <ClInclude Include="src\service\xini.h" />
     <QtMoc Include="src\gui\existitemdlg.h">
     </QtMoc>

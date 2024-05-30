@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
-#include <QPair>
-#include <QList>
+#include <utility>
+#include <list>
 #include <QSharedPointer>
 
 class Unicode {
@@ -12,14 +12,29 @@ public:
     };
     struct Group {
         std::string name;
-        QList<QPair<unsigned int, unsigned int> > ranges;
-        QList<Group> children;
+        std::list<std::pair<unsigned int, unsigned int> > ranges;
+		std::list<Group> children;
 
-        Group* AddGroup(const char *name);
-        bool   LoadGroups(const char *fpath);
-    };
+        Group*   AddGroup(const char *name);
+        bool     LoadGroups(const char *fpath);
+		unsigned int GetCount();
+		
+		struct Iterator {
+			friend Group;
+			unsigned int operator*() const;
+			Iterator& operator++();
+			bool operator==(const Iterator& other) const;
+			bool operator!=(const Iterator& other) const;
+		private:
+			std::list<std::pair<unsigned int, unsigned int> >::iterator ri, re;
+			unsigned int rc;
+		};
 
+		Group::Iterator begin();
+		Group::Iterator end();
+    };	
 public:
+	Unicode();
     bool Load(const char* fpath);
 public:
     Group All;
@@ -30,4 +45,5 @@ private:
     Symbol Data[Count];
 
 };
+Q_DECLARE_METATYPE(Unicode::Group*)
 

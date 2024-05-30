@@ -22,6 +22,7 @@ public slots:
     void onSelect(QTreeWidgetItem *item);
 private:
     void LoadLevel(QTreeWidgetItem *node, Unicode::Group *group);
+	void LoadGroup(Unicode::Group* gr);
 
 	Ui::SymbolsDlg ui;
     int m_cols, m_rows;		// total cells

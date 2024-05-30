@@ -47,10 +47,10 @@ SymbolsDlg::~SymbolsDlg()
 void SymbolsDlg::LoadLevel(QTreeWidgetItem *node, Unicode::Group *group)
 {
     node->setText(0, QString::fromStdString( group->name ));
-    for(auto ch : group->children )
+	node->setData(0, Qt::UserRole, QVariant::fromValue(group));
+    for(auto &ch : group->children )
     {
         QTreeWidgetItem *item = new QTreeWidgetItem(node);
-        //item->setData(0, Qt::UserRole, QVariant::fromValue(tpos));
         LoadLevel(item, &ch);
     }
 }
@@ -59,17 +59,14 @@ int SymbolsDlg::DoModal()
 {
     ui.treeGroups->clear();
     QTreeWidgetItem *root1 = new QTreeWidgetItem();
-    root1->setText(0, "Recent" );
     ui.treeGroups->addTopLevelItem(root1);
-    //  LoadLevel(root1, &theUnicode.recent);
+    LoadLevel(root1, &theUnicode.Recent);
 
     QTreeWidgetItem *root2 = new QTreeWidgetItem();
-    root2->setText(0, "Favorites" );
     ui.treeGroups->addTopLevelItem(root2);
-    //  LoadLevel(root2, &theUnicode.Faves);
+    LoadLevel(root2, &theUnicode.Faves);
 
     QTreeWidgetItem *root3 = new QTreeWidgetItem();
-    root3->setText(0, "All" );
     ui.treeGroups->addTopLevelItem(root3);
     LoadLevel(root3, &theUnicode.All);
 
@@ -97,13 +94,46 @@ void SymbolsDlg::onEdit()
     QTreeWidgetItem *item = ui.treeGroups->currentItem();
 	if(item)
 	{
-        QString *path = item->data(0, Qt::UserRole).value<QString *>();
-		QString  cmd = codecUtf8->toUnicode(INI::HtmEditPath.c_str());
-		OpenInExternalApplication(this, cmd, *path);
+ //       QString *path = item->data(0, Qt::UserRole).value<QString *>();
+//		QString  cmd = codecUtf8->toUnicode(INI::HtmEditPath.c_str());
+	//	OpenInExternalApplication(this, cmd, *path);
 	}
 }
 
 void SymbolsDlg::onSelect(QTreeWidgetItem *item)
 {
-	onOk();
+	if (item) {
+		Unicode::Group* gr = item->data(0, Qt::UserRole).value<Unicode::Group*>();
+		if (gr) {
+			LoadGroup(gr);
+		}
+	}
+}
+
+void SymbolsDlg::LoadGroup(Unicode::Group* gr)
+{
+	int row = 0;
+	int col = 0;
+	int count = gr->GetCount();
+	const int cols = 16;
+	int rows = (count - 1) / cols + 1;
+	
+	ui.tableSymbols->clear();
+	ui.tableSymbols->setRowCount(rows);
+	ui.tableSymbols->setColumnCount(cols);
+		
+	for (auto i = gr->begin(), e = gr->end(); i != e; ++i) {
+		if (col >= cols) {
+			row++;
+			col = 0;
+		}
+		unsigned int c = *i;
+		QString s = QChar(c);
+
+		QTableWidgetItem* item = new QTableWidgetItem(s);
+		item->setFlags(item->flags() & ~Qt::ItemFlag::ItemIsEditable);
+	//	item->setToolTip('\\' + pair.first);
+		ui.tableSymbols->setItem(row, col, item);
+		col++;
+	}
 }
