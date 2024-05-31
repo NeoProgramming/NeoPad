@@ -31,6 +31,13 @@ bool Unicode::Load(const char* fpath)
     return true;
 }
 
+QString Unicode::GetName(unsigned int c)
+{
+    if(c >= Count)
+        return "";
+    return Data[c].name.c_str();
+}
+
 Unicode::Group* Unicode::Group::AddGroup(const char *name)
 {
 
@@ -48,6 +55,11 @@ bool Unicode::Group::LoadGroups(const char *fpath)
             continue;
         if(line[0]=='#')
             continue;
+        if(line[0]=='<')
+            continue;
+        if(line[0]=='>')
+            continue;
+
         QString s = line;
         QStringList parts = s.split(QRegExp("[\\.;]+"), QString::SkipEmptyParts);
         if(parts.size() >= 3) {

@@ -36,10 +36,12 @@ public:
 public:
 	Unicode();
     bool Load(const char* fpath);
+    QString GetName(unsigned int c);
 public:
     Group All;
     Group Recent;
     Group Faves;
+    Group Search;
 private:
     enum { Count = 0xF0000 };
     Symbol Data[Count];

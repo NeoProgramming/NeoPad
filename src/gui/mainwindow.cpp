@@ -275,9 +275,7 @@ MainWindow::MainWindow()
     // load unicode
     theUnicode.Load("js/UnicodeData.txt");
     theUnicode.All.LoadGroups("js/Blocks.txt");
-   // theUnicode.Root.AddGroup("Favorites");
-   // theUnicode.Root.AddGroup("Recent");
-    //theUnicode.Root.LoadGroup("Std", "js/Blocks.txt");
+    theUnicode.Faves.LoadGroups("js/Faves.txt");
 
 	QTimer::singleShot(0, this, SLOT(onPostInit()));
 }
