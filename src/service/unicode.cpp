@@ -2,6 +2,7 @@
 #include <QFile>
 #include <QRegExp>
 #include <QString>
+#include <algorithm>
 #include "../service/fail.h"
 
 Unicode::Unicode()
@@ -12,10 +13,12 @@ Unicode::Unicode()
 }
 
 bool Unicode::Load(const char* fpath)
-{
-    QFile file(fpath);
+{    QFile file(fpath);
     if (!file.open(QIODevice::ReadOnly))
         return Fail("Unicode::Load: file.open() error"), false;
+	if(!Data)
+		Data = new Symbol[Count];
+
     while (!file.atEnd()) {
         QByteArray line = file.readLine();
         auto lst = line.split(';');
@@ -24,24 +27,38 @@ bool Unicode::Load(const char* fpath)
             if(code < Count) {
                 Data[code].code = code;
                 QByteArray a = lst.at(1);
-                Data[code].name = a.toStdString();
+                Data[code].name = a;
             }
         }
     }
     return true;
 }
 
+Unicode::~Unicode()
+{
+	delete[] Data;
+}
+
 QString Unicode::GetName(unsigned int c)
 {
     if(c >= Count)
         return "";
-    return Data[c].name.c_str();
+    return Data[c].name;
 }
 
-Unicode::Group* Unicode::Group::AddGroup(const char *name)
+void Unicode::FindByName(const QString& name, Unicode::Group &gr)
 {
+	if (name.length() >= 3) {
+		for (unsigned int i = 0; i < Count; i++) {
+			if (Data[i].name.indexOf(name, 0, Qt::CaseInsensitive)>=0)
+				gr.AddRange(i, i);
+		}
+	}
+}
 
-    return nullptr;
+void Unicode::Group::AddRange(unsigned int from, unsigned int to)
+{
+	ranges.push_back(std::pair<unsigned int, unsigned int>(from, to));
 }
 
 bool Unicode::Group::LoadGroups(const char *fpath)

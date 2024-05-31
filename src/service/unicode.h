@@ -8,14 +8,14 @@ class Unicode {
 public:
     struct Symbol {
         unsigned int code = 0;
-        std::string name;
+        QString name;
     };
     struct Group {
         std::string name;
         std::list<std::pair<unsigned int, unsigned int> > ranges;
 		std::list<Group> children;
 
-        Group*   AddGroup(const char *name);
+        void     AddRange(unsigned int from, unsigned int to);
         bool     LoadGroups(const char *fpath);
 		unsigned int GetCount();
 		
@@ -35,8 +35,10 @@ public:
     };	
 public:
 	Unicode();
+	~Unicode();
     bool Load(const char* fpath);
     QString GetName(unsigned int c);
+	void FindByName(const QString& name, Unicode::Group &gr);
 public:
     Group All;
     Group Recent;
@@ -44,7 +46,7 @@ public:
     Group Search;
 private:
     enum { Count = 0xF0000 };
-    Symbol Data[Count];
+	Symbol *Data = nullptr;
 
 };
 Q_DECLARE_METATYPE(Unicode::Group*)

@@ -22,6 +22,7 @@ public slots:
     void onDoubleClickSymbol(QTableWidgetItem *item);
     void onSplitterMoved(int pos, int index);
     void onFontChanged(const QString &text);
+	void onSearch();
 private:
     void resizeEvent(QResizeEvent* event);
     void Done(QTableWidgetItem *item);

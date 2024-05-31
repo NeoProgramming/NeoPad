@@ -44,6 +44,7 @@ SymbolsDlg::SymbolsDlg(int cols, QWidget *parent)
     connect(ui.tableSymbols, &QTableWidget::itemDoubleClicked, this, &SymbolsDlg::onDoubleClickSymbol);
     connect(ui.splitter, &QSplitter::splitterMoved, this, &SymbolsDlg::onSplitterMoved);
     connect(ui.comboFonts, &QComboBox::currentTextChanged, this, &SymbolsDlg::onFontChanged);
+	connect(ui.pushSearch, &QPushButton::clicked, this, &SymbolsDlg::onSearch);
 }
 
 SymbolsDlg::~SymbolsDlg()
@@ -189,4 +190,14 @@ void SymbolsDlg::onFontChanged(const QString &text)
 {
     m_font = QFont(text);
     ResizeTable();
+}
+
+void SymbolsDlg::onSearch()
+{
+	QString text = ui.lineSearch->text();
+	Unicode::Group gr;
+	theUnicode.FindByName(text, gr);
+	if (!gr.ranges.empty()) {
+		LoadGroup(&gr);
+	}
 }
