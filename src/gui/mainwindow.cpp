@@ -273,9 +273,9 @@ MainWindow::MainWindow()
 	UpdateZoom(100);
 
     // load unicode
-    theUnicode.Load("js/UnicodeData.txt");
-    theUnicode.All.LoadGroups("js/Blocks.txt");
-    theUnicode.Faves.LoadGroups("js/Faves.txt");
+    theUnicode.Load(theSln.m_sProgDir + "/js/UnicodeData.txt");
+    theUnicode.All.LoadGroups(theSln.m_sProgDir + "/js/Blocks.txt");
+    theUnicode.Faves.LoadGroups(theSln.m_sProgDir + "/js/Faves.txt");
 
 	QTimer::singleShot(0, this, SLOT(onPostInit()));
 }
@@ -471,6 +471,7 @@ void MainWindow::loadScripts()
         if(QDir(m_jsPath).isRelative())
             m_jsPath = theSln.m_sProgDir + "/" + m_jsPath;
     }
+
     m_jsPath += "/neopad.js";
     QFile file(m_jsPath);
 	if(!file.open(QIODevice::ReadOnly)) {

@@ -12,7 +12,7 @@ Unicode::Unicode()
 	Recent.name = "Recent";
 }
 
-bool Unicode::Load(const char* fpath)
+bool Unicode::Load(const QString& fpath)
 {    QFile file(fpath);
     if (!file.open(QIODevice::ReadOnly))
         return Fail("Unicode::Load: file.open() error"), false;
@@ -61,7 +61,7 @@ void Unicode::Group::AddRange(unsigned int from, unsigned int to)
 	ranges.push_back(std::pair<unsigned int, unsigned int>(from, to));
 }
 
-bool Unicode::Group::LoadGroups(const char *fpath)
+bool Unicode::Group::LoadGroups(const QString& fpath)
 {
     QFile file(fpath);
     if (!file.open(QIODevice::ReadOnly))
