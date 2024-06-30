@@ -13,7 +13,8 @@ Unicode::Unicode()
 }
 
 bool Unicode::Load(const QString& fpath)
-{    QFile file(fpath);
+{    
+	QFile file(fpath);
     if (!file.open(QIODevice::ReadOnly))
         return Fail("Unicode::Load: file.open() error"), false;
 	if(!Data)
@@ -32,6 +33,35 @@ bool Unicode::Load(const QString& fpath)
         }
     }
     return true;
+}
+
+bool Unicode::LoadRecent(const QString& fpath)
+{
+	QFile file(fpath);
+	if (!file.open(QIODevice::ReadOnly))
+		return Fail("Unicode::LoadRecent: file.open() error"), false;
+	while (!file.atEnd()) {
+		QByteArray line = file.readLine();
+		bool ok;
+		unsigned int c = line.toUInt(&ok, 16);
+		if (ok) {
+			Recent.ranges.push_back(std::pair<unsigned int, unsigned int>(c, c));
+		}
+	}
+	return true;
+}
+
+bool Unicode::SaveRecent(const QString& fpath)
+{
+	QFile file(fpath);
+	if (!file.open(QIODevice::WriteOnly))
+		return Fail("Unicode::SaveRecent: file.open() error"), false;
+	for (auto i : Recent) {
+		QString s = QString::asprintf("%X\r\n", i, i);
+		QByteArray a = s.toLocal8Bit();
+		file.write(a);
+	}
+	return true;
 }
 
 Unicode::~Unicode()
@@ -61,8 +91,25 @@ void Unicode::Group::AddRange(unsigned int from, unsigned int to)
 	ranges.push_back(std::pair<unsigned int, unsigned int>(from, to));
 }
 
+void Unicode::Group::AddRecent(unsigned int c)
+{
+	// 1 searh & remove
+	for (auto i : ranges) {
+		if (i.first == c && c == i.second) {
+			ranges.remove(i);
+			break;
+		}
+	}
+	// 2 push front
+	ranges.push_front(std::pair<unsigned int, unsigned int>(c, c));
+	// 3 if need remove tail 
+	while (ranges.size() > 256)
+		ranges.pop_back();
+}
+
 bool Unicode::Group::LoadGroups(const QString& fpath)
 {
+	// 2200..22FF; Mathematical Operators
     QFile file(fpath);
     if (!file.open(QIODevice::ReadOnly))
         return Fail("Unicode::Group::LoadGroups: file.open() error"), false;

@@ -2,6 +2,8 @@
 #include <QTextCodec>
 #include <QMessageBox>
 #include <QFontDatabase>
+#include <QTimer>
+#include <QClipboard>
 
 #include "../core/Solution.h"
 #include "../core/ini.h"
@@ -41,10 +43,12 @@ SymbolsDlg::SymbolsDlg(int cols, QWidget *parent)
     connect(ui.pushOk, &QPushButton::clicked, this, &SymbolsDlg::onOk);
     connect(ui.pushCancel, &QPushButton::clicked, this, &QDialog::reject);
     connect(ui.treeGroups, &QTreeWidget::itemClicked, this, &SymbolsDlg::onSelectGroup);
-    connect(ui.tableSymbols, &QTableWidget::itemDoubleClicked, this, &SymbolsDlg::onDoubleClickSymbol);
+    connect(ui.tableSymbols, &QTableWidget::itemClicked, this, &SymbolsDlg::onClickSymbol);
+	connect(ui.tableSymbols, &QTableWidget::itemDoubleClicked, this, &SymbolsDlg::onDoubleClickSymbol);
     connect(ui.splitter, &QSplitter::splitterMoved, this, &SymbolsDlg::onSplitterMoved);
     connect(ui.comboFonts, &QComboBox::currentTextChanged, this, &SymbolsDlg::onFontChanged);
 	connect(ui.pushSearch, &QPushButton::clicked, this, &SymbolsDlg::onSearch);
+	connect(ui.pushCopy, &QPushButton::clicked, this, &SymbolsDlg::onCopy);
 }
 
 SymbolsDlg::~SymbolsDlg()
@@ -79,21 +83,31 @@ int SymbolsDlg::DoModal()
     QTreeWidgetItem *root3 = new QTreeWidgetItem();
     ui.treeGroups->addTopLevelItem(root3);
     LoadLevel(root3, &theUnicode.All);
+	
+	root1->setSelected(true);
+	QTimer::singleShot(0, this, SLOT(onPostInit()));
 
 	return this->exec();
 }
 
+void SymbolsDlg::onPostInit()
+{	
+	LoadGroup(&theUnicode.Recent);
+}
+
+
 void SymbolsDlg::Done(QTableWidgetItem *item)
 {
     if(item) {
+		unsigned int c = item->data(Qt::UserRole).value<unsigned int>();
         if(ui.checkCode->checkState() == Qt::Checked) {
-            unsigned int c = item->data(Qt::UserRole).value<unsigned int>();
             m_Symbol.sprintf("&#%d;", c);
         }
         else {
             m_Symbol = item->text();
         }
-
+		// add to recent
+		theUnicode.Recent.AddRecent(c);
         accept();
     }
 }
@@ -150,6 +164,13 @@ void SymbolsDlg::LoadGroup(Unicode::Group* gr)
     ResizeTable();
 }
 
+void SymbolsDlg::onClickSymbol(QTableWidgetItem *item)
+{
+	unsigned int c = item->data(Qt::UserRole).value<unsigned int>();
+	m_Symbol += item->text();
+	ui.lineSymbols->setText(m_Symbol);
+}
+
 void SymbolsDlg::onDoubleClickSymbol(QTableWidgetItem *item)
 {
     Done(item);
@@ -200,4 +221,10 @@ void SymbolsDlg::onSearch()
 	if (!gr.ranges.empty()) {
 		LoadGroup(&gr);
 	}
+}
+
+void SymbolsDlg::onCopy()
+{
+	QClipboard *clipboard = QApplication::clipboard();
+	clipboard->setText(m_Symbol);
 }

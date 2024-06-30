@@ -19,10 +19,13 @@ public:
 public slots:
 	void onOk();
     void onSelectGroup(QTreeWidgetItem *item);
+	void onClickSymbol(QTableWidgetItem *item);
     void onDoubleClickSymbol(QTableWidgetItem *item);
     void onSplitterMoved(int pos, int index);
     void onFontChanged(const QString &text);
 	void onSearch();
+	void onCopy();
+	void onPostInit();
 private:
     void resizeEvent(QResizeEvent* event);
     void Done(QTableWidgetItem *item);

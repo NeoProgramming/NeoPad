@@ -16,7 +16,8 @@ public:
 		std::list<Group> children;
 
         void     AddRange(unsigned int from, unsigned int to);
-        bool     LoadGroups(const QString& fpath);
+		void     AddRecent(unsigned int c);
+		bool     LoadGroups(const QString& fpath);
 		unsigned int GetCount();
 		
 		struct Iterator {
@@ -33,10 +34,13 @@ public:
 		Group::Iterator begin();
 		Group::Iterator end();
     };	
+
 public:
 	Unicode();
 	~Unicode();
     bool Load(const QString& fpath);
+	bool LoadRecent(const QString& fpath);
+	bool SaveRecent(const QString& fpath);
     QString GetName(unsigned int c);
 	void FindByName(const QString& name, Unicode::Group &gr);
 public:
