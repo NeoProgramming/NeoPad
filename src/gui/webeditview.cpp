@@ -906,13 +906,14 @@ void WebEditView::onInsertSymbol()
 {
 	// insert a special dialog for selecting a unicode character here
 	//triggerPageAction(QWebPage::InspectElement);
-    SymbolsDlg dlg(16);
+    SymbolsDlg dlg;
 	if (dlg.DoModal() == QDialog::Accepted)
 	{
 		// snippet name
 		QString s = dlg.m_Symbol;
-		InsertHtml(s);
+		InsertSymbol(s);
 	}
+	m_wMain->getSln()->UpdateSymbols();
 }
 
 void WebEditView::onInsertNumList()
@@ -923,6 +924,29 @@ void WebEditView::onInsertNumList()
 void WebEditView::onInsertBulList()
 {
 	execCommand("insertUnorderedList");
+}
+
+void WebEditView::InsertSymbol(QString html)
+{
+	QString js =
+		"var r = document.createTextNode('" + html + " '); "
+		"var p = r.nodeValue; "
+		"var s = document.createElement('span'); "
+		"s.innerHTML = p; "
+		"var sl = window.getSelection ? window.getSelection() : window.document.selection; "
+		"var t = sl.rangeCount > 0 ? sl.getRangeAt(0) : document.createRange(); "
+		"t.insertNode(s); "
+		"var z = s.innerHTML; "
+		"s.outerHTML = z; "
+		"t.setStart(t.startContainer, t.startOffset + 1); "
+		"t.collapse(true); "
+		"sl.removeAllRanges(); "
+		"sl.addRange(t); "
+		;
+
+	QWebFrame *frame = this->page()->mainFrame();
+	QVariant r = frame->evaluateJavaScript(js);
+	setWindowModified(true);
 }
 
 void WebEditView::InsertHtml(QString html)
@@ -940,7 +964,8 @@ void WebEditView::InsertHtml(QString html)
 		"var t = sl.rangeCount > 0 ? sl.getRangeAt(0) : document.createRange(); "
 		"t.insertNode(s); "
 		"var z = s.innerHTML; "
-		"s.outerHTML = z; ";
+		"s.outerHTML = z; "
+		;
 
 	QWebFrame *frame = this->page()->mainFrame();
 	QVariant r = frame->evaluateJavaScript(js);

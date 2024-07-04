@@ -48,6 +48,7 @@ public:
     void UpdateDocNode(QTreeWidgetItem * qnode, DocItem *node);
     void UpdateDocTree();
     void UpdateFavTree();
+	void UpdateSymbols();
     void Update(QTreeWidgetItem *qitem, DocItem *doc);
 
     void Search(const QString &text);
@@ -70,6 +71,7 @@ private slots:
 	void onFavContextMenu(const QPoint &pos);
     void onFavRootChanged(int index);
 	int  onDropping(QTreeWidgetItem *drag, QTreeWidgetItem *drop, int m);
+	void onDoubleClickSymbol(QTableWidgetItem *item);
 
 	void onItemProperties();
 	void onOpenInNewTab(int bi);
@@ -108,7 +110,8 @@ private slots:
     void processEvents();
 	
 private:
-	
+	void resizeEvent(QResizeEvent* event);
+
 	TREEITEM CurrItem();
 
     void SetCurrItemStatus(ETreeStatus status);
@@ -145,6 +148,7 @@ private:
 	QString searchRoot;	// guid
 	QIcon m_TreeIcons[(int)ETreeStatus::TS_ITEMS_COUNT];
 	QIcon m_LangIcons[(int)ELangStatus::LS_ITEMS_COUNT];
+	QFont m_fontSymbols;
 
 	QMenu *menuPopupDoc;
     QMenu *menuPopupAllFav;

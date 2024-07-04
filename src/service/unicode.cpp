@@ -10,6 +10,7 @@ Unicode::Unicode()
 	All.name = "All";
 	Faves.name = "Faves";
 	Recent.name = "Recent";
+	Quick.name = "Quick";
 }
 
 bool Unicode::Load(const QString& fpath)
@@ -35,28 +36,28 @@ bool Unicode::Load(const QString& fpath)
     return true;
 }
 
-bool Unicode::LoadRecent(const QString& fpath)
+bool Unicode::Group::Load(const QString& fpath)
 {
 	QFile file(fpath);
 	if (!file.open(QIODevice::ReadOnly))
-		return Fail("Unicode::LoadRecent: file.open() error"), false;
+		return Fail("Unicode::Group::Load: file.open() error"), false;
 	while (!file.atEnd()) {
 		QByteArray line = file.readLine();
 		bool ok;
 		unsigned int c = line.toUInt(&ok, 16);
 		if (ok) {
-			Recent.ranges.push_back(std::pair<unsigned int, unsigned int>(c, c));
+			ranges.push_back(std::pair<unsigned int, unsigned int>(c, c));
 		}
 	}
 	return true;
 }
 
-bool Unicode::SaveRecent(const QString& fpath)
+bool Unicode::Group::Save(const QString& fpath)
 {
 	QFile file(fpath);
 	if (!file.open(QIODevice::WriteOnly))
-		return Fail("Unicode::SaveRecent: file.open() error"), false;
-	for (auto i : Recent) {
+		return Fail("Unicode::Group::Save: file.open() error"), false;
+	for (auto i : *this) {
 		QString s = QString::asprintf("%X\r\n", i, i);
 		QByteArray a = s.toLocal8Bit();
 		file.write(a);
@@ -102,9 +103,15 @@ void Unicode::Group::AddRecent(unsigned int c)
 	}
 	// 2 push front
 	ranges.push_front(std::pair<unsigned int, unsigned int>(c, c));
+
 	// 3 if need remove tail 
 	while (ranges.size() > 256)
 		ranges.pop_back();
+}
+
+void Unicode::Group::AddQuick(unsigned int c)
+{
+	ranges.push_back(std::pair<unsigned int, unsigned int>(c, c));
 }
 
 bool Unicode::Group::LoadGroups(const QString& fpath)

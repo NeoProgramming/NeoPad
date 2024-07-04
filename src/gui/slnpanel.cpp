@@ -4,6 +4,7 @@
 #include "itemproperty.h"
 #include "newitemdlg.h"
 #include "existitemdlg.h"
+#include "symbolsdlg.h"
 
 #include <QtGui>
 #include <QtDebug>
@@ -89,6 +90,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	connect(ui.treeResults,	  &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onResDoubleClicked);
 	connect(ui.treeFavorites, &QTreeWidget::itemDoubleClicked, this, &SlnPanel::onFavDoubleClicked);
     connect(ui.comboFavRoot,  static_cast<void (QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &SlnPanel::onFavRootChanged);
+
+	connect(ui.tableSymbols, &QTableWidget::itemDoubleClicked, this, &SlnPanel::onDoubleClickSymbol);
 
 	ui.tabWidget->setCurrentIndex(0);
 
@@ -224,6 +227,18 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupRef->addMenu(menuPopupDoc);
 	menuPopupRef->addAction(actionEditFavRef);
 	menuPopupRef->addAction(actionRemoveFromFavs);
+
+	// symbols
+	ui.tableSymbols->setFocusPolicy(Qt::NoFocus);
+	ui.tableSymbols->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+	ui.tableSymbols->verticalHeader()->setVisible(false);
+	ui.tableSymbols->horizontalHeader()->setVisible(false);
+	ui.tableSymbols->verticalHeader()->setMinimumSectionSize(5);
+	ui.tableSymbols->horizontalHeader()->setMinimumSectionSize(5);
+	ui.tableSymbols->verticalHeader()->setDefaultSectionSize(30);
+	ui.tableSymbols->horizontalHeader()->setDefaultSectionSize(30);
+	m_fontSymbols = ui.tableSymbols->font();
+	ui.tableSymbols->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 TREEITEM SlnPanel::CurrItem()
@@ -430,6 +445,7 @@ void SlnPanel::Load()
     LoadFavTree(theSln.Favs.GetRoot());
     LoadFavCombo();
 	LoadBookTitles();
+	UpdateSymbols();
 	setCursor(Qt::ArrowCursor);
 }
 
@@ -544,6 +560,9 @@ void SlnPanel::onTabChanged(int tab)
             m_favoritesNeedsToRefresh = false;
         }
     }
+	else if (tab == 3) {
+		UpdateSymbols();
+	}
 }
 
 void SlnPanel::onDocContextMenu(const QPoint &pos)
@@ -1554,3 +1573,30 @@ void SlnPanel::SaveFavs()
 		return false;
 	});*/
 }
+
+void SlnPanel::onDoubleClickSymbol(QTableWidgetItem *item)
+{
+	if (!item)
+		return;
+	WebEditView *wnd = mw->GetActiveMdiChild();
+	if (!wnd)
+		return;
+	unsigned int c = item->data(Qt::UserRole).value<unsigned int>();
+	if (!c)
+		return;
+	QString s = QString::asprintf("&#%d;", c);
+	wnd->InsertSymbol(s);
+}
+
+void SlnPanel::UpdateSymbols()
+{
+	SymbolsDlg::LoadGroup(&theUnicode.Quick, ui.tableSymbols, m_fontSymbols);
+}
+
+void SlnPanel::resizeEvent(QResizeEvent* event)
+{
+	QWidget::resizeEvent(event);
+	SymbolsDlg::ResizeTable(ui.tableSymbols, m_fontSymbols);
+}
+
+

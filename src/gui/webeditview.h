@@ -149,6 +149,7 @@ public:
 	bool LoadHtml(DocItem* tpos, int di);
 	bool SaveHtml(bool update_tree);
 	void Find(const QString &text, bool backward);
+	void InsertSymbol(QString html);
 protected:
 	virtual void keyPressEvent(QKeyEvent * event);
 	virtual void closeEvent(QCloseEvent *e);
@@ -166,6 +167,7 @@ private:
 	bool GetCaretContext();
 	void OpenLink(const QUrl&);
 	void InsertHtml(QString html);
+	
 	void InsertLink(const QString &url, const QString &text);
 	QString PrepareImage(ImageAction action, const QString &fpath);
 	void InsertImage(const QString &fpath, int w, int h);

@@ -4,6 +4,7 @@
 #include <QFontDatabase>
 #include <QTimer>
 #include <QClipboard>
+#include <QMenu>
 
 #include "../core/Solution.h"
 #include "../core/ini.h"
@@ -13,9 +14,8 @@ extern QTextCodec *codecUtf8;
 
 Q_DECLARE_METATYPE(QString *)
 
-SymbolsDlg::SymbolsDlg(int cols, QWidget *parent)
+SymbolsDlg::SymbolsDlg(QWidget *parent)
 	: QDialog(parent)
-    , m_cols(cols)
 {
 	ui.setupUi(this);
 
@@ -40,11 +40,21 @@ SymbolsDlg::SymbolsDlg(int cols, QWidget *parent)
     }
     ui.comboFonts->setCurrentText(m_font.family());
 
+	ui.tableSymbols->setContextMenuPolicy(Qt::CustomContextMenu);
+
+	QAction* addAction = new QAction("Add to QuickPanel", this);
+	connect(addAction, &QAction::triggered, this, &SymbolsDlg::onItemAddToQuick);
+	m_contextMenu = new QMenu(this);
+	m_contextMenu->addAction(addAction);
+	//m_contextMenu->addAction("Delete");
+
     connect(ui.pushOk, &QPushButton::clicked, this, &SymbolsDlg::onOk);
     connect(ui.pushCancel, &QPushButton::clicked, this, &QDialog::reject);
     connect(ui.treeGroups, &QTreeWidget::itemClicked, this, &SymbolsDlg::onSelectGroup);
     connect(ui.tableSymbols, &QTableWidget::itemClicked, this, &SymbolsDlg::onClickSymbol);
 	connect(ui.tableSymbols, &QTableWidget::itemDoubleClicked, this, &SymbolsDlg::onDoubleClickSymbol);
+	connect(ui.tableSymbols, &QTableWidget::customContextMenuRequested, this, &SymbolsDlg::onRightClickSymbol);
+	
     connect(ui.splitter, &QSplitter::splitterMoved, this, &SymbolsDlg::onSplitterMoved);
     connect(ui.comboFonts, &QComboBox::currentTextChanged, this, &SymbolsDlg::onFontChanged);
 	connect(ui.pushSearch, &QPushButton::clicked, this, &SymbolsDlg::onSearch);
@@ -69,8 +79,6 @@ void SymbolsDlg::LoadLevel(QTreeWidgetItem *node, Unicode::Group *group)
 
 int SymbolsDlg::DoModal()
 {
-    //ui.splitter
-
     ui.treeGroups->clear();
     QTreeWidgetItem *root1 = new QTreeWidgetItem();
     ui.treeGroups->addTopLevelItem(root1);
@@ -83,6 +91,10 @@ int SymbolsDlg::DoModal()
     QTreeWidgetItem *root3 = new QTreeWidgetItem();
     ui.treeGroups->addTopLevelItem(root3);
     LoadLevel(root3, &theUnicode.All);
+
+	QTreeWidgetItem *root4 = new QTreeWidgetItem();
+	ui.treeGroups->addTopLevelItem(root4);
+	LoadLevel(root4, &theUnicode.Quick);
 	
 	root1->setSelected(true);
 	QTimer::singleShot(0, this, SLOT(onPostInit()));
@@ -92,7 +104,7 @@ int SymbolsDlg::DoModal()
 
 void SymbolsDlg::onPostInit()
 {	
-	LoadGroup(&theUnicode.Recent);
+	LoadGroup(&theUnicode.Recent, ui.tableSymbols, m_font);
 }
 
 
@@ -123,21 +135,21 @@ void SymbolsDlg::onSelectGroup(QTreeWidgetItem *item)
 	if (item) {
 		Unicode::Group* gr = item->data(0, Qt::UserRole).value<Unicode::Group*>();
 		if (gr) {
-			LoadGroup(gr);
+			LoadGroup(gr, ui.tableSymbols, m_font);
 		}
 	}
 }
 
-void SymbolsDlg::LoadGroup(Unicode::Group* gr)
+void SymbolsDlg::LoadGroup(Unicode::Group* gr, QTableWidget *tableSymbols, QFont &font)
 {
 	int row = 0;
 	int col = 0;
 	int count = gr->GetCount();
     int rows = (count - 1) / Q_Columns + 1;
 	
-	ui.tableSymbols->clear();
-	ui.tableSymbols->setRowCount(rows);
-    ui.tableSymbols->setColumnCount(Q_Columns);
+	tableSymbols->clear();
+	tableSymbols->setRowCount(rows);
+    tableSymbols->setColumnCount(Q_Columns);
 		
 	for (auto i = gr->begin(), e = gr->end(); i != e; ++i) {
         if (col >= Q_Columns) {
@@ -152,16 +164,16 @@ void SymbolsDlg::LoadGroup(Unicode::Group* gr)
         item->setTextAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         item->setToolTip(theUnicode.GetName(c));
         item->setData(Qt::UserRole, QVariant::fromValue(c));
-		ui.tableSymbols->setItem(row, col, item);
+		tableSymbols->setItem(row, col, item);
 		col++;
 	}
     //Make empty entries uneditable
     for(int i = col; i < Q_Columns; i++) {
        QTableWidgetItem* item = new QTableWidgetItem("");
        item->setFlags(item->flags() & ~Qt::ItemFlag::ItemIsEditable);
-       ui.tableSymbols->setItem(row, i, item);
+       tableSymbols->setItem(row, i, item);
     }
-    ResizeTable();
+    ResizeTable(tableSymbols, font);
 }
 
 void SymbolsDlg::onClickSymbol(QTableWidgetItem *item)
@@ -179,38 +191,38 @@ void SymbolsDlg::onDoubleClickSymbol(QTableWidgetItem *item)
 void SymbolsDlg::resizeEvent(QResizeEvent* event)
 {
     QDialog::resizeEvent(event);
-    ResizeTable();
+    ResizeTable(ui.tableSymbols, m_font);
 }
 
 void SymbolsDlg::onSplitterMoved(int pos, int index)
 {
-    ResizeTable();
+    ResizeTable(ui.tableSymbols, m_font);
 }
 
-void SymbolsDlg::ResizeTable()
+void SymbolsDlg::ResizeTable(QTableWidget *tableSymbols, QFont &font)
 {
-    QSize s = ui.tableSymbols->size();
+    QSize s = tableSymbols->size();
     int cw = (s.width() - 20) / Q_Columns;
     if(cw < 2)
         return;
 
-    QHeaderView *h = ui.tableSymbols->horizontalHeader();
+    QHeaderView *h = tableSymbols->horizontalHeader();
     for(int i=0; i<Q_Columns; i++)
         h->resizeSection(i, cw);
 
-    h = ui.tableSymbols->verticalHeader();
-    int nc = ui.tableSymbols->rowCount();
+    h = tableSymbols->verticalHeader();
+    int nc = tableSymbols->rowCount();
     for(int i=0; i<nc; i++)
         h->resizeSection(i, cw);
 
-    m_font.setPointSize(cw/2);
-    ui.tableSymbols->setFont(m_font);
+    font.setPointSize(cw/2);
+    tableSymbols->setFont(font);
 }
 
 void SymbolsDlg::onFontChanged(const QString &text)
 {
     m_font = QFont(text);
-    ResizeTable();
+    ResizeTable(ui.tableSymbols, m_font);
 }
 
 void SymbolsDlg::onSearch()
@@ -219,7 +231,7 @@ void SymbolsDlg::onSearch()
 	Unicode::Group gr;
 	theUnicode.FindByName(text, gr);
 	if (!gr.ranges.empty()) {
-		LoadGroup(&gr);
+		LoadGroup(&gr, ui.tableSymbols, m_font);
 	}
 }
 
@@ -228,3 +240,21 @@ void SymbolsDlg::onCopy()
 	QClipboard *clipboard = QApplication::clipboard();
 	clipboard->setText(m_Symbol);
 }
+
+void SymbolsDlg::onRightClickSymbol(const QPoint & pos)
+{
+	QModelIndex index = ui.tableSymbols->indexAt(pos);
+	if (!index.isValid()) return;
+	m_contextMenu->exec(ui.tableSymbols->mapToGlobal(pos));
+}
+
+void SymbolsDlg::onItemAddToQuick()
+{
+	QTableWidgetItem* currentItem = ui.tableSymbols->currentItem();
+	if (currentItem != nullptr) {
+		unsigned int c = currentItem->data(Qt::UserRole).value<unsigned int>();
+		// add to qiock
+		theUnicode.Quick.AddQuick(c);
+	}
+}
+

@@ -14,9 +14,11 @@ public:
         std::string name;
         std::list<std::pair<unsigned int, unsigned int> > ranges;
 		std::list<Group> children;
-
+		bool	 Load(const QString& fpath);
+		bool	 Save(const QString& fpath);
         void     AddRange(unsigned int from, unsigned int to);
 		void     AddRecent(unsigned int c);
+		void     AddQuick(unsigned int c);
 		bool     LoadGroups(const QString& fpath);
 		unsigned int GetCount();
 		
@@ -39,8 +41,6 @@ public:
 	Unicode();
 	~Unicode();
     bool Load(const QString& fpath);
-	bool LoadRecent(const QString& fpath);
-	bool SaveRecent(const QString& fpath);
     QString GetName(unsigned int c);
 	void FindByName(const QString& name, Unicode::Group &gr);
 public:
@@ -48,6 +48,7 @@ public:
     Group Recent;
     Group Faves;
     Group Search;
+	Group Quick;
 private:
     enum { Count = 0xF0000 };
 	Symbol *Data = nullptr;

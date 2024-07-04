@@ -276,7 +276,8 @@ MainWindow::MainWindow()
     theUnicode.Load(theSln.m_sProgDir + "/js/UnicodeData.txt");
     theUnicode.All.LoadGroups(theSln.m_sProgDir + "/js/Blocks.txt");
     theUnicode.Faves.LoadGroups(theSln.m_sProgDir + "/js/Faves.txt");
-	theUnicode.LoadRecent(theSln.m_sProgDir + "/js/Recent.txt");
+	theUnicode.Recent.Load(theSln.m_sProgDir + "/js/Recent.txt");
+	theUnicode.Quick.Load(theSln.m_sProgDir + "/js/Quick.txt");
 
 	QTimer::singleShot(0, this, SLOT(onPostInit()));
 }
@@ -450,7 +451,8 @@ void MainWindow::saveSettings()
 	ha = ba.toHex();
 	INI::WinState = ha.data();
 
-	theUnicode.SaveRecent(theSln.m_sProgDir + "/js/Recent.txt");
+	theUnicode.Recent.Save(theSln.m_sProgDir + "/js/Recent.txt");
+	theUnicode.Quick.Save(theSln.m_sProgDir + "/js/Quick.txt");
 }
 
 void MainWindow::loadSettings()
