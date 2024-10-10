@@ -40,6 +40,8 @@ public slots:
 	void onEditPaste();
 	void onEditPasteText();
     void onEditPasteAsTable();
+	void onEditPasteAsCode();
+	void onEditPasteAsBilingua();
 	void onEditPasteCell();
 	void onEditPasteSpecial();
 
@@ -166,7 +168,7 @@ private:
 	int  GetElementContext(const QWebElement &el);
 	bool GetCaretContext();
 	void OpenLink(const QUrl&);
-	void InsertHtml(QString html);
+	void InsertHtml(QString html, bool without_crlf = true);
 	
 	void InsertLink(const QString &url, const QString &text);
 	QString PrepareImage(ImageAction action, const QString &fpath);
@@ -176,6 +178,7 @@ private:
 	
 	MainWindow *m_wMain;
 	QMenu m_menuContext;
+	QMenu m_menuPaste;
 	QMenu m_menuTable;
 	QAction *actionTableProps;
 	QAction *actionTableInsAbove;

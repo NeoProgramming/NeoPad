@@ -154,6 +154,8 @@ MainWindow::MainWindow()
 	CONN_CHILD(ui.actionEditPaste,			onEditPaste);
 	CONN_CHILD(ui.actionEditPasteText,		onEditPasteText);
 	CONN_CHILD(ui.actionEditPasteAsTable,	onEditPasteAsTable);
+	CONN_CHILD(ui.actionEditPasteAsCode,    onEditPasteAsCode);
+	CONN_CHILD(ui.actionEditPasteAsBilingua,onEditPasteAsBilingua);
 	CONN_CHILD(ui.actionEditPasteCell,      onEditPasteCell);
 	CONN_CHILD(ui.actionEditUndo,			onEditUndo);
 	CONN_CHILD(ui.actionEditRedo,			onEditRedo);

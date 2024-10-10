@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>20</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -115,6 +115,14 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <widget class="QMenu" name="menuSpecial_paste">
+     <property name="title">
+      <string>Special paste</string>
+     </property>
+     <addaction name="actionEditPasteAsTable"/>
+     <addaction name="actionEditPasteAsCode"/>
+     <addaction name="actionEditPasteAsBilingua"/>
+    </widget>
     <addaction name="separator"/>
     <addaction name="actionEditUndo"/>
     <addaction name="actionEditRedo"/>
@@ -126,7 +134,7 @@
     <addaction name="actionCopyLink"/>
     <addaction name="actionEditPaste"/>
     <addaction name="actionEditPasteText"/>
-    <addaction name="actionEditPasteAsTable"/>
+    <addaction name="menuSpecial_paste"/>
     <addaction name="separator"/>
     <addaction name="actionEditUntag"/>
     <addaction name="actionEditOutside"/>
@@ -1597,7 +1605,7 @@
      <normaloff>:/edit/images/edit-pastetable.png</normaloff>:/edit/images/edit-pastetable.png</iconset>
    </property>
    <property name="text">
-    <string>Paste as Table</string>
+    <string>As Table</string>
    </property>
    <property name="toolTip">
     <string>Paste as Table</string>
@@ -1790,6 +1798,16 @@
   <action name="actionFileOpenImportant">
    <property name="text">
     <string>Open Important</string>
+   </property>
+  </action>
+  <action name="actionEditPasteAsCode">
+   <property name="text">
+    <string>As Code</string>
+   </property>
+  </action>
+  <action name="actionEditPasteAsBilingua">
+   <property name="text">
+    <string>As Bilingua</string>
    </property>
   </action>
  </widget>

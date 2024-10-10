@@ -10,5 +10,5 @@ public:
 public:
 	void	LoadSnippets();
 	QString GetSnippetPath(const QString& name);
-	QString GetSnippet(const QString& name);
+	QString GetSnippet(const QString& name, const QString &content = "");
 };

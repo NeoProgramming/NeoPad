@@ -21,7 +21,7 @@ QString Snippets::GetSnippetPath(const QString& name)
 	return path;
 }
 
-QString Snippets::GetSnippet(const QString& name)
+QString Snippets::GetSnippet(const QString& name, const QString &content)
 {
 	// open the snippet, read its code
 	QString s;
@@ -38,6 +38,7 @@ QString Snippets::GetSnippet(const QString& name)
 		file.close();
 	}
 
+	s.replace("$", content);
 	return s;
 }
 

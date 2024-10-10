@@ -92,6 +92,12 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	m_menuTable.addAction(actionTableDelRow);
 	m_menuTable.addAction(actionTableDelCol);
 
+	// paste menu
+	m_menuPaste.setTitle("Special Paste");
+	m_menuPaste.addAction(mw->ui.actionEditPasteAsTable);
+	m_menuPaste.addAction(mw->ui.actionEditPasteAsCode);
+	m_menuPaste.addAction(mw->ui.actionEditPasteAsBilingua);
+
 	// context menu
 	m_menuContext.addAction(mw->ui.actionEditCut);
 	m_menuContext.addAction(mw->ui.actionEditCutText);
@@ -99,7 +105,7 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
     m_menuContext.addAction(mw->ui.actionEditCopyText);
 	m_menuContext.addAction(mw->ui.actionEditPaste);
 	m_menuContext.addAction(mw->ui.actionEditPasteText);
-    m_menuContext.addAction(mw->ui.actionEditPasteAsTable);
+    m_menuContext.addMenu( &m_menuPaste );
 	m_menuContext.addSeparator();
 	m_menuContext.addAction(mw->ui.actionToolsLink);
 	m_menuContext.addAction(mw->ui.actionToolsSearch);
@@ -536,6 +542,26 @@ void WebEditView::onEditPasteAsTable()
     InsertHtml(html);
 }
 
+void WebEditView::onEditPasteAsCode()
+{
+	QClipboard *clipboard = QApplication::clipboard();
+	QString originalText = clipboard->text();
+	originalText = originalText.toHtmlEscaped();
+	QString html = theSln.m_Snippets.GetSnippet("code.html", originalText);
+	InsertHtml(html, false);
+}
+
+void WebEditView::onEditPasteAsBilingua()
+{
+	QClipboard *clipboard = QApplication::clipboard();
+	const QMimeData* mimeData = clipboard->mimeData();
+	if (mimeData && mimeData->hasHtml()) {
+		QString htmlContent = mimeData->html();
+		QString html = theSln.m_Snippets.GetSnippet("bilingua.html", htmlContent);
+		InsertHtml(html);
+	}	
+}
+
 void WebEditView::onEditPasteCell()
 {
 	// paste as text without CR LF s
@@ -949,11 +975,19 @@ void WebEditView::InsertSymbol(QString html)
 	setWindowModified(true);
 }
 
-void WebEditView::InsertHtml(QString html)
-{
-	html.replace('\r', ' ');
-	html.replace('\n', ' ');
+void WebEditView::InsertHtml(QString html, bool without_crlf)
+{	
+	if (without_crlf) {
+		html.replace("\r", " ");
+		html.replace("\n", " ");
+	}
+	else {
+		html.replace("\r\n", "&NewLine;");
+		html.replace("\r", "&NewLine;");
+		html.replace("\n", "&NewLine;");
+	}
 	html.replace("\'", "&rsquo;");
+	html.replace("\\", "&bsol;");
 	
 	QString js = 
 		"var r = document.createTextNode('" + html + " '); "
