@@ -528,8 +528,10 @@ void WebEditView::onEditPasteText()
 	// paste as text
 	QClipboard *clipboard = QApplication::clipboard();
 	QString originalText = clipboard->text();
-	clipboard->setText(originalText);
-	triggerPageAction(QWebPage::Paste);
+    originalText = originalText.toHtmlEscaped();
+    //clipboard->setText(originalText);
+    //triggerPageAction(QWebPage::Paste);
+    InsertHtml(originalText);
 }
 
 void WebEditView::onEditPasteAsTable()
@@ -548,7 +550,7 @@ void WebEditView::onEditPasteAsCode()
 	QString originalText = clipboard->text();
 	originalText = originalText.toHtmlEscaped();
 	QString html = theSln.m_Snippets.GetSnippet("code.html", originalText);
-	InsertHtml(html, false);
+    InsertHtml(html);
 }
 
 void WebEditView::onEditPasteAsBilingua()
