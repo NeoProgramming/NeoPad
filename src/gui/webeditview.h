@@ -110,8 +110,6 @@ public slots:
 	void onInsertNumList();
 	void onInsertBulList();
 
-	
-
 	void onZoomOut();
 	void onZoomIn();
 	void onZoomNormal();
@@ -168,7 +166,7 @@ private:
 	int  GetElementContext(const QWebElement &el);
 	bool GetCaretContext();
 	void OpenLink(const QUrl&);
-	void InsertHtml(QString html, bool without_crlf = true);
+    void InsertHtml(QString html);
 	
 	void InsertLink(const QString &url, const QString &text);
 	QString PrepareImage(ImageAction action, const QString &fpath);

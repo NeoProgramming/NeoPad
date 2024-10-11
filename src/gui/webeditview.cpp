@@ -975,17 +975,11 @@ void WebEditView::InsertSymbol(QString html)
 	setWindowModified(true);
 }
 
-void WebEditView::InsertHtml(QString html, bool without_crlf)
+void WebEditView::InsertHtml(QString html)
 {	
-	if (without_crlf) {
-		html.replace("\r", " ");
-		html.replace("\n", " ");
-	}
-	else {
-		html.replace("\r\n", "&NewLine;");
-		html.replace("\r", "&NewLine;");
-		html.replace("\n", "&NewLine;");
-	}
+    html.replace("\r\n", "&NewLine;");
+    html.replace("\r", "&NewLine;");
+    html.replace("\n", "&NewLine;");
 	html.replace("\'", "&rsquo;");
 	html.replace("\\", "&bsol;");
 	
