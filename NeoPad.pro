@@ -2,7 +2,8 @@ TEMPLATE = app
 TARGET = NeoPad
 DESTDIR	= .
 
-CONFIG += c++11
+CONFIG += c++14
+QMAKE_CXXFLAGS += -include limits
 
 MOC_DIR	= build/.moc
 RCC_DIR	= build/.rcc
