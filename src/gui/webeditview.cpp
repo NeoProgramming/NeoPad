@@ -561,7 +561,14 @@ void WebEditView::onEditPasteAsBilingua()
 		QString htmlContent = mimeData->html();
 		QString html = theSln.m_Snippets.GetSnippet("bilingua.html", htmlContent);
 		InsertHtml(html);
-	}	
+    }
+    else {
+        // for cross-vm copy/paste
+        QString originalText = clipboard->text();
+        originalText = originalText.toHtmlEscaped();
+        QString html = theSln.m_Snippets.GetSnippet("bilingua.html", originalText);
+        InsertHtml(html);
+    }
 }
 
 void WebEditView::onEditPasteCell()
