@@ -23,10 +23,11 @@ public:
 
 	bool DoModal(MainWindow *mw);
 private:
-	void DoSave(bool all);
+	void DoSave(bool all, bool save);
 public slots:
 	void onSaveAll();
 	void onSaveSel();
+	void onSaveNothing();
 private:
 	Ui::SaveAllDlg ui;
 };

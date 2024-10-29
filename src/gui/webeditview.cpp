@@ -130,7 +130,7 @@ void WebEditView::onAdjustSource()
 
 bool WebEditView::maybeSave()
 {
-	if (!isWindowModified())
+	if (m_DontSaveBeforeClosing || !isWindowModified())
 		return true;
 
 	QMessageBox::StandardButton ret;

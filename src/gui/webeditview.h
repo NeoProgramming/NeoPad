@@ -18,6 +18,7 @@ public:
 	~WebEditView();
 	DocItem* m_Item;
 	int   m_di;
+	bool m_DontSaveBeforeClosing = false;
 private:
     static QString jsGetSelBounds();
     static QString jsSetSelAttr();

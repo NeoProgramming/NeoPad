@@ -11,7 +11,7 @@ SaveAllDlg::SaveAllDlg(QWidget *parent)
 	ui.setupUi(this);
 
 	connect(ui.pushSaveAll,		SIGNAL(clicked()), this, SLOT(onSaveAll()));
-	connect(ui.pushSaveNothing, SIGNAL(clicked()), this, SLOT(accept()));
+	connect(ui.pushSaveNothing, SIGNAL(clicked()), this, SLOT(onSaveNothing()));
 	connect(ui.pushOk,			SIGNAL(clicked()), this, SLOT(onSaveSel()));
 	connect(ui.pushCancel,		SIGNAL(clicked()), this, SLOT(reject()));
 }
@@ -60,7 +60,7 @@ bool SaveAllDlg::DoModal(MainWindow *mw)
 	return QDialog::Accepted;
 }
 
-void SaveAllDlg::DoSave(bool all)
+void SaveAllDlg::DoSave(bool all, bool save)
 {
 	int n = ui.listFiles->count();
 	for(int i=0; i<n; i++)
@@ -72,27 +72,38 @@ void SaveAllDlg::DoSave(bool all)
 			unsigned int t = item->data(Qt::UserRole+1).value<unsigned int>();
 			if(t == 0)	// this is a vmbase node
 			{
-				DocItem* tpos = item->data(Qt::UserRole).value<DocItem*>();
-				theSln.SaveSubBase(tpos, false);
+				if (save) {
+					DocItem* tpos = item->data(Qt::UserRole).value<DocItem*>();
+					theSln.SaveSubBase(tpos, false);
+				}
 			}
 			else if(t == 1) // this is html document
 			{
 				WebEditView *view = item->data(Qt::UserRole).value<WebEditView*>();
-				view->onFileSave();
+				if (save)
+					view->onFileSave();
+				else
+					view->m_DontSaveBeforeClosing = true;
 			}
 		}
 	}
 }
 
+void SaveAllDlg::onSaveNothing()
+{
+	DoSave(true, false);
+	accept();
+}
+
 void SaveAllDlg::onSaveAll()
 {
-	DoSave(true);
+	DoSave(true, true);
 	accept();
 }
 
 void SaveAllDlg::onSaveSel()
 {
-	DoSave(false);
+	DoSave(false, true);
 	accept();
 }
 

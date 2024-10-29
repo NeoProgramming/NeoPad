@@ -104,7 +104,7 @@ private:
     void onChild(void (WebEditView::*pHandler)());
 	void GenContents(int bi);
 	void EditCss(int bi);
-	bool DoSaveAll();
+	bool DoSaveBeforeClosing();
 	void DoQuickStart(int code);
 	bool DoPrjOpen(const QString& fpath);
 	void DoOpenDoc(DocItem* mtPos, int di);

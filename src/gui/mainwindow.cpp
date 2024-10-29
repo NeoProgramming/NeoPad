@@ -307,11 +307,12 @@ void MainWindow::QuitProject()
 	m_wSln->SaveFavs();
 	SaveTabs();
 	theSln.QuitProject();
+	m_wArea->closeAllSubWindows();
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-	if (DoSaveAll())
+	if (DoSaveBeforeClosing())
 	{
 		QuitProject();
 
@@ -700,7 +701,9 @@ void MainWindow::onProjectQuickStart()
 {
 	QuickStartDlg dlg(this);
 	if (dlg.DoModal() == QDialog::Accepted) {
-		
+		if (!DoSaveBeforeClosing())
+			return;		// cancel saving
+		QuitProject();	// save tree, tabs, close all windows
 		DoQuickStart(INI::QSModeNew);
 	}
 }
@@ -715,7 +718,7 @@ qreal MainWindow::UpdateZoom(int percent)
 	return factor;
 }
 
-bool MainWindow::DoSaveAll()
+bool MainWindow::DoSaveBeforeClosing()
 {
 	SaveAllDlg dlg(this);	
 	theSln.MakeUnsavedList(dlg.mpl);
