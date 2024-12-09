@@ -518,6 +518,9 @@ void WebEditView::onEditPaste()
 			InsertHtml(html);
 		}
 	}
+	else if (!formats.contains("text/html")) {
+		onEditPasteText();
+	}
 	else {
 		triggerPageAction(QWebPage::Paste);
 	}
