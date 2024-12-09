@@ -528,10 +528,23 @@ void WebEditView::onEditPasteText()
 	// paste as text
 	QClipboard *clipboard = QApplication::clipboard();
 	QString originalText = clipboard->text();
-    originalText = originalText.toHtmlEscaped();
+    //originalText = originalText.toHtmlEscaped();
+
+    QMimeData* mimeData = new QMimeData();
+
+    mimeData->setText(originalText.toUtf8());
+    QString htmlText = originalText;
+    htmlText.replace("/r/n", "<p>");
+    htmlText.replace("/r", "<p>");
+    htmlText.replace("/n", "<p>");
+    mimeData->setData("text/html", htmlText.toUtf8());
+    QApplication::clipboard()->setMimeData(mimeData);
+
     //clipboard->setText(originalText);
-    //triggerPageAction(QWebPage::Paste);
-    InsertHtml(originalText);
+
+    triggerPageAction(QWebPage::Paste);
+
+    //InsertHtml(originalText);
 }
 
 void WebEditView::onEditPasteAsTable()
