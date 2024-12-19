@@ -13,7 +13,7 @@
 #include "Favorites.h"
 #include "Workspace.h"
 #include "Importants.h"
-
+#include "Classes.h"
 
 
 class CSolution 
@@ -32,6 +32,7 @@ public:
 	//Documents Docs; // temporary commented
 	Favorites Favs;
 	Importants Imps;
+	Classes   Clss;
 public:
 	CSolution(void);
 	~CSolution(void);

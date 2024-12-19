@@ -214,6 +214,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\3rdparty\pugixml\pugixml.cpp" />
+    <ClCompile Include="src\core\Classes.cpp" />
     <ClCompile Include="src\core\Importants.cpp" />
     <ClCompile Include="src\core\Books.cpp" />
     <ClCompile Include="src\core\Cryptor.cpp" />
@@ -265,6 +266,7 @@
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp" />
     <ClInclude Include="src\3rdparty\pugixml\pugixml.hpp" />
+    <ClInclude Include="src\core\Classes.h" />
     <ClInclude Include="src\core\Importants.h" />
     <ClInclude Include="src\core\BaseItem.h" />
     <ClInclude Include="src\core\Books.h" />

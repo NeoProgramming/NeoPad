@@ -215,6 +215,9 @@
     <ClCompile Include="src\service\unicode.cpp">
       <Filter>src\service</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Classes.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp">
@@ -303,6 +306,9 @@
     </ClInclude>
     <ClInclude Include="src\service\unicode.h">
       <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Classes.h">
+      <Filter>src\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -132,6 +132,9 @@ bool CSolution::LoadProject(const QString &fpath)
 	// load importants
 	Imps.Load(xRoot);
 
+	// load classes
+	Clss.Load(xRoot);
+
     // load paths from attributes (deprecated, refactor to Settings.SaveSettings(xRoot) )
 	m_ImageDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("images").as_string()));
 	m_Snippets.m_SnippDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("snippets").as_string()));
@@ -162,6 +165,9 @@ void CSolution::SaveProjectData(pugi::xml_node xRoot)
 
 	// save importants
 	Imps.Save(xRoot);
+
+	// save classes
+	//Clss.Save(xRoot);
 }
 
 bool CSolution::SaveProject(bool recursive)

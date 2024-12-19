@@ -886,7 +886,7 @@ void WebEditView::onInsertTable()
 {
 	TableProperties dlg;
 	HtmlTable table;
-	if(dlg.DoModal(5,5,"") == QDialog::Accepted)
+	if(dlg.DoModal(5,5,"","","") == QDialog::Accepted)
 	{
 		InsertHtml(table.MakeHtml(dlg.m_rowsCount, dlg.m_colsCount));
 	}
@@ -1076,9 +1076,24 @@ void WebEditView::onTableProperties()
 	}
 	HtmlTable table(m_elTable);
 	TableProperties dlg;
-	if(dlg.DoModal(table.GetRowCount(), table.GetColCount(), table.GetClass()) == QDialog::Accepted) {
+	if(dlg.DoModal(table.GetRowCount(), table.GetColCount(), 
+		table.GetClass(), m_elTR.attribute("class"), m_elTD.attribute("class"))
+		== QDialog::Accepted) {
 		table.SetDimensions(dlg.m_rowsCount, dlg.m_colsCount);
-		table.SetClass(dlg.m_class);
+		// todo: move to helpers
+		// table class 
+		table.SetClass(dlg.m_classTable);
+		// tr class
+		if (dlg.m_classTR.isEmpty())
+			m_elTR.removeAttribute("class");
+		else
+			m_elTR.setAttribute("class", dlg.m_classTR);
+		// td class
+		if (dlg.m_classTD.isEmpty())
+			m_elTD.removeAttribute("class");
+		else
+			m_elTD.setAttribute("class", dlg.m_classTD);
+
 		setWindowModified(true);
 	}
 }
