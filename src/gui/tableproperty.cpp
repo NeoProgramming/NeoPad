@@ -17,16 +17,19 @@ int  TableProperties::DoModal(int rowsCount, int colsCount, const QString &ctab,
 
 	// load all classes
 	QStringList *L;
-	L = theSln.Clss.Get("table");
+    ui.comboTableClass->addItem("");
+    L = theSln.Clss.Get("table");
 	if (L) {
 		for (const QString&c : *L)
 			ui.comboTableClass->addItem(c);
 	}
+    ui.comboTrClass->addItem("");
 	L = theSln.Clss.Get("tr");
 	if (L) {
 		for (const QString&c : *L)
 			ui.comboTrClass->addItem(c);
 	}
+    ui.comboTdClass->addItem("");
 	L = theSln.Clss.Get("td");
 	if (L) {
 		for (const QString&c : *L)

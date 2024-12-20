@@ -10,6 +10,7 @@
 #include "linkproperty.h"
 #include "snippetsdlg.h"
 #include "symbolsdlg.h"
+#include "html.h"
 #include "htmltable.h"
 #include "htmlimage.h"
 #include "htmllink.h"
@@ -1077,22 +1078,12 @@ void WebEditView::onTableProperties()
 	HtmlTable table(m_elTable);
 	TableProperties dlg;
 	if(dlg.DoModal(table.GetRowCount(), table.GetColCount(), 
-		table.GetClass(), m_elTR.attribute("class"), m_elTD.attribute("class"))
-		== QDialog::Accepted) {
+        Html::GetClass(m_elTable), Html::GetClass(m_elTR), Html::GetClass(m_elTD)) == QDialog::Accepted) {
 		table.SetDimensions(dlg.m_rowsCount, dlg.m_colsCount);
-		// todo: move to helpers
-		// table class 
-		table.SetClass(dlg.m_classTable);
-		// tr class
-		if (dlg.m_classTR.isEmpty())
-			m_elTR.removeAttribute("class");
-		else
-			m_elTR.setAttribute("class", dlg.m_classTR);
-		// td class
-		if (dlg.m_classTD.isEmpty())
-			m_elTD.removeAttribute("class");
-		else
-			m_elTD.setAttribute("class", dlg.m_classTD);
+        // set classes
+        Html::SetClass(m_elTable, dlg.m_classTable);
+        Html::SetClass(m_elTR, dlg.m_classTR);
+        Html::SetClass(m_elTD, dlg.m_classTD);
 
 		setWindowModified(true);
 	}

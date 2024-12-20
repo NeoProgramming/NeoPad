@@ -62,6 +62,7 @@ HEADERS += \
     ./src/core/ini.h \
     ./src/core/BaseItem.h \
     ./src/core/Books.h \
+    ./src/core/Classes.h \
     ./src/core/Cryptor.h \
     ./src/core/DocItem.h \
     ./src/core/Documents.h \
@@ -93,6 +94,7 @@ HEADERS += \
     ./src/gui/passworddlg.h \
     ./src/gui/tableproperty.h \
     ./src/gui/tablemenu.h \
+    ./src/gui/html.h \
     ./src/gui/htmltable.h \
     ./src/gui/prjpropsdlg.h \
     ./src/gui/htmlimage.h \
@@ -110,6 +112,7 @@ HEADERS += \
 SOURCES += \
     ./src/main.cpp \
     ./src/core/Books.cpp \
+    ./src/core/Classes.cpp \
     ./src/core/Cryptor.cpp \
     ./src/core/DocItem.cpp \
     ./src/core/Documents.cpp \
@@ -141,6 +144,7 @@ SOURCES += \
     ./src/gui/passworddlg.cpp \
     ./src/gui/tableproperty.cpp \
     ./src/gui/tablemenu.cpp \
+    ./src/gui/html.cpp \
     ./src/gui/htmltable.cpp \
     ./src/gui/prjpropsdlg.cpp \
     ./src/gui/htmlimage.cpp \

@@ -15,19 +15,6 @@ HtmlTable::~HtmlTable(void)
 {
 }
 
-QString HtmlTable::GetClass()
-{
-	return m_table.attribute("class");
-}
-
-void HtmlTable::SetClass(const QString &cls)
-{
-	if (cls.isEmpty())
-		m_table.removeAttribute("class");
-	else
-		m_table.setAttribute("class", cls);
-}
-
 int HtmlTable::GetColCount()
 {
 	if (m_table.isNull())
