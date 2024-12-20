@@ -42,9 +42,12 @@ public:
 	void Collapse(QWebElement &td);
 
     void MoveRow(QWebElement &tr, bool below);
+    void MoveColumn(QWebElement &td, bool right);
 
 	void ClearColumn(QWebElement &td);
 	void ClearRow(QWebElement &td);
+
+    void SetFocus(QWebElement &td);
 protected:
 	void Parse(const QString &text, QList<QStringList> &data);
 	void ParseRow(const QString &text, QStringList &row);

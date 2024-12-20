@@ -257,6 +257,22 @@ void HtmlTable::InsertRowBelow(QWebElement &tr)
 	tr.appendOutside(MakeHtmlRow(colsCount));
 }
 
+void HtmlTable::SetFocus(QWebElement &td)
+{
+    if(!td.isNull()) {
+       td.setFocus();
+       const char *script =
+               "var el = this; "
+               "var range = document.createRange(); "
+               "var sel = window.getSelection(); "
+               "range.setStart(el, 0); "
+               "range.collapse(true); "
+               "sel.removeAllRanges(); "
+               "sel.addRange(range); ";
+        td.evaluateJavaScript(script);
+    }
+}
+
 void HtmlTable::MoveRow(QWebElement &tr, bool below)
 {
     if(tr.isNull())
@@ -271,19 +287,47 @@ void HtmlTable::MoveRow(QWebElement &tr, bool below)
         tr2.appendOutside(tr);
     else
         tr2.prependOutside(tr);
+
     QWebElement td = tr.findFirst("TD");
-    if(!td.isNull()) {
-       td.setFocus();
-       const char *script =
-               "var el = this; "
-               "var range = document.createRange(); "
-               "var sel = window.getSelection(); "
-               "range.setStart(el, 0); "
-               "range.collapse(true); "
-               "sel.removeAllRanges(); "
-               "sel.addRange(range); ";
-        td.evaluateJavaScript(script);
+    SetFocus(td);
+}
+
+void HtmlTable::MoveColumn(QWebElement &td, bool right)
+{
+    if(td.isNull())
+        return;
+
+    QWebElement tri = td.parent();
+    if(tri.tagName() != "TR")
+        return;
+
+    int colIndex = GetColIndex(td);
+    if (colIndex < 0)
+        return;
+    QWebElement tr = m_table.findFirst("tr");
+    while (!tr.isNull()) {
+        QWebElement td = GetColByIndex(tr, colIndex);
+        if (!td.isNull()) {
+            // move cell in row
+
+            QWebElement td2 = right ? td.nextSibling() : td.previousSibling();
+            if(td2.isNull())
+                return;
+            if(td2.tagName() != "TD")
+                return;
+
+            td.takeFromDocument();
+
+            if(right)
+                td2.appendOutside(td);
+            else
+                td2.prependOutside(td);
+        }
+        tr = tr.nextSibling();
     }
+
+    QWebElement tdf = tri.findFirst("TD");
+    SetFocus(tdf);
 }
 
 bool HtmlTable::NormalizeRow(QWebElement &tr)
