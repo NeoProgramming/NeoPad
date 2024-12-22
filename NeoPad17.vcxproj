@@ -227,6 +227,7 @@
     <ClCompile Include="src\core\Solution.cpp" />
     <ClCompile Include="src\core\vmbsrv.cpp" />
     <ClCompile Include="src\core\Workspace.cpp" />
+    <ClCompile Include="src\gui\html.cpp" />
     <ClCompile Include="src\gui\htmllink.cpp" />
     <ClCompile Include="src\gui\passworddlg.cpp" />
     <ClCompile Include="src\gui\symbolsdlg.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="src\core\Snippets.h" />
     <ClInclude Include="src\core\Solution.h" />
     <ClInclude Include="src\core\Workspace.h" />
+    <ClInclude Include="src\gui\html.h" />
     <ClInclude Include="src\gui\htmllink.h" />
     <QtMoc Include="src\gui\symbolsdlg.h" />
     <ClInclude Include="src\service\search.h" />
