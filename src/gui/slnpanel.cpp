@@ -142,6 +142,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	actionImportant = MakeAction(tr("Mark as important"), &SlnPanel::onMarkAsImportant);
 	actionImportant->setCheckable(true);
 	actionCopyLink = MakeAction(tr("Copy Link"), &SlnPanel::onCopyLink);
+	actionSearchText = MakeAction(tr("Search..."), &SlnPanel::onSearchText);
 
     // shortcuts does not trigger action, see eventFilter()
 	QAction *actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), &SlnPanel::onItemProperties);
@@ -197,6 +198,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	menuPopupDoc->addMenu(submenuDelete);
 	menuPopupDoc->addAction(actionItemMove);
     menuPopupDoc->addAction(actionCopyLink);
+	menuPopupDoc->addAction(actionSearchText);
 
 	QAction *actionAddSiblingGroup = MakeAction(tr("Add sibling group"), &SlnPanel::onAddSiblingGroup);
 	QAction *actionAddChildGroup = MakeAction(tr("Add child group"), &SlnPanel::onAddChildGroup);
@@ -1302,6 +1304,18 @@ void SlnPanel::onFindPrev()
 		wnd->Find(ui.lineSearch->text(), true);
 }
 
+void SlnPanel::SetSearchRoot(DocItem *sr)
+{
+	if (sr) {
+		searchRoot = sr->GetGuid();
+		ui.lineNode->setText(sr->GetTitles(0));
+	}
+	else {
+		ui.lineNode->setText("");
+		searchRoot = "";
+	}
+}
+
 void SlnPanel::onSelNode()
 {
 	TopicChooser dlg(this, "Select node to search");
@@ -1310,12 +1324,10 @@ void SlnPanel::onSelNode()
 		ui.lineNode->setText("");
 		return;
 	}
-	searchRoot = dlg.m_posSelected->GetGuid();
-	if (dlg.m_posSelected)
-		ui.lineNode->setText(dlg.m_posSelected->GetTitles(0));
-	else
-		ui.lineNode->setText("");
+	SetSearchRoot(dlg.m_posSelected);
+	
 }
+
 
 void SlnPanel::onMarkAsImportant()
 {
@@ -1333,6 +1345,14 @@ void SlnPanel::onCopyLink()
 
 	QString uid = item.doc->GetGuid();
 	CopyLink(uid.toLocal8Bit().constData());
+}
+
+void SlnPanel::onSearchText()
+{
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
+	ui.tabWidget->setCurrentIndex(1);
+	SetSearchRoot(item.doc);
 }
 
 void SlnPanel::onAddToFavorites()

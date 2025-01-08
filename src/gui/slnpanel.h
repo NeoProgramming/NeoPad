@@ -100,6 +100,7 @@ private slots:
 	void onRemoveFromFavorites();
 	void onMarkAsImportant();
 	void onCopyLink();
+	void onSearchText();
 	void onEditFavoriteRef();
 	void onAddSiblingGroup();
 	void onAddChildGroup();
@@ -113,6 +114,7 @@ private:
 	void resizeEvent(QResizeEvent* event);
 
 	TREEITEM CurrItem();
+	void SetSearchRoot(DocItem *sr);
 
     void SetCurrItemStatus(ETreeStatus status);
     void SetCurrNodeStatus(ETreeStatus status);
@@ -162,6 +164,7 @@ private:
 
 	QAction *actionImportant;
 	QAction *actionCopyLink;
+	QAction* actionSearchText;
 
 	QAction *actionCheckTree;
 	QAction *actionCheckIds;

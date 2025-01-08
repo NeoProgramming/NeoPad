@@ -62,7 +62,7 @@ public slots:
     void onProjectQuickStart();
 	void onProjectNew();
 	void onProjectSave();
-    void ProjectOpenImportant();
+    void onProjectOpenImportant();
 	void onProjectProperties();
     void onProjectStatistics();
 	void onProjectPrintPdfBundle();
