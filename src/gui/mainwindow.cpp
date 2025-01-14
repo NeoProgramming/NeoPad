@@ -207,6 +207,8 @@ MainWindow::MainWindow()
 	CONN_CHILD(ui.actionTableDeleteRow,    onTableDeleteRow);
 	CONN_CHILD(ui.actionTableMoveRowAbove, onTableMoveRowAbove);
 	CONN_CHILD(ui.actionTableMoveRowBelow, onTableMoveRowBelow);
+    CONN_CHILD(ui.actionTableMoveColLeft,  onTableMoveColLeft);
+    CONN_CHILD(ui.actionTableMoveColRight, onTableMoveColRight);
 		
 	CONN_CHILD(ui.actionParaMarkList,	onInsertBulList);
 	CONN_CHILD(ui.actionParaNumList,	onInsertNumList);

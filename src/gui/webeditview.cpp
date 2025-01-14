@@ -1230,6 +1230,30 @@ void WebEditView::onTableMoveRowBelow()
     setWindowModified(true);
 }
 
+void WebEditView::onTableMoveColLeft()
+{
+    GetCaretContext();
+    if (m_elTable.isNull() || m_elTR.isNull() || m_elTD.isNull()) {
+        QMessageBox::warning(this, AppTitle, tr("Table, row or cell not found"), QMessageBox::Ok);
+        return;
+    }
+    HtmlTable table(m_elTable);
+    table.MoveColumn(m_elTD, false);
+    setWindowModified(true);
+}
+
+void WebEditView::onTableMoveColRight()
+{
+    GetCaretContext();
+    if (m_elTable.isNull() || m_elTR.isNull() || m_elTD.isNull()) {
+        QMessageBox::warning(this, AppTitle, tr("Table, row or cell not found"), QMessageBox::Ok);
+        return;
+    }
+    HtmlTable table(m_elTable);
+    table.MoveColumn(m_elTD, true);
+    setWindowModified(true);
+}
+
 void WebEditView::onImageProperties()
 {
 	if(m_elImage.isNull())

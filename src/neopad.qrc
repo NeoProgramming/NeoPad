@@ -124,6 +124,8 @@
         <file>images/table-rowup.png</file>
         <file>images/table-insert-row-above.png</file>
         <file>images/table-insert-row-below.png</file>
+        <file>images/table-colleft.png</file>
+        <file>images/table-colright.png</file>
     </qresource>
     <qresource prefix="/treeicons">
         <file>images/ti-html25.png</file>

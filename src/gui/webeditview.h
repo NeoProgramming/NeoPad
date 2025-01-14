@@ -136,6 +136,8 @@ public slots:
 	void onTableCollapse();
     void onTableMoveRowAbove();
     void onTableMoveRowBelow();
+    void onTableMoveColLeft();
+    void onTableMoveColRight();
 	
 	void onImageProperties();
 

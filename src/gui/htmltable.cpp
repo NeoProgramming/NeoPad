@@ -326,7 +326,9 @@ void HtmlTable::MoveColumn(QWebElement &td, bool right)
         tr = tr.nextSibling();
     }
 
-    QWebElement tdf = tri.findFirst("TD");
+    QWebElement tdf = //tri.findFirst("TD");
+            GetColByIndex(tri, right ? colIndex+1 : colIndex-1);
+
     SetFocus(tdf);
 }
 

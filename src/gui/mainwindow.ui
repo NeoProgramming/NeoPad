@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>18</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -389,6 +389,8 @@
    <addaction name="actionTableDeleteRow"/>
    <addaction name="actionTableMoveRowAbove"/>
    <addaction name="actionTableMoveRowBelow"/>
+   <addaction name="actionTableMoveColLeft"/>
+   <addaction name="actionTableMoveColRight"/>
   </widget>
   <widget class="QToolBar" name="toolBarMark">
    <property name="windowTitle">
@@ -1808,6 +1810,30 @@
   <action name="actionEditPasteAsBilingua">
    <property name="text">
     <string>As Bilingua</string>
+   </property>
+  </action>
+  <action name="actionTableMoveColLeft">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/table/images/table-colleft.png</normaloff>:/table/images/table-colleft.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move column left</string>
+   </property>
+   <property name="toolTip">
+    <string>Move column left</string>
+   </property>
+  </action>
+  <action name="actionTableMoveColRight">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/table/images/table-colright.png</normaloff>:/table/images/table-colright.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move column right</string>
+   </property>
+   <property name="toolTip">
+    <string>Move column right</string>
    </property>
   </action>
  </widget>
