@@ -66,6 +66,7 @@ function isSpanTag(t)
 	|| t=='SAMP'
 	|| t=='VAR'
 	|| t=='KBD'
+	|| t=='NOTE'
 	)
 		return true;
 	return false;
