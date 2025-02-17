@@ -145,7 +145,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	actionSearchText = MakeAction(tr("Search..."), &SlnPanel::onSearchText);
 
     // shortcuts does not trigger action, see eventFilter()
-	QAction *actionItemProperties = MakeAction(tr("Item properties..."), QKeySequence(Qt::ControlModifier + Qt::Key_Space), &SlnPanel::onItemProperties);
+    QAction *actionItemProperties = MakeAction(tr("Item properties..."), &SlnPanel::onItemProperties);
+    QAction *actionItemStatistics = MakeAction(tr("Item statistics..."), &SlnPanel::onItemStatistics);
 	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
 
 	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), this);// menuPopupDoc);
@@ -177,6 +178,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 
 	// formation of a context menu
 	menuPopupDoc->addAction(actionItemProperties);
+    menuPopupDoc->addAction(actionItemStatistics);
     menuPopupDoc->addSeparator();
 
     menuPopupDoc->addAction(actionItemAddToFavs);
@@ -926,6 +928,16 @@ void SlnPanel::onItemProperties()
             Update(item.qitem, item.doc);
         }
 	}
+}
+
+void SlnPanel::onItemStatistics()
+{
+    TREEITEM item = CurrItem();
+    if (item.badDoc()) return;
+
+    int n = theSln.CalcCharCountInFile(item.doc);
+    QString str = QString::asprintf("%d symbols", n);
+    QMessageBox::information(this, "Statistics", str);
 }
 
 void SlnPanel::onOpenInNewTab(int di)

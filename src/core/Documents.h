@@ -55,9 +55,11 @@ public:
 	void    TransformDocs(int bi);
 	bool	TransformFile(DocItem* tpos, int bi);
 
+    QString GetDocHtml(DocItem* pos);
 	DocItem*Locate(const QString &guid);
 	void    Search(const QString &text, unsigned int scope, DocItem* root, std::list<DocItem*> &results);
 	bool    SearchInFile(DocItem* pos, const QString &text, unsigned int scope);
+    int     CalcCharCountInFile(DocItem* pos);
 
 	void    HandleChanges(DocItem* tpItem, bool recursive);
 	void    HandleChanges(DocItem* tpItem1, DocItem* tpItem2);

@@ -74,6 +74,7 @@ private slots:
 	void onDoubleClickSymbol(QTableWidgetItem *item);
 
 	void onItemProperties();
+    void onItemStatistics();
 	void onOpenInNewTab(int bi);
 	void onOpenInExtBrowser(int bi);
 	void onOpenInExtDocEditor(int bi);

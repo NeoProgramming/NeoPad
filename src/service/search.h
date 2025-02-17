@@ -10,3 +10,5 @@ enum ESearchMask {
 };
 
 bool search(const QString &html, const QString &text, unsigned int sm);
+int calculate_char_count(const QString &html);
+

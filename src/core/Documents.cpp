@@ -832,19 +832,33 @@ bool Documents::TransformFile(DocItem* pos, int bi)
 	return true;
 }
 
+QString Documents::GetDocHtml(DocItem* pos)
+{
+    QString html;
+    QString fpath = pos->GetDocAbsPath(0);
+    if (void *wnd = m_pCB->FindOpenedDoc(pos, 0)) {
+        m_pCB->GetDocData(wnd, html);
+    }
+    else if (!LoadDoc(pos, 0, html)) {
+        //return false;
+    }
+    return html;
+}
+
 bool Documents::SearchInFile(DocItem* pos, const QString &text, unsigned int scope)
 {
-	QByteArray data;
-	QString html;
-	QString fpath = pos->GetDocAbsPath(0);
-	if (void *wnd = m_pCB->FindOpenedDoc(pos, 0)) {
-		m_pCB->GetDocData(wnd, html);
-	}
-	else if (!LoadDoc(pos, 0, html)) {
-		return false;
-	}
-
+    QString html = GetDocHtml(pos);
+    if(html.isEmpty())
+        return false;
 	return search(html, text, scope);
+}
+
+int Documents::CalcCharCountInFile(DocItem* pos)
+{
+    QString html = GetDocHtml(pos);
+    if(html.isEmpty())
+        return 0;
+    return calculate_char_count(html);
 }
 
 bool Documents::LoadDoc(DocItem* item, int bi, QString &content)
