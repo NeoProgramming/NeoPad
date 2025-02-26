@@ -81,6 +81,9 @@ function isTableTag(t)
 	|| t=='TH'
 	|| t=='TR'
 	|| t=='TD'
+	|| t=='UL'
+	|| t=='OL'
+	|| t=='LI'
 	)
 		return true;
 	return false;
@@ -716,7 +719,7 @@ function tableToText()
 	if(!se) 
 		return "no caret!";
 	// get the table tag
-	while(se && se.tagName != 'TABLE')
+	while(se && se.tagName != 'TABLE' && se.tagName != 'UL' && se.tagName != 'OL')
 		se = se.parentNode;
 	if(!se)
 		return "table not found!";
