@@ -26,6 +26,7 @@ public slots:
     void onFontChanged(const QString &text);
 	void onSearch();
 	void onCopy();
+	void onAdd();
 	void onPostInit();
 	void onItemAddToQuick();
 public:

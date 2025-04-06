@@ -1012,6 +1012,22 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineID</tabstop>
+  <tabstop>lineTitle0</tabstop>
+  <tabstop>lineTitle1</tabstop>
+  <tabstop>lineDoc0Path</tabstop>
+  <tabstop>lineDoc1Path</tabstop>
+  <tabstop>lineTime0</tabstop>
+  <tabstop>lineTime1</tabstop>
+  <tabstop>lineXmlPath</tabstop>
+  <tabstop>lineInfo</tabstop>
+  <tabstop>lineSrvInfo</tabstop>
+  <tabstop>lineParent</tabstop>
+  <tabstop>listChildren</tabstop>
+  <tabstop>pushOk</tabstop>
+  <tabstop>pushCancel</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

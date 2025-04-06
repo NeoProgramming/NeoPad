@@ -59,6 +59,7 @@ SymbolsDlg::SymbolsDlg(QWidget *parent)
     connect(ui.comboFonts, &QComboBox::currentTextChanged, this, &SymbolsDlg::onFontChanged);
 	connect(ui.pushSearch, &QPushButton::clicked, this, &SymbolsDlg::onSearch);
 	connect(ui.pushCopy, &QPushButton::clicked, this, &SymbolsDlg::onCopy);
+	connect(ui.pushAdd, &QPushButton::clicked, this, &SymbolsDlg::onAdd);
 }
 
 SymbolsDlg::~SymbolsDlg()
@@ -241,6 +242,15 @@ void SymbolsDlg::onCopy()
 	clipboard->setText(m_Symbol);
 }
 
+void SymbolsDlg::onAdd()
+{
+	QString s = ui.lineSymbols->text();
+	for (QChar c : s) {
+		// add to quick panel
+		theUnicode.Quick.AddQuick(c.unicode());
+	}	
+}
+
 void SymbolsDlg::onRightClickSymbol(const QPoint & pos)
 {
 	QModelIndex index = ui.tableSymbols->indexAt(pos);
@@ -253,7 +263,7 @@ void SymbolsDlg::onItemAddToQuick()
 	QTableWidgetItem* currentItem = ui.tableSymbols->currentItem();
 	if (currentItem != nullptr) {
 		unsigned int c = currentItem->data(Qt::UserRole).value<unsigned int>();
-		// add to qiock
+		// add to quick panel
 		theUnicode.Quick.AddQuick(c);
 	}
 }

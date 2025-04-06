@@ -14,15 +14,22 @@
    <string>Symbols</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="2" column="4">
+   <item row="0" column="6" colspan="2">
+    <widget class="QComboBox" name="comboFonts"/>
+   </item>
+   <item row="2" column="6">
     <widget class="QPushButton" name="pushOk">
      <property name="text">
       <string>OK</string>
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
-    <widget class="QLineEdit" name="lineSymbols"/>
+   <item row="0" column="5">
+    <widget class="QPushButton" name="pushSearch">
+     <property name="text">
+      <string>Search</string>
+     </property>
+    </widget>
    </item>
    <item row="2" column="0">
     <widget class="QCheckBox" name="checkCode">
@@ -34,17 +41,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="5">
-    <widget class="QPushButton" name="pushCancel">
-     <property name="text">
-      <string>Cancel</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="4" colspan="2">
-    <widget class="QComboBox" name="comboFonts"/>
-   </item>
-   <item row="1" column="0" colspan="6">
+   <item row="1" column="0" colspan="8">
     <widget class="QSplitter" name="splitter">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -72,6 +69,19 @@
      </widget>
     </widget>
    </item>
+   <item row="2" column="2">
+    <widget class="QLineEdit" name="lineSymbols"/>
+   </item>
+   <item row="2" column="7">
+    <widget class="QPushButton" name="pushCancel">
+     <property name="text">
+      <string>Cancel</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="3">
+    <widget class="QLineEdit" name="lineSearch"/>
+   </item>
    <item row="2" column="3">
     <widget class="QPushButton" name="pushCopy">
      <property name="text">
@@ -79,15 +89,12 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
-    <widget class="QPushButton" name="pushSearch">
+   <item row="2" column="5">
+    <widget class="QPushButton" name="pushAdd">
      <property name="text">
-      <string>Search</string>
+      <string>Add to QP</string>
      </property>
     </widget>
-   </item>
-   <item row="0" column="0" colspan="3">
-    <widget class="QLineEdit" name="lineSearch"/>
    </item>
   </layout>
  </widget>
