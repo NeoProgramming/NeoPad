@@ -75,6 +75,7 @@ private slots:
 
 	void onItemProperties();
     void onItemStatistics();
+	void onNodeStatistics();
 	void onOpenInNewTab(int bi);
 	void onOpenInExtBrowser(int bi);
 	void onOpenInExtDocEditor(int bi);

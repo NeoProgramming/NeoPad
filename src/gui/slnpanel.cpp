@@ -147,6 +147,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
     // shortcuts does not trigger action, see eventFilter()
     QAction *actionItemProperties = MakeAction(tr("Item properties..."), &SlnPanel::onItemProperties);
     QAction *actionItemStatistics = MakeAction(tr("Item statistics..."), &SlnPanel::onItemStatistics);
+	QAction *actionNodeStatistics = MakeAction(tr("Node statistics..."), &SlnPanel::onNodeStatistics);
 	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
 
 	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), this);// menuPopupDoc);
@@ -179,6 +180,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	// formation of a context menu
 	menuPopupDoc->addAction(actionItemProperties);
     menuPopupDoc->addAction(actionItemStatistics);
+	menuPopupDoc->addAction(actionNodeStatistics);
     menuPopupDoc->addSeparator();
 
     menuPopupDoc->addAction(actionItemAddToFavs);
@@ -938,6 +940,21 @@ void SlnPanel::onItemStatistics()
     int n = theSln.CalcCharCountInFile(item.doc);
     QString str = QString::asprintf("%d symbols", n);
     QMessageBox::information(this, "Statistics", str);
+}
+
+void SlnPanel::onNodeStatistics()
+{
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
+
+	int n = 0, k = 0;
+	theSln.ForEach(item.doc, [&n, &k](DocItem *docitem) {
+		n += theSln.CalcCharCountInFile(docitem);
+		k++;
+	});	
+
+	QString str = QString::asprintf("%d symbols in %d files", n, k);
+	QMessageBox::information(this, "Statistics", str);
 }
 
 void SlnPanel::onOpenInNewTab(int di)
