@@ -18,6 +18,7 @@ public slots:
 	void onOk();
 	void onOverviewSnippets();
 	void onOverviewImages();
+	void onOverviewIcons();
 
 	void onOverviewBPath1();
 	void onOverviewBPath2();
@@ -26,6 +27,7 @@ public slots:
 public:
 
 	QString m_images;
+	QString m_icons;
 	QString m_snippets;
     std::vector<NeopadCol> m_bases;
 private:

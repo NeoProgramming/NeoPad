@@ -5,6 +5,7 @@
 #include "newitemdlg.h"
 #include "existitemdlg.h"
 #include "symbolsdlg.h"
+#include "pictogramdlg.h"
 
 #include <QtGui>
 #include <QtDebug>
@@ -48,6 +49,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	m_TreeIcons[(int)ETreeStatus::TS_25] = QIcon(":/treeicons/images/ti-html25.png");
 	m_TreeIcons[(int)ETreeStatus::TS_UNREADY] = QIcon(":/treeicons/images/ti-html0.png");
 	m_TreeIcons[(int)ETreeStatus::TS_LOCKED] = QIcon(":/treeicons/images/ti-locked.png");
+	m_TreeIcons[(int)ETreeStatus::TS_IMPORTANT] = QIcon(":/treeicons/images/ti-important.png");
 	m_TreeIcons[(int)ETreeStatus::TS_FOLDER] = QIcon(":/treeicons/images/ti-folder.png");
 
 	m_LangIcons[(int)ELangStatus::LS_NONE] = QIcon(":/langicons/images/li-none.png");
@@ -111,6 +113,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
     connect(ui.tabWidget, &QTabWidget::currentChanged, this, &SlnPanel::onTabChanged);
 
 	menuPopupDoc = new QMenu(tr("Document"), this);
+	
 	submenuOpen0Ext = new QMenu(tr("Doc0"), menuPopupDoc);
 	submenuOpen1Ext = new QMenu(tr("Doc1"), menuPopupDoc);
 	submenuClose = new QMenu(tr("Close"), menuPopupDoc);
@@ -139,8 +142,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionOpenFolder = MakeAction(tr("Open Folder"), &SlnPanel::onOpenFolderVmb);
 	QAction *actionOpenVmbaseInTextEditor = MakeAction(tr("Open VMB in Text Editor"), &SlnPanel::onOpenVmbaseInExtTextEditor);
 	QAction *actionItemMove = MakeAction(tr("Move item..."), &SlnPanel::onMoveItem);
-	actionImportant = MakeAction(tr("Mark as important"), &SlnPanel::onMarkAsImportant);
-	actionImportant->setCheckable(true);
+		
 	actionCopyLink = MakeAction(tr("Copy Link"), &SlnPanel::onCopyLink);
 	actionSearchText = MakeAction(tr("Search..."), &SlnPanel::onSearchText);
 
@@ -151,22 +153,28 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
 
 	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), this);// menuPopupDoc);
-	MakeAction(tr("Ready"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_READY); });
-	MakeAction(tr("Almost ready"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_ALMOST); });
-	MakeAction(tr("75 %"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_75); });
-	MakeAction(tr("50 %"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_50); });
-	MakeAction(tr("25 %"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_25); });
-	MakeAction(tr("Under construction"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_UNREADY); });
-	MakeAction(tr("Locked"), submenuItemStatus, [this]() { SetCurrItemStatus(ETreeStatus::TS_LOCKED); });
+	MakeAction(tr("Ready"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, false); });
+	MakeAction(tr("Almost ready"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, false); });
+	MakeAction(tr("75 %"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, false); });
+	MakeAction(tr("50 %"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, false); });
+	MakeAction(tr("25 %"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, false); });
+	MakeAction(tr("Under construction"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, false); });
+	MakeAction(tr("Locked"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, false); });
+	MakeAction(tr("Important"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, false); });
+	submenuItemStatus->addSeparator();
+	MakeAction(tr("User defined..."), submenuItemStatus, [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), false); });
 
 	QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), this);//menuPopupDoc);
-	MakeAction(tr("Ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY); });
-	MakeAction(tr("Almost ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST); });
-	MakeAction(tr("75 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75); });
-	MakeAction(tr("50 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_50); });
-	MakeAction(tr("25 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_25); });
-	MakeAction(tr("Under construction"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY); });
-	MakeAction(tr("Locked"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED); });
+	MakeAction(tr("Ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, true); });
+	MakeAction(tr("Almost ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, true); });
+	MakeAction(tr("75 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, true); });
+	MakeAction(tr("50 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, true); });
+	MakeAction(tr("25 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, true); });
+	MakeAction(tr("Under construction"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, true); });
+	MakeAction(tr("Locked"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, true); });
+	MakeAction(tr("Important"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, true); });
+	submenuNodeStatus->addSeparator();
+	MakeAction(tr("User defined..."), submenuNodeStatus, [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), true); });
 
 	QMenu *submenuInsert = new QMenu(tr("Insert"), this);//menuPopupDoc);
 	MakeAction(tr("New subitem"),      QKeySequence(Qt::Key_Insert), submenuInsert, &SlnPanel::onAddChildDoc);
@@ -184,7 +192,6 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
     menuPopupDoc->addSeparator();
 
     menuPopupDoc->addAction(actionItemAddToFavs);
-    menuPopupDoc->addAction(actionImportant);
 	menuPopupDoc->addSeparator();
 
 	menuPopupDoc->addMenu(submenuOpen0Ext);
@@ -247,25 +254,40 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	ui.tableSymbols->setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
+void SlnPanel::setTabDoc(DocItem *doc)
+{
+	tabDoc = doc;
+	qDebug() << "setTabDoc " << doc;
+}
+
 TREEITEM SlnPanel::CurrItem()
 {
+	qDebug() << "CurrItem";
+
 	TREEITEM item;
-	int tab = ui.tabWidget->currentIndex();
-	if (tab == 0) {
-		item.qitem = ui.treeContents->currentItem();
-		if (item.qitem) {
-			item.fav = nullptr;
-			item.doc = item.qitem->data(0, Qt::UserRole).value<DocItem*>();
-		}
+	if (tabDoc) {
+		
+		item.doc = tabDoc;
+		item.qitem = FindItem(ui.treeContents->topLevelItem(0), tabDoc);
 	}
-	else if (tab == 2) {
-		item.qitem = ui.treeFavorites->currentItem();
-		if (item.qitem) {
-			item.fav = item.qitem->data(0, Qt::UserRole).value<FavItem*>();
-			if (item.fav && item.fav->ref)
-				item.doc = item.fav->ref;
-			else
+	else {
+		int tab = ui.tabWidget->currentIndex();
+		if (tab == 0) {
+			item.qitem = ui.treeContents->currentItem();
+			if (item.qitem) {
+				item.fav = nullptr;
 				item.doc = item.qitem->data(0, Qt::UserRole).value<DocItem*>();
+			}
+		}
+		else if (tab == 2) {
+			item.qitem = ui.treeFavorites->currentItem();
+			if (item.qitem) {
+				item.fav = item.qitem->data(0, Qt::UserRole).value<FavItem*>();
+				if (item.fav && item.fav->ref)
+					item.doc = item.fav->ref;
+				else
+					item.doc = item.qitem->data(0, Qt::UserRole).value<DocItem*>();
+			}
 		}
 	}
 	return item;
@@ -573,6 +595,7 @@ void SlnPanel::onTabChanged(int tab)
 
 void SlnPanel::onDocContextMenu(const QPoint &pos)
 {
+	setTabDoc(nullptr);
 	QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(sender());
 	if (!treeWidget)
 		return;
@@ -580,16 +603,17 @@ void SlnPanel::onDocContextMenu(const QPoint &pos)
 	if (!item)
 		return;
 	// checkboxes
-	DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
-	if (doc) {
-		actionImportant->setChecked(theSln.Imps.Contains(doc->guid));
-	}
+//	DocItem* doc = item->data(0, Qt::UserRole).value<DocItem*>();
+//	if (doc) {
+//		actionImportant->setChecked(theSln.Imps.Contains(doc->guid));
+//	}
 
 	menuPopupDoc->exec(treeWidget->viewport()->mapToGlobal(pos));
 }
 
 void SlnPanel::onFavContextMenu(const QPoint &pos)
 {
+	setTabDoc(nullptr);
 //	QTreeWidget *treeWidget = qobject_cast<QTreeWidget*>(sender());
 //	if (!treeWidget)
 //		return;
@@ -698,13 +722,16 @@ void SlnPanel::UpdateDocItem(QTreeWidgetItem * qitem, DocItem* tpos)
             qitem->setIcon(1, GetLangItemIcon(ls));
         }
     }
+	// update tab icons 
+	mw->UpdateTab(tpos);
 }
 
 void SlnPanel::UpdateFavItem(QTreeWidgetItem * item)
 {
 	// set the text and picture of the node depending on its state and attributes
 	FavItem* tpos = item->data(0, Qt::UserRole).value<FavItem*>();
-
+	if (!tpos)
+		return;
 	if (tpos->type == FavItem::T_GROUP) {
 		item->setText(0, tpos->title);
 		item->setIcon(0, GetTreeItemIcon(ETreeStatus::TS_FOLDER));
@@ -846,28 +873,20 @@ void SlnPanel::UpdateDocItemsByObj(DocItem* pos)
     });
 }
 
-void SlnPanel::SetCurrItemStatus(ETreeStatus status)
+void SlnPanel::SetCurrNodeStatus(ETreeStatus status, bool recursive)
 {
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-	if (!tpos) return;
+	if (status == ETreeStatus::TS_UNKNOWN) 
+		return;
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) 
+		return;
 
-	theSln.SetStatus(tpos, status, false);
-    UpdateDocItem(item);
-
-	UpdateTreesIfNeeded(false);
-}
-
-void SlnPanel::SetCurrNodeStatus(ETreeStatus status)
-{
-	QTreeWidgetItem *item = ui.treeContents->currentItem();
-	if (!item) return;
-	DocItem* tpos = item->data(0, Qt::UserRole).value<DocItem*>();
-	if (!tpos) return;
-
-	theSln.SetStatus(tpos, status, true);
-	UpdateTreesIfNeeded(true);
+	theSln.SetStatus(item.doc, status, recursive);
+	if (!recursive) {
+		UpdateDocItem(item.qitem);
+		UpdateFavItem(item.qitem);	
+	}	
+	UpdateTreesIfNeeded(recursive);
 }
 
 void SlnPanel::UpdateTreesIfNeeded(bool all)
@@ -881,7 +900,7 @@ void SlnPanel::UpdateTreesIfNeeded(bool all)
 	if(all) {
 		UpdateDocTree();
 		UpdateFavTree();
-	}
+	}	
 }
 
 
@@ -1264,8 +1283,6 @@ void SlnPanel::ForEachItem(QTreeWidgetItem *par, const std::function<bool(QTreeW
     }
 }
 
-
-
 void SlnPanel::EnsureVisible(DocItem* node)
 {
 	QTreeWidgetItem *item = FindItem(ui.treeContents->topLevelItem(0), node);
@@ -1355,16 +1372,6 @@ void SlnPanel::onSelNode()
 	}
 	SetSearchRoot(dlg.m_posSelected);
 	
-}
-
-
-void SlnPanel::onMarkAsImportant()
-{
-	TREEITEM item = CurrItem();
-	if (item.badDoc()) return;
-
-	theSln.Imps.Toggle(item.doc->guid);	
-	theSln.HandleChanges(theSln.GetRoot(), false);
 }
 
 void SlnPanel::onCopyLink()

@@ -77,9 +77,6 @@
     <ClCompile Include="src\core\ini.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\itemproperty.cpp">
-      <Filter>src\gui</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\mainwindow.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
@@ -203,9 +200,6 @@
     <ClCompile Include="src\core\Workspace.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\Importants.cpp">
-      <Filter>src\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\core\vmbsrv.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
@@ -220,6 +214,15 @@
     </ClCompile>
     <ClCompile Include="src\gui\html.cpp">
       <Filter>src\gui\html</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Pictograms.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\itemproperty.cpp">
+      <Filter>src\gui\dlg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\pictogramdlg.cpp">
+      <Filter>src\gui\dlg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,9 +307,6 @@
     <ClInclude Include="src\core\Workspace.h">
       <Filter>src\core</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\Importants.h">
-      <Filter>src\core</Filter>
-    </ClInclude>
     <ClInclude Include="src\service\unicode.h">
       <Filter>src\service</Filter>
     </ClInclude>
@@ -315,6 +315,12 @@
     </ClInclude>
     <ClInclude Include="src\gui\html.h">
       <Filter>src\gui\html</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Pictograms.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\TreeStatus.h">
+      <Filter>src\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -377,6 +383,9 @@
     <QtUic Include="src\gui\symbolsdlg.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="src\gui\pictogramdlg.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="src\neopad.qrc">
@@ -417,9 +426,6 @@
     <QtMoc Include="src\gui\savealldlg.h">
       <Filter>src\gui\dlg</Filter>
     </QtMoc>
-    <QtMoc Include="src\gui\itemproperty.h">
-      <Filter>src\gui</Filter>
-    </QtMoc>
     <QtMoc Include="src\gui\webeditview.h">
       <Filter>src\gui</Filter>
     </QtMoc>
@@ -448,6 +454,12 @@
       <Filter>src\gui\html</Filter>
     </QtMoc>
     <QtMoc Include="src\gui\symbolsdlg.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\itemproperty.h">
+      <Filter>src\gui\dlg</Filter>
+    </QtMoc>
+    <QtMoc Include="src\gui\pictogramdlg.h">
       <Filter>src\gui\dlg</Filter>
     </QtMoc>
   </ItemGroup>

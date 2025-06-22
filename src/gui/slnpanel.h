@@ -57,6 +57,10 @@ public:
 	void LoadBookTitles();	
 	void SaveDocs();
 	void SaveFavs();
+
+	QMenu *getMenu() { return menuPopupDoc; }
+	QIcon& GetTreeItemIcon(ETreeStatus i);
+	QIcon& GetLangItemIcon(ELangStatus i);
 private slots:
     void onSearch();
 	void onFindNext();
@@ -100,7 +104,6 @@ private slots:
 	
 	void onAddToFavorites();
 	void onRemoveFromFavorites();
-	void onMarkAsImportant();
 	void onCopyLink();
 	void onSearchText();
 	void onEditFavoriteRef();
@@ -110,20 +113,15 @@ private slots:
 	void onAddSiblingFav();
 	void onAddChildFav();
 
-    void processEvents();
+    void processEvents();	
 	
 private:
 	void resizeEvent(QResizeEvent* event);
 
 	TREEITEM CurrItem();
 	void SetSearchRoot(DocItem *sr);
-
-    void SetCurrItemStatus(ETreeStatus status);
-    void SetCurrNodeStatus(ETreeStatus status);
-
-    QIcon& GetTreeItemIcon(ETreeStatus i);
-    QIcon& GetLangItemIcon(ELangStatus i);
-
+    void SetCurrNodeStatus(ETreeStatus status, bool recursive);
+	
     void LoadDocTree();
     void LoadDocLevel(DocItem* node, QTreeWidgetItem *parent);
     void LoadFavTree(FavItem* root);
@@ -137,16 +135,18 @@ private:
 	
     void ForEachItem(QTreeWidgetItem *par, const std::function<bool(QTreeWidgetItem *)> fn);
     int  FindChildItemIndex(QTreeWidgetItem *par, DocItem* item, int startIndex);
-
+	
     QAction *MakeAction(QString text, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QKeySequence skey, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, const std::function<void()> &fn);
 	QAction *MakeAction(QString text, QKeySequence skey, QMenu *menu, void (SlnPanel::*slot)());
-
+public:
+	void setTabDoc(DocItem *doc);
 private:
 	Ui::SlnForm ui;
 	MainWindow *mw;
+	DocItem *tabDoc = nullptr;
     bool m_contentsNeedsToRefresh = false;
     bool m_favoritesNeedsToRefresh = false;
 	QString searchRoot;	// guid
@@ -163,8 +163,7 @@ private:
 	QMenu *submenuOpen0Ext;
 	QMenu *submenuOpen1Ext;
 	QMenu *submenuClose;
-
-	QAction *actionImportant;
+		
 	QAction *actionCopyLink;
 	QAction* actionSearchText;
 

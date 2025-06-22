@@ -129,9 +129,6 @@ bool CSolution::LoadProject(const QString &fpath)
     // load favorites - after main tree!
 	Favs.LoadFavorites(xRoot);
 
-	// load importants
-	Imps.Load(xRoot);
-
 	// load classes
 	Clss.Load(xRoot);
 
@@ -139,6 +136,10 @@ bool CSolution::LoadProject(const QString &fpath)
 	m_ImageDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("images").as_string()));
 	m_Snippets.m_SnippDir = QDir::cleanPath(m_RootDir + "/" + codecUtf8->toUnicode(xRoot.attribute("snippets").as_string()));
 	m_Snippets.LoadSnippets();
+
+	QString picts_dir = codecUtf8->toUnicode(xRoot.attribute("icons").as_string());
+	if(!picts_dir.isEmpty())
+		Picts.LoadPicts(m_RootDir + "/" + picts_dir);
 
 	// add to recent
 	theSln.addProjectToRecent(fpath);
@@ -159,12 +160,10 @@ void CSolution::SaveProjectData(pugi::xml_node xRoot)
     // save paths as attributes ( deprecated, refactor to Settings.SaveSettings(xRoot) )
     set_attr(xRoot, "images").set_value(codecUtf8->fromUnicode(GetRelPath(m_ImageDir, m_RootDir, false)).constData());
     set_attr(xRoot, "snippets").set_value(codecUtf8->fromUnicode(GetRelPath(m_Snippets.m_SnippDir, m_RootDir, false)).constData());
+	set_attr(xRoot, "icons").set_value(codecUtf8->fromUnicode(GetRelPath(Picts.Dir, m_RootDir, false)).constData());
 
     // save favorites
     Favs.SaveFavorites(xRoot);
-
-	// save importants
-	Imps.Save(xRoot);
 
 	// save classes
 	//Clss.Save(xRoot);

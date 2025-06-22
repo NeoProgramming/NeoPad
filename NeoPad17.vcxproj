@@ -215,12 +215,12 @@
   <ItemGroup>
     <ClCompile Include="src\3rdparty\pugixml\pugixml.cpp" />
     <ClCompile Include="src\core\Classes.cpp" />
-    <ClCompile Include="src\core\Importants.cpp" />
     <ClCompile Include="src\core\Books.cpp" />
     <ClCompile Include="src\core\Cryptor.cpp" />
     <ClCompile Include="src\core\DocItem.cpp" />
     <ClCompile Include="src\core\Documents.cpp" />
     <ClCompile Include="src\core\Favorites.cpp" />
+    <ClCompile Include="src\core\Pictograms.cpp" />
     <ClCompile Include="src\core\PrjStat.cpp" />
     <ClCompile Include="src\core\FavItem.cpp" />
     <ClCompile Include="src\core\Snippets.cpp" />
@@ -230,6 +230,7 @@
     <ClCompile Include="src\gui\html.cpp" />
     <ClCompile Include="src\gui\htmllink.cpp" />
     <ClCompile Include="src\gui\passworddlg.cpp" />
+    <ClCompile Include="src\gui\pictogramdlg.cpp" />
     <ClCompile Include="src\gui\symbolsdlg.cpp" />
     <ClCompile Include="src\service\cstr.cpp" />
     <ClCompile Include="src\service\pugitools.cpp" />
@@ -268,22 +269,24 @@
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp" />
     <ClInclude Include="src\3rdparty\pugixml\pugixml.hpp" />
     <ClInclude Include="src\core\Classes.h" />
-    <ClInclude Include="src\core\Importants.h" />
     <ClInclude Include="src\core\BaseItem.h" />
     <ClInclude Include="src\core\Books.h" />
     <ClInclude Include="src\core\Cryptor.h" />
     <ClInclude Include="src\core\DocItem.h" />
     <ClInclude Include="src\core\Documents.h" />
     <ClInclude Include="src\core\Favorites.h" />
+    <ClInclude Include="src\core\Pictograms.h" />
     <ClInclude Include="src\core\PrjStat.h" />
     <ClInclude Include="src\core\PrjTree.h" />
     <ClInclude Include="src\core\FavItem.h" />
     <ClInclude Include="src\core\Snippets.h" />
     <ClInclude Include="src\core\Solution.h" />
+    <ClInclude Include="src\core\TreeStatus.h" />
     <ClInclude Include="src\core\Workspace.h" />
     <ClInclude Include="src\gui\html.h" />
     <ClInclude Include="src\gui\htmllink.h" />
     <QtMoc Include="src\gui\symbolsdlg.h" />
+    <QtMoc Include="src\gui\pictogramdlg.h" />
     <ClInclude Include="src\service\search.h" />
     <ClInclude Include="src\service\unicode.h" />
     <ClInclude Include="src\service\xini.h" />
@@ -368,6 +371,7 @@
     <QtUic Include="src\gui\newprojectdlg.ui">
     </QtUic>
     <QtUic Include="src\gui\passworddlg.ui" />
+    <QtUic Include="src\gui\pictogramdlg.ui" />
     <QtUic Include="src\gui\prjpropsdlg.ui">
     </QtUic>
     <QtUic Include="src\gui\quickstartdlg.ui">

@@ -3,22 +3,9 @@
 #include <QMetaType>
 #include "BaseItem.h"
 #include "vmbsrv.h"
+#include "TreeStatus.h"
 
-// statuses (pictures) of the main items in the tree
-enum class ETreeStatus
-{
-	TS_UNKNOWN,		// unknown what ...
-	TS_READY,		// regular document
-	TS_ALMOST,
-	TS_75,
-	TS_50,
-	TS_25,
-	TS_UNREADY,		// unfinished document
-	TS_LOCKED,		// ready but blocked for publication
-	TS_FOLDER,
 
-	TS_ITEMS_COUNT
-};
 
 // statuses (pictures) of transfers in the tree
 enum class ELangStatus

@@ -449,7 +449,14 @@ bool WebEditView::LoadHtml(DocItem* tpos, int bi)
 	page()->setContentEditable(true);
 	connect(page(), &QWebPage::linkClicked, this, &WebEditView::onLinkClicked);
 	
-	setWindowTitle(m_Item->GetTitle(m_di));
+	QWidget* parent = parentWidget();
+	while (parent && !qobject_cast<QMdiSubWindow*>(parent)) {
+		parent = parent->parentWidget();
+	}
+	QMdiSubWindow *subwnd = qobject_cast<QMdiSubWindow*>(parent);
+	subwnd->setWindowTitle(m_Item->GetTitle(m_di));
+	subwnd->setWindowIcon(m_wMain->m_wSln->GetTreeItemIcon(m_Item->status));
+
 	setWindowModified(false);
 
 	return true;

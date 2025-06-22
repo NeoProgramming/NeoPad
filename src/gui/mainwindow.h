@@ -91,7 +91,8 @@ private slots:
 	void onAppForceExit();
 
     void onTreeSync();
-	
+	void onAboutToShowTabMenu();
+	void onAboutToHideTabMenu();
 protected:
     void closeEvent(QCloseEvent *);
     
@@ -120,10 +121,11 @@ private:
 	
 	QToolButton* createMenuButton(const char *res, QMenu *menu, const QString &tooltip);
 	QMenu* createTableMenu(const char *slot);
+public:
+	SlnPanel	  *m_wSln;
 private:	
 	QMdiArea      *m_wArea;
 	QTabBar       *m_tabBar;			// extract from m_wArea
-	SlnPanel	  *m_wSln;
 	QDockWidget   *m_wDock;
 	QToolButton	  *tbtnInsertTable;	// table picker
 };

@@ -33,6 +33,7 @@ int NewItemDlg::DoModal()
 	ui.comboStatus->addItem(tr("25 %"));
 	ui.comboStatus->addItem(tr("Under construction"));
 	ui.comboStatus->addItem(tr("Locked"));
+	ui.comboStatus->addItem(tr("Important"));
 
 	if (m_pStatusIcons) {
 		ui.comboStatus->setItemIcon(0, m_pStatusIcons[(int)ETreeStatus::TS_READY]);

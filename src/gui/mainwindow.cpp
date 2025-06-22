@@ -89,6 +89,7 @@ MainWindow::MainWindow()
 	if (m_tabBar) {
 		m_tabBar->setExpanding(false);
 		m_tabBar->setSelectionBehaviorOnRemove(QTabBar::SelectPreviousTab);
+		m_tabBar->setIconSize(QSize(20, 20));
 	}
 
 	setCentralWidget(m_wArea);
@@ -371,10 +372,9 @@ void MainWindow::OpenTabs()
 
 void MainWindow::OpenImportants()
 {
-    for (auto &guid : theSln.Imps.AutoLoadedItems) {
-        DocItem* pos = theSln.Locate(guid);
-        if (pos)
-            OpenDoc(pos, 0);
+    for (DocItem *item : theSln.m_Imps) {
+        if (item)
+            OpenDoc(item, 0);
     }
 }
 
@@ -619,6 +619,7 @@ void MainWindow::onProjectProperties()
 
 	dlg.m_images   = theSln.m_ImageDir;
 	dlg.m_snippets = theSln.m_Snippets.m_SnippDir;
+	dlg.m_icons    = theSln.Picts.Dir;
     dlg.m_bases    = theSln.Cols.books;
 		
 	if(dlg.DoModal() == QDialog::Accepted)
@@ -626,10 +627,14 @@ void MainWindow::onProjectProperties()
 		// global paths
         theSln.m_ImageDir = dlg.m_images;
 		theSln.m_Snippets.m_SnippDir = dlg.m_snippets;
+		theSln.Picts.Dir = dlg.m_icons;
 		// bases
-		int cnt = std::max(1, !dlg.m_bases[0].suffix.isEmpty() + !dlg.m_bases[1].suffix.isEmpty());
+		int n = theSln.Cols.BCnt();
+		int cnt = (n==2) 
+			? std::max(1, !dlg.m_bases[0].suffix.isEmpty() + !dlg.m_bases[1].suffix.isEmpty())
+			: std::max(1, !dlg.m_bases[0].suffix.isEmpty() + 0);
         theSln.Cols.booksCnt = cnt;
-        for (int bi = 0; bi < theSln.Cols.BCnt(); bi++) {
+        for (int bi = 0; bi < n; bi++) {
             if(theSln.Cols.books[bi].isBook()) {
                 theSln.Cols.books[bi] = dlg.m_bases[bi];
                 if (theSln.Cols.books[bi].load_prefix != theSln.Cols.books[bi].save_prefix) {
@@ -768,6 +773,7 @@ bool MainWindow::DoPrjOpen(const QString& fpath)
 	m_wSln->Load();
 	UpdateTitle();
 	OpenTabs();
+//	theSln.Picts.BuildMenu(submenuItemStatus);
 	return res;
 }
 
@@ -840,6 +846,32 @@ void MainWindow::LoadToCurrentDoc(DocItem* mtPos, int di)
 
 }
 
+void MainWindow::onAboutToShowTabMenu()
+{
+	qDebug() << "onAboutToShowTabMenu";
+	m_wSln->setTabDoc(nullptr);
+
+	QPoint globalPos = QCursor::pos();
+	QPoint tabPos = m_tabBar->mapFromGlobal(globalPos);
+	int tabIndex = m_tabBar->tabAt(tabPos);
+	if (tabIndex >= 0) {
+		QList<QMdiSubWindow*> windows = m_wArea->subWindowList();
+		QMdiSubWindow* subWindow = windows.at(tabIndex);
+		WebEditView *view = qobject_cast<WebEditView *>(subWindow->widget());
+		if (view) {
+			m_wSln->setTabDoc(view->m_Item);
+		}
+	}	
+}
+
+void MainWindow::onAboutToHideTabMenu()
+{
+	QTimer::singleShot(0, this, [this]() {
+		qDebug() << "singleShot, onAboutToHideTabMenu";
+		m_wSln->setTabDoc(nullptr);
+	});	
+}
+
 void MainWindow::CreateNewDoc(DocItem* mtPos, int di)
 {
 	WebEditView *child = new WebEditView(this, mtPos, di);
@@ -847,7 +879,10 @@ void MainWindow::CreateNewDoc(DocItem* mtPos, int di)
 
 	// modify system menu
 	QMenu *menu = subWindow->systemMenu();
-	menu->addAction(ui.actionCopyLink);
+	connect(menu, &QMenu::aboutToShow, this, &MainWindow::onAboutToShowTabMenu);
+	connect(menu, &QMenu::aboutToHide, this, &MainWindow::onAboutToHideTabMenu);
+
+	menu->addMenu(getSln()->getMenu());
 				
 	child->LoadHtml(mtPos, di);
 	child->show();
@@ -1130,11 +1165,15 @@ void MainWindow::UpdateTab(DocItem* tpos)
 {
 	QMdiSubWindow * subwnd;
 	subwnd = FindTab(tpos, 0);
-	if (subwnd)
+	if (subwnd) {
 		subwnd->setWindowTitle(tpos->GetTitle(0));
+		subwnd->setWindowIcon(m_wSln->GetTreeItemIcon(tpos->status));
+	}
 	subwnd = FindTab(tpos, 1);
-	if (subwnd)
+	if (subwnd) {
 		subwnd->setWindowTitle(tpos->GetTitle(1));
+		subwnd->setWindowIcon(m_wSln->GetTreeItemIcon(tpos->status));
+	}
 }
 
 void MainWindow::CloseTab(DocItem* tpos, bool clear_modify)

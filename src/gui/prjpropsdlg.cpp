@@ -10,6 +10,7 @@ PrjPropsDlg::PrjPropsDlg(QWidget *parent)
 	
 	connect(ui.toolSnippets, &QToolButton::clicked, this, &PrjPropsDlg::onOverviewSnippets);
 	connect(ui.toolImages, &QToolButton::clicked, this, &PrjPropsDlg::onOverviewImages);
+	connect(ui.toolIcons, &QToolButton::clicked, this, &PrjPropsDlg::onOverviewIcons);
 
 	connect(ui.toolBPath1, &QToolButton::clicked, this, &PrjPropsDlg::onOverviewBPath1);
 	connect(ui.toolBPath2, &QToolButton::clicked, this, &PrjPropsDlg::onOverviewBPath2);
@@ -26,6 +27,7 @@ int PrjPropsDlg::DoModal()
 {
 	ui.lineSnippets->setText(m_snippets);
 	ui.lineImages->setText(m_images);
+	ui.lineIcons->setText(m_icons);
 
 	ui.lineBName1->setText(m_bases[0].title);
 	ui.lineBSuffix1->setText(m_bases[0].suffix);
@@ -47,6 +49,7 @@ void PrjPropsDlg::onOk()
 {	
 	m_snippets = ui.lineSnippets->text();
 	m_images = ui.lineImages->text();
+	m_icons = ui.lineIcons->text();
 
 	m_bases[0].title = ui.lineBName1->text();
 	m_bases[0].suffix = ui.lineBSuffix1->text();
@@ -75,6 +78,13 @@ void PrjPropsDlg::onOverviewImages()
 	QString dirName = QFileDialog::getExistingDirectory ( this, tr("Select images folder"));
 	if (!dirName.isEmpty())
 		ui.lineImages->setText(dirName);
+}
+
+void PrjPropsDlg::onOverviewIcons()
+{
+	QString dirName = QFileDialog::getExistingDirectory(this, tr("Select icons folder"));
+	if (!dirName.isEmpty())
+		ui.lineIcons->setText(dirName);
 }
 
 void PrjPropsDlg::onOverviewBPath1()

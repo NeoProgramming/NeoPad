@@ -12,27 +12,26 @@
 #include "Documents.h"
 #include "Favorites.h"
 #include "Workspace.h"
-#include "Importants.h"
 #include "Classes.h"
-
+#include "Pictograms.h"
 
 class CSolution 
 	: public Documents // temporary
 {
 public:
 
-	QString   m_sProgDir;		// directory with program and settings files
-    QString   m_sPargPath;		// path to exe module (for display in 'about' dialog)
-	Numerator m_fnum;			// file numbering
-	QString   m_ImageDir;		// path to the directory with pictures
-	Snippets  m_Snippets;
-	QString   m_RecentClipboard;
-	Workspace WS;
-    Columns   Cols;
+	QString		m_sProgDir;		// directory with program and settings files
+    QString		m_sPargPath;	// path to exe module (for display in 'about' dialog)
+	Numerator	m_fnum;			// file numbering
+	QString		m_ImageDir;		// path to the directory with pictures
+	Snippets	m_Snippets;
+	QString		m_RecentClipboard;
+	Workspace	WS;
+    Columns		Cols;
 	//Documents Docs; // temporary commented
-	Favorites Favs;
-	Importants Imps;
-	Classes   Clss;
+	Favorites	Favs;
+	Classes		Clss;
+	Pictograms	Picts;
 public:
 	CSolution(void);
 	~CSolution(void);
