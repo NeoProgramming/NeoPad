@@ -48,6 +48,7 @@ FORMS += \
     ./src/gui/newprojectdlg.ui \
     ./src/gui/quickstartdlg.ui \
     ./src/gui/passworddlg.ui \
+    ./src/gui/pictogramdlg.ui \
     ./src/gui/savealldlg.ui \
     ./src/gui/selectdocdlg.ui \
     ./src/gui/slnpanel.ui \
@@ -59,7 +60,6 @@ FORMS += \
     ./src/gui/multieditdlg.ui
 
 HEADERS += \
-    ./src/core/ini.h \
     ./src/core/BaseItem.h \
     ./src/core/Books.h \
     ./src/core/Classes.h \
@@ -68,6 +68,7 @@ HEADERS += \
     ./src/core/Documents.h \
     ./src/core/FavItem.h \
     ./src/core/Favorites.h \
+    ./src/core/ini.h \
     ./src/core/Pictograms.h \
     ./src/core/PrjStat.h \
     ./src/core/PrjTree.h \
@@ -83,6 +84,7 @@ HEADERS += \
     ./src/gui/itemproperty.h \
     ./src/gui/newitemdlg.h \
     ./src/gui/newprojectdlg.h \
+    ./src/gui/pictogramdlg.h \
     ./src/gui/quickstartdlg.h \
     ./src/gui/savealldlg.h \
     ./src/gui/selectdocdlg.h \
@@ -118,8 +120,8 @@ SOURCES += \
     ./src/core/Documents.cpp \
     ./src/core/FavItem.cpp \
     ./src/core/Favorites.cpp \
-    ./src/core/Pictograms.cpp \
     ./src/core/ini.cpp \
+    ./src/core/Pictograms.cpp \
     ./src/core/PrjStat.cpp \
     ./src/core/Snippets.cpp \
     ./src/core/Solution.cpp \
@@ -133,6 +135,7 @@ SOURCES += \
     ./src/gui/itemproperty.cpp \
     ./src/gui/newitemdlg.cpp \
     ./src/gui/newprojectdlg.cpp \
+    ./src/gui/pictogramdlg.cpp \
     ./src/gui/quickstartdlg.cpp \
     ./src/gui/savealldlg.cpp \
     ./src/gui/selectdocdlg.cpp \

@@ -1653,6 +1653,20 @@ void SlnPanel::resizeEvent(QResizeEvent* event)
 {
 	QWidget::resizeEvent(event);
 	SymbolsDlg::ResizeTable(ui.tableSymbols, m_fontSymbols);
+
+    int n = ui.treeContents->columnCount();
+    float w = 0;
+    for(int i=0; i<n; i++)
+        w += ui.treeContents->columnWidth(i);
+    float ww = width() - 23;
+    if(w < ww && w > 0) {
+        float k = ww / w;
+        for(int i=0; i<n; i++) {
+            float cw = ui.treeContents->columnWidth(i);
+            cw *= k;
+            ui.treeContents->setColumnWidth(i, cw);
+        }
+    }
 }
 
 
