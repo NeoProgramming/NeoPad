@@ -152,29 +152,47 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionNodeStatistics = MakeAction(tr("Node statistics..."), &SlnPanel::onNodeStatistics);
 	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
 
-	QMenu *submenuItemStatus = new QMenu(tr("Item Status"), this);// menuPopupDoc);
-	MakeAction(tr("Ready"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, false); });
-	MakeAction(tr("Almost ready"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, false); });
-	MakeAction(tr("75 %"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, false); });
-	MakeAction(tr("50 %"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, false); });
-	MakeAction(tr("25 %"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, false); });
-	MakeAction(tr("Under construction"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, false); });
-	MakeAction(tr("Locked"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, false); });
-	MakeAction(tr("Important"), submenuItemStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, false); });
+    QMenu *submenuItemStatus = new QMenu(tr("Item Status"), this);
+    MakeAction(tr("Ready"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_READY],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, false); });
+    MakeAction(tr("Almost ready"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_ALMOST],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, false); });
+    MakeAction(tr("75 %"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_75],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, false); });
+    MakeAction(tr("50 %"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_50],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, false); });
+    MakeAction(tr("25 %"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_25],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, false); });
+    MakeAction(tr("Under construction"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_UNREADY],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, false); });
+    MakeAction(tr("Locked"), submenuItemStatus,m_TreeIcons[(int)ETreeStatus::TS_LOCKED],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, false); });
+    MakeAction(tr("Important"), submenuItemStatus,m_TreeIcons[(int)ETreeStatus::TS_IMPORTANT],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, false); });
 	submenuItemStatus->addSeparator();
-	MakeAction(tr("User defined..."), submenuItemStatus, [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), false); });
+    MakeAction(tr("User defined..."), submenuItemStatus,
+               [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), false); });
 
-	QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), this);//menuPopupDoc);
-	MakeAction(tr("Ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, true); });
-	MakeAction(tr("Almost ready"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, true); });
-	MakeAction(tr("75 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, true); });
-	MakeAction(tr("50 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, true); });
-	MakeAction(tr("25 %"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, true); });
-	MakeAction(tr("Under construction"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, true); });
-	MakeAction(tr("Locked"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, true); });
-	MakeAction(tr("Important"), submenuNodeStatus, [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, true); });
+    QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), this);
+    MakeAction(tr("Ready"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_READY],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, true); });
+    MakeAction(tr("Almost ready"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_ALMOST],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, true); });
+    MakeAction(tr("75 %"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_75],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, true); });
+    MakeAction(tr("50 %"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_50],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, true); });
+    MakeAction(tr("25 %"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_25],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, true); });
+    MakeAction(tr("Under construction"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_UNREADY],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, true); });
+    MakeAction(tr("Locked"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_LOCKED],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, true); });
+    MakeAction(tr("Important"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_IMPORTANT],
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, true); });
 	submenuNodeStatus->addSeparator();
-	MakeAction(tr("User defined..."), submenuNodeStatus, [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), true); });
+    MakeAction(tr("User defined..."), submenuNodeStatus,
+               [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), true); });
 
 	QMenu *submenuInsert = new QMenu(tr("Insert"), this);//menuPopupDoc);
 	MakeAction(tr("New subitem"),      QKeySequence(Qt::Key_Insert), submenuInsert, &SlnPanel::onAddChildDoc);
@@ -325,6 +343,17 @@ QAction *SlnPanel::MakeAction(QString text, QMenu *menu, const std::function<voi
 	connect(action, &QAction::triggered, this, fn);
 	return action;
 }
+
+QAction *SlnPanel::MakeAction(QString text, QMenu *menu, QIcon &icon, const std::function<void()> &fn)
+{
+    QAction *action = new QAction(this);
+    action->setText(text);
+    action->setIcon(icon);
+    menu->addAction(action);
+    connect(action, &QAction::triggered, this, fn);
+    return action;
+}
+
 
 QAction *SlnPanel::MakeAction(QString text, void (SlnPanel::*slot)())
 {

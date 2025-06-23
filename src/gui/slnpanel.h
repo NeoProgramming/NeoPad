@@ -140,6 +140,7 @@ private:
 	QAction *MakeAction(QString text, QKeySequence skey, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, void (SlnPanel::*slot)());
 	QAction *MakeAction(QString text, QMenu *menu, const std::function<void()> &fn);
+    QAction *MakeAction(QString text, QMenu *menu, QIcon &icon, const std::function<void()> &fn);
 	QAction *MakeAction(QString text, QKeySequence skey, QMenu *menu, void (SlnPanel::*slot)());
 public:
 	void setTabDoc(DocItem *doc);
