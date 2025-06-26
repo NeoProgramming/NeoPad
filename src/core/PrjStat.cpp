@@ -34,7 +34,7 @@ int NEOPAD_STAT::CalcStatistics(DocItem* node)
 		xUnd++;
 		break;
 	}
-	ELangStatus ls = node->GetLangStatus(1);
+	ELangStatus ls = node->GetLangStatusCode(1);
 	switch (ls) {
 	case ELangStatus::LS_NONE:		// no document
 		tNone++;

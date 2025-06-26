@@ -2,6 +2,43 @@
 #include <QDir>
 #include "vmbsrv.h"
 
+void Pictograms::LoadStdIcons()
+{
+	TreeIcons[(int)ETreeStatus::TS_UNKNOWN] = QIcon(":/treeicons/images/ti-unknown.png");
+	TreeIcons[(int)ETreeStatus::TS_READY] = QIcon(":/treeicons/images/ti-html.png");
+	TreeIcons[(int)ETreeStatus::TS_ALMOST] = QIcon(":/treeicons/images/ti-htmlx.png");
+	TreeIcons[(int)ETreeStatus::TS_75] = QIcon(":/treeicons/images/ti-html75.png");
+	TreeIcons[(int)ETreeStatus::TS_50] = QIcon(":/treeicons/images/ti-html50.png");
+	TreeIcons[(int)ETreeStatus::TS_25] = QIcon(":/treeicons/images/ti-html25.png");
+	TreeIcons[(int)ETreeStatus::TS_UNREADY] = QIcon(":/treeicons/images/ti-html0.png");
+	TreeIcons[(int)ETreeStatus::TS_LOCKED] = QIcon(":/treeicons/images/ti-locked.png");
+	TreeIcons[(int)ETreeStatus::TS_IMPORTANT] = QIcon(":/treeicons/images/ti-important.png");
+	TreeIcons[(int)ETreeStatus::TS_FOLDER] = QIcon(":/treeicons/images/ti-folder.png");
+	TreeIcons[(int)ETreeStatus::TS_EMPTY] = QIcon(":/treeicons/images/ti-htmlempty.png");
+
+	LangIcons[(int)ELangStatus::LS_NONE] = QIcon(":/langicons/images/li-none.png");
+	LangIcons[(int)ELangStatus::LS_OK] = QIcon(":/langicons/images/li-ok.png");
+	LangIcons[(int)ELangStatus::LS_OLD] = QIcon(":/langicons/images/li-old.png");
+	LangIcons[(int)ELangStatus::LS_QOK] = QIcon(":/langicons/images/li-qok.png");
+	LangIcons[(int)ELangStatus::LS_QOLD] = QIcon(":/langicons/images/li-qold.png");
+}
+
+QIcon& Pictograms::GetIcon(int i)
+{
+	return TreeIcons[i];
+}
+
+QIcon& Pictograms::GetIcon(ETreeStatus i)
+{
+	return TreeIcons[(int)i];
+}
+
+QIcon& Pictograms::GetIcon(ELangStatus i)
+{
+	return LangIcons[(int)i];
+}
+
+
 void Pictograms::LoadPicts(const QString &path)
 {
 	Dir = path;

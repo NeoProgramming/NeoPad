@@ -151,8 +151,7 @@ private:
     bool m_contentsNeedsToRefresh = false;
     bool m_favoritesNeedsToRefresh = false;
 	QString searchRoot;	// guid
-	QIcon m_TreeIcons[(int)ETreeStatus::TS_ITEMS_COUNT];
-	QIcon m_LangIcons[(int)ELangStatus::LS_ITEMS_COUNT];
+	
 	QFont m_fontSymbols;
 
 	QMenu *menuPopupDoc;

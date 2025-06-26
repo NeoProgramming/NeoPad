@@ -15,7 +15,7 @@ DocItem::DocItem() : BaseItem<DocItem>()
 
 	attrs = 0;
 	status = ETreeStatus::TS_UNREADY;
-	check = 1;
+	p_check = 1;
 }
 
 DocItem::DocItem(const char *text) : BaseItem<DocItem>()
@@ -77,12 +77,12 @@ int DocItem::GetDescendantsCount()
 
 void DocItem::SetCheck(bool _check)
 {
-	this->check = _check;
+	this->p_check = _check;
 }
 
 bool DocItem::GetCheck()
 {
-	return check;
+	return p_check;
 }
 
 QString DocItem::GetId()
@@ -203,15 +203,18 @@ time_t DocItem::GetDocTime(int bi)
 	return time[bi];
 }
 
-ETreeStatus DocItem::GetTreeStatus()
+ETreeStatus DocItem::GetTreeStatusCode()
 {
     QString path = GetDocAbsPath(0);
-    if (!QFileInfo(path).isFile())
-        return ETreeStatus::TS_UNKNOWN;
-    return status;
+	QFileInfo info(path);
+    if (!info.isFile())
+		return ETreeStatus::TS_UNKNOWN;
+	if (info.size() < 124)
+		return ETreeStatus::TS_EMPTY;
+	return status;
 }
 
-ELangStatus DocItem::GetLangStatus(int di2)
+ELangStatus DocItem::GetLangStatusCode(int di2)
 {
 	QString path = GetDocAbsPath(di2);
 	if (!QFileInfo(path).isFile())

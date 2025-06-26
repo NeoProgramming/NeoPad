@@ -9,7 +9,7 @@ class NewItemDlg : public QDialog
 	Q_OBJECT
 
 public:
-	NewItemDlg(QIcon *statusIcons, QWidget *parent = 0);
+	NewItemDlg(QWidget *parent = 0);
 	~NewItemDlg();
 	int DoModal();
 	bool m_open = false;
@@ -22,7 +22,6 @@ public slots:
 private:
 	bool start_editing = true;
 	Ui::NewItemDlg ui;
-	QIcon * m_pStatusIcons;
 };
 
 #endif // NEWITEMDLG_H

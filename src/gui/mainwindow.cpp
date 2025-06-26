@@ -57,6 +57,8 @@ MainWindow::MainWindow()
 	setUnifiedTitleAndToolBarOnMac(true);
     ui.setupUi(this);
 
+	theSln.Picts.LoadStdIcons();
+
 #if defined(Q_WS_WIN)
     // Workaround for QMimeSourceFactory failing in QFileInfo::isReadable() for
     // certain user configs. See task: 34372

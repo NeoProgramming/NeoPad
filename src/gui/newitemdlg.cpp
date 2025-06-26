@@ -1,9 +1,9 @@
 #include "newitemdlg.h"
 #include "../core/DocItem.h"
+#include "../core/Solution.h"
 
-NewItemDlg::NewItemDlg(QIcon *statusIcons, QWidget *parent)
-	: m_pStatusIcons(statusIcons)
-	, QDialog(parent)
+NewItemDlg::NewItemDlg(QWidget *parent)
+	: QDialog(parent)
 {
 	ui.setupUi(this);
 
@@ -26,24 +26,14 @@ int NewItemDlg::DoModal()
 	ui.lineId->setFocus();
     ui.checkOpen->setChecked(m_open);
 	
-	ui.comboStatus->addItem(tr("Ready"));
-	ui.comboStatus->addItem(tr("Almost ready"));
-	ui.comboStatus->addItem(tr("75 %"));
-	ui.comboStatus->addItem(tr("50 %"));
-	ui.comboStatus->addItem(tr("25 %"));
-	ui.comboStatus->addItem(tr("Under construction"));
-	ui.comboStatus->addItem(tr("Locked"));
-	ui.comboStatus->addItem(tr("Important"));
-
-	if (m_pStatusIcons) {
-		ui.comboStatus->setItemIcon(0, m_pStatusIcons[(int)ETreeStatus::TS_READY]);
-		ui.comboStatus->setItemIcon(1, m_pStatusIcons[(int)ETreeStatus::TS_ALMOST]);
-		ui.comboStatus->setItemIcon(2, m_pStatusIcons[(int)ETreeStatus::TS_75]);
-		ui.comboStatus->setItemIcon(3, m_pStatusIcons[(int)ETreeStatus::TS_50]);
-		ui.comboStatus->setItemIcon(4, m_pStatusIcons[(int)ETreeStatus::TS_25]);
-		ui.comboStatus->setItemIcon(5, m_pStatusIcons[(int)ETreeStatus::TS_UNREADY]);
-		ui.comboStatus->setItemIcon(6, m_pStatusIcons[(int)ETreeStatus::TS_LOCKED]);
-	}
+	ui.comboStatus->addItem(theSln.Picts.GetIcon(ETreeStatus::TS_READY), tr("Ready"));
+	ui.comboStatus->addItem(theSln.Picts.GetIcon(ETreeStatus::TS_ALMOST), tr("Almost ready"));
+	ui.comboStatus->addItem(theSln.Picts.GetIcon(ETreeStatus::TS_75), tr("75 %"));
+	ui.comboStatus->addItem(theSln.Picts.GetIcon(ETreeStatus::TS_50), tr("50 %"));
+	ui.comboStatus->addItem(theSln.Picts.GetIcon(ETreeStatus::TS_25), tr("25 %"));
+	ui.comboStatus->addItem(theSln.Picts.GetIcon(ETreeStatus::TS_UNREADY), tr("Under construction"));
+	ui.comboStatus->addItem(theSln.Picts.GetIcon(ETreeStatus::TS_LOCKED), tr("Locked"));
+		
 	ui.comboStatus->setCurrentIndex(m_status - (int)ETreeStatus::TS_READY);
 	return this->exec();
 }

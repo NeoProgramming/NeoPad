@@ -415,19 +415,14 @@ bool Documents::MakeDoc(DocItem* tpItem, int bi)
 	path = tpItem->GetCssRelPath(bi);
 	QByteArray a = U8a(m_BI->books[bi].save_prefix);
 	file.write(a);
-	file.write("<html>\n");
-	file.write("<head>\n");
-	file.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-
-
-	file.write(U8a(path));
-
-	file.write("\">\n");
-	file.write("<meta content=\"text/html; charset=utf-8\" http-equiv=Content-Type>\n");
+	file.write("<html><head>\n");
+	//file.write("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
+	//file.write(U8a(path));
+	//file.write("\">\n");
+	file.write("<meta content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\">\n");
 	file.write("</head>\n");
-	file.write("<body><p>\n");
-	file.write("</p></body>\n");
-	file.write("</html>\n");
+	file.write("<body><div>\n");
+	file.write("</div></body></html>\n");
 	file.close();
 	return true;
 }

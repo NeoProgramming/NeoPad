@@ -6,18 +6,6 @@
 #include "TreeStatus.h"
 
 
-
-// statuses (pictures) of transfers in the tree
-enum class ELangStatus
-{
-	LS_NONE,	// no translation
-	LS_OK,		// translation is newer than the original
-	LS_OLD,		// the original is newer than the translation - you need to translate
-	LS_QOK,     // the translation is newer than the original, one of the dates is unreliable
-	LS_QOLD,    // the original is newer than the translation, one of the dates is unreliable
-	LS_ITEMS_COUNT
-};
-
 // tree element (main structural element of the base)
 struct DocItem : public BaseItem<DocItem>
 {
@@ -28,8 +16,9 @@ public:
 		struct {
 			unsigned p_subbase : 1;	// own file or not
 			unsigned p_modify : 1;	// modification sign
-			unsigned check : 1;		// some document mark
+			unsigned p_check : 1;	// some document mark
             unsigned p_remove : 1;  // mark for removed, used in clear-favorites algirithm
+			unsigned p_empty : 1;	// empty document
 		};
 	};
 	ETreeStatus status = ETreeStatus::TS_UNREADY;    // status
@@ -75,8 +64,8 @@ public:
 	QString GetDocTimeStr(int bi);
 	QString GetCssRelPath(int bi);
 
-    ETreeStatus GetTreeStatus();
-	ELangStatus GetLangStatus(int di2);
+	ETreeStatus GetTreeStatusCode();
+	ELangStatus GetLangStatusCode(int di2);
 	   
 	QString GetAbsDir(int bi);
 	QString GetBaseDir();

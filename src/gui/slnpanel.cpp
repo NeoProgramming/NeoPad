@@ -41,22 +41,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	connect(ui.pushFindPrev,	&QPushButton::clicked, this, &SlnPanel::onFindPrev);
 	connect(ui.pushSelNode,		&QPushButton::clicked, this, &SlnPanel::onSelNode);
 
-	m_TreeIcons[(int)ETreeStatus::TS_UNKNOWN] = QIcon(":/treeicons/images/ti-unknown.png");
-	m_TreeIcons[(int)ETreeStatus::TS_READY] = QIcon(":/treeicons/images/ti-html.png");
-	m_TreeIcons[(int)ETreeStatus::TS_ALMOST] = QIcon(":/treeicons/images/ti-htmlx.png");
-	m_TreeIcons[(int)ETreeStatus::TS_75] = QIcon(":/treeicons/images/ti-html75.png");
-	m_TreeIcons[(int)ETreeStatus::TS_50] = QIcon(":/treeicons/images/ti-html50.png");
-	m_TreeIcons[(int)ETreeStatus::TS_25] = QIcon(":/treeicons/images/ti-html25.png");
-	m_TreeIcons[(int)ETreeStatus::TS_UNREADY] = QIcon(":/treeicons/images/ti-html0.png");
-	m_TreeIcons[(int)ETreeStatus::TS_LOCKED] = QIcon(":/treeicons/images/ti-locked.png");
-	m_TreeIcons[(int)ETreeStatus::TS_IMPORTANT] = QIcon(":/treeicons/images/ti-important.png");
-	m_TreeIcons[(int)ETreeStatus::TS_FOLDER] = QIcon(":/treeicons/images/ti-folder.png");
-
-	m_LangIcons[(int)ELangStatus::LS_NONE] = QIcon(":/langicons/images/li-none.png");
-	m_LangIcons[(int)ELangStatus::LS_OK] = QIcon(":/langicons/images/li-ok.png");
-	m_LangIcons[(int)ELangStatus::LS_OLD] = QIcon(":/langicons/images/li-old.png");
-	m_LangIcons[(int)ELangStatus::LS_QOK] = QIcon(":/langicons/images/li-qok.png");
-	m_LangIcons[(int)ELangStatus::LS_QOLD] = QIcon(":/langicons/images/li-qold.png");
+	
 
 	QMenu *menu = new QMenu(this);	
 	actionCheckTree = menu->addAction("Search in Tree Titles");
@@ -153,42 +138,42 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	QAction *actionItemAddToFavs = MakeAction(tr("Add to favorites"), &SlnPanel::onAddToFavorites);
 
     QMenu *submenuItemStatus = new QMenu(tr("Item Status"), this);
-    MakeAction(tr("Ready"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_READY],
+    MakeAction(tr("Ready"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_READY),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, false); });
-    MakeAction(tr("Almost ready"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_ALMOST],
+    MakeAction(tr("Almost ready"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_ALMOST),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, false); });
-    MakeAction(tr("75 %"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_75],
+    MakeAction(tr("75 %"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_75),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, false); });
-    MakeAction(tr("50 %"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_50],
+    MakeAction(tr("50 %"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_50),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, false); });
-    MakeAction(tr("25 %"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_25],
+    MakeAction(tr("25 %"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_25),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, false); });
-    MakeAction(tr("Under construction"), submenuItemStatus, m_TreeIcons[(int)ETreeStatus::TS_UNREADY],
+    MakeAction(tr("Under construction"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_UNREADY),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, false); });
-    MakeAction(tr("Locked"), submenuItemStatus,m_TreeIcons[(int)ETreeStatus::TS_LOCKED],
+    MakeAction(tr("Locked"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_LOCKED),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, false); });
-    MakeAction(tr("Important"), submenuItemStatus,m_TreeIcons[(int)ETreeStatus::TS_IMPORTANT],
+    MakeAction(tr("Important"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_IMPORTANT),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, false); });
 	submenuItemStatus->addSeparator();
     MakeAction(tr("User defined..."), submenuItemStatus,
                [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), false); });
 
     QMenu *submenuNodeStatus = new QMenu(tr("Node Status"), this);
-    MakeAction(tr("Ready"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_READY],
+    MakeAction(tr("Ready"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_READY),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_READY, true); });
-    MakeAction(tr("Almost ready"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_ALMOST],
+    MakeAction(tr("Almost ready"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_ALMOST),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_ALMOST, true); });
-    MakeAction(tr("75 %"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_75],
+    MakeAction(tr("75 %"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_75),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_75, true); });
-    MakeAction(tr("50 %"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_50],
+    MakeAction(tr("50 %"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_50),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_50, true); });
-    MakeAction(tr("25 %"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_25],
+    MakeAction(tr("25 %"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_25),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_25, true); });
-    MakeAction(tr("Under construction"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_UNREADY],
+    MakeAction(tr("Under construction"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_UNREADY),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, true); });
-    MakeAction(tr("Locked"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_LOCKED],
+    MakeAction(tr("Locked"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_LOCKED),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, true); });
-    MakeAction(tr("Important"), submenuNodeStatus, m_TreeIcons[(int)ETreeStatus::TS_IMPORTANT],
+    MakeAction(tr("Important"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_IMPORTANT),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, true); });
 	submenuNodeStatus->addSeparator();
     MakeAction(tr("User defined..."), submenuNodeStatus,
@@ -702,14 +687,14 @@ QIcon& SlnPanel::GetTreeItemIcon(ETreeStatus i)
 {
 	if (i < ETreeStatus::TS_UNKNOWN || i >= ETreeStatus::TS_ITEMS_COUNT)
 		i = ETreeStatus::TS_UNKNOWN;
-	return m_TreeIcons[(int)i];
+	return theSln.Picts.GetIcon(i);
 }
 
 QIcon& SlnPanel::GetLangItemIcon(ELangStatus i)
 {
 	if (i < ELangStatus::LS_NONE || i >= ELangStatus::LS_ITEMS_COUNT)
 		i = ELangStatus::LS_NONE;
-	return m_LangIcons[(int)i];
+	return theSln.Picts.GetIcon(i);
 }
 
 void SlnPanel::RemoveItemDontAsk(bool del_files)
@@ -743,11 +728,11 @@ void SlnPanel::UpdateDocItem(QTreeWidgetItem * qitem, DocItem* tpos)
     for(int i=0; i<theSln.Cols.BCnt(); i++) {
         qitem->setText(i, tpos->GetTitle(i));
         if(theSln.Cols.GetColType(i) == CT_BASE) {
-            ETreeStatus im = tpos->GetTreeStatus();
+            ETreeStatus im = tpos->GetTreeStatusCode();
             qitem->setIcon(0, GetTreeItemIcon(im));
         }
         else if(theSln.Cols.GetColType(i) == CT_BOOK) {
-            ELangStatus ls = tpos->GetLangStatus(1);
+            ELangStatus ls = tpos->GetLangStatusCode(1);
             qitem->setIcon(1, GetLangItemIcon(ls));
         }
     }
@@ -1108,7 +1093,7 @@ void SlnPanel::OpenInExtProgram(const QString& program, int di)
 void SlnPanel::onAddChildDoc()
 {
 	// insert the blank into the tree
-	NewItemDlg dlg(m_TreeIcons);
+	NewItemDlg dlg(this);
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
     dlg.m_open = INI::OpenNewDoc;
 	dlg.m_status = INI::DefItemStatus;
@@ -1144,7 +1129,7 @@ void SlnPanel::onAddChildDoc()
 void SlnPanel::onAddSiblingDoc()
 {
 	// insert a new item after the given one
-	NewItemDlg dlg(m_TreeIcons);
+	NewItemDlg dlg(this);
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
     dlg.m_open = INI::OpenNewDoc;
 	dlg.m_status = INI::DefItemStatus;
