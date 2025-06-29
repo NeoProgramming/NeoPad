@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -1798,6 +1798,10 @@
    </property>
   </action>
   <action name="actionFileOpenImportant">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/treeicons/images/ti-important.png</normaloff>:/treeicons/images/ti-important.png</iconset>
+   </property>
    <property name="text">
     <string>Open Important</string>
    </property>
