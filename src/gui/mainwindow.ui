@@ -122,6 +122,7 @@
      <addaction name="actionEditPasteAsTable"/>
      <addaction name="actionEditPasteAsCode"/>
      <addaction name="actionEditPasteAsBilingua"/>
+     <addaction name="actionEditPasteAsLWText"/>
     </widget>
     <addaction name="separator"/>
     <addaction name="actionEditUndo"/>
@@ -1838,6 +1839,11 @@
    </property>
    <property name="toolTip">
     <string>Move column right</string>
+   </property>
+  </action>
+  <action name="actionEditPasteAsLWText">
+   <property name="text">
+    <string>As Line-Wrapped Text</string>
    </property>
   </action>
  </widget>

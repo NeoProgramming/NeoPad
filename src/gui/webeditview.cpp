@@ -1,6 +1,7 @@
 #include <QtCore>
 #include <QtGui>
 #include <QWebFrame>
+#include <QRegularExpression>
 #include "webeditview.h"
 #include "mainwindow.h"
 #include "slnpanel.h"
@@ -98,6 +99,7 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsTable);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsCode);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsBilingua);
+	m_menuPaste.addAction(mw->ui.actionEditPasteAsLWText);
 
 	// context menu
 	m_menuContext.addAction(mw->ui.actionEditCut);
@@ -582,6 +584,23 @@ void WebEditView::onEditPasteAsBilingua()
         QString html = theSln.m_Snippets.GetSnippet("bilingua.html", originalText);
         InsertHtml(html);
     }
+}
+
+void WebEditView::onEditPasteAsLWText()
+{
+	// paste text and correct line-wrapping: replace all ".L" to ".\r\nL"
+	QClipboard *clipboard = QApplication::clipboard();
+	QString text = clipboard->text();
+	text = text.toHtmlEscaped();
+
+	text = text.replace("\r\n", "<p>");
+	text = text.replace("\r", "<p>");
+	text = text.replace("\n", "<p>");
+
+	QRegularExpression regex("\\.(\\S)");
+	text = text.replace(regex, ".<p>\\1");
+
+	InsertHtml(text);
 }
 
 void WebEditView::onEditPasteCell()

@@ -43,6 +43,7 @@ public slots:
     void onEditPasteAsTable();
 	void onEditPasteAsCode();
 	void onEditPasteAsBilingua();
+	void onEditPasteAsLWText();
 	void onEditPasteCell();
 	void onEditPasteSpecial();
 
