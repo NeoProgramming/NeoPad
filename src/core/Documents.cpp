@@ -27,7 +27,8 @@ const char* csStatusNames[] = {
 	"25",
 	"unready",
 	"locked",
-	"important",
+	"pinned",
+	"quick",
 	NULL
 };
 
@@ -203,8 +204,11 @@ void Documents::LoadItemData(pugi::xml_node txElem, DocItem *item)
 	}
 
 	item->status = GetTreeStatus(txElem.attribute(MBA::status).as_string());
-	if (item->status == ETreeStatus::TS_IMPORTANT) {
-		m_Imps.push_back(item);
+	if (item->status == ETreeStatus::TS_PINNED) {
+		m_Pinned.push_back(item);
+	}
+	else if (item->status == ETreeStatus::TS_QUICK) {
+		m_Quick.push_back(item);
 	}
 }
 
@@ -214,7 +218,8 @@ bool Documents::LoadRootBase(const QString &fpath, pugi::xml_node xRoot)
 	// remove previous tree
 	RemoveAll();
 	m_bModify = false;
-	m_Imps.clear();
+	m_Pinned.clear();
+	m_Quick.clear();
 
 	// root directory
 	m_RootDir = QFileInfo(fpath).dir().canonicalPath();

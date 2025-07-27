@@ -152,8 +152,10 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, false); });
     MakeAction(tr("Locked"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_LOCKED),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, false); });
-    MakeAction(tr("Important"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_IMPORTANT),
-               [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, false); });
+    MakeAction(tr("Pinned"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_PINNED),
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_PINNED, false); });
+	MakeAction(tr("Quick"), submenuItemStatus, theSln.Picts.GetIcon(ETreeStatus::TS_QUICK),
+				[this]() { SetCurrNodeStatus(ETreeStatus::TS_QUICK, false); });
 	submenuItemStatus->addSeparator();
     MakeAction(tr("User defined..."), submenuItemStatus,
                [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), false); });
@@ -173,8 +175,10 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_UNREADY, true); });
     MakeAction(tr("Locked"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_LOCKED),
                [this]() { SetCurrNodeStatus(ETreeStatus::TS_LOCKED, true); });
-    MakeAction(tr("Important"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_IMPORTANT),
-               [this]() { SetCurrNodeStatus(ETreeStatus::TS_IMPORTANT, true); });
+    MakeAction(tr("Pinned"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_PINNED),
+               [this]() { SetCurrNodeStatus(ETreeStatus::TS_PINNED, true); });
+	MakeAction(tr("Quick"), submenuNodeStatus, theSln.Picts.GetIcon(ETreeStatus::TS_QUICK),
+			   [this]() { SetCurrNodeStatus(ETreeStatus::TS_QUICK, true); });
 	submenuNodeStatus->addSeparator();
     MakeAction(tr("User defined..."), submenuNodeStatus,
                [this]() { SetCurrNodeStatus((ETreeStatus)PictogramDlg::getPictogram(), true); });

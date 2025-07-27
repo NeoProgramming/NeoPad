@@ -17,7 +17,8 @@ public:
 	QString m_RootDir;		// main base for xml files
 	QString m_Password;
 	NeopadCallback *m_pCB = nullptr;
-	QList<DocItem*> m_Imps;
+	QList<DocItem*> m_Pinned;
+	QList<DocItem*> m_Quick;
 public:
 	// work with the project
     bool	LoadSubBase(const QString &id, DocItem* tpParNode);

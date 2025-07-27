@@ -254,7 +254,8 @@ MainWindow::MainWindow()
 	connect(ui.actionProjectStatistics, &QAction::triggered, this, &MainWindow::onProjectStatistics);
 	connect(ui.actionProjectPrinfPdf, &QAction::triggered, this, &MainWindow::onProjectPrintPdfBundle);
 	connect(ui.actionExportPdfFiles, &QAction::triggered, this, &MainWindow::onProjectPrintPdfFiles);
-    connect(ui.actionFileOpenImportant, &QAction::triggered, this, &MainWindow::onProjectOpenImportant);
+    connect(ui.actionFileOpenPinned, &QAction::triggered, this, &MainWindow::onProjectOpenPinned);
+	connect(ui.actionFileOpenQuick, &QAction::triggered, this, &MainWindow::onProjectOpenQuick);
 
 	connect(ui.actionGenContents1, &QAction::triggered, this, [this]() { GenContents(0); });
 	connect(ui.actionGenContents2, &QAction::triggered, this, [this]() { GenContents(1); });
@@ -370,12 +371,13 @@ void MainWindow::OpenTabs()
             OpenDoc(pos, 0);
 	}
 	// autoload 
-    OpenImportants();
+    OpenSpecial(false);
 }
 
-void MainWindow::OpenImportants()
+void MainWindow::OpenSpecial(bool quick)
 {
-    for (DocItem *item : theSln.m_Imps) {
+	QList<DocItem*> &lst = quick ? theSln.m_Quick : theSln.m_Pinned;
+    for (DocItem *item : lst) {
         if (item)
             OpenDoc(item, 0);
     }
@@ -584,9 +586,14 @@ void MainWindow::onProjectNew()
 	}
 }
 
-void MainWindow::onProjectOpenImportant()
+void MainWindow::onProjectOpenPinned()
 {
-    OpenImportants();
+    OpenSpecial(false);
+}
+
+void MainWindow::onProjectOpenQuick()
+{
+	OpenSpecial(true);
 }
 
 void MainWindow::onProjectSave()

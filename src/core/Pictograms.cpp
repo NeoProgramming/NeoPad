@@ -12,7 +12,8 @@ void Pictograms::LoadStdIcons()
 	TreeIcons[(int)ETreeStatus::TS_25] = QIcon(":/treeicons/images/ti-html25.png");
 	TreeIcons[(int)ETreeStatus::TS_UNREADY] = QIcon(":/treeicons/images/ti-html0.png");
 	TreeIcons[(int)ETreeStatus::TS_LOCKED] = QIcon(":/treeicons/images/ti-locked.png");
-	TreeIcons[(int)ETreeStatus::TS_IMPORTANT] = QIcon(":/treeicons/images/ti-important.png");
+	TreeIcons[(int)ETreeStatus::TS_PINNED] = QIcon(":/treeicons/images/ti-pinned.png");
+	TreeIcons[(int)ETreeStatus::TS_QUICK] = QIcon(":/treeicons/images/ti-quick.png");
 	TreeIcons[(int)ETreeStatus::TS_FOLDER] = QIcon(":/treeicons/images/ti-folder.png");
 	TreeIcons[(int)ETreeStatus::TS_EMPTY] = QIcon(":/treeicons/images/ti-htmlempty.png");
 

@@ -97,7 +97,8 @@
     <addaction name="actionFileSaveAs"/>
     <addaction name="actionFileSaveAll"/>
     <addaction name="separator"/>
-    <addaction name="actionFileOpenImportant"/>
+    <addaction name="actionFileOpenPinned"/>
+	<addaction name="actionFileOpenQuick"/>
     <addaction name="actionFileReload"/>
     <addaction name="separator"/>
     <addaction name="actionClearDoc"/>
@@ -1798,13 +1799,22 @@
     <string>Copy Link</string>
    </property>
   </action>
-  <action name="actionFileOpenImportant">
+  <action name="actionFileOpenPinned">
    <property name="icon">
     <iconset resource="../neopad.qrc">
-     <normaloff>:/treeicons/images/ti-important.png</normaloff>:/treeicons/images/ti-important.png</iconset>
+     <normaloff>:/treeicons/images/ti-pinned.png</normaloff>:/treeicons/images/ti-pinned.png</iconset>
    </property>
    <property name="text">
-    <string>Open Important</string>
+    <string>Open Pinned</string>
+   </property>
+  </action>
+  <action name="actionFileOpenQuick">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/treeicons/images/ti-quick.png</normaloff>:/treeicons/images/ti-quick.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Quick Access</string>
    </property>
   </action>
   <action name="actionEditPasteAsCode">

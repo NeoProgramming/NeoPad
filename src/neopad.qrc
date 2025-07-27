@@ -137,7 +137,8 @@
         <file>images/ti-locked.png</file>
         <file>images/ti-htmlx.png</file>
         <file>images/ti-folder.png</file>
-        <file>images/ti-important.png</file>
+        <file>images/ti-pinned.png</file>
+		<file>images/ti-quick.png</file>
         <file>images/ti-htmlempty.png</file>
     </qresource>
     <qresource prefix="/langicons">

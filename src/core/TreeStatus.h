@@ -11,7 +11,8 @@ enum class ETreeStatus
 	TS_25,
 	TS_UNREADY,		// unfinished document
 	TS_LOCKED,		// ready but blocked for publication
-	TS_IMPORTANT,
+	TS_PINNED,
+	TS_QUICK,
 	TS_FOLDER,
 	TS_EMPTY,
 
