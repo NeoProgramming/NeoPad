@@ -83,6 +83,15 @@ MainWindow::MainWindow()
 	m_wArea->setViewMode(QMdiArea::TabbedView);
 	m_wArea->setTabsClosable(true);
 	m_wArea->setTabsMovable(true);
+	m_wArea->setStyleSheet(R"(
+    QTabBar::tab:selected {
+        background: #ffcc00;
+        font-weight: bold;     
+        margin: 2px 2px;
+		padding-left: 4px;
+    }
+	)");
+//border: 2px solid #ff9900;
 
 	QTabWidget *tabWidget = m_wArea->findChild<QTabWidget*>();
 

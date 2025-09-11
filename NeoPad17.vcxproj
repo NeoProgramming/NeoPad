@@ -78,7 +78,7 @@
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;build\.moc;ui;/include;D:\Libs\OpenSSL-111m-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;build\.moc;ui;/include;E:\Libs\OpenSSL-111m-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>build\.obj\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -99,7 +99,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>shell32.lib;mfuuid.lib;strmiids.lib;libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Libs\OpenSSL-111m-Win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\Libs\OpenSSL-111m-Win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -144,13 +144,13 @@
       <Command>./updateBuildNumber.bat</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy $(TargetPath) D:\MySoft\_Outliners\NeoPad2x64\NeoPad.exe</Command>
+      <Command>copy $(TargetPath) E:\MySoft\_Outliners\NeoPad2x64\NeoPad.exe</Command>
       <Message>copying release exe...</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;build\.moc;ui;/include;D:\Libs\OpenSSL-111m-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;build\.moc;ui;/include;E:\Libs\OpenSSL-111m-Win64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>build\.obj\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -169,7 +169,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>shell32.lib;mfuuid.lib;strmiids.lib;libssl.lib;libcrypto.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\Libs\OpenSSL-111m-Win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\Libs\OpenSSL-111m-Win64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
