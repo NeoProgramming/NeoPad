@@ -44,6 +44,7 @@ public slots:
 	void onEditPasteAsCode();
 	void onEditPasteAsBilingua();
 	void onEditPasteAsLWText();
+	void onEditPasteAsMarkdown();
 	void onEditPasteCell();
 	void onEditPasteSpecial();
 

@@ -98,7 +98,7 @@
     <addaction name="actionFileSaveAll"/>
     <addaction name="separator"/>
     <addaction name="actionFileOpenPinned"/>
-	<addaction name="actionFileOpenQuick"/>
+    <addaction name="actionFileOpenQuick"/>
     <addaction name="actionFileReload"/>
     <addaction name="separator"/>
     <addaction name="actionClearDoc"/>
@@ -124,6 +124,7 @@
      <addaction name="actionEditPasteAsCode"/>
      <addaction name="actionEditPasteAsBilingua"/>
      <addaction name="actionEditPasteAsLWText"/>
+     <addaction name="actionEditPasteAsMarkdown"/>
     </widget>
     <addaction name="separator"/>
     <addaction name="actionEditUndo"/>
@@ -1854,6 +1855,14 @@
   <action name="actionEditPasteAsLWText">
    <property name="text">
     <string>As Line-Wrapped Text</string>
+   </property>
+  </action>
+  <action name="actionEditPasteAsMarkdown">
+   <property name="text">
+    <string>As Markdown</string>
+   </property>
+   <property name="toolTip">
+    <string>As Markdown</string>
    </property>
   </action>
  </widget>

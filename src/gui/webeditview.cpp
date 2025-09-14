@@ -100,6 +100,7 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsCode);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsBilingua);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsLWText);
+	m_menuPaste.addAction(mw->ui.actionEditPasteAsMarkdown);
 
 	// context menu
 	m_menuContext.addAction(mw->ui.actionEditCut);
@@ -601,6 +602,131 @@ void WebEditView::onEditPasteAsLWText()
 	text = text.replace(regex, "\\1<p>\\2");
 
 	InsertHtml(text);
+}
+
+static QString convertMarkdownLists(const QString &markdown)
+{
+	QRegularExpression listItemRegex("^\\*\\s+(.+)$");
+	QStringList lines = markdown.split("\n");
+	QString result;
+	QStringList currentList;
+
+	for (const QString &line : lines) {
+		QRegularExpressionMatch match = listItemRegex.match(line);
+
+		if (match.hasMatch()) {
+			// Найден элемент списка
+			currentList.append("<li>" + match.captured(1) + "</li>");
+		}
+		else {
+			// Не элемент списка - закрываем предыдущий список если он был
+			if (!currentList.isEmpty()) {
+				result += "<ul>\n" + currentList.join("\n") + "\n</ul>\n";
+				currentList.clear();
+			}
+			result += line + "\n";
+		}
+	}
+
+	// Закрываем последний список если он остался
+	if (!currentList.isEmpty()) {
+		result += "<ul>\n" + currentList.join("\n") + "\n</ul>\n";
+	}
+
+	return result;
+}
+
+static QString convertCodeBlocks(const QString &markdown) 
+{
+	QString result = markdown;
+
+	// Регулярное выражение для поиска блоков кода с обратными кавычками
+	QRegularExpression codeBlockRegex("```(\\w+)?\\n([\\s\\S]*?)\\n```");
+	QRegularExpressionMatchIterator it = codeBlockRegex.globalMatch(result);
+
+	int offset = 0;
+	QList<QRegularExpressionMatch> matches;
+
+	// Сначала собираем все совпадения
+	while (it.hasNext()) {
+		matches.append(it.next());
+	}
+
+	// Обрабатываем совпадения с конца к началу (чтобы не сбивать позиции)
+	for (int i = matches.size() - 1; i >= 0; --i) {
+		QRegularExpressionMatch match = matches[i];
+		QString lang = match.captured(1).trimmed();
+		QString code = match.captured(2);
+
+		// Экранируем HTML-символы в коде
+		code.replace("&", "&amp;")
+			.replace("<", "&lt;")
+			.replace(">", "&gt;")
+			.replace("\"", "&quot;");
+
+		// Формируем HTML для блока кода
+		QString htmlCode;
+		if (lang.isEmpty()) {
+			htmlCode = QString("<pre><code>%1</code></pre>").arg(code);
+		}
+		else {
+			htmlCode = QString("<pre><code class=\"language-%1\">%2</code></pre>")
+				.arg(lang, code);
+		}
+
+		// Заменяем блок кода в исходной строке
+		result.replace(match.capturedStart() + offset,
+			match.capturedLength(),
+			htmlCode);
+		offset += htmlCode.length() - match.capturedLength();
+	}
+
+	return result;
+}
+
+void WebEditView::onEditPasteAsMarkdown()
+{
+	QClipboard *clipboard = QApplication::clipboard();
+	QString html = clipboard->text();
+	html = html.toHtmlEscaped();
+
+	// Заголовки
+	html = html.replace(QRegularExpression("^######\\s+(.+)$", QRegularExpression::MultilineOption), "<h6>\\1</h6>");
+	html = html.replace(QRegularExpression("^#####\\s+(.+)$", QRegularExpression::MultilineOption), "<h5>\\1</h5>");
+	html = html.replace(QRegularExpression("^####\\s+(.+)$", QRegularExpression::MultilineOption), "<h4>\\1</h4>");
+	html = html.replace(QRegularExpression("^###\\s+(.+)$", QRegularExpression::MultilineOption), "<h3>\\1</h3>");
+	html = html.replace(QRegularExpression("^##\\s+(.+)$", QRegularExpression::MultilineOption), "<h2>\\1</h2>");
+	html = html.replace(QRegularExpression("^#\\s+(.+)$", QRegularExpression::MultilineOption), "<h1>\\1</h1>");
+
+	// Жирный текст
+	html = html.replace(QRegularExpression("\\*\\*(.*?)\\*\\*"), "<strong>\\1</strong>");
+	html = html.replace(QRegularExpression("__(.*?)__"), "<strong>\\1</strong>");
+
+	// Курсив
+	html = html.replace(QRegularExpression("\\*(.*?)\\*"), "<em>\\1</em>");
+	html = html.replace(QRegularExpression("_(.*?)_"), "<em>\\1</em>");
+
+	// Списки
+	html = convertMarkdownLists(html);
+	//html = html.replace(QRegularExpression("^\\*\\s+(.+)$", QRegularExpression::MultilineOption), "<li>\\1</li>");
+	//html = html.replace(QRegularExpression("(<li>.*</li>)", QRegularExpression::DotMatchesEverythingOption), "<ul>\\1</ul>");
+
+	// Ссылки
+	html = html.replace(QRegularExpression("\\[(.*?)\\]\\((.*?)\\)"), "<a href=\"$2\">$1</a>");
+
+	// Блоки кода
+	html = convertCodeBlocks(html);
+	
+	// Inline код
+	html = html.replace(QRegularExpression("`([^`]+)`"), "<code>\\1</code>");
+
+	// Цитаты
+	html = html.replace(QRegularExpression("^>\\s+(.+)$", QRegularExpression::MultilineOption), "<blockquote>$1</blockquote>");
+
+	// Горизонтальные линии
+	html = html.replace(QRegularExpression("^---$", QRegularExpression::MultilineOption), "<hr>");
+
+	InsertHtml(html);
 }
 
 void WebEditView::onEditPasteCell()

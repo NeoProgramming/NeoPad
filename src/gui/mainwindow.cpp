@@ -85,12 +85,12 @@ MainWindow::MainWindow()
 	m_wArea->setTabsMovable(true);
 	m_wArea->setStyleSheet(R"(
     QTabBar::tab:selected {
-        background: #ffcc00;
-        font-weight: bold;     
+        background: #ffcc00;           
         margin: 2px 2px;
 		padding-left: 4px;
     }
 	)");
+	//font-weight: bold;  
 //border: 2px solid #ff9900;
 
 	QTabWidget *tabWidget = m_wArea->findChild<QTabWidget*>();
@@ -169,6 +169,7 @@ MainWindow::MainWindow()
 	CONN_CHILD(ui.actionEditPasteAsCode,    onEditPasteAsCode);
 	CONN_CHILD(ui.actionEditPasteAsBilingua,onEditPasteAsBilingua);
 	CONN_CHILD(ui.actionEditPasteAsLWText,  onEditPasteAsLWText);
+	CONN_CHILD(ui.actionEditPasteAsMarkdown,onEditPasteAsMarkdown);
 	CONN_CHILD(ui.actionEditPasteCell,      onEditPasteCell);
 	CONN_CHILD(ui.actionEditUndo,			onEditUndo);
 	CONN_CHILD(ui.actionEditRedo,			onEditRedo);
