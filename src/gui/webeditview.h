@@ -140,6 +140,8 @@ public slots:
     void onTableMoveRowBelow();
     void onTableMoveColLeft();
     void onTableMoveColRight();
+    void onTableSortAsc();
+    void onTableSortDesc();
 	
 	void onImageProperties();
 
@@ -197,6 +199,8 @@ private:
 	QAction *actionLinkProps;
 	QAction *actionTableClearCol;
 	QAction *actionTableClearRow;
+    QAction *actionTableSortAsc;
+    QAction *actionTableSortDesc;
     
 	QWebElement m_elTable;
 	QWebElement m_elTR;

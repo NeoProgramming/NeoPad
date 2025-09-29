@@ -65,6 +65,8 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	actionTablePasteData= new QAction(tr("Paste Data"), 0);
 	actionTableClearCol = new QAction(tr("Clear column"), 0);
 	actionTableClearRow = new QAction(tr("Clear row"), 0);
+    actionTableSortAsc  = new QAction(tr("Sort by ascending"), 0);
+    actionTableSortDesc = new QAction(tr("Sort by descending"), 0);
 
 	connect(actionTableInsAbove, &QAction::triggered, this, &WebEditView::onTableInsAbove);
 	connect(actionTableInsBelow, &QAction::triggered, this, &WebEditView::onTableInsBelow);
@@ -77,6 +79,8 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	connect(actionTableDelRow, &QAction::triggered, this, &WebEditView::onTableDeleteRow);
 	connect(actionTableDelCol, &QAction::triggered, this, &WebEditView::onTableDeleteColumn);
 	connect(actionTablePasteData, &QAction::triggered, this, &WebEditView::onTableInsertData);
+    connect(actionTableSortAsc, &QAction::triggered, this, &WebEditView::onTableSortAsc);
+    connect(actionTableSortDesc, &QAction::triggered, this, &WebEditView::onTableSortDesc);
 	
 	// table menu
 	m_menuTable.setTitle("Table");
@@ -93,6 +97,9 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	m_menuTable.addSeparator();
 	m_menuTable.addAction(actionTableDelRow);
 	m_menuTable.addAction(actionTableDelCol);
+    m_menuTable.addSeparator();
+    m_menuTable.addAction(actionTableSortAsc);
+    m_menuTable.addAction(actionTableSortDesc);
 
 	// paste menu
 	m_menuPaste.setTitle("Special Paste");
@@ -753,6 +760,40 @@ void WebEditView::onTableInsertData()
 
 	table.InsertData(originalText, m_elTD);
 	setWindowModified(true);
+}
+
+void WebEditView::onTableSortAsc()
+{
+    if (m_elTable.isNull()) {
+        QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+        return;
+    }
+    int r = QMessageBox::warning(this, AppTitle,
+        tr("Are you really want to sort table?"),
+        QMessageBox::Yes | QMessageBox::No);
+    if (r == QMessageBox::Yes)
+    {
+        HtmlTable table(m_elTable);
+        table.Sort(m_elTD, false);
+        setWindowModified(true);
+    }
+}
+
+void WebEditView::onTableSortDesc()
+{
+    if (m_elTable.isNull()) {
+        QMessageBox::warning(this, AppTitle, tr("Table not found"), QMessageBox::Ok);
+        return;
+    }
+    int r = QMessageBox::warning(this, AppTitle,
+        tr("Are you really want to sort table?"),
+        QMessageBox::Yes | QMessageBox::No);
+    if (r == QMessageBox::Yes)
+    {
+        HtmlTable table(m_elTable);
+        table.Sort(m_elTD, true);
+        setWindowModified(true);
+    }
 }
 
 QWebElement WebEditView::getTag()

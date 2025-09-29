@@ -206,7 +206,7 @@ int HtmlTable::GetColIndex(QWebElement &tdi)
 	return -1;
 }
 
-QWebElement HtmlTable::GetColByIndex(QWebElement &tr, int ti)
+QWebElement HtmlTable::GetCellByIndex(QWebElement &tr, int ti)
 {
 	QWebElement td = tr.findFirst("td");
 	int i = 0;
@@ -228,7 +228,7 @@ void HtmlTable::DeleteColumn(QWebElement &tdi)
 		return;
 	QWebElement tr = m_table.findFirst("tr");
 	while (!tr.isNull()) {
-		QWebElement td = GetColByIndex(tr, colIndex);
+        QWebElement td = GetCellByIndex(tr, colIndex);
 		if(!td.isNull())
 			td.removeFromDocument();
 		tr = tr.nextSibling();
@@ -306,7 +306,7 @@ void HtmlTable::MoveColumn(QWebElement &td, bool right)
         return;
     QWebElement tr = m_table.findFirst("tr");
     while (!tr.isNull()) {
-        QWebElement td = GetColByIndex(tr, colIndex);
+        QWebElement td = GetCellByIndex(tr, colIndex);
         if (!td.isNull()) {
             // move cell in row
 
@@ -327,7 +327,7 @@ void HtmlTable::MoveColumn(QWebElement &td, bool right)
     }
 
     QWebElement tdf = //tri.findFirst("TD");
-            GetColByIndex(tri, right ? colIndex+1 : colIndex-1);
+            GetCellByIndex(tri, right ? colIndex+1 : colIndex-1);
 
     SetFocus(tdf);
 }
@@ -355,7 +355,7 @@ void HtmlTable::InsertColLeft(QWebElement &tdi)
 		return;
 	QWebElement tr = m_table.findFirst("tr");
 	while (!tr.isNull()) {
-		QWebElement td = GetColByIndex(tr, colIndex);
+        QWebElement td = GetCellByIndex(tr, colIndex);
 		if(!td.isNull())
 			td.prependOutside("<td>&nbsp;</td>");
 		tr = tr.nextSibling();
@@ -371,7 +371,7 @@ void HtmlTable::InsertColRight(QWebElement &tdi)
 		return;
 	QWebElement tr = m_table.findFirst("tr");
 	while (!tr.isNull()) {
-		QWebElement td = GetColByIndex(tr, colIndex);
+        QWebElement td = GetCellByIndex(tr, colIndex);
 		if (!td.isNull())
 			td.appendOutside("<td>&nbsp;</td>");
 		tr = tr.nextSibling();
@@ -464,7 +464,7 @@ void HtmlTable::InsertData(const QString &text, QWebElement &td)
 	// insert
 	QWebElement tr = td.parent();
 	for (auto &r : data) {
-		QWebElement td = GetColByIndex(tr, col);
+        QWebElement td = GetCellByIndex(tr, col);
 		for (auto &c : r) {
 			td.setPlainText(c);
 			td = td.nextSibling();
@@ -550,7 +550,7 @@ void HtmlTable::ClearColumn(QWebElement &td)
 	QWebElement tri = FirstTR();
 	int col = GetColIndex(td);
 	while(!tri.isNull()) {
-		QWebElement tdi = GetColByIndex(tri, col);
+        QWebElement tdi = GetCellByIndex(tri, col);
 		tdi.setPlainText("");
 		tri = tri.nextSibling();
 	}
@@ -566,3 +566,50 @@ void HtmlTable::ClearRow(QWebElement &td)
 	}
 }
 
+void HtmlTable::Sort(QWebElement &tds, bool desc)
+{
+    if (tds.isNull())
+        return;
+    int colIndex = GetColIndex(tds);
+    if (colIndex < 0)
+        return;
+    // 1. Сначала собираем все строки в массив (без извлечения)
+    QVector<QWebElement> rows;
+    QWebElement tr = m_table.findFirst("tr");
+    while (!tr.isNull()) {
+        rows.append(tr);
+        tr = tr.nextSibling();
+    }
+
+    // 2. Теперь извлекаем ВСЕ строки из документа
+    for (int i = 0; i < rows.size(); i++) {
+        rows[i].takeFromDocument();
+    }
+
+    // 3. Сортируем извлеченные строки
+    for (int i = 0; i < rows.size() - 1; i++) {
+        for (int j = i+1; j < rows.size(); j++) {
+            QWebElement td1 = GetCellByIndex(rows[i], colIndex);
+            QWebElement td2 = GetCellByIndex(rows[j], colIndex);
+
+            QString text1 = td1.toPlainText();
+            QString text2 = td2.toPlainText();
+
+            bool needSwap = (text1 > text2) ^ desc;
+
+            if (needSwap) {
+                auto a = rows[i];
+                rows[i] =rows[j];
+                rows[j] = a;
+            }
+        }
+    }
+
+    // 4. Вставляем отсортированные строки обратно
+    QWebElement tbody = m_table.findFirst("tbody");
+    QWebElement container = tbody.isNull() ? m_table : tbody;
+
+    for (int i = 0; i < rows.size(); i++) {
+        container.appendInside(rows[i]);
+    }
+}

@@ -47,6 +47,8 @@ public:
 	void ClearColumn(QWebElement &td);
 	void ClearRow(QWebElement &td);
 
+    void Sort(QWebElement &td, bool desc);
+
     void SetFocus(QWebElement &td);
 protected:
 	void Parse(const QString &text, QList<QStringList> &data);
@@ -57,7 +59,7 @@ protected:
 	int  GetRowIndex(QWebElement &td);
 	int  GetColIndex(QWebElement &td);
 
-	QWebElement GetColByIndex(QWebElement &tr, int ti);
+    QWebElement GetCellByIndex(QWebElement &tr, int ti);
 
 	QWebElement FirstTR();
 	QWebElement LastTR();
