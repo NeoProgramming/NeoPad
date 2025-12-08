@@ -290,6 +290,27 @@ void WebEditView::keyPressEvent(QKeyEvent * e)
 	// this is how our own hotkeys are implemented
 	int	key = e->key();
 	Qt::KeyboardModifiers m = e->modifiers();
+
+
+	if (key == Qt::Key_Minus && m == Qt::NoModifier) {
+		// Отменяем оригинальное событие минуса
+		e->accept();
+
+		// Создаем новое событие клавиши с длинным тире
+		QKeyEvent newEvent(
+			QEvent::KeyPress,
+			Qt::Key_unknown,  // Неизвестная клавиша
+			Qt::NoModifier,
+			QString(QChar(0x2014)) //QString("—")      // Сам текст длинного тире
+		);
+
+		// Отправляем новое событие
+		QApplication::sendEvent(this, &newEvent);
+		return;
+	}
+
+
+
 	if ((key == Qt::Key_Return) && (m & Qt::ControlModifier))
 		onEditOutside();
 	else if ((key == Qt::Key_Return) && (m == 0)) 
