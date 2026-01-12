@@ -292,21 +292,39 @@ void WebEditView::keyPressEvent(QKeyEvent * e)
 	Qt::KeyboardModifiers m = e->modifiers();
 
 
-	if (key == Qt::Key_Minus && m == Qt::NoModifier) {
-		// ќтмен€ем оригинальное событие минуса
-		e->accept();
+	if (key == Qt::Key_Minus) {
+		if (m == Qt::NoModifier) {
+			// ќтмен€ем оригинальное событие минуса
+			e->accept();
 
-		// —оздаем новое событие клавиши с длинным тире
-		QKeyEvent newEvent(
-			QEvent::KeyPress,
-			Qt::Key_unknown,  // Ќеизвестна€ клавиша
-			Qt::NoModifier,
-			QString(QChar(0x2014)) //QString("Ч")      // —ам текст длинного тире
-		);
+			// —оздаем новое событие клавиши с длинным тире
+			QKeyEvent newEvent(
+				QEvent::KeyPress,
+				Qt::Key_unknown,  // Ќеизвестна€ клавиша
+				Qt::NoModifier,
+				QString(QChar(0x2014)) //QString("Ч")      // —ам текст длинного тире
+			);
 
-		// ќтправл€ем новое событие
-		QApplication::sendEvent(this, &newEvent);
-		return;
+			// ќтправл€ем новое событие
+			QApplication::sendEvent(this, &newEvent);
+			return;
+		}
+		else if(m == Qt::AltModifier) {
+			// ќтмен€ем оригинальное событие минуса
+			e->accept();
+
+			// —оздаем новое событие клавиши с длинным тире
+			QKeyEvent newEvent(
+				QEvent::KeyPress,
+				Qt::Key_unknown,  // Ќеизвестна€ клавиша
+				Qt::NoModifier,
+				QString("-")      // —ам текст длинного тире
+			);
+
+			// ќтправл€ем новое событие
+			QApplication::sendEvent(this, &newEvent);
+			return;
+		}
 	}
 
 
@@ -626,11 +644,18 @@ void WebEditView::onEditPasteAsLWText()
 	text = text.replace("\r", "<p>");
 	text = text.replace("\n", "<p>");
 
-	//QRegularExpression regex("([.!?Е])(\\S)"); 
-	QRegularExpression regex("([.!?Е])(?![їФ\"\\p{Pf}])(\\S)");
-	// Ѕолее конкретное регул€рное выражение
-	//QRegularExpression regex("([.!?Е])(?![їФ\"')])(\\S)");
-	text = text.replace(regex, "\\1<p>\\2");
+	//QRegularExpression regex("([.!?Е])(?![їФ\"\\p{Pf}])(\\S)");
+	//QRegularExpression regex("([.!?Е]+[їФ\"\\p{Pf}]*)(?!\\s)(\\S)");
+	//QRegularExpression regex("([.!?Е]{1,3}(?:[їФ\"\\p{Pf}])*)(?![\\s\\n])(\\S)");
+	//QRegularExpression regex("((?:[.!?]|Е)(?:[.!?ЕїФ\"\\p{Pf}])*)(?![\\s\\n])(\\S)");
+	//QRegularExpression regex("((?:[.!?]|\\.\\.\\.)(?:[.!ЕїФ\"\\p{Pf}])*)(?![\\s\\n])(\\S)");
+	//QRegularExpression regex("((?:[.!?]|\\.\\.\\.|Е)(?:[.!ЕїФ\"\\p{Pf}])*)(?![\\s\\n])(\\S)");
+	//text = text.replace(regex, "\\1<p>\\2");
+
+	//QRegularExpression regex("([.!?Е\\p{P}]+)(?=\\p{L})");
+	//QRegularExpression regex("([.!?Е,:;\\])}\\p{Pf}]+)(?=\\p{L})");
+	QRegularExpression regex("([.!?Е,:;їФ\"')\\]}\\p{Pf}]+)(?=\\p{L})");
+	text = text.replace(regex, "\\1<p>");
 
 	InsertHtml(text);
 }

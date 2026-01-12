@@ -259,6 +259,19 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	ui.tableSymbols->horizontalHeader()->setDefaultSectionSize(30);
 	m_fontSymbols = ui.tableSymbols->font();
 	ui.tableSymbols->setContextMenuPolicy(Qt::CustomContextMenu);
+
+	// Голубой цвет для выделения без фокуса
+	QString styleSheet =
+		"QTreeWidget::item:selected:!active {"
+		"    background-color: #2196F3;"
+		"    color: #000000;"
+		"}"
+		"QTreeWidget::item:selected:active {"
+		"    background-color: palette(highlight);"
+		"    color: palette(highlightedtext);"
+		"}";
+	ui.treeContents->setStyleSheet(styleSheet);
+	//0A246A
 }
 
 void SlnPanel::setTabDoc(DocItem *doc)
