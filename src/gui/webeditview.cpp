@@ -654,7 +654,10 @@ void WebEditView::onEditPasteAsLWText()
 
 	//QRegularExpression regex("([.!?…\\p{P}]+)(?=\\p{L})");
 	//QRegularExpression regex("([.!?…,:;\\])}\\p{Pf}]+)(?=\\p{L})");
-	QRegularExpression regex("([.!?…,:;»”\"')\\]}\\p{Pf}]+)(?=\\p{L})");
+	//QRegularExpression regex("([.!?…,:;»”\"')\\]}\\p{Pf}]+)(?=\\p{L})");
+
+	//QRegularExpression regex("([.!?…]+(?:[»”\"')]?))(?=\\p{L}|—|–)");
+	QRegularExpression regex("([.!?…,:)\\]}]+)(?=\\p{L}|—|–)");
 	text = text.replace(regex, "\\1<p>");
 
 	InsertHtml(text);
