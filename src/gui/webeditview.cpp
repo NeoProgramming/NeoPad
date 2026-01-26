@@ -657,8 +657,24 @@ void WebEditView::onEditPasteAsLWText()
 	//QRegularExpression regex("([.!?Е,:;їФ\"')\\]}\\p{Pf}]+)(?=\\p{L})");
 
 	//QRegularExpression regex("([.!?Е]+(?:[їФ\"')]?))(?=\\p{L}|Ч|Ц)");
-	QRegularExpression regex("([.!?Е,:)\\]}]+)(?=\\p{L}|Ч|Ц)");
+
+	QString pattern = QString("([.!?%1,:]+)(?=\\p{L}|%2|%3|%4|%5)")
+		.arg(QChar(0x2026)).arg(QChar(0x002D)).arg(QChar(0x2010)).arg(QChar(0x2013)).arg(QChar(0x2014));
+	QRegularExpression regex(pattern);
 	text = text.replace(regex, "\\1<p>");
+
+/*
+	// 1. «наки препинани€, после которых идет буква
+	QRegularExpression regex1("([.!?Е,:]+)(?=\\p{L})");
+	text = text.replace(regex1, "\\1<p>");
+
+	QChar chars[] = { 0x002D , 0x2010 , 0x2013 , 0x2014 };
+	for (auto c : chars) {
+		QString pattern2 = QString("([.!?Е,:]+)(?=%1)").arg(c);
+		QRegularExpression regex2(pattern2);
+		text = text.replace(regex2, "\\1<p>");
+	}
+	*/
 
 	InsertHtml(text);
 }
