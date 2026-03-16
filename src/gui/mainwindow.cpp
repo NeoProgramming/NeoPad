@@ -819,6 +819,16 @@ void MainWindow::DoOpenDoc(DocItem* tpos, int di)
 	qApp->restoreOverrideCursor();
 }
 
+void MainWindow::DoCloseDocs(DocItem* mtPos, bool recursive, bool invert)
+{
+	// make unsaved list for filtered docs
+	// if they are exist then open 'save multiple' dlg
+	// if cancel then return
+	// else close filtered docs
+
+	// QMdiSubWindow *subwnd = FindTab(mtPos, di);
+}
+
 bool MainWindow::DoSelectDoc(DocItem* tpos, int bi)
 {
 	// open 'SelectDoc' dialog

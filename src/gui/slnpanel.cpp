@@ -1069,7 +1069,10 @@ void SlnPanel::onOpenFolderVmb()
 
 void SlnPanel::onCloseDocs(bool recursive, bool invert)
 {
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
 
+	mw->DoCloseDocs(item.doc, recursive, invert);
 }
 
 void SlnPanel::onOpenFolder(int bi)

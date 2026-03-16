@@ -110,6 +110,7 @@ private:
 	void DoQuickStart(int code);
 	bool DoPrjOpen(const QString& fpath);
 	void DoOpenDoc(DocItem* mtPos, int di);
+	void DoCloseDocs(DocItem* mtPos, bool recursive, bool invert);
 	bool DoSelectDoc(DocItem* tpos, int di);
 	void OpenDoc(DocItem* mtPos, int di);
 	void LoadToCurrentDoc(DocItem* mtPos, int di);
