@@ -1269,11 +1269,12 @@ void SlnPanel::onMoveItem()
     if (item.badDoc()) return;
 
     TopicChooser dlg(this, "Select new parent item");
-    if (dlg.DoModal(false, item.doc)) {
+    if (dlg.DoModal(false, theSln.recentTarget ? theSln.recentTarget : item.doc)) {
         if (!theSln.Move(item.doc, dlg.m_posSelected, NULL)) {
             QMessageBox::warning(this, "Move error", FailMsg, QMessageBox::Ok);
         }
         else {
+			theSln.recentTarget = dlg.m_posSelected;
             QTreeWidgetItem *qnpar = FindItem(ui.treeContents->topLevelItem(0), dlg.m_posSelected);
             if (qnpar) {
                 MoveItem(item.qitem, qnpar, 0);

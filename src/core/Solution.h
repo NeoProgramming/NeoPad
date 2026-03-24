@@ -19,7 +19,7 @@ class CSolution
 	: public Documents // temporary
 {
 public:
-
+	DocItem*    recentTarget = nullptr;
 	QString		m_sProgDir;		// directory with program and settings files
     QString		m_sPargPath;	// path to exe module (for display in 'about' dialog)
 	Numerator	m_fnum;			// file numbering
