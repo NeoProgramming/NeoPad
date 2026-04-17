@@ -759,6 +759,135 @@ static QString convertCodeBlocks(const QString &markdown)
 	return result;
 }
 
+///////////////////////////////////////////////////
+bool isAlignmentRow(const QStringList& row)
+{
+    if (row.isEmpty()) {
+        return false;
+    }
+
+    // Проверяем, состоит ли строка только из символов: |, :, -, пробелы
+    for (const QString& cell : row) {
+        for (int i = 0; i < cell.size(); ++i) {
+            QChar ch = cell[i];
+            if (ch != ':' && ch != '-' && ch != ' ') {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+QString convertTableToHtml(const QList<QStringList>& tableRows)
+{
+    if (tableRows.isEmpty()) {
+        return "";
+    }
+
+    // Первая строка - заголовки
+    QStringList headers = tableRows[0];
+
+    // Вторая строка - выравнивание (пропускаем её, т.к. форматирование не нужно)
+    bool hasAlignRow = tableRows.size() >= 2 && isAlignmentRow(tableRows[1]);
+    int dataStartIndex = hasAlignRow ? 2 : 1;
+
+    QString html = "<table>\n";
+
+    // Заголовок
+    html += "  <tr>\n";
+    for (const QString& header : headers) {
+        html += QString("    <th>%1</th>\n").arg(header);
+    }
+    html += "  </tr>\n";
+
+    // Данные
+    for (int i = dataStartIndex; i < tableRows.size(); ++i) {
+        const QStringList& row = tableRows[i];
+        html += "  <tr>\n";
+        for (const QString& cell : row) {
+            html += QString("    <td>%1</td>\n").arg(cell);
+        }
+        html += "  </tr>\n";
+    }
+
+    html += "</table>\n";
+    return html;
+}
+
+QStringList parseTableRowCells(const QString& row)
+{
+    QString trimmed = row.trimmed();
+    QStringList cells;
+
+    // Убираем первый и последний |
+    if (trimmed.startsWith('|')) {
+        trimmed = trimmed.mid(1);
+    }
+    if (trimmed.endsWith('|')) {
+        trimmed = trimmed.left(trimmed.length() - 1);
+    }
+
+    // Разбиваем по |
+    cells = trimmed.split('|');
+
+    // Очищаем пробелы по краям каждой ячейки
+    for (QString& cell : cells) {
+        cell = cell.trimmed();
+    }
+
+    return cells;
+}
+
+
+QString convertMarkdownTables(const QString& text)
+{
+    QStringList lines = text.split('\n');
+    QString result;
+    QList<QStringList> tableRows;
+    bool inTable = false;
+
+    for (int i = 0; i < lines.size(); ++i) {
+        QString line = lines[i];
+
+        // Проверяем, является ли строка частью таблицы (начинается с |)
+        bool isTableRow = line.trimmed().startsWith('|');
+
+        if (!inTable && isTableRow) {
+            // Начало таблицы
+            inTable = true;
+            tableRows.clear();
+            tableRows.append(parseTableRowCells(line));
+        }
+        else if (inTable && isTableRow) {
+            // Продолжение таблицы
+            tableRows.append(parseTableRowCells(line));
+        }
+        else if (inTable && !isTableRow) {
+            // Конец таблицы
+            result += convertTableToHtml(tableRows);
+            result += line + "\n";
+            inTable = false;
+        }
+        else {
+            // Обычный текст
+            result += line + "\n";
+        }
+    }
+
+    // Если таблица в конце файла
+    if (inTable) {
+        result += convertTableToHtml(tableRows);
+    }
+
+    return result;
+}
+
+
+
+
+
+
+
 void WebEditView::onEditPasteAsMarkdown()
 {
 	QClipboard *clipboard = QApplication::clipboard();
@@ -772,6 +901,9 @@ void WebEditView::onEditPasteAsMarkdown()
 	html = html.replace(QRegularExpression("^###\\s+(.+)$", QRegularExpression::MultilineOption), "<h3>\\1</h3>");
 	html = html.replace(QRegularExpression("^##\\s+(.+)$", QRegularExpression::MultilineOption), "<h2>\\1</h2>");
 	html = html.replace(QRegularExpression("^#\\s+(.+)$", QRegularExpression::MultilineOption), "<h1>\\1</h1>");
+
+    // Таблицы
+    html = convertMarkdownTables(html);
 
 	// Жирный текст
 	html = html.replace(QRegularExpression("\\*\\*(.*?)\\*\\*"), "<strong>\\1</strong>");
