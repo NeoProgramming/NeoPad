@@ -681,34 +681,111 @@ void WebEditView::onEditPasteAsLWText()
 
 static QString convertMarkdownLists(const QString &markdown)
 {
-	QRegularExpression listItemRegex("^\\*\\s+(.+)$");
-	QStringList lines = markdown.split("\n");
-	QString result;
-	QStringList currentList;
+    QStringList lines = markdown.split("\n");
+    QString result;
 
-	for (const QString &line : lines) {
-		QRegularExpressionMatch match = listItemRegex.match(line);
+    // Стек для хранения текущих списков (уровень -> тип списка)
+    QVector<QPair<int, QString>> listStack;
+    int prevIndent = -1;
+    QString prevType;
 
-		if (match.hasMatch()) {
-			// Найден элемент списка
-			currentList.append("<li>" + match.captured(1) + "</li>");
-		}
-		else {
-			// Не элемент списка - закрываем предыдущий список если он был
-			if (!currentList.isEmpty()) {
-				result += "<ul>\n" + currentList.join("\n") + "\n</ul>\n";
-				currentList.clear();
-			}
-			result += line + "\n";
-		}
-	}
+    for (const QString &line : lines) {
+        // Подсчитываем пробелы в начале строки
+        int spaces = 0;
+        while (spaces < line.length() && line[spaces] == ' ') {
+            spaces++;
+        }
 
-	// Закрываем последний список если он остался
-	if (!currentList.isEmpty()) {
-		result += "<ul>\n" + currentList.join("\n") + "\n</ul>\n";
-	}
+        QString trimmedLine = line.trimmed();
 
-	return result;
+        // Проверяем, является ли строка элементом списка
+        bool isUnorderedItem = false;
+        bool isOrderedItem = false;
+        QString itemContent;
+        int itemStartPos = 0;
+
+        if (trimmedLine.startsWith("* ")) {
+            isUnorderedItem = true;
+            itemContent = trimmedLine.mid(2);
+            itemStartPos = spaces + 2;
+        }
+        else if (trimmedLine.startsWith("- ")) {
+            isUnorderedItem = true;
+            itemContent = trimmedLine.mid(2);
+            itemStartPos = spaces + 2;
+        }
+        else if (trimmedLine.contains(QRegularExpression("^\\d+\\.\\s"))) {
+            isOrderedItem = true;
+            int dotPos = trimmedLine.indexOf('.');
+            itemContent = trimmedLine.mid(dotPos + 1).trimmed();
+            itemStartPos = spaces + dotPos + 2;
+        }
+
+        if (isUnorderedItem || isOrderedItem) {
+            QString itemType = isUnorderedItem ? "ul" : "ol";
+
+            // Если это первый элемент списка
+            if (prevIndent == -1) {
+                // Открываем первый список
+                result += QString("<%1>\n").arg(itemType);
+                listStack.append(qMakePair(spaces, itemType));
+            }
+            // Если отступ увеличился - открываем вложенный список
+            else if (spaces > prevIndent) {
+                result += QString("<%1>\n").arg(itemType);
+                listStack.append(qMakePair(spaces, itemType));
+            }
+            // Если отступ уменьшился - закрываем списки до нужного уровня
+            else if (spaces < prevIndent) {
+                while (!listStack.isEmpty() && listStack.last().first > spaces) {
+                    result += QString("</%1>\n").arg(listStack.last().second);
+                    listStack.pop_back();
+                }
+                // Проверяем, не изменился ли тип списка на том же уровне
+                if (!listStack.isEmpty() && listStack.last().first == spaces && listStack.last().second != itemType) {
+                    result += QString("</%1>\n").arg(listStack.last().second);
+                    listStack.pop_back();
+                    result += QString("<%1>\n").arg(itemType);
+                    listStack.append(qMakePair(spaces, itemType));
+                }
+                else if (listStack.isEmpty() || listStack.last().first < spaces) {
+                    result += QString("<%1>\n").arg(itemType);
+                    listStack.append(qMakePair(spaces, itemType));
+                }
+            }
+            // Если отступ тот же, но тип списка изменился
+            else if (spaces == prevIndent && !listStack.isEmpty() && listStack.last().second != itemType) {
+                result += QString("</%1>\n").arg(listStack.last().second);
+                listStack.pop_back();
+                result += QString("<%1>\n").arg(itemType);
+                listStack.append(qMakePair(spaces, itemType));
+            }
+
+            // Добавляем элемент списка
+            result += QString("  <li>%1</li>\n").arg(itemContent);
+
+            prevIndent = spaces;
+            prevType = itemType;
+        }
+        else {
+            // Не элемент списка - закрываем все открытые списки
+            while (!listStack.isEmpty()) {
+                result += QString("</%1>\n").arg(listStack.last().second);
+                listStack.pop_back();
+            }
+            result += line + "\n";
+            prevIndent = -1;
+            prevType.clear();
+        }
+    }
+
+    // Закрываем все оставшиеся открытые списки
+    while (!listStack.isEmpty()) {
+        result += QString("</%1>\n").arg(listStack.last().second);
+        listStack.pop_back();
+    }
+
+    return result;
 }
 
 static QString convertCodeBlocks(const QString &markdown) 
