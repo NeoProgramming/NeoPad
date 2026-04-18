@@ -959,11 +959,34 @@ QString convertMarkdownTables(const QString& text)
     return result;
 }
 
+static QString convertMarkdownParagraphs(const QString &markdown)
+{
+	QStringList lines = markdown.split("\n");
+	QString result;
+	QStringList paragraphLines;
 
+	for (const QString &line : lines) {
+		if (line.trimmed().isEmpty()) {
+			// Пустая строка - закрываем текущий параграф
+			if (!paragraphLines.isEmpty()) {
+				result += "<p>" + paragraphLines.join(" ") + "</p>\n";
+				paragraphLines.clear();
+			}
+			result += "\n"; // сохраняем пустую строку
+		}
+		else {
+			// Собираем строки параграфа
+			paragraphLines.append(line.trimmed());
+		}
+	}
 
+	// Последний параграф
+	if (!paragraphLines.isEmpty()) {
+		result += "<p>" + paragraphLines.join(" ") + "</p>\n";
+	}
 
-
-
+	return result;
+}
 
 void WebEditView::onEditPasteAsMarkdown()
 {
@@ -992,9 +1015,7 @@ void WebEditView::onEditPasteAsMarkdown()
 
 	// Списки
 	html = convertMarkdownLists(html);
-	//html = html.replace(QRegularExpression("^\\*\\s+(.+)$", QRegularExpression::MultilineOption), "<li>\\1</li>");
-	//html = html.replace(QRegularExpression("(<li>.*</li>)", QRegularExpression::DotMatchesEverythingOption), "<ul>\\1</ul>");
-
+	
 	// Ссылки
 	html = html.replace(QRegularExpression("\\[(.*?)\\]\\((.*?)\\)"), "<a href=\"$2\">$1</a>");
 
@@ -1009,6 +1030,9 @@ void WebEditView::onEditPasteAsMarkdown()
 
 	// Горизонтальные линии
 	html = html.replace(QRegularExpression("^---$", QRegularExpression::MultilineOption), "<hr>");
+
+	// Параграфы (после списков и таблиц, чтобы не разбивать их внутренние строки)
+	html = convertMarkdownParagraphs(html);
 
 	InsertHtml(html);
 }
