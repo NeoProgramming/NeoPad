@@ -20,6 +20,7 @@
 #include "../core/vmbsrv.h"
 #include "../core/ini.h"
 #include "../core/Cryptor.h"
+#include "../core/markdownparser.h"
 
 extern QTextCodec *codecUtf8;
 
@@ -788,53 +789,76 @@ static QString convertMarkdownLists(const QString &markdown)
     return result;
 }
 
-static QString convertCodeBlocks(const QString &markdown) 
+static QString convertCodeBlocks(const QString &markdown)
 {
-	QString result = markdown;
+    QString result;
+    QTextStream stream(const_cast<QString*>(&markdown), QIODevice::ReadOnly);
+    stream.setAutoDetectUnicode(true);
 
-	// Регулярное выражение для поиска блоков кода с обратными кавычками
-	QRegularExpression codeBlockRegex("```(\\w+)?\\n([\\s\\S]*?)\\n```");
-	QRegularExpressionMatchIterator it = codeBlockRegex.globalMatch(result);
+    bool insideCodeBlock = false;
+    QStringList codeBuffer;
+    QString line;
 
-	int offset = 0;
-	QList<QRegularExpressionMatch> matches;
+    while (!stream.atEnd()) {
+        line = stream.readLine();
 
-	// Сначала собираем все совпадения
-	while (it.hasNext()) {
-		matches.append(it.next());
-	}
+        // Сохраняем информацию о пустых строках
+        bool isEmptyLine = line.isEmpty();
+        QString trimmedLine = line.trimmed();
 
-	// Обрабатываем совпадения с конца к началу (чтобы не сбивать позиции)
-	for (int i = matches.size() - 1; i >= 0; --i) {
-		QRegularExpressionMatch match = matches[i];
-		QString lang = match.captured(1).trimmed();
-		QString code = match.captured(2);
+        // Начало блока кода
+        if (!insideCodeBlock && trimmedLine.startsWith("```")) {
+            insideCodeBlock = true;
+            codeBuffer.clear();
+            continue;
+        }
 
-		// Экранируем HTML-символы в коде
-		code.replace("&", "&amp;")
-			.replace("<", "&lt;")
-			.replace(">", "&gt;")
-			.replace("\"", "&quot;");
+        // Конец блока кода
+        if (insideCodeBlock && trimmedLine == "```") {
+            insideCodeBlock = false;
 
-		// Формируем HTML для блока кода
-		QString htmlCode;
-		if (lang.isEmpty()) {
-			htmlCode = QString("<pre><code>%1</code></pre>").arg(code);
-		}
-		else {
-			htmlCode = QString("<pre><code class=\"language-%1\">%2</code></pre>")
-				.arg(lang, code);
-		}
+            // Выводим блок кода
+            if (!codeBuffer.isEmpty()) {
+                result += "<pre>";
+                for (int i = 0; i < codeBuffer.size(); ++i) {
+                    if (i > 0) result += "\n";
+                    result += codeBuffer[i];
+                }
+                result += "</pre>\n";
+            }
+            continue;
+        }
 
-		// Заменяем блок кода в исходной строке
-		result.replace(match.capturedStart() + offset,
-			match.capturedLength(),
-			htmlCode);
-		offset += htmlCode.length() - match.capturedLength();
-	}
+        // Внутри блока кода
+        if (insideCodeBlock) {
+            codeBuffer.append(line);
+            continue;
+        }
 
-	return result;
+        // Обычный текст
+        result += line;
+
+        // Добавляем перенос строки, если это не последняя строка
+        if (!stream.atEnd()) {
+            result += "\n";
+        }
+    }
+
+    // Обработка незакрытого блока
+    if (insideCodeBlock && !codeBuffer.isEmpty()) {
+        result += "<pre>";
+        for (int i = 0; i < codeBuffer.size(); ++i) {
+            if (i > 0) result += "\n";
+            result += codeBuffer[i];
+        }
+        result += "</pre>";
+    }
+
+    return result;
 }
+
+
+
 
 ///////////////////////////////////////////////////
 bool isAlignmentRow(const QStringList& row)
@@ -991,8 +1015,12 @@ static QString convertMarkdownParagraphs(const QString &markdown)
 void WebEditView::onEditPasteAsMarkdown()
 {
 	QClipboard *clipboard = QApplication::clipboard();
-	QString html = clipboard->text();
-	html = html.toHtmlEscaped();
+    QString markdown = clipboard->text();
+
+    MarkdownParser parser;
+    QString html = parser.parse(markdown);
+
+/*	html = html.toHtmlEscaped();
 
 	// Заголовки
 	html = html.replace(QRegularExpression("^######\\s+(.+)$", QRegularExpression::MultilineOption), "<h6>\\1</h6>");
@@ -1023,7 +1051,7 @@ void WebEditView::onEditPasteAsMarkdown()
 	html = convertCodeBlocks(html);
 	
 	// Inline код
-	html = html.replace(QRegularExpression("`([^`]+)`"), "<code>\\1</code>");
+    html = html.replace(QRegularExpression("`([^`]+)`"), "<code>\\1</code>");
 
 	// Цитаты
 	html = html.replace(QRegularExpression("^>\\s+(.+)$", QRegularExpression::MultilineOption), "<blockquote>$1</blockquote>");
@@ -1033,7 +1061,7 @@ void WebEditView::onEditPasteAsMarkdown()
 
 	// Параграфы (после списков и таблиц, чтобы не разбивать их внутренние строки)
 	html = convertMarkdownParagraphs(html);
-
+*/
 	InsertHtml(html);
 }
 

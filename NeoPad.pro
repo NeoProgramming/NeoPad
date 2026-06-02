@@ -109,7 +109,8 @@ HEADERS += \
     ./src/service/tools.h \
     ./src/service/unicode.h \
     ./src/3rdparty/pugixml/pugixml.hpp \
-    ./src/3rdparty/pugixml/pugiconfig.hpp
+    ./src/3rdparty/pugixml/pugiconfig.hpp \
+    src/core/markdownparser.h
     
 SOURCES += \
     ./src/main.cpp \
@@ -162,7 +163,8 @@ SOURCES += \
     ./src/service/xini.cpp \
     ./src/service/cstr.cpp \
     ./src/service/pugitools.cpp \
-    ./src/3rdparty/pugixml/pugixml.cpp
+    ./src/3rdparty/pugixml/pugixml.cpp \
+    src/core/markdownparser.cpp
 
 RESOURCES += ./src/neopad.qrc
 
