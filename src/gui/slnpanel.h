@@ -88,6 +88,7 @@ private slots:
     void onOpenFolder(int bi);
 	void onOpenFolderVmb();
 	void onCloseDocs(bool recursive, bool invert);
+	void onSaveAsTxt(int bi);
 
     void onAddChildDoc();
 	void onAddSiblingDoc();

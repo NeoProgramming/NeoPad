@@ -36,3 +36,5 @@ void MoveItem(QTreeWidgetItem *item, QTreeWidgetItem *insparent, QTreeWidgetItem
 void SetCurrentItem(QTreeWidgetItem *item);
 
 QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos);
+
+QString htmlToText(const QString& html);

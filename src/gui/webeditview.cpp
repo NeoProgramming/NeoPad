@@ -1020,48 +1020,6 @@ void WebEditView::onEditPasteAsMarkdown()
     MarkdownParser parser;
     QString html = parser.parse(markdown);
 
-/*	html = html.toHtmlEscaped();
-
-	// Заголовки
-	html = html.replace(QRegularExpression("^######\\s+(.+)$", QRegularExpression::MultilineOption), "<h6>\\1</h6>");
-	html = html.replace(QRegularExpression("^#####\\s+(.+)$", QRegularExpression::MultilineOption), "<h5>\\1</h5>");
-	html = html.replace(QRegularExpression("^####\\s+(.+)$", QRegularExpression::MultilineOption), "<h4>\\1</h4>");
-	html = html.replace(QRegularExpression("^###\\s+(.+)$", QRegularExpression::MultilineOption), "<h3>\\1</h3>");
-	html = html.replace(QRegularExpression("^##\\s+(.+)$", QRegularExpression::MultilineOption), "<h2>\\1</h2>");
-	html = html.replace(QRegularExpression("^#\\s+(.+)$", QRegularExpression::MultilineOption), "<h1>\\1</h1>");
-
-    // Таблицы
-    html = convertMarkdownTables(html);
-
-	// Жирный текст
-	html = html.replace(QRegularExpression("\\*\\*(.*?)\\*\\*"), "<strong>\\1</strong>");
-	html = html.replace(QRegularExpression("__(.*?)__"), "<strong>\\1</strong>");
-
-	// Курсив
-	html = html.replace(QRegularExpression("\\*(.*?)\\*"), "<em>\\1</em>");
-	html = html.replace(QRegularExpression("_(.*?)_"), "<em>\\1</em>");
-
-	// Списки
-	html = convertMarkdownLists(html);
-	
-	// Ссылки
-	html = html.replace(QRegularExpression("\\[(.*?)\\]\\((.*?)\\)"), "<a href=\"$2\">$1</a>");
-
-	// Блоки кода
-	html = convertCodeBlocks(html);
-	
-	// Inline код
-    html = html.replace(QRegularExpression("`([^`]+)`"), "<code>\\1</code>");
-
-	// Цитаты
-	html = html.replace(QRegularExpression("^>\\s+(.+)$", QRegularExpression::MultilineOption), "<blockquote>$1</blockquote>");
-
-	// Горизонтальные линии
-	html = html.replace(QRegularExpression("^---$", QRegularExpression::MultilineOption), "<hr>");
-
-	// Параграфы (после списков и таблиц, чтобы не разбивать их внутренние строки)
-	html = convertMarkdownParagraphs(html);
-*/
 	InsertHtml(html);
 }
 

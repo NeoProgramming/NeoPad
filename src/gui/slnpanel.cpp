@@ -109,6 +109,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	MakeAction(tr("Open in External Browser"), submenuOpen0Ext, [this]() { onOpenInExtBrowser(0); });
 	MakeAction(tr("Open in External Text Editor"), submenuOpen0Ext, [this]() { onOpenInExtTextEditor(0); });
 	MakeAction(tr("Open Folder"), submenuOpen0Ext, [this]() { onOpenFolder(0); });
+	submenuOpen0Ext->addSeparator();
+	MakeAction(tr("Save as TXT"), submenuOpen0Ext, [this]() { onSaveAsTxt(0); });
 
 	// doc1
 	MakeAction(tr("Open in New Tab"), submenuOpen1Ext, [this]() { onOpenInNewTab(1); });
@@ -116,6 +118,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	MakeAction(tr("Open in External Browser"), submenuOpen1Ext, [this]() { onOpenInExtBrowser(1); });
 	MakeAction(tr("Open in External Text Editor"), submenuOpen1Ext, [this]() { onOpenInExtTextEditor(1); });
 	MakeAction(tr("Open Folder"), submenuOpen1Ext, [this]() { onOpenFolder(1); });
+	submenuOpen1Ext->addSeparator();
+	MakeAction(tr("Save as TXT"), submenuOpen1Ext, [this]() { onSaveAsTxt(1); });
 
 	// close
 	MakeAction(tr("This item"), submenuClose, [this]() { onCloseDocs(false, false); });
@@ -1073,6 +1077,48 @@ void SlnPanel::onCloseDocs(bool recursive, bool invert)
 	if (item.badDoc()) return;
 
 	mw->DoCloseDocs(item.doc, recursive, invert);
+}
+
+void SlnPanel::onSaveAsTxt(int bi)
+{
+	TREEITEM item = CurrItem();
+	if (item.badDoc()) return;
+
+	QString htmlPath = item.doc->GetDocAbsPath(bi);
+	if (!QFileInfo(htmlPath).isFile()) {
+		QMessageBox::warning(this, AppTitle, tr("Document %1 not found").arg(htmlPath), QMessageBox::Ok);
+		return;
+	}
+
+	QString savePath = QFileDialog::getSaveFileName(
+		this,
+		"Save as TXT",
+		"",
+		"Text files (*.txt);;All files (*.*)"
+	);
+	if (savePath.isEmpty()) {
+		return ;
+	}
+
+	QFile inputFile(htmlPath);
+	if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::warning(this, "Error", "File open error");
+		return;
+	}
+
+	QString html = QString::fromUtf8(inputFile.readAll());
+	inputFile.close();
+	
+	QFile outputFile(savePath);
+	if (!outputFile.open(QIODevice::WriteOnly)) 
+		return;
+
+	QTextDocument doc;
+	doc.setHtml(html);
+	QString plainText = doc.toPlainText();
+	plainText = plainText.replace("\n\n", "\n");
+	outputFile.write(plainText.toUtf8());
+	outputFile.close();
 }
 
 void SlnPanel::onOpenFolder(int bi)

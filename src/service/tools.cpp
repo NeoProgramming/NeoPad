@@ -8,6 +8,9 @@
 #include <QDateTime>
 #include <QTextCodec>
 #include <QMessageBox>
+#include <QTextDocument>
+#include <QTextStream>
+
 #include "../core/DocItem.h"
 
 extern QTextCodec *codecUtf8;
@@ -268,3 +271,15 @@ QTreeWidgetItem* FindItem(QTreeWidgetItem *par, DocItem* mtpos)
 	}
 	return 0;
 }
+
+QString htmlToText(const QString& html) 
+{
+	QTextDocument doc;
+	doc.setHtml(html);
+	return doc.toPlainText();
+}
+
+
+
+
+
