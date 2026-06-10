@@ -224,6 +224,7 @@
     <ClCompile Include="src\core\Pictograms.cpp" />
     <ClCompile Include="src\core\PrjStat.cpp" />
     <ClCompile Include="src\core\FavItem.cpp" />
+    <ClCompile Include="src\core\Settings.cpp" />
     <ClCompile Include="src\core\Snippets.cpp" />
     <ClCompile Include="src\core\Solution.cpp" />
     <ClCompile Include="src\core\vmbsrv.cpp" />
@@ -281,6 +282,7 @@
     <ClInclude Include="src\core\PrjStat.h" />
     <ClInclude Include="src\core\PrjTree.h" />
     <ClInclude Include="src\core\FavItem.h" />
+    <ClInclude Include="src\core\Settings.h" />
     <ClInclude Include="src\core\Snippets.h" />
     <ClInclude Include="src\core\Solution.h" />
     <ClInclude Include="src\core\TreeStatus.h" />

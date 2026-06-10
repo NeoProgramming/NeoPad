@@ -227,6 +227,9 @@
     <ClCompile Include="src\core\markdownparser.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\core\Settings.cpp">
+      <Filter>src\core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp">
@@ -326,6 +329,9 @@
       <Filter>src\core</Filter>
     </ClInclude>
     <ClInclude Include="src\core\markdownparser.h">
+      <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Settings.h">
       <Filter>src\core</Filter>
     </ClInclude>
   </ItemGroup>

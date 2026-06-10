@@ -7,6 +7,7 @@
 #include "../service/fail.h"
 #include "../service/unicode.h"
 
+#include "Settings.h"
 #include "Snippets.h"
 #include "vmbsrv.h"
 #include "Documents.h"

@@ -72,6 +72,7 @@ HEADERS += \
     ./src/core/Pictograms.h \
     ./src/core/PrjStat.h \
     ./src/core/PrjTree.h \
+	./src/core/Settings.h \
     ./src/core/Snippets.h \
     ./src/core/Solution.h \
     ./src/core/vmbsrv.h \
@@ -124,6 +125,7 @@ SOURCES += \
     ./src/core/ini.cpp \
     ./src/core/Pictograms.cpp \
     ./src/core/PrjStat.cpp \
+	./src/core/Settings.cpp \
     ./src/core/Snippets.cpp \
     ./src/core/Solution.cpp \
     ./src/core/vmbsrv.cpp \
