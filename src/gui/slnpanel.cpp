@@ -1093,12 +1093,13 @@ void SlnPanel::onSaveAsTxt(int bi)
 	QString savePath = QFileDialog::getSaveFileName(
 		this,
 		"Save as TXT",
-		"",
+		theSln.cfg.SaveAsPath,
 		"Text files (*.txt);;All files (*.*)"
 	);
 	if (savePath.isEmpty()) {
 		return ;
 	}
+	theSln.cfg.SaveAsPath = QDir(savePath).absolutePath();
 
 	QFile inputFile(htmlPath);
 	if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {

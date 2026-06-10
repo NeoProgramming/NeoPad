@@ -1,5 +1,6 @@
 #pragma once
 #include <QString>
+#include <QStringList>
 #include <QByteArray>
 
 #define SETTINGS_LIST	\
@@ -7,6 +8,7 @@
 	X(int,		DefItemStatus,  0)\
 	X(int,		OpenNewDoc,     0)\
 	X(QString,	CurrProjectPath,"")\
+	X(QString,	SaveAsPath,		"")\
 	X(int,		QSModeNew,		0)\
 	X(int,		AutoSavePages,	1)\
 	X(int,		LastImageAction,0)\
@@ -25,7 +27,7 @@
 	X(QString,	TitleRedef,		"")\
 	X(int,		CreateNewVmb,	0)\
 	X(int,		CreateNewDir,	0)\
-	X(QString,	RecentProjects,	"")\
+	X(QStringList,	RecentProjects,	QStringList())\
 	X(QString,	LastImageDir,	"")\
 	X(QString,	AppPassword,	"")\
 	X(QByteArray, WinGeometry,	QVariant())\
@@ -33,7 +35,9 @@
 
 struct Settings
 {
+	QString m_dir;
 public:
+	void setDir(const QString &dir);
 	void loadSettings();
 	void saveSettings();
 public:

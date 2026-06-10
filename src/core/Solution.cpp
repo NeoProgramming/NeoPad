@@ -41,8 +41,37 @@ CSolution::~CSolution(void)
 {
 }
 
+// temporary
+template<typename TTo, typename TFrom>
+void Assign(TTo &to, const TFrom &from)
+{
+	to = from;
+}
+template<>
+void Assign<QString, std::string>(QString &to, const std::string &from)
+{
+	to = QString::fromStdString(from);
+}
+template<>
+void Assign<QByteArray, std::string>(QByteArray &to, const std::string &from)
+{
+	to = from.c_str();
+}
+template<>
+void Assign<QStringList, std::list<std::string>>(QStringList &to, const std::list<std::string> &from)
+{
+	to.clear();
+	to.reserve(static_cast<int>(from.size()));
+	for (const auto &str : from) {
+		to.append(QString::fromStdString(str));
+	}
+}
+
 void CSolution::loadSettings()
 {
+	cfg.setDir(m_sProgDir);
+	cfg.loadSettings();
+
 	XIni ini;
 	ini.Load(codecUtf8->fromUnicode(m_sProgDir + "/settings.xml"), INI::Main);
 
@@ -55,12 +84,18 @@ void CSolution::loadSettings()
 		INI::HtmEditPath = "notepad.exe";
 	if (IsBlank(INI::ExplorePath.c_str()))
 		INI::ExplorePath = "explorer";
+
+#define X(type, var, def) Assign(cfg.var, INI::var);
+//	SETTINGS_LIST
+#undef X
 }
 
 void CSolution::saveSettings()
 {
 	XIni ini;
 	ini.Save(codecUtf8->fromUnicode(m_sProgDir + "/settings.xml"), INI::Main);
+
+	cfg.saveSettings();
 }
 
 void CSolution::addProjectToRecent(const QString &path)

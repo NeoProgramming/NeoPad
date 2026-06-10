@@ -11,9 +11,17 @@ void getValue(const QVariant &v, T &x)
 	x = v.value<T>();
 }
 
+void Settings::setDir(const QString &dir)
+{
+	m_dir = dir;
+	QChar ch = m_dir[m_dir.count() - 1];
+	if (ch != '\\' && ch != '/')
+		m_dir += '/';
+}
+
 void Settings::loadSettings()
 {
-	QSettings settings(INI_FILE, QSettings::IniFormat);
+	QSettings settings(m_dir + INI_FILE, QSettings::IniFormat);
 	
 #define X(type, var, def)	getValue(settings.value(#var, def), var);
 	SETTINGS_LIST
@@ -25,7 +33,7 @@ void Settings::loadSettings()
 
 void Settings::saveSettings()
 {
-	QSettings settings(INI_FILE, QSettings::IniFormat);
+	QSettings settings(m_dir + INI_FILE, QSettings::IniFormat);
 
 #define X(type, var, def)	settings.setValue(#var, var);
 	SETTINGS_LIST
