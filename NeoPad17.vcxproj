@@ -241,7 +241,6 @@
     <ClCompile Include="src\gui\htmlimage.cpp" />
     <ClCompile Include="src\gui\htmltable.cpp" />
     <ClCompile Include="src\gui\imageproperty.cpp" />
-    <ClCompile Include="src\core\ini.cpp" />
     <ClCompile Include="src\gui\itemproperty.cpp" />
     <ClCompile Include="src\gui\linkproperty.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -265,7 +264,6 @@
     <ClCompile Include="src\gui\topicchooser.cpp" />
     <ClCompile Include="src\gui\webeditview.cpp" />
     <ClCompile Include="src\service\unicode.cpp" />
-    <ClCompile Include="src\service\xini.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp" />
@@ -293,7 +291,6 @@
     <QtMoc Include="src\gui\pictogramdlg.h" />
     <ClInclude Include="src\service\search.h" />
     <ClInclude Include="src\service\unicode.h" />
-    <ClInclude Include="src\service\xini.h" />
     <QtMoc Include="src\gui\existitemdlg.h">
     </QtMoc>
     <QtMoc Include="src\gui\passworddlg.h" />
@@ -303,7 +300,6 @@
     <ClInclude Include="src\gui\htmltable.h" />
     <QtMoc Include="src\gui\imageproperty.h">
     </QtMoc>
-    <ClInclude Include="src\core\ini.h" />
     <QtMoc Include="src\gui\itemproperty.h">
     </QtMoc>
     <QtMoc Include="src\gui\linkproperty.h">

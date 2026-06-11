@@ -74,9 +74,6 @@
     <ClCompile Include="src\service\fail.cpp">
       <Filter>src\service</Filter>
     </ClCompile>
-    <ClCompile Include="src\core\ini.cpp">
-      <Filter>src\core</Filter>
-    </ClCompile>
     <ClCompile Include="src\gui\mainwindow.cpp">
       <Filter>src\gui</Filter>
     </ClCompile>
@@ -93,9 +90,6 @@
       <Filter>src\gui</Filter>
     </ClCompile>
     <ClCompile Include="src\service\pugitools.cpp">
-      <Filter>src\service</Filter>
-    </ClCompile>
-    <ClCompile Include="src\service\xini.cpp">
       <Filter>src\service</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
@@ -244,9 +238,6 @@
     <ClInclude Include="src\core\Cryptor.h">
       <Filter>src\core</Filter>
     </ClInclude>
-    <ClInclude Include="src\core\ini.h">
-      <Filter>src\core</Filter>
-    </ClInclude>
     <ClInclude Include="src\core\PrjStat.h">
       <Filter>src\core</Filter>
     </ClInclude>
@@ -275,9 +266,6 @@
       <Filter>src\service</Filter>
     </ClInclude>
     <ClInclude Include="src\service\pugitools.h">
-      <Filter>src\service</Filter>
-    </ClInclude>
-    <ClInclude Include="src\service\xini.h">
       <Filter>src\service</Filter>
     </ClInclude>
     <ClInclude Include="src\service\search.h">
