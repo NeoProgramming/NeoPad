@@ -8,8 +8,7 @@
 	X(int,		DefItemStatus,  0)\
 	X(int,		OpenNewDoc,     0)\
 	X(QString,	CurrProjectPath,"")\
-	X(QString,	SaveAsPath,		"")\
-	X(int,		QSModeNew,		0)\
+    X(int,		QSModeNew,		0)\
 	X(int,		AutoSavePages,	1)\
 	X(int,		LastImageAction,0)\
 	X(int,		IconSize,		16)\
@@ -31,7 +30,8 @@
 	X(QString,	LastImageDir,	"")\
 	X(QString,	AppPassword,	"")\
 	X(QByteArray, WinGeometry,	QVariant())\
-	X(QByteArray, WinState,		QVariant())
+    X(QByteArray, WinState,		QVariant())\
+    X(QString,	SaveAsPath,		"")
 
 struct Settings
 {
@@ -45,4 +45,6 @@ public:
 	SETTINGS_LIST
 #undef X
 };
+
+extern Settings    INI;
 

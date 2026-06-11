@@ -68,11 +68,11 @@ HEADERS += \
     ./src/core/Documents.h \
     ./src/core/FavItem.h \
     ./src/core/Favorites.h \
-    ./src/core/ini.h \
+    ./src/core/Settings.h \
     ./src/core/Pictograms.h \
     ./src/core/PrjStat.h \
     ./src/core/PrjTree.h \
-	./src/core/Settings.h \
+    ./src/core/Settings.h \
     ./src/core/Snippets.h \
     ./src/core/Solution.h \
     ./src/core/vmbsrv.h \
@@ -122,10 +122,9 @@ SOURCES += \
     ./src/core/Documents.cpp \
     ./src/core/FavItem.cpp \
     ./src/core/Favorites.cpp \
-    ./src/core/ini.cpp \
     ./src/core/Pictograms.cpp \
     ./src/core/PrjStat.cpp \
-	./src/core/Settings.cpp \
+    ./src/core/Settings.cpp \
     ./src/core/Snippets.cpp \
     ./src/core/Solution.cpp \
     ./src/core/vmbsrv.cpp \
@@ -162,7 +161,6 @@ SOURCES += \
     ./src/service/sys.cpp \
     ./src/service/tools.cpp \
     ./src/service/unicode.cpp \
-    ./src/service/xini.cpp \
     ./src/service/cstr.cpp \
     ./src/service/pugitools.cpp \
     ./src/3rdparty/pugixml/pugixml.cpp \

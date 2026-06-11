@@ -3,6 +3,7 @@
 
 static const char INI_FILE[] = "neopad.ini";
 
+Settings    INI;
 
 // Qt does not QVariant.getValue() method
 template<typename T>

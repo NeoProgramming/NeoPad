@@ -2,7 +2,7 @@
 #include <QDebug>
 #include "Favorites.h"
 #include "Solution.h"
-#include "ini.h"
+#include "Settings.h"
 
 extern QTextCodec *codecUtf8;
 
@@ -122,7 +122,7 @@ void Favorites::ChangeRef(FavItem* item, DocItem *ref)
 void Favorites::HandleChanges()
 {
     theSln.Favs.m_bModify = true;
-	if (INI::AutoSavePages)
+	if (INI.AutoSavePages)
 	{
         theSln.SaveSubBase(theSln.GetRoot(), false);
 	}

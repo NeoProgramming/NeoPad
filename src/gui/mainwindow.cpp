@@ -33,7 +33,7 @@
 #include "multieditdlg.h"
 #include "passworddlg.h"
 
-#include "../core/ini.h"
+#include "../core/Settings.h"
 #include "../core/vmbsrv.h"
 #include "../core/PrjStat.h"
 #include "../core/Cryptor.h"
@@ -66,7 +66,7 @@ MainWindow::MainWindow()
 #endif
     m_doCommit = true;
 
-    QSize tbSize = QSize( INI::IconSize, INI::IconSize );
+    QSize tbSize = QSize( INI.IconSize, INI.IconSize );
     ui.toolBarEdit->setIconSize( tbSize );
     ui.toolBarInsert->setIconSize( tbSize );
     ui.toolBarPara->setIconSize( tbSize );
@@ -124,8 +124,8 @@ MainWindow::MainWindow()
     // read geometry configuration
 	loadSettings();
 
-    if(!IsBlank(INI::TitleRedef.c_str()))
-        setWindowTitle(codecUtf8->toUnicode(INI::TitleRedef.c_str()));
+    if(!IsBlank(INI.TitleRedef))
+        setWindowTitle(INI.TitleRedef);
 	SetAutoRaiseToolBar(ui.toolBarEdit, false);
 	SetAutoRaiseToolBar(ui.toolBarInsert, false);
 	SetAutoRaiseToolBar(ui.toolBarPara, false);
@@ -336,12 +336,12 @@ void MainWindow::closeEvent(QCloseEvent *e)
 		saveSettings();
 		if(theSln.m_bModify && !m_doCommit)
 		{
-			QString bdir = QDir(U16(INI::CurrProjectPath)).path();
-			if(!IsBlank(INI::CommitPath.c_str()))
-				StartExternalApplication(codecUtf8->toUnicode(INI::CommitPath.c_str()), "", bdir);
+            QString bdir = QDir(INI.CurrProjectPath).path();
+            if(!IsBlank(INI.CommitPath))
+                StartExternalApplication(INI.CommitPath, "", bdir);
 			QCoreApplication::processEvents();
-			if(!IsBlank(INI::SyncPath.c_str()))
-				StartExternalApplication(codecUtf8->toUnicode(INI::SyncPath.c_str()), "", bdir);
+            if(!IsBlank(INI.SyncPath))
+                StartExternalApplication(INI.SyncPath, "", bdir);
 		}
 		
 		e->accept();
@@ -465,11 +465,11 @@ void MainWindow::saveSettings()
 	QByteArray ba, ha;
 	ba = saveGeometry();
 	ha = ba.toHex();
-	INI::WinGeometry = ha.data();
+	INI.WinGeometry = ha.data();
 
 	ba = saveState();
 	ha = ba.toHex();
-	INI::WinState = ha.data();
+	INI.WinState = ha.data();
 
 	theUnicode.Recent.Save(theSln.m_sProgDir + "/js/Recent.txt");
 	theUnicode.Quick.Save(theSln.m_sProgDir + "/js/Quick.txt");
@@ -478,21 +478,21 @@ void MainWindow::saveSettings()
 void MainWindow::loadSettings()
 {
 	QByteArray ba, ha;
-	ha = INI::WinGeometry.c_str();
+    ha = INI.WinGeometry;
 	ba = QByteArray::fromHex(ha);
 	restoreGeometry( ba );
-	ha = INI::WinState.c_str();
+    ha = INI.WinState;
 	ba = QByteArray::fromHex(ha);
 	restoreState(ba);
 }
 
 void MainWindow::loadScripts()
 {
-     if(IsBlank(INI::ScriptsDir.c_str())) {
+     if(IsBlank(INI.ScriptsDir)) {
         m_jsPath = theSln.m_sProgDir + "/js";
     }
     else {
-        m_jsPath = codecUtf8->toUnicode(INI::ScriptsDir.c_str());
+        m_jsPath = INI.ScriptsDir;
         if(QDir(m_jsPath).isRelative())
             m_jsPath = theSln.m_sProgDir + "/" + m_jsPath;
     }
@@ -731,7 +731,7 @@ void MainWindow::onProjectQuickStart()
 		if (!DoSaveBeforeClosing())
 			return;		// cancel saving
 		QuitProject();	// save tree, tabs, close all windows
-		DoQuickStart(INI::QSModeNew);
+		DoQuickStart(INI.QSModeNew);
 	}
 }
 
@@ -760,7 +760,7 @@ void MainWindow::DoQuickStart(int code)
 	switch(code)
 	{
 	case 0:
-		DoPrjOpen(U16(INI::CurrProjectPath));
+        DoPrjOpen(INI.CurrProjectPath);
 		break;
 	case 1:
 		onProjectNew();
@@ -864,7 +864,7 @@ void MainWindow::OpenDoc(DocItem* mtPos, int bi)
 {
 	if(!OpenExistingDoc(mtPos, bi))
 	{
-		if(!INI::OutlinerMode)
+		if(!INI.OutlinerMode)
 			CreateNewDoc(mtPos, bi);
 		else
 			LoadToCurrentDoc(mtPos, bi);
@@ -963,7 +963,7 @@ void MainWindow::onZoomChange(int percent)
 
 void MainWindow::onToolsEditScript()
 {
-	QString cmd = U16(INI::HtmEditPath);
+    QString cmd = INI.HtmEditPath;
 	if (!QFileInfo(m_jsPath).isFile())
 		QMessageBox::warning(this, "NeoPad", tr("neopad.js file not found!"));
 	else
@@ -1057,9 +1057,9 @@ void MainWindow::onTileSubWindowsVertically()
 
 void MainWindow::onProjectPrintPdfBundle()
 {
-	if (!QFileInfo(U16(INI::PdfgenPath)).isFile())
+    if (!QFileInfo(INI.PdfgenPath).isFile())
 	{
-		QMessageBox::warning(this, tr("Error"), tr("pdf generation software (wkhtmltopdf) not found; path: ") + U16(INI::PdfgenPath));
+        QMessageBox::warning(this, tr("Error"), tr("pdf generation software (wkhtmltopdf) not found; path: ") + INI.PdfgenPath);
 		return;
 	}
 
@@ -1092,7 +1092,7 @@ void MainWindow::onProjectPrintPdfBundle()
 
 	// make pdf
 	args << fileName;
-	int c = StartExternalApplication(U16(INI::PdfgenPath), args, "");
+    int c = StartExternalApplication(INI.PdfgenPath, args, "");
 	
 	this->setCursor(Qt::ArrowCursor);
 
@@ -1104,9 +1104,9 @@ void MainWindow::onProjectPrintPdfBundle()
 
 void MainWindow::onProjectPrintPdfFiles()
 {
-	if (!QFileInfo(codecUtf8->toUnicode(INI::PdfgenPath.c_str())).isFile())
+    if (!QFileInfo(INI.PdfgenPath).isFile())
 	{
-		QMessageBox::warning(this, tr("Error"), tr("pdf generation software (wkhtmltopdf) not found; path: ") + U16(INI::PdfgenPath));
+        QMessageBox::warning(this, tr("Error"), tr("pdf generation software (wkhtmltopdf) not found; path: ") + INI.PdfgenPath);
 		return;
 	}
 
@@ -1149,7 +1149,7 @@ void MainWindow::onProjectPrintPdfFiles()
 		QStringList sl;
 		sl.push_back(*i);
 		sl.push_back(fpath);
-		int c = StartExternalApplication(U16(INI::PdfgenPath), sl, "");
+        int c = StartExternalApplication(INI.PdfgenPath, sl, "");
 		if (!c) ok++;
 		else {
 			er++;
@@ -1251,7 +1251,7 @@ void MainWindow::GenContents(int bi)
 void MainWindow::EditCss(int bi)
 {
 	QString cssPath = theSln.GetCssAbsPath(bi);
-	QString cmd = U16(INI::HtmEditPath);
+    QString cmd = INI.HtmEditPath;
 	if (!QFileInfo(cssPath).exists())
 		QMessageBox::warning(this, "NeoPad", tr("CSS file not found!"));
 	else

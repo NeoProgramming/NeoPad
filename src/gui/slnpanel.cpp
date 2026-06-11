@@ -16,7 +16,7 @@
 #include <limits.h>
 
 #include "../core/vmbsrv.h"
-#include "../core/ini.h"
+#include "../core/Settings.h"
 #include "../service/tools.h"
 #include "../service/search.h"
 
@@ -29,7 +29,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	ui.setupUi(this);
 
 	QString fmt;
-	fmt.sprintf("background-color: #%06X; alternate-background-color: #%06X", INI::BackColor1, INI::BackColor2);
+    fmt.sprintf("background-color: #%06X; alternate-background-color: #%06X", INI.BackColor1, INI.BackColor2);
 	ui.treeContents->setStyleSheet(fmt);//"background-color: #FFC782; alternate-background-color: #F0CF72");
 			
 	initTree(ui.treeContents);
@@ -1020,17 +1020,17 @@ void SlnPanel::onOpenInNewTab(int di)
 
 void SlnPanel::onOpenInExtBrowser(int di)
 {
-	OpenInExtProgram(U16(INI::BrowserPath), di);
+    OpenInExtProgram(INI.BrowserPath, di);
 }
 
 void SlnPanel::onOpenInExtDocEditor(int di)
 {
-	OpenInExtProgram(U16(INI::VisEditPath), di);
+    OpenInExtProgram(INI.VisEditPath, di);
 }
 
 void SlnPanel::onOpenInExtTextEditor(int di)
 {
-	OpenInExtProgram(U16(INI::HtmEditPath), di);
+    OpenInExtProgram(INI.HtmEditPath, di);
 }
 
 void SlnPanel::onDeleteDoc()
@@ -1063,7 +1063,7 @@ void SlnPanel::onOpenVmbaseInExtTextEditor()
 	if (!QFileInfo(path).isFile())
 		QMessageBox::warning(this, AppTitle, tr("VMBase file not found"), QMessageBox::Ok);
 	else
-		OpenInExternalApplication(this, codecUtf8->toUnicode(INI::HtmEditPath.c_str()), path);
+        OpenInExternalApplication(this, INI.HtmEditPath, path);
 }
 
 void SlnPanel::onOpenFolderVmb()
@@ -1093,13 +1093,13 @@ void SlnPanel::onSaveAsTxt(int bi)
 	QString savePath = QFileDialog::getSaveFileName(
 		this,
 		"Save as TXT",
-		theSln.cfg.SaveAsPath + "/" + item.doc->GetId(),
+        INI.SaveAsPath + "/" + item.doc->GetId(),
 		"Text files (*.txt);;All files (*.*)"
 	);
 	if (savePath.isEmpty()) {
 		return ;
 	}
-	theSln.cfg.SaveAsPath = QFileInfo(savePath).path();
+    INI.SaveAsPath = QFileInfo(savePath).path();
 
 	QFile inputFile(htmlPath);
 	if (!inputFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -1124,7 +1124,7 @@ void SlnPanel::onSaveAsTxt(int bi)
 
 void SlnPanel::onOpenFolder(int bi)
 {
-	if (INI::ExplorePath.empty()) {
+    if (INI.ExplorePath.isEmpty()) {
 		QMessageBox::warning(this, "Error", "ExplorePath is not set");
 		return;
 	}
@@ -1136,7 +1136,7 @@ void SlnPanel::onOpenFolder(int bi)
 	path += "/";
 	path = QDir::toNativeSeparators(path);
 	if (QFileInfo(path).exists())
-		OpenInExternalApplication(this, U16(INI::ExplorePath), path);
+        OpenInExternalApplication(this, INI.ExplorePath, path);
 	else
 		QMessageBox::warning(this, "Warning", "Path is not exist\r\n" + path);
 }
@@ -1162,8 +1162,8 @@ void SlnPanel::onAddChildDoc()
 	// insert the blank into the tree
 	NewItemDlg dlg(this);
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
-    dlg.m_open = INI::OpenNewDoc;
-	dlg.m_status = INI::DefItemStatus;
+    dlg.m_open = INI.OpenNewDoc;
+    dlg.m_status = INI.DefItemStatus;
 
     TREEITEM item = CurrItem();
     if(item.badDoc()) return;
@@ -1172,8 +1172,8 @@ void SlnPanel::onAddChildDoc()
     QTreeWidgetItem *nqitem = AddTreeItem(item.qitem, nullptr, dlg.m_title, GetTreeItemIcon(ETreeStatus::TS_UNREADY));
 
 	if (dlg.DoModal() == QDialog::Accepted) {
-		INI::OpenNewDoc = dlg.m_open;
-		INI::DefItemStatus = dlg.m_status;
+        INI.OpenNewDoc = dlg.m_open;
+        INI.DefItemStatus = dlg.m_status;
 
 		// ok - insert the element into the base and connect the workpiece
         DocItem* tpNew = theSln.AddItem(item.doc, nullptr, dlg.m_title, dlg.m_id);
@@ -1198,8 +1198,8 @@ void SlnPanel::onAddSiblingDoc()
 	// insert a new item after the given one
 	NewItemDlg dlg(this);
 	dlg.m_title = dlg.m_id = theSln.m_fnum.GenNewName("doc");
-    dlg.m_open = INI::OpenNewDoc;
-	dlg.m_status = INI::DefItemStatus;
+    dlg.m_open = INI.OpenNewDoc;
+    dlg.m_status = INI.DefItemStatus;
 
     TREEITEM item = CurrItem();
     if(item.badDoc() || !item.doc->parent || item.fav) return;
@@ -1208,8 +1208,8 @@ void SlnPanel::onAddSiblingDoc()
     QTreeWidgetItem *nqitem = AddTreeItem(item.qitem->parent(), item.qitem, dlg.m_title, GetTreeItemIcon(ETreeStatus::TS_UNREADY));
 		
 	if (dlg.DoModal() == QDialog::Accepted) {
-		INI::OpenNewDoc = dlg.m_open;
-		INI::DefItemStatus = dlg.m_status;
+        INI.OpenNewDoc = dlg.m_open;
+        INI.DefItemStatus = dlg.m_status;
 
 		// ok - insert the element into the base and connect the workpiece
         DocItem* tpNew = theSln.AddItem(item.doc->parent, item.doc, dlg.m_title, dlg.m_id);

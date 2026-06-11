@@ -7,7 +7,7 @@
 #include <QMenu>
 
 #include "../core/Solution.h"
-#include "../core/ini.h"
+#include "../core/Settings.h"
 #include "../service/tools.h"
 
 extern QTextCodec *codecUtf8;

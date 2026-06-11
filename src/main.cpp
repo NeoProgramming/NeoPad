@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #include "core/Solution.h"
-#include "core/ini.h"
+#include "core/Settings.h"
 
 QTextCodec *codecUtf8 = 0;
 
@@ -18,7 +18,7 @@ int main( int argc, char ** argv )
 {
     Q_INIT_RESOURCE(neopad); //Initialize the resources specified by the .qrc file
     
-    INI::AppPassword = "1122"; // default
+    INI.AppPassword = "1122"; // default
 
     QApplication a(argc, argv, true);
     a.setOrganizationName("NeoProgramming");
@@ -38,7 +38,7 @@ int main( int argc, char ** argv )
 
     bool ok = true;
 	int appExec = 0;
-    QString psw, desired_psw = INI::AppPassword.c_str();
+    QString psw, desired_psw = INI.AppPassword;
     if(desired_psw != "")
         psw = QInputDialog::getText(NULL, "Input PIN",  "PIN:", QLineEdit::Password, "", &ok);
 

@@ -1,6 +1,6 @@
 #include <QFileDialog>
 #include <QMessageBox>
-#include "../core/ini.h"
+#include "../core/Settings.h"
 #include "imageproperty.h"
 #include "../service/tools.h"
 
@@ -101,14 +101,14 @@ void ImageProperties::onOverview()
 {
 	m_fpath = ui.lineFPath->text();
 	if (m_fpath.isEmpty())
-		m_fpath = INI::LastImageDir.c_str();
+        m_fpath = INI.LastImageDir;
 	m_fpath = QFileDialog::getOpenFileName(this, tr("Load Image..."),
 		m_fpath,
 		tr("Images (*.png *.jpg *.gif);;All Files (*)"));
 	if(!m_fpath.isEmpty())
 	{
 		ui.lineFPath->setText(m_fpath);
-        INI::LastImageDir = U8(QDir(m_fpath).path());
+        INI.LastImageDir = QDir(m_fpath).path();
 	}
 }
 
@@ -156,8 +156,8 @@ void ImageProperties::onEditImage()
 {
 	m_fpath = ui.lineFPath->text();
 	if (QFileInfo(m_fpath).isAbsolute())
-		OpenInExternalApplication(this, U16(INI::ImgEditPath), m_fpath);
+        OpenInExternalApplication(this, INI.ImgEditPath, m_fpath);
 	else
-		OpenInExternalApplication(this, U16(INI::ImgEditPath), m_adir + "/" + m_fpath);
+        OpenInExternalApplication(this, INI.ImgEditPath, m_adir + "/" + m_fpath);
 }
 

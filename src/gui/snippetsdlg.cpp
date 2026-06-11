@@ -3,7 +3,7 @@
 #include <QMessageBox>
 
 #include "../core/Solution.h"
-#include "../core/ini.h"
+#include "../core/Settings.h"
 #include "../service/tools.h"
 
 extern QTextCodec *codecUtf8;
@@ -58,7 +58,7 @@ void SnippetsDlg::onEdit()
 	if(item)
 	{
 		QString *path = item->data(Qt::UserRole).value<QString *>();
-		QString  cmd = codecUtf8->toUnicode(INI::HtmEditPath.c_str());
+        QString  cmd = INI.HtmEditPath;
 		OpenInExternalApplication(this, cmd, *path);
 	}
 }

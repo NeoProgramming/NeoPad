@@ -18,7 +18,7 @@
 
 #include "../service/tools.h"
 #include "../core/vmbsrv.h"
-#include "../core/ini.h"
+#include "../core/Settings.h"
 #include "../core/Cryptor.h"
 #include "../core/markdownparser.h"
 
@@ -295,34 +295,34 @@ void WebEditView::keyPressEvent(QKeyEvent * e)
 
 	if (key == Qt::Key_Minus) {
 		if (m == Qt::NoModifier) {
-			// Отменяем оригинальное событие минуса
+            // Cancel the original minus event
 			e->accept();
 
-			// Создаем новое событие клавиши с длинным тире
+            // Create a new em dash key event
 			QKeyEvent newEvent(
 				QEvent::KeyPress,
-				Qt::Key_unknown,  // Неизвестная клавиша
+                Qt::Key_unknown,  // Unknown key
 				Qt::NoModifier,
-				QString(QChar(0x2014)) //QString("—")      // Сам текст длинного тире
+                QString(QChar(0x2014)) //QString("—")      // The text itself is an em dash
 			);
 
-			// Отправляем новое событие
+            // Sending a new event
 			QApplication::sendEvent(this, &newEvent);
 			return;
 		}
 		else if(m == Qt::AltModifier) {
-			// Отменяем оригинальное событие минуса
+            // Cancel the original minus event
 			e->accept();
 
-			// Создаем новое событие клавиши с длинным тире
+            // Create a new em dash key event
 			QKeyEvent newEvent(
 				QEvent::KeyPress,
-				Qt::Key_unknown,  // Неизвестная клавиша
+                Qt::Key_unknown,
 				Qt::NoModifier,
-				QString("-")      // Сам текст длинного тире
+                QString("-")
 			);
 
-			// Отправляем новое событие
+            // Sending a new event
 			QApplication::sendEvent(this, &newEvent);
 			return;
 		}
@@ -1376,12 +1376,12 @@ void WebEditView::onInsertTable()
 void WebEditView::onInsertImage()
 {
 	ImageProperties dlg;
-	dlg.m_action = static_cast<ImageAction> (INI::LastImageAction);
+    dlg.m_action = static_cast<ImageAction> (INI.LastImageAction);
 	dlg.m_adir = m_Item->GetAbsDir(m_di);
 
 	if(dlg.DoModal() == QDialog::Accepted)
 	{
-		INI::LastImageAction = static_cast<int> (dlg.m_action);
+        INI.LastImageAction = static_cast<int> (dlg.m_action);
 		QString res = PrepareImage(dlg.m_action, dlg.m_fpath);
 		InsertImage(res, dlg.m_width, dlg.m_height);
 	}
@@ -1811,10 +1811,10 @@ void WebEditView::onLinkClicked(const QUrl & url)
 	QString s = url.toString();
 	if (!s.startsWith("http"))
 		m_wMain->OpenLocalLink(s, m_di);
-	else if (INI::BrowserPath.empty())
+    else if (INI.BrowserPath.isEmpty())
 		QMessageBox::warning(this, "Error", "BrowserPath is not set!");
 	else
-		OpenInExternalApplication(this, U16(INI::BrowserPath), s);
+        OpenInExternalApplication(this, INI.BrowserPath, s);
 }
 
 void WebEditView::onToolsLink()
@@ -1825,12 +1825,12 @@ void WebEditView::onToolsLink()
 	if(sel.isEmpty())
 		execScript("getFocusText()", &sel);
 
-	if (INI::BrowserPath.empty())
+    if (INI.BrowserPath.isEmpty())
 		QMessageBox::warning(this, "Error", "BrowserPath is not set!");
 	else if (sel.startsWith("http://") || sel.startsWith("https://"))
-		OpenInExternalApplication(this, U16(INI::BrowserPath), sel);
+        OpenInExternalApplication(this, INI.BrowserPath, sel);
 	else
-		OpenInExternalApplication(this, U16(INI::BrowserPath), "https://www.google.com/search?q=" + sel);
+        OpenInExternalApplication(this, INI.BrowserPath, "https://www.google.com/search?q=" + sel);
 }
 
 void WebEditView::onToolsSearch()
@@ -1851,10 +1851,10 @@ void WebEditView::onToolsTranslate()
 	sel = page()->selectedText();
 	if (sel.isEmpty())
 		execScript("getFocusText()", &sel);
-	if (INI::BrowserPath.empty())
+    if (INI.BrowserPath.isEmpty())
 		QMessageBox::warning(this, "Error", "BrowserPath is not set!");
 	else
-		OpenInExternalApplication(this, U16(INI::BrowserPath), "http://translate.google.com/#auto/en/" + sel);
+        OpenInExternalApplication(this, INI.BrowserPath, "http://translate.google.com/#auto/en/" + sel);
 }
 
 void WebEditView::onTableAppendData()

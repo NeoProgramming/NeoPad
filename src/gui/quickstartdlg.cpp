@@ -1,6 +1,6 @@
 #include "quickstartdlg.h"
 #include <QFileDialog>
-#include "../core/ini.h"
+#include "../core/Settings.h"
 #include "../service/tools.h"
 
 
@@ -25,11 +25,11 @@ QuickStartDlg::~QuickStartDlg()
 
 int QuickStartDlg::DoModal()
 {
-	for(auto item : INI::RecentProjects)
-		ui.comboOpen->addItem( U16(item) );
+	for(auto item : INI.RecentProjects)
+        ui.comboOpen->addItem( item );
 	ui.comboOpen->setCurrentIndex(0);
 
-	switch(INI::QSModeNew)
+	switch(INI.QSModeNew)
 	{
 	case 0:
 		ui.radioOpen->setChecked(1);
@@ -60,13 +60,13 @@ void QuickStartDlg::onOk()
 {
 	if(ui.radioOpen->isChecked())
 	{	
-		INI::CurrProjectPath = U8(ui.comboOpen->currentText());
-		INI::QSModeNew = 0;
+        INI.CurrProjectPath = ui.comboOpen->currentText();
+		INI.QSModeNew = 0;
 	}
 	else if(ui.radioCreate->isChecked())
 	{
-		INI::CurrProjectPath = "";
-		INI::QSModeNew = 1;
+		INI.CurrProjectPath = "";
+		INI.QSModeNew = 1;
 	}
 
 	accept();
@@ -89,7 +89,7 @@ void QuickStartDlg::onRemoveFromList()
 	int i = ui.comboOpen->currentIndex();
 	if (i < 0)
 		return;
-	INI::RecentProjects.remove(U8(ui.comboOpen->currentText()));
+    INI.RecentProjects.removeAll(ui.comboOpen->currentText());
 	ui.comboOpen->removeItem(i);
 	ui.comboOpen->setCurrentIndex(0);
 }

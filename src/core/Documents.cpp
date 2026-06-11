@@ -9,11 +9,10 @@
 #include "../service/pugitools.h"
 #include "../service/sys.h"
 #include "../service/tools.h"
-#include "../service/xini.h"
 #include "../service/search.h"
 #include "vmbsrv.h"
 #include "Solution.h"
-#include "ini.h"
+#include "Settings.h"
 #include "Cryptor.h"
 
 extern QTextCodec *codecUtf8;
@@ -318,8 +317,8 @@ DocItem* Documents::AddItem(DocItem* tpPar, DocItem* tpAfter, const QString& tit
 
 	item->p_subbase = 1;
 
-	if (INI::DefItemStatus != 0)
-		item->status = (ETreeStatus)INI::DefItemStatus;
+    if (INI.DefItemStatus != 0)
+        item->status = (ETreeStatus)INI.DefItemStatus;
 
 	// identifier; just in case, normalize it
 	item->id = id;
@@ -633,7 +632,7 @@ void  Documents::RenameTitle(DocItem* item, const QString & title, int bi)
 void Documents::HandleChanges(DocItem* tpItem, bool recursive)
 {
 	tpItem->p_modify = 1;
-	if (INI::AutoSavePages)
+    if (INI.AutoSavePages)
 	{
 		tpItem = GetAncestorWithFile(tpItem, true);
 		SaveSubBase(tpItem, recursive);
@@ -644,7 +643,7 @@ void Documents::HandleChanges(DocItem* tpItem1, DocItem* tpItem2)
 {
 	tpItem1->p_modify = 1;
 	tpItem2->p_modify = 1;
-	if (INI::AutoSavePages)
+    if (INI.AutoSavePages)
 	{
 		tpItem1 = GetAncestorWithFile(tpItem1, true);
 		tpItem2 = GetAncestorWithFile(tpItem2, true);

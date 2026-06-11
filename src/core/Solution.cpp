@@ -8,11 +8,10 @@
 #include "../service/pugitools.h"
 #include "../service/sys.h"
 #include "../service/tools.h"
-#include "../service/xini.h"
 #include "../service/search.h"
 #include "vmbsrv.h"
 #include "Solution.h"
-#include "ini.h"
+#include "Settings.h"
 #include "Cryptor.h"
 
 extern QTextCodec *codecUtf8;
@@ -41,73 +40,38 @@ CSolution::~CSolution(void)
 {
 }
 
-// temporary
-template<typename TTo, typename TFrom>
-void Assign(TTo &to, const TFrom &from)
-{
-	to = from;
-}
-template<>
-void Assign<QString, std::string>(QString &to, const std::string &from)
-{
-	to = QString::fromStdString(from);
-}
-template<>
-void Assign<QByteArray, std::string>(QByteArray &to, const std::string &from)
-{
-	to = from.c_str();
-}
-template<>
-void Assign<QStringList, std::list<std::string>>(QStringList &to, const std::list<std::string> &from)
-{
-	to.clear();
-	to.reserve(static_cast<int>(from.size()));
-	for (const auto &str : from) {
-		to.append(QString::fromStdString(str));
-	}
-}
-
 void CSolution::loadSettings()
 {
-	cfg.setDir(m_sProgDir);
-	cfg.loadSettings();
+    INI.setDir(m_sProgDir);
+    INI.loadSettings();
 
-	XIni ini;
-	ini.Load(codecUtf8->fromUnicode(m_sProgDir + "/settings.xml"), INI::Main);
+    QSet<QString> set = QSet<QString>(INI.RecentProjects.begin(), INI.RecentProjects.end());
+    QStringList uniqueList = QStringList(set.begin(), set.end());
 
-	INI::RecentProjects.unique();
-	INI::RecentProjects.remove_if([](const std::string &str) {return str.empty(); });
-	if (INI::RecentProjects.size() > 10)
-		INI::RecentProjects.resize(10);
+    if (INI.RecentProjects.size() > 10)
+        INI.RecentProjects.erase(INI.RecentProjects.begin() + 10, INI.RecentProjects.end());
 
-	if (IsBlank(INI::HtmEditPath.c_str()))
-		INI::HtmEditPath = "notepad.exe";
-	if (IsBlank(INI::ExplorePath.c_str()))
-		INI::ExplorePath = "explorer";
-
-#define X(type, var, def) Assign(cfg.var, INI::var);
-//	SETTINGS_LIST
-#undef X
+    if (IsBlank(INI.HtmEditPath))
+        INI.HtmEditPath = "notepad.exe";
+    if (IsBlank(INI.ExplorePath))
+        INI.ExplorePath = "explorer";
 }
 
 void CSolution::saveSettings()
 {
-	XIni ini;
-	ini.Save(codecUtf8->fromUnicode(m_sProgDir + "/settings.xml"), INI::Main);
-
-	cfg.saveSettings();
+    INI.saveSettings();
 }
 
 void CSolution::addProjectToRecent(const QString &path)
 {
 	// to make a separate class for storing settings? PrjSettings?
-	std::string spath = U8(path);
-	INI::RecentProjects.remove(spath);
-	INI::RecentProjects.push_front(spath);
-	if (INI::RecentProjects.size() > 10)
-		INI::RecentProjects.resize(10);
+    INI.RecentProjects.removeAll(path);
+    INI.RecentProjects.prepend(path);
 
-	INI::CurrProjectPath = U8(path);
+    if (INI.RecentProjects.size() > 10)
+        INI.RecentProjects.erase(INI.RecentProjects.begin() + 10, INI.RecentProjects.end());
+
+    INI.CurrProjectPath = path;
 }
 
 void CSolution::QuitProject()
