@@ -17,6 +17,7 @@
 #include "htmllink.h"
 
 #include "../service/tools.h"
+#include "../service/search.h"
 #include "../core/vmbsrv.h"
 #include "../core/Settings.h"
 #include "../core/Cryptor.h"
@@ -50,7 +51,9 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	actionTableProps = new QAction(tr("Table properties"), 0);
 	actionImageProps = new QAction(tr("Image properties"), 0);
 	actionLinkProps  = new QAction(tr("Link properties"), 0);
+    actionTextProps = new QAction(tr("Text properties"), 0);
 
+    connect(actionTextProps, SIGNAL(triggered()), this, SLOT(onTextProperties()));
 	connect(actionTableProps, SIGNAL(triggered()), this, SLOT(onTableProperties()));
 	connect(actionImageProps, SIGNAL(triggered()), this, SLOT(onImageProperties()));
 	connect(actionLinkProps, SIGNAL(triggered()), this, SLOT(onLinkProperties()));
@@ -104,27 +107,32 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 
 	// paste menu
 	m_menuPaste.setTitle("Special Paste");
+    m_menuPaste.addAction(mw->ui.actionEditPasteText);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsTable);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsCode);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsBilingua);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsLWText);
 	m_menuPaste.addAction(mw->ui.actionEditPasteAsMarkdown);
 
+    // copy/cut menu
+    m_menuCopyCut.setTitle("Special Cut/Copy");
+    m_menuCopyCut.addAction(mw->ui.actionEditCutText);
+    m_menuCopyCut.addAction(mw->ui.actionEditCopyText);
+
 	// context menu
 	m_menuContext.addAction(mw->ui.actionEditCut);
-	m_menuContext.addAction(mw->ui.actionEditCutText);
 	m_menuContext.addAction(mw->ui.actionEditCopy);
-    m_menuContext.addAction(mw->ui.actionEditCopyText);
-	m_menuContext.addAction(mw->ui.actionEditPaste);
-	m_menuContext.addAction(mw->ui.actionEditPasteText);
+    m_menuContext.addMenu( &m_menuCopyCut );
+	m_menuContext.addAction(mw->ui.actionEditPaste);	
     m_menuContext.addMenu( &m_menuPaste );
 	m_menuContext.addSeparator();
-	m_menuContext.addAction(mw->ui.actionToolsLink);
+    m_menuContext.addAction(mw->ui.actionToolsLink);
 	m_menuContext.addAction(mw->ui.actionToolsSearch);
 	m_menuContext.addAction(mw->ui.actionToolsTranslate);
 	m_menuContext.addSeparator();
-	m_menuContext.addAction(actionTableProps);
-	m_menuContext.addMenu( &m_menuTable );
+    m_menuContext.addAction(actionTextProps);
+    m_menuContext.addAction(actionTableProps);
+	m_menuContext.addMenu( &m_menuTable );    
 	m_menuContext.addAction(actionImageProps);
 	m_menuContext.addAction(actionLinkProps);
 }
@@ -1775,6 +1783,18 @@ void WebEditView::onImageProperties()
 		image.SetHeight(dlg.m_height);
 		setWindowModified(true);
 	}
+}
+
+void WebEditView::onTextProperties()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    triggerPageAction(QWebPage::Copy);
+    QString text = clipboard->text();
+    clipboard->clear();
+
+    int n = calculate_char_count(text);
+    QString str = QString::asprintf("%d symbols", n);
+    QMessageBox::information(this, "Statistics", str);
 }
 
 void WebEditView::onLinkProperties()

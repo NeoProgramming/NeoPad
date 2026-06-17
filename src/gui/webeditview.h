@@ -144,7 +144,7 @@ public slots:
     void onTableSortDesc();
 	
 	void onImageProperties();
-
+    void onTextProperties();
 	void onLinkProperties();
 	
 	void onLinkClicked(const QUrl & url);
@@ -183,6 +183,7 @@ private:
 	
 	MainWindow *m_wMain;
 	QMenu m_menuContext;
+    QMenu m_menuCopyCut;
 	QMenu m_menuPaste;
 	QMenu m_menuTable;
 	QAction *actionTableProps;
@@ -195,6 +196,8 @@ private:
 	QAction *actionTableDelRow;
 	QAction *actionTableDelCol;
 	QAction *actionTablePasteData;
+
+    QAction *actionTextProps;
 	QAction *actionImageProps;
 	QAction *actionLinkProps;
 	QAction *actionTableClearCol;
