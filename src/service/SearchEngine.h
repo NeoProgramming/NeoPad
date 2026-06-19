@@ -15,7 +15,7 @@ struct SearchMatch {
 
 struct SearchConfig {
     bool caseSensitive = false;
-    int radius = 50;         // maximum distance between words
+    int radius = 10;         // maximum distance between words
     bool wholeWords = false; // only whole words (not implemented yet)
 };
 

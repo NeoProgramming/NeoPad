@@ -264,7 +264,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	m_fontSymbols = ui.tableSymbols->font();
 	ui.tableSymbols->setContextMenuPolicy(Qt::CustomContextMenu);
 
-	// Голубой цвет для выделения без фокуса
+    // Blue color for out-of-focus highlighting
 	QString styleSheet =
 		"QTreeWidget::item:selected:!active {"
 		"    background-color: #2196F3;"
@@ -1421,8 +1421,14 @@ void SlnPanel::onSearch()
 void SlnPanel::onFindNext()
 {
 	WebEditView *wnd = mw->GetActiveMdiChild();
-	if (wnd)
-		wnd->Find(ui.lineSearch->text(), false);
+    if (!wnd)
+        return;
+    QString text = ui.lineSearch->text();
+    QStringList sl = text.split(' ');
+    if(sl.size() <= 1)
+        wnd->Find(text, false);
+    else
+        wnd->Find(sl[0], false);
 }
 
 void SlnPanel::onFindPrev()
