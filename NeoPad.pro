@@ -2,7 +2,7 @@ TEMPLATE = app
 TARGET = NeoPad
 DESTDIR	= .
 
-CONFIG += c++14
+CONFIG += c++17
 QMAKE_CXXFLAGS += -include limits
 
 MOC_DIR	= build/.moc
@@ -109,9 +109,12 @@ HEADERS += \
     ./src/service/sys.h \
     ./src/service/tools.h \
     ./src/service/unicode.h \
+    ./src/service/FileExtractor.h \
+    ./src/service/SearchEngine.h \
     ./src/3rdparty/pugixml/pugixml.hpp \
     ./src/3rdparty/pugixml/pugiconfig.hpp \
-    src/core/markdownparser.h
+    ./src/3rdparty/ted/text_encoding_detect.h \
+    ./src/core/markdownparser.h
     
 SOURCES += \
     ./src/main.cpp \
@@ -163,8 +166,11 @@ SOURCES += \
     ./src/service/unicode.cpp \
     ./src/service/cstr.cpp \
     ./src/service/pugitools.cpp \
+    ./src/service/FileExtractor.cpp \
+    ./src/service/SearchEngine.cpp \
     ./src/3rdparty/pugixml/pugixml.cpp \
-    src/core/markdownparser.cpp
+    ./src/3rdparty/ted/text_encoding_detect.cpp \
+    ./src/core/markdownparser.cpp
 
 RESOURCES += ./src/neopad.qrc
 
