@@ -49,7 +49,8 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	actionCheckText = menu->addAction("Search in Text");
 	actionCheckTags = menu->addAction("Search in HTML Tags");
 	actionCheckAttrs= menu->addAction("Search in HTML Attributes");
-//	menu->addSeparator();
+	menu->addSeparator();
+	actionCheckMulti = menu->addAction("MultiSearch");
 //	menu->addAction("Match case");
 //	menu->addAction("Whole words");
 
@@ -58,6 +59,7 @@ SlnPanel::SlnPanel(QWidget *parent, MainWindow *h)
 	actionCheckText->setCheckable(true);
 	actionCheckTags->setCheckable(true);
 	actionCheckAttrs->setCheckable(true);
+	actionCheckMulti->setCheckable(true);
 
 	actionCheckTree->setChecked(true);
 	actionCheckText->setChecked(true);
@@ -681,7 +683,7 @@ void SlnPanel::onDocDoubleClicked(QTreeWidgetItem* qitem, int column)
 	// open document by double click in Contents and SearchResults
 	DocItem *item = qitem->data(0, Qt::UserRole).value<DocItem*>();
 	mw->DoOpenDoc(item, column);
-	UpdateDocItem(qitem);
+//	UpdateDocItem(qitem);
 }
 
 void SlnPanel::onFavDoubleClicked(QTreeWidgetItem* curItem, int column)
@@ -1400,6 +1402,8 @@ void SlnPanel::onSearch()
 		scope |= ESM_TAG;
 	if (actionCheckAttrs->isChecked())
 		scope |= ESM_ATTR;
+	if (actionCheckMulti->isChecked())
+		scope |= ESM_MULTI;
 	if (!scope) {
 		QMessageBox::warning(this, "Search", "Search scope not defined!");
 		return;
@@ -1413,9 +1417,17 @@ void SlnPanel::onSearch()
         QTreeWidgetItem *item = new QTreeWidgetItem();
         item->setData(0, Qt::UserRole, QVariant::fromValue(pos));
         ui.treeResults->addTopLevelItem(item);
-        UpdateDocItem(item);
-    }
+        //UpdateDocItem(item);
+		UpdateSearchItem(item, pos, root);
+	}
 	setCursor(QCursor(Qt::ArrowCursor));
+}
+
+void SlnPanel::UpdateSearchItem(QTreeWidgetItem * qitem, DocItem* tpos, DocItem *search_root)
+{
+	qitem->setText(0, tpos->GetUpwardTitles(0, search_root));
+	ETreeStatus im = tpos->GetTreeStatusCode();
+	qitem->setIcon(0, GetTreeItemIcon(im));
 }
 
 void SlnPanel::onFindNext()
@@ -1425,7 +1437,7 @@ void SlnPanel::onFindNext()
         return;
     QString text = ui.lineSearch->text();
     QStringList sl = text.split(' ');
-    if(sl.size() <= 1)
+    if(sl.size() <= 1 || !actionCheckMulti->isChecked())
         wnd->Find(text, false);
     else
         wnd->Find(sl[0], false);
@@ -1434,15 +1446,21 @@ void SlnPanel::onFindNext()
 void SlnPanel::onFindPrev()
 {
 	WebEditView *wnd = mw->GetActiveMdiChild();
-	if (wnd)
-		wnd->Find(ui.lineSearch->text(), true);
+	if (!wnd)
+		return;
+	QString text = ui.lineSearch->text();
+	QStringList sl = text.split(' ');
+	if (sl.size() <= 1 || !actionCheckMulti->isChecked())
+		wnd->Find(text, true);
+	else
+		wnd->Find(sl[0], true);
 }
 
 void SlnPanel::SetSearchRoot(DocItem *sr)
 {
 	if (sr) {
 		searchRoot = sr->GetGuid();
-		ui.lineNode->setText(sr->GetTitles(0));
+		ui.lineNode->setText(sr->GetUpwardTitles(0));
 	}
 	else {
 		ui.lineNode->setText("");
@@ -1458,8 +1476,7 @@ void SlnPanel::onSelNode()
 		ui.lineNode->setText("");
 		return;
 	}
-	SetSearchRoot(dlg.m_posSelected);
-	
+	SetSearchRoot(dlg.m_posSelected);	
 }
 
 void SlnPanel::onCopyLink()

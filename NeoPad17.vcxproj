@@ -214,6 +214,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\3rdparty\pugixml\pugixml.cpp" />
+    <ClCompile Include="src\3rdparty\ted\text_encoding_detect.cpp" />
     <ClCompile Include="src\core\Classes.cpp" />
     <ClCompile Include="src\core\Books.cpp" />
     <ClCompile Include="src\core\Cryptor.cpp" />
@@ -235,6 +236,7 @@
     <ClCompile Include="src\gui\pictogramdlg.cpp" />
     <ClCompile Include="src\gui\symbolsdlg.cpp" />
     <ClCompile Include="src\service\cstr.cpp" />
+    <ClCompile Include="src\service\FileExtractor.cpp" />
     <ClCompile Include="src\service\pugitools.cpp" />
     <ClCompile Include="src\gui\existitemdlg.cpp" />
     <ClCompile Include="src\service\fail.cpp" />
@@ -257,6 +259,7 @@
     <ClCompile Include="src\gui\slntreewidget.cpp" />
     <ClCompile Include="src\gui\snippetsdlg.cpp" />
     <ClCompile Include="src\service\search.cpp" />
+    <ClCompile Include="src\service\SearchEngine.cpp" />
     <ClCompile Include="src\service\sys.cpp" />
     <ClCompile Include="src\gui\tablemenu.cpp" />
     <ClCompile Include="src\gui\tableproperty.cpp" />
@@ -268,6 +271,7 @@
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp" />
     <ClInclude Include="src\3rdparty\pugixml\pugixml.hpp" />
+    <ClInclude Include="src\3rdparty\ted\text_encoding_detect.h" />
     <ClInclude Include="src\core\Classes.h" />
     <ClInclude Include="src\core\BaseItem.h" />
     <ClInclude Include="src\core\Books.h" />
@@ -289,7 +293,9 @@
     <ClInclude Include="src\gui\htmllink.h" />
     <QtMoc Include="src\gui\symbolsdlg.h" />
     <QtMoc Include="src\gui\pictogramdlg.h" />
+    <ClInclude Include="src\service\FileExtractor.h" />
     <ClInclude Include="src\service\search.h" />
+    <ClInclude Include="src\service\SearchEngine.h" />
     <ClInclude Include="src\service\unicode.h" />
     <QtMoc Include="src\gui\existitemdlg.h">
     </QtMoc>

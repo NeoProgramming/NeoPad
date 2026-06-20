@@ -857,29 +857,16 @@ bool Documents::SearchInFile(DocItem* pos, const QString &text, unsigned int sco
         return false;
 
     QStringList sl = text.split(' ');
-    if(sl.size() <= 1) {
+    if((sl.size() <= 1) || !(scope & ESM_MULTI)) {
         return search(html, text, scope);
     }
 
     SearchEngine searcher;
-    auto matches = searcher.findTwoWords(html, sl[0], sl[1]);
+	
+	auto matches = searcher.findWordGroups(html, sl, sl.size(), 50);
+	//auto matches = searcher.findWordPairs(html, sl[0], sl[1]);
     if (!matches.isEmpty()) {
         return true;
-       /*
-        QFileInfo fileInfo(filePath);
-        QString context = matches.first().surroundingText;
-        m_searchDock->addResult(fileInfo.fileName(), filePath,
-            matches.size(), context);
-        totalMatches += matches.size();
-
-        // Сохраняем matches
-        m_fileMatches[filePath] = matches;
-        qDebug() << "Saved" << matches.size() << "matches for" << filePath;
-
-        // Для отладки выведем первые несколько позиций
-        for (int i = 0; i < qMin(3, matches.size()); ++i) {
-            qDebug() << "  Match" << i << ":" << matches[i].startPos << "-" << matches[i].endPos;
-        } */
     }
     return false;
 }

@@ -54,7 +54,7 @@ public:
 		
 	QString GetGuid();
 	QString GetTitle(int bi);
-	QString GetTitles(int bi);
+	QString GetUpwardTitles(int bi, DocItem *to = nullptr);
 	QString GetDocAbsPath(int bi);
 	QString GetDocRelPath(int bi);
 	QString GetDocLocPath(int bi);

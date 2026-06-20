@@ -44,6 +44,7 @@ public:
     void UpdateDocItem(QTreeWidgetItem * item, DocItem* tpos);
     void UpdateDocItem(QTreeWidgetItem * item);
     void UpdateFavItem(QTreeWidgetItem * item);
+	void UpdateSearchItem(QTreeWidgetItem * item, DocItem* tpos, DocItem *search_root);
    
     void UpdateDocNode(QTreeWidgetItem * qnode, DocItem *node);
     void UpdateDocTree();
@@ -173,6 +174,7 @@ private:
 	QAction *actionCheckText;
 	QAction *actionCheckTags;
 	QAction *actionCheckAttrs;
+	QAction *actionCheckMulti;
 };
 
 #endif // SLNPANEL_H

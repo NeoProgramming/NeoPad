@@ -69,6 +69,9 @@
     <Filter Include="src\gui\html">
       <UniqueIdentifier>{4fda1627-d4bd-4b69-802c-dca6f13d9a26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\3rdparty\ted">
+      <UniqueIdentifier>{014c1f26-2c62-42b5-a6c5-01b62665e743}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\service\fail.cpp">
@@ -224,6 +227,15 @@
     <ClCompile Include="src\core\Settings.cpp">
       <Filter>src\core</Filter>
     </ClCompile>
+    <ClCompile Include="src\3rdparty\ted\text_encoding_detect.cpp">
+      <Filter>src\3rdparty\ted</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\FileExtractor.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
+    <ClCompile Include="src\service\SearchEngine.cpp">
+      <Filter>src\service</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\3rdparty\pugixml\pugiconfig.hpp">
@@ -321,6 +333,15 @@
     </ClInclude>
     <ClInclude Include="src\core\Settings.h">
       <Filter>src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\3rdparty\ted\text_encoding_detect.h">
+      <Filter>src\3rdparty\ted</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\FileExtractor.h">
+      <Filter>src\service</Filter>
+    </ClInclude>
+    <ClInclude Include="src\service\SearchEngine.h">
+      <Filter>src\service</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

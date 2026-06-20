@@ -6,7 +6,8 @@ enum ESearchMask {
 	ESM_TAG = 0x2,
 	ESM_ATTR = 0x4,
 	ESM_TREE = 0x8,
-	ESM_ID = 0x10
+	ESM_ID = 0x10,
+	ESM_MULTI = 0x20
 };
 
 bool search(const QString &html, const QString &text, unsigned int sm);

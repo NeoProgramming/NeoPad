@@ -137,13 +137,13 @@ QString DocItem::GetTitle(int bi)
     return QString();
 }
 
-QString DocItem::GetTitles(int bi)
+QString DocItem::GetUpwardTitles(int bi, DocItem *to)
 {
-    if (bi < 0 || bi >= theSln.Cols.BCnt())
+    if (bi < 0 || bi >= theSln.Cols.BCnt() || to==this)
 		return QString();
 	if (!parent)
 		return GetTitle(bi);
-	return GetTitle(bi) + QChar(0x26AB) + parent->GetTitles(bi);
+	return GetTitle(bi) + " \\ " + parent->GetUpwardTitles(bi, to); // QChar(0x26AB)
 }
 
 QString DocItem::GetDocLocPath(int bi)
