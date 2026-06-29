@@ -1242,6 +1242,43 @@ void WebEditView::onTextMark7()
 	execScript("makeSpan('MARK7')");
 }
 
+void WebEditView::onParaClear()
+{
+	execScript("removeAnyPMARKFromNearestBlock()");
+}
+void WebEditView::onParaMark0()
+{
+	execScript("setClassToNearestBlock('PMARK0')");
+}
+void WebEditView::onParaMark1()
+{
+	execScript("setClassToNearestBlock('PMARK1')");
+}
+void WebEditView::onParaMark2()
+{
+	execScript("setClassToNearestBlock('PMARK2')");
+}
+void WebEditView::onParaMark3()
+{
+	execScript("setClassToNearestBlock('PMARK3')");
+}
+void WebEditView::onParaMark4()
+{
+	execScript("setClassToNearestBlock('PMARK4')");
+}
+void WebEditView::onParaMark5()
+{
+	execScript("setClassToNearestBlock('PMARK5')");
+}
+void WebEditView::onParaMark6()
+{
+	execScript("setClassToNearestBlock('PMARK6')");
+}
+void WebEditView::onParaMark7()
+{
+	execScript("setClassToNearestBlock('PMARK7')");
+}
+
 
 void WebEditView::onTextStrong()
 {

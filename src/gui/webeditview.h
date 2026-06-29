@@ -84,6 +84,16 @@ public slots:
 	void onTextMark6();
 	void onTextMark7();
 
+	void onParaClear();
+	void onParaMark0();
+	void onParaMark1();
+	void onParaMark2();
+	void onParaMark3();
+	void onParaMark4();
+	void onParaMark5();
+	void onParaMark6();
+	void onParaMark7();
+
 	void onParaHeading1();
 	void onParaHeading2();
 	void onParaHeading3();

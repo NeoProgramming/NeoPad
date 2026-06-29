@@ -76,6 +76,7 @@ MainWindow::MainWindow()
 	ui.toolBarTools->setIconSize( tbSize );
 	ui.toolBarTable->setIconSize( tbSize );
 	ui.toolBarMark->setIconSize(tbSize);
+	ui.toolBarParaMark->setIconSize(tbSize);
 		
 	m_wArea = new QMdiArea;
 	m_wArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -135,6 +136,7 @@ MainWindow::MainWindow()
 	SetAutoRaiseToolBar(ui.toolBarTools, false);
 	SetAutoRaiseToolBar(ui.toolBarTable, false);
 	SetAutoRaiseToolBar(ui.toolBarMark, false);
+	SetAutoRaiseToolBar(ui.toolBarParaMark, false);
 	
 	// read script
 	loadScripts();
@@ -194,7 +196,7 @@ MainWindow::MainWindow()
 	CONN_CHILD(ui.actionTextSamp,		onTextSamp);
 	CONN_CHILD(ui.actionTextVar,		onTextVar);
 	CONN_CHILD(ui.actionTextKbd,		onTextKbd);
-
+		
 	CONN_CHILD(ui.actionTextMark,		onTextMark);
 	CONN_CHILD(ui.actionTextMark1,		onTextMark1);
 	CONN_CHILD(ui.actionTextMark2,		onTextMark2);
@@ -203,6 +205,16 @@ MainWindow::MainWindow()
 	CONN_CHILD(ui.actionTextMark5,		onTextMark5);
 	CONN_CHILD(ui.actionTextMark6,		onTextMark6);
 	CONN_CHILD(ui.actionTextMark7,		onTextMark7);
+
+	CONN_CHILD(ui.actionParaClear, onParaClear);
+	CONN_CHILD(ui.actionParaMark0, onParaMark0);
+	CONN_CHILD(ui.actionParaMark1, onParaMark1);
+	CONN_CHILD(ui.actionParaMark2, onParaMark2);
+	CONN_CHILD(ui.actionParaMark3, onParaMark3);
+	CONN_CHILD(ui.actionParaMark4, onParaMark4);
+	CONN_CHILD(ui.actionParaMark5, onParaMark5);
+	CONN_CHILD(ui.actionParaMark6, onParaMark6);
+	CONN_CHILD(ui.actionParaMark7, onParaMark7);
 
 	CONN_CHILD(ui.actionInsertTable,    onInsertTable);
 	CONN_CHILD(ui.actionInsertHorzline,	onInsertHorzLine);

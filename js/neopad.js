@@ -41,7 +41,7 @@ function isDivTag(t)
 function isSpanTag(t) 
 {
 	if(false
-//	|| t=='SPAN' 
+	|| t=='SPAN' 
 	|| t=='B' 
 	|| t=='I' 
 	|| t=='U' 
@@ -914,5 +914,100 @@ function getCaretPosition ()
 	return str;
 }
 	
+function setClassToNearestBlock(className) 
+{
+	var selection = window.getSelection();
+	if (!selection || !selection.rangeCount) return "selection error";
+	
+	var range = selection.getRangeAt(0);
+	var node = range.startContainer;
+	
+	if (node.nodeType === 3) { // Node.TEXT_NODE
+		node = node.parentNode;
+	}
+	
+	while (node && node.nodeType === 1) { // Node.ELEMENT_NODE
+		var tagName = node.tagName.toLowerCase();
+		var blockElements = ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 						  'section', 'article', 'aside', 'header', 'footer', 'nav', 'main', 'blockquote', 'pre', 'ul', 'ol', 'li', 'table', 'form', 'fieldset', 'address', 'hr', 'figure', 'figcaption', 'details', 'summary'];
+		
+		var isBlock = false;
+		for (var i = 0; i < blockElements.length; i++) {
+			if (blockElements[i] === tagName) {
+				isBlock = true;
+				break;
+			}
+		}
+		
+		if (isBlock) {
+
+			var currentClass = node.className || '';
+			var classes = currentClass.split(/\s+/);
+			var newClasses = [];
+			for (var j = 0; j < classes.length; j++) {
+				if (classes[j].indexOf('PMARK') !== 0) {
+					newClasses.push(classes[j]);
+				}
+			}
+			newClasses.push(className);
+			node.className = newClasses.join(' ');
+			return true;
+		}
+
+		node = node.parentNode;
+	}
+	
+	return "node not found";    
+}
+
+function removeAnyPMARKFromNearestBlock() {
+    
+	var selection = window.getSelection();
+	if (!selection || !selection.rangeCount) return "selection error";
+	
+	var range = selection.getRangeAt(0);
+	var node = range.startContainer;
+	
+	if (node.nodeType === 3) { // TEXT_NODE
+		node = node.parentNode;
+	}
+	
+	while (node && node.nodeType === 1) { // ELEMENT_NODE
+		var tagName = node.tagName.toLowerCase();
+		var blockElements = ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 						  'section', 'article', 'aside', 'header', 'footer', 'nav', 'main', 'blockquote', 'pre', 'ul', 'ol', 'li', 'table', 'form', 'fieldset', 'address', 'hr', 'figure',						  'figcaption', 'details', 'summary'];
+		
+		var isBlock = false;
+		for (var i = 0; i < blockElements.length; i++) {
+			if (blockElements[i] === tagName) {
+				isBlock = true;
+				break;
+			}
+		}
+		
+		if (isBlock) {
+			var currentClass = node.className || '';
+			var classes = currentClass.split(/\s+/);
+			var newClasses = [];
+			var found = false;
+			
+			for (var j = 0; j < classes.length; j++) {
+				if (classes[j].indexOf('PMARK') !== 0) {
+					newClasses.push(classes[j]);
+				} else {
+					found = true;
+				}
+			}
+			
+			if (found) {
+				node.className = newClasses.join(' ');
+				return true;
+			}
+			return "pmark not found";
+		}
+		
+		node = node.parentNode;
+	}
+	
+	return "node not found";   
+}
 
 

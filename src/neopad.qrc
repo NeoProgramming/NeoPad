@@ -138,7 +138,7 @@
         <file>images/ti-htmlx.png</file>
         <file>images/ti-folder.png</file>
         <file>images/ti-pinned.png</file>
-		<file>images/ti-quick.png</file>
+        <file>images/ti-quick.png</file>
         <file>images/ti-htmlempty.png</file>
     </qresource>
     <qresource prefix="/langicons">
@@ -150,5 +150,16 @@
     </qresource>
     <qresource prefix="/ani">
         <file>images/skull.gif</file>
+    </qresource>
+    <qresource prefix="/para">
+        <file>images/para-mark0.png</file>
+        <file>images/para-mark1.png</file>
+        <file>images/para-mark2.png</file>
+        <file>images/para-mark3.png</file>
+        <file>images/para-mark4.png</file>
+        <file>images/para-mark5.png</file>
+        <file>images/para-mark6.png</file>
+        <file>images/para-mark7.png</file>
+        <file>images/para-clear.png</file>
     </qresource>
 </RCC>

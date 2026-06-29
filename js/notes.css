@@ -1,0 +1,420 @@
+BODY { 
+	font-family: Verdana;  Arial Unicode MS; 
+	/* background-color: #F2D39F; */
+	background-color: #F5F1D8;
+	margin: 5px; 
+	padding: 5px;
+    tab-size: 4;
+}
+
+MATH {
+	background-color: yellow;	
+}
+math:hover {
+	background-color: blue;
+}
+DETAILS {
+	border: 1px solid #aaaaaa; 
+}
+
+TABLE {
+	width: 100%;
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+TH, TD {
+	border: 1px solid black;
+	border-collapse: collapse;
+	background-color: #B9E6F0;
+}
+.yellow, .yellow td, .yellow tr td {
+	background-color: #FFFF00;
+}
+.pale_yellow, .pale_yellow td, .pale_yellow tr td {
+	background-color: #FFFFA0;
+}
+.orange, .orange td, .orange tr td {
+	background-color: #FFC000;
+}
+.cyan, .cyan td, .cyan tr td {
+	background-color: #55D1DB;
+}
+.green, .green td, .green tr td {
+	background-color: #7DED80;
+}
+.pink, .pink td, .pink tr td {
+	background-color: #DEB7C7;
+}
+.lilac, .lilac td, .lilac tr td {
+	background-color: #DE73FE;
+}
+.white, .white td, .white tr rd {
+	background-color: #FFFFFF;
+}
+.blue, .blue td, .blue tr td {
+	background-color: #6783F4;
+}
+
+.mytable3 {
+	width: 100%;
+}
+.mytable3 td:first-child {
+	background-color: #AAFDB3;
+	width: 30%;
+}
+.mytable3 td:nth-child(2) {
+	background-color: #7EDEFE;
+	width: 30%;
+}
+.mytable3 td:last-child {
+	background-color: #FFD2EB;
+}
+
+
+P {
+	text-align: justify;
+}
+
+DIV {
+	text-align: justify;
+}
+
+PRE {
+	border: 1px groove; 
+	font-family: Consolas,Inconsolata,Monospace; 
+	background-color: #FFFFC4; 
+	font-size: 12pt; 
+	padding: 7px;
+	white-space: pre;
+	word-break: break-word;
+}
+
+H1 {
+	font-family: Verdana; 
+	font-size: 32px; 
+	text-indent: 0px; 
+	color: #7b7bc0;
+	font-weight: normal;
+	margin-block-start: 0.27em;
+    margin-block-end: 0.27em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+H2 {
+	color: #0040A0;
+	font-size: 1.5em;
+	margin-block-start: 0.53em;
+    margin-block-end: 0.23em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+H3 {
+	color: #e86300;
+	font-size: 1.35em;
+    margin-block-start: 0.4em;
+    margin-block-end: 0.2em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+H4 {
+	color: #c053a6;
+	font-size: 1.2em;
+	margin-block-start: 0.4em;
+    margin-block-end: 0.2em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+H5 {
+	font-size: 1.15em;
+	color: #d000f0;
+	1margin-block-start: 0.4em;
+    1margin-block-end: 0.2em;
+    1margin-inline-start: 0px;
+    1margin-inline-end: 0px;
+	margin-top: 0.6em;
+    margin-bottom: 0.6em;
+}
+
+H6 {
+	font-size: 1.05em; 
+	color: #1111FF;
+	1margin-block-start: 0.4em;
+    1margin-block-end: 0.2em;
+    1margin-inline-start: 0px;
+    1margin-inline-end: 0px;
+	margin-top: 0.4em;
+    margin-bottom: 0.4em;
+}
+
+MARK1 {
+	background-color: #DC880C;
+}
+
+MARK2 {
+	background-color: #55D1DB;
+}
+
+MARK3 {
+	background-color: #7DED80;
+}
+
+MARK4 {
+	background-color: #DEB7C7;
+}
+
+MARK5 {
+	background-color: #DE73FE;
+}
+
+MARK6 {
+	background-color: #FFFFAF;
+}
+
+MARK7 {
+	background-color: #6783F4;
+}
+
+ANN {
+	display:block;
+	font-family: Verdana; 
+	font-weight: normal;
+	color: #800080;
+	background-color: #FFFFFF;
+	border: 1px solid blue;
+	border-radius: 5px;
+	border-spacing: 5px;
+	margin: 5px;
+	padding: 5px; 
+	overflow-wrap: break-word;
+	word-break: break-word;
+}
+
+NOTE {
+	display: inline-block;
+	border-radius: 5px;
+	padding: 10px 15px;
+	text-decoration: none;
+	margin: 10px;
+	color: black;
+	background: #55acee;
+	box-shadow: 5px 5px 0 #3C93D5;
+}
+
+ABBR {
+	background-color: #00AAFF;
+}
+
+BLOCKQUOTE {
+	background-color: #AAFF99;
+	border: 1px solid #aaaaaa; 
+	padding: 2px;
+	border-radius: 3px;
+}
+
+CODE {
+	background-color: #ffffa0;	
+	border: 1px solid #aaaaaa; 
+	padding: 2px;
+	border-radius: 3px;
+}
+
+EM {
+	text-decoration-color: blue;
+	text-decoration-style: wavy;
+	text-decoration-thickness: 3px;
+}
+
+STRONG {
+	color: red;	
+	text-shadow: yellow 0 0 2px;
+}
+
+
+COMMENT {
+	display:block;
+	font-family: Consolas,Inconsolata,Monospace;
+	background: #006666; /* #008888; */
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid #008888;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+QUESTION {
+	display:block;
+	background-color: #00a000;
+	border: 1px groove; 
+	background: #C4FFFF; 
+	font-size: 12pt; 
+	padding:14px; 
+	text-indent: 0px;
+	word-wrap: break-word;
+}
+
+IMPORTANT {
+	display:block;
+	font-family: Consolas,Inconsolata,Monospace,'Lucida Console';
+	background: red; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid red;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+FEATURE {
+	display:block;
+	font-family: Consolas,Inconsolata,Monospace,'Lucida Console';
+	background: blue; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid blue;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+TERMINAL2 {
+	display:block;
+	font-family: Consolas,Inconsolata,Monospace,'Lucida Console';
+	background: black; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid black;
+	color: #ffff00; 
+	padding: 5px;
+	text-indent: 0px;
+	margin-top: 0.3em;
+    margin-bottom: 0.3em;
+}
+
+TERMINAL {
+	display:block;
+	border: 1px solid blue;
+	font-family: Consolas,Inconsolata,Monospace,'Lucida Console'; 
+	background-color: #22B14C; /* #9BBEFF; */
+	font-size: 12pt; 
+	padding: 7px;
+	white-space: pre;
+	text-indent: 0px;
+	margin-top: 0.3em;
+    margin-bottom: 0.3em;
+}
+
+
+/* old styles */
+
+.code {
+	font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	border: 1px groove; 
+	background: #FFFF00; 
+	font-size: 12pt; 
+	padding:14px; 
+	white-space: pre;
+	text-indent: 0px;
+}
+
+.quote {
+	border: 1px groove; 
+	background: #C4FFFF; 
+	font-size: 12pt; 
+	padding:14px; 
+	text-indent: 0px;
+	word-wrap: break-word;
+}
+
+.comment {
+    font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: #008888; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid #008888;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+.error {
+    font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: #9f0000; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid red;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+.feature {
+    font-family: "Consolas","Inconsolata","Monospace","Lucida Console";
+	background: #00009f; 
+	border: 6px double white; 
+	margin: 5px; 
+	outline: 5px solid blue;
+	color: yellow; 
+	padding: 5px;
+	text-indent: 0px;
+}
+
+.bilingua {
+	width: 100%;
+	border: 1px solid #9999ff;
+	padding: 7px;
+}
+
+.bilingua td {
+	width: 50%;
+	background-color: #FFE9C4;
+	border: 1px solid #9999ff;
+	padding: 7px;
+}
+
+.vertical {
+	 /* Ограничиваем ширину ячейки */
+  width: 1em;           /* Ширина в одну букву */
+  max-width: 1em;       
+  word-break: break-all; /* Разрываем слова где угодно */
+  word-wrap: break-word; /* Дополнительно для старых браузеров */
+  display: inline-block; /* Помогает с шириной */
+}
+
+/* Классы для выделения параграфов (более бледные версии) */
+.PMARK0 {
+    background-color: #FFFFB3; /* Бледнее #FFFF00 */
+}
+
+.PMARK1 {
+    background-color: #F5D4A0; /* Бледнее #DC880C */
+}
+
+.PMARK2 {
+    background-color: #B8ECF2; /* Бледнее #55D1DB */
+}
+
+.PMARK3 {
+    background-color: #C4F5C6; /* Бледнее #7DED80 */
+}
+
+.PMARK4 {
+    background-color: #F2DFE7; /* Бледнее #DEB7C7 */
+}
+
+.PMARK5 {
+    background-color: #F0C4FE; /* Бледнее #DE73FE */
+}
+
+.PMARK6 {
+    background-color: #FFFFD9; /* Бледнее #FFFFAF */
+}
+
+.PMARK7 {
+    background-color: #B8C8FA; /* Бледнее #6783F4 */
+}

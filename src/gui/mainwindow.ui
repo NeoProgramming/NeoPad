@@ -414,6 +414,26 @@
    <addaction name="actionTextMark6"/>
    <addaction name="actionTextMark7"/>
   </widget>
+  <widget class="QToolBar" name="toolBarParaMark">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionParaClear"/>
+   <addaction name="actionParaMark0"/>
+   <addaction name="actionParaMark1"/>
+   <addaction name="actionParaMark2"/>
+   <addaction name="actionParaMark3"/>
+   <addaction name="actionParaMark4"/>
+   <addaction name="actionParaMark5"/>
+   <addaction name="actionParaMark6"/>
+   <addaction name="actionParaMark7"/>
+  </widget>
   <action name="actionAppExit">
    <property name="icon">
     <iconset>
@@ -1863,6 +1883,87 @@
    </property>
    <property name="toolTip">
     <string>As Markdown</string>
+   </property>
+  </action>
+  <action name="actionParaMark0">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark0.png</normaloff>:/para/images/para-mark0.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark0</string>
+   </property>
+  </action>
+  <action name="actionParaMark1">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark1.png</normaloff>:/para/images/para-mark1.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark1</string>
+   </property>
+  </action>
+  <action name="actionParaMark2">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark2.png</normaloff>:/para/images/para-mark2.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark2</string>
+   </property>
+  </action>
+  <action name="actionParaMark3">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark3.png</normaloff>:/para/images/para-mark3.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark3</string>
+   </property>
+  </action>
+  <action name="actionParaMark4">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark4.png</normaloff>:/para/images/para-mark4.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark4</string>
+   </property>
+  </action>
+  <action name="actionParaMark5">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark5.png</normaloff>:/para/images/para-mark5.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark5</string>
+   </property>
+  </action>
+  <action name="actionParaMark6">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark6.png</normaloff>:/para/images/para-mark6.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark6</string>
+   </property>
+  </action>
+  <action name="actionParaMark7">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mark7.png</normaloff>:/para/images/para-mark7.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaMark7</string>
+   </property>
+  </action>
+  <action name="actionParaClear">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-clear.png</normaloff>:/para/images/para-clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>ParaClear</string>
    </property>
   </action>
  </widget>
