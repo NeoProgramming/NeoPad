@@ -914,100 +914,335 @@ function getCaretPosition ()
 	return str;
 }
 	
-function setClassToNearestBlock(className) 
-{
-	var selection = window.getSelection();
-	if (!selection || !selection.rangeCount) return "selection error";
-	
-	var range = selection.getRangeAt(0);
-	var node = range.startContainer;
-	
-	if (node.nodeType === 3) { // Node.TEXT_NODE
-		node = node.parentNode;
-	}
-	
-	while (node && node.nodeType === 1) { // Node.ELEMENT_NODE
-		var tagName = node.tagName.toLowerCase();
-		var blockElements = ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 						  'section', 'article', 'aside', 'header', 'footer', 'nav', 'main', 'blockquote', 'pre', 'ul', 'ol', 'li', 'table', 'form', 'fieldset', 'address', 'hr', 'figure', 'figcaption', 'details', 'summary'];
-		
-		var isBlock = false;
-		for (var i = 0; i < blockElements.length; i++) {
-			if (blockElements[i] === tagName) {
-				isBlock = true;
-				break;
-			}
-		}
-		
-		if (isBlock) {
+// BLOCKS
 
-			var currentClass = node.className || '';
-			var classes = currentClass.split(/\s+/);
-			var newClasses = [];
-			for (var j = 0; j < classes.length; j++) {
-				if (classes[j].indexOf('PMARK') !== 0) {
-					newClasses.push(classes[j]);
-				}
-			}
-			newClasses.push(className);
-			node.className = newClasses.join(' ');
-			return true;
-		}
+// Совместимость с Qt WebKit
+function setClassToNearestBlock(className) {
+    try {
+        var selection = window.getSelection();
+        if (!selection || !selection.rangeCount) {
+            return 'No selection';
+        }
+        
+        var range = selection.getRangeAt(0);
+        
+        // Если выделение свернуто (просто каретка) - обрабатываем один блок
+        if (range.collapsed) {
+            return setClassToSingleBlock(className, range);
+        }
+        
+        // Проверяем, находится ли начало и конец выделения в одном блоке
+        var startBlock = getBlockAtNode(range.startContainer);
+        var endBlock = getBlockAtNode(range.endContainer);
+        
+        // Если начало и конец в одном блоке - обрабатываем как один блок
+        if (startBlock === endBlock && startBlock !== null) {
+            return setClassToSingleBlock(className, range);
+        }
+        
+        // Иначе - обрабатываем все блоки в выделении
+        return setClassToMultipleBlocks(className, range);
+        
+    } catch(e) {
+        return 'Error: ' + e.message;
+    }
+}
 
-		node = node.parentNode;
-	}
-	
-	return "node not found";    
+function setClassToSingleBlock(className, range) {
+    try {
+        var node = range.startContainer;
+        if (node.nodeType === 3) {
+            node = node.parentNode;
+        }
+        
+        while (node && node.nodeType === 1) {
+            var tagName = node.tagName.toLowerCase();
+            if (isBlockElement(tagName)) {
+                // Удаляем старые PMARK классы и добавляем новый
+                var currentClass = node.className || '';
+                var classes = currentClass.split(/\s+/);
+                var newClasses = [];
+                for (var i = 0; i < classes.length; i++) {
+                    if (classes[i].indexOf('PMARK') !== 0) {
+                        newClasses.push(classes[i]);
+                    }
+                }
+                newClasses.push(className);
+                node.className = newClasses.join(' ');
+                return true;
+            }
+            node = node.parentNode;
+        }
+        return 'Block element not found';
+    } catch(e) {
+        return 'Error in setClassToSingleBlock: ' + e.message;
+    }
+}
+
+function setClassToMultipleBlocks(className, range) {
+    try {
+        var blocks = getBlocksInRange(range);
+        if (blocks.length === 0) {
+            return 'No blocks found in selection';
+        }
+        
+        var processedCount = 0;
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i];
+            // Удаляем старые PMARK классы и добавляем новый
+            var currentClass = block.className || '';
+            var classes = currentClass.split(/\s+/);
+            var newClasses = [];
+            for (var j = 0; j < classes.length; j++) {
+                if (classes[j].indexOf('PMARK') !== 0) {
+                    newClasses.push(classes[j]);
+                }
+            }
+            newClasses.push(className);
+            block.className = newClasses.join(' ');
+            processedCount++;
+        }
+        
+        return processedCount > 0 ? true : 'No blocks processed';
+    } catch(e) {
+        return 'Error in setClassToMultipleBlocks: ' + e.message;
+    }
 }
 
 function removeAnyPMARKFromNearestBlock() {
-    
-	var selection = window.getSelection();
-	if (!selection || !selection.rangeCount) return "selection error";
-	
-	var range = selection.getRangeAt(0);
-	var node = range.startContainer;
-	
-	if (node.nodeType === 3) { // TEXT_NODE
-		node = node.parentNode;
-	}
-	
-	while (node && node.nodeType === 1) { // ELEMENT_NODE
-		var tagName = node.tagName.toLowerCase();
-		var blockElements = ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 						  'section', 'article', 'aside', 'header', 'footer', 'nav', 'main', 'blockquote', 'pre', 'ul', 'ol', 'li', 'table', 'form', 'fieldset', 'address', 'hr', 'figure',						  'figcaption', 'details', 'summary'];
-		
-		var isBlock = false;
-		for (var i = 0; i < blockElements.length; i++) {
-			if (blockElements[i] === tagName) {
-				isBlock = true;
-				break;
-			}
-		}
-		
-		if (isBlock) {
-			var currentClass = node.className || '';
-			var classes = currentClass.split(/\s+/);
-			var newClasses = [];
-			var found = false;
-			
-			for (var j = 0; j < classes.length; j++) {
-				if (classes[j].indexOf('PMARK') !== 0) {
-					newClasses.push(classes[j]);
-				} else {
-					found = true;
-				}
-			}
-			
-			if (found) {
-				node.className = newClasses.join(' ');
-				return true;
-			}
-			return "pmark not found";
-		}
-		
-		node = node.parentNode;
-	}
-	
-	return "node not found";   
+    try {
+        var selection = window.getSelection();
+        if (!selection || !selection.rangeCount) {
+            return 'No selection';
+        }
+        
+        var range = selection.getRangeAt(0);
+        
+        // Если выделение свернуто (просто каретка)
+        if (range.collapsed) {
+            return removeFromSingleBlock(range);
+        }
+        
+        // Проверяем, находится ли начало и конец выделения в одном блоке
+        var startBlock = getBlockAtNode(range.startContainer);
+        var endBlock = getBlockAtNode(range.endContainer);
+        
+        // Если начало и конец в одном блоке - обрабатываем как один блок
+        if (startBlock === endBlock && startBlock !== null) {
+            return removeFromSingleBlock(range);
+        }
+        
+        // Иначе - обрабатываем все блоки в выделении
+        return removeFromMultipleBlocks(range);
+        
+    } catch(e) {
+        return 'Error: ' + e.message;
+    }
 }
 
+function removeFromSingleBlock(range) {
+    try {
+        var node = range.startContainer;
+        if (node.nodeType === 3) {
+            node = node.parentNode;
+        }
+        
+        while (node && node.nodeType === 1) {
+            var tagName = node.tagName.toLowerCase();
+            if (isBlockElement(tagName)) {
+                var result = removeClassFromBlock(node);
+                if (result) {
+                    return true;
+                }
+                return 'No PMARK class found on block';
+            }
+            node = node.parentNode;
+        }
+        return 'Block element not found';
+    } catch(e) {
+        return 'Error in removeFromSingleBlock: ' + e.message;
+    }
+}
 
+function removeFromMultipleBlocks(range) {
+    try {
+        var blocks = getBlocksInRange(range);
+        if (blocks.length === 0) {
+            return 'No blocks found in selection';
+        }
+        
+        var processedCount = 0;
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i];
+            var result = removeClassFromBlock(block);
+            if (result) {
+                processedCount++;
+            }
+        }
+        
+        return processedCount > 0 ? true : 'No PMARK classes found on blocks';
+    } catch(e) {
+        return 'Error in removeFromMultipleBlocks: ' + e.message;
+    }
+}
+
+function removeClassFromBlock(block) {
+    var currentClass = block.className || '';
+    var classes = currentClass.split(/\s+/);
+    var newClasses = [];
+    var found = false;
+    
+    for (var i = 0; i < classes.length; i++) {
+        if (classes[i].indexOf('PMARK') !== 0) {
+            newClasses.push(classes[i]);
+        } else {
+            found = true;
+        }
+    }
+    
+    if (found) {
+        block.className = newClasses.join(' ');
+        return true;
+    }
+    return false;
+}
+
+// ============================================
+// Вспомогательные функции (оптимизированные)
+// ============================================
+
+function isBlockElement(tagName) {
+	return tagName == 'div' || tagName == 'p';
+	
+    // Используем объект для быстрого поиска вместо массива
+    var blocks = {
+        'div': true, 'p': true, 'h1': true, 'h2': true, 'h3': true,
+        'h4': true, 'h5': true, 'h6': true, 'section': true,
+        'article': true, 'aside': true, 'header': true, 'footer': true,
+        'nav': true, 'main': true, 'blockquote': true, 'pre': true,
+        'ul': true, 'ol': true, 'li': true, 'table': true,
+        'form': true, 'fieldset': true, 'address': true, 'hr': true,
+        'figure': true, 'figcaption': true, 'details': true, 'summary': true
+    };
+    return !!blocks[tagName];
+}
+
+function getBlockAtNode(node) {
+    if (node.nodeType === 3) {
+        node = node.parentNode;
+    }
+    
+    while (node && node.nodeType === 1) {
+        if (isBlockElement(node.tagName.toLowerCase())) {
+            return node;
+        }
+        node = node.parentNode;
+    }
+    return null;
+}
+
+function isDescendant(child, parent) {
+    var node = child;
+    while (node) {
+        if (node === parent) {
+            return true;
+        }
+        node = node.parentNode;
+    }
+    return false;
+}
+
+function getBlocksInRange(range) {
+    var blocks = [];
+    var ancestor = range.commonAncestorContainer;
+    
+    // Если общий предок - текстовый узел, поднимаемся к элементу
+    if (ancestor.nodeType === 3) {
+        ancestor = ancestor.parentNode;
+    }
+    
+    // Получаем все блочные элементы внутри общего предка
+    var iterator = document.createNodeIterator(
+        ancestor,
+        NodeFilter.SHOW_ELEMENT,
+        {
+            acceptNode: function(node) {
+                if (isBlockElement(node.tagName.toLowerCase())) {
+                    // Проверяем пересечение с выделением
+                    if (isNodeIntersectsRange(node, range)) {
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                }
+                return NodeFilter.FILTER_SKIP;
+            }
+        },
+        false
+    );
+    
+    var node;
+    while (node = iterator.nextNode()) {
+        // Проверяем, не является ли блок дочерним для уже добавленного
+        var isChild = false;
+        for (var i = 0; i < blocks.length; i++) {
+            if (blocks[i] !== node && isDescendant(node, blocks[i])) {
+                isChild = true;
+                break;
+            }
+        }
+        
+        if (!isChild) {
+            blocks.push(node);
+        }
+    }
+    
+    // Добавляем блок, в котором находится начало выделения (если он частично выделен)
+    var startBlock = getBlockAtNode(range.startContainer);
+    if (startBlock && !isBlockInArray(startBlock, blocks)) {
+        blocks.push(startBlock);
+    }
+    
+    // Добавляем блок, в котором находится конец выделения (если он частично выделен)
+    var endBlock = getBlockAtNode(range.endContainer);
+    if (endBlock && !isBlockInArray(endBlock, blocks) && endBlock !== startBlock) {
+        blocks.push(endBlock);
+    }
+    
+    // Быстрая сортировка блоков по порядку в DOM
+    if (blocks.length > 1) {
+        blocks.sort(function(a, b) {
+            var position = a.compareDocumentPosition(b);
+            if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+                return -1;
+            } else if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+    
+    return blocks;
+}
+
+function isBlockInArray(block, blocks) {
+    for (var i = 0; i < blocks.length; i++) {
+        if (blocks[i] === block) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function isNodeIntersectsRange(node, range) {
+    try {
+        var nodeRange = document.createRange();
+        nodeRange.selectNode(node);
+        
+        // Проверяем пересечение
+        var startBeforeEnd = range.compareBoundaryPoints(Range.END_TO_END, nodeRange) >= 0;
+        var endAfterStart = range.compareBoundaryPoints(Range.START_TO_START, nodeRange) <= 0;
+        
+        return startBeforeEnd && endAfterStart;
+    } catch(e) {
+        return false;
+    }
+}
