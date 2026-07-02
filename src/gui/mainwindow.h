@@ -77,6 +77,8 @@ public slots:
 	void onToolsReloadScript();
 
 private slots:
+    void onWindowRestore();
+
 	void onPostInit();
 
 	void onTileSubWindowsHorizontally();

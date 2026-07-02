@@ -151,6 +151,7 @@ MainWindow::MainWindow()
 	connect(ui.actionAboutNeopad,	&QAction::triggered, this, &MainWindow::onAppAbout);
 	connect(ui.actionAboutQt,		&QAction::triggered, this, &MainWindow::onAppAboutQt);
 
+    connect(ui.actionWindowRestore, &QAction::triggered, this, &MainWindow::onWindowRestore);
 	
 #define CONN_CHILD(act, meth) connect(act, &QAction::triggered, this, [this]() { onChild(&WebEditView::meth); } )
 
@@ -1316,3 +1317,7 @@ void MainWindow::setStatus(const QString &str)
     statusBar()->showMessage(str);
 }
 
+void MainWindow::onWindowRestore()
+{
+    this->showNormal();
+}
