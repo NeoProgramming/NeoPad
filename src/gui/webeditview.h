@@ -156,6 +156,8 @@ public slots:
 	void onImageProperties();
     void onTextProperties();
 	void onLinkProperties();
+
+	void onCopyMarkedText();
 	
 	void onLinkClicked(const QUrl & url);
 	void onToolsLink();
@@ -214,6 +216,8 @@ private:
 	QAction *actionTableClearRow;
     QAction *actionTableSortAsc;
     QAction *actionTableSortDesc;
+
+	QAction *actionCopyMarkedText;
     
 	QWebElement m_elTable;
 	QWebElement m_elTR;

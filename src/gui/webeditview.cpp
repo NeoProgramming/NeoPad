@@ -53,10 +53,14 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
 	actionLinkProps  = new QAction(tr("Link properties"), 0);
     actionTextProps = new QAction(tr("Text properties"), 0);
 
+	actionCopyMarkedText = new QAction(tr("Copy marked text"), 0);
+
     connect(actionTextProps, SIGNAL(triggered()), this, SLOT(onTextProperties()));
 	connect(actionTableProps, SIGNAL(triggered()), this, SLOT(onTableProperties()));
 	connect(actionImageProps, SIGNAL(triggered()), this, SLOT(onImageProperties()));
 	connect(actionLinkProps, SIGNAL(triggered()), this, SLOT(onLinkProperties()));
+
+	connect(actionCopyMarkedText, SIGNAL(triggered()), this, SLOT(onCopyMarkedText()));
 
 	actionTableInsAbove = new QAction(tr("Insert row above"), 0);
 	actionTableInsBelow = new QAction(tr("Insert row below"), 0);
@@ -118,6 +122,7 @@ WebEditView::WebEditView(MainWindow *mw, DocItem* tpos, int di)
     m_menuCopyCut.setTitle("Special Cut/Copy");
     m_menuCopyCut.addAction(mw->ui.actionEditCutText);
     m_menuCopyCut.addAction(mw->ui.actionEditCopyText);
+	m_menuCopyCut.addAction(actionCopyMarkedText);
 
 	// context menu
 	m_menuContext.addAction(mw->ui.actionEditCut);
@@ -1832,6 +1837,30 @@ void WebEditView::onTextProperties()
     int n = calculate_char_count(text);
     QString str = QString::asprintf("%d symbols", n);
     QMessageBox::information(this, "Statistics", str);
+}
+
+void WebEditView::onCopyMarkedText()
+{
+	QString html = page()->selectedHtml();
+	if (html.isEmpty()) return;
+
+	// Удаляем mark1 с содержимым
+	html.replace(QRegularExpression("<mark1[^>]*>.*?</mark1>"), "");
+
+	// Заменяем mark2 на квадратные скобки
+	html.replace(QRegularExpression("<mark2[^>]*>"), "[");
+	html.replace(QRegularExpression("</mark2>"), "]");
+
+//	html.replace(QRegularExpression("<mark[12][^>]*>"), "[");
+//	html.replace(QRegularExpression("</mark[12]>"), "]");
+
+	// Заменяем mark6 на фигурные скобки
+	html.replace(QRegularExpression("<mark6[^>]*>"), "{");
+	html.replace(QRegularExpression("</mark6>"), "}");
+
+	QTextDocument doc;
+	doc.setHtml(html);
+	QApplication::clipboard()->setText(doc.toPlainText());
 }
 
 void WebEditView::onLinkProperties()
