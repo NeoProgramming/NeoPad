@@ -161,5 +161,6 @@
         <file>images/para-mark6.png</file>
         <file>images/para-mark7.png</file>
         <file>images/para-clear.png</file>
+        <file>images/para-mode.png</file>
     </qresource>
 </RCC>

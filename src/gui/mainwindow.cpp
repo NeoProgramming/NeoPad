@@ -268,6 +268,9 @@ MainWindow::MainWindow()
 
 #undef CONN_CHILD
 
+	connect(ui.actionParaMode, &QAction::triggered, this, &MainWindow::onParaMode);
+	ui.actionParaMode->setCheckable(true);
+
 	connect(ui.actionQuickStart, &QAction::triggered, this, &MainWindow::onProjectQuickStart);
 	connect(ui.actionProjectNew, &QAction::triggered, this, &MainWindow::onProjectNew);
 	connect(ui.actionProjectSave, &QAction::triggered, this, &MainWindow::onProjectSave);
@@ -735,6 +738,11 @@ void MainWindow::createSpecialToolWidgets()
 		tr("Insert table"));
 	connect(tbtnInsertTable, &QToolButton::clicked, this, [this]() { onChild(&WebEditView::onInsertTable); } );
 	ui.toolBarInsert->insertWidget(ui.actionInsertImage, tbtnInsertTable);
+}
+
+void MainWindow::onParaMode()
+{
+	
 }
 
 void MainWindow::onProjectQuickStart()

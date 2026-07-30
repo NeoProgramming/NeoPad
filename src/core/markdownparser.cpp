@@ -245,18 +245,35 @@ void MarkdownParser::processListLine(const QString &line, int spaces, const QStr
 void MarkdownParser::processTableLine(const QString &line)
 {
     QString trimmed = line.trimmed();
+	// Пропускаем пустые строки
+	if (trimmed.isEmpty()) return;
+
     QStringList cells = parseTableRowCells(trimmed);
 
-    if (m_tableContext.rows.isEmpty()) {
-        // Первая строка - заголовки
-        m_tableContext.rows.append(cells);
-    } else if (!m_tableContext.hasAlignRow && isAlignmentRow(cells)) {
-        // Строка выравнивания
-        m_tableContext.hasAlignRow = true;
-    } else {
-        // Строка данных
-        m_tableContext.rows.append(cells);
-    }
+	// Если это первая строка таблицы - всегда считаем её заголовком
+	if (m_tableContext.rows.isEmpty()) {
+		// Обрабатываем форматирование в заголовках
+		for (QString &cell : cells) {
+			cell = formatInlineElements(cell);
+		}
+		m_tableContext.rows.append(cells);
+		return;
+	}
+
+	// Проверяем, является ли строка строкой выравнивания
+	// Это должно быть до обработки форматирования!
+	if (!m_tableContext.hasAlignRow && isAlignmentRow(cells)) {
+		m_tableContext.hasAlignRow = true;
+		return;
+	}
+
+	// Обрабатываем форматирование в ячейках данных
+	for (QString &cell : cells) {
+		cell = formatInlineElements(cell);
+	}
+
+	// Иначе это строка данных
+	m_tableContext.rows.append(cells);
 }
 
 void MarkdownParser::processBlockquoteLine(const QString &line)
@@ -307,6 +324,27 @@ bool MarkdownParser::isAlignmentRow(const QStringList &row)
 {
     if (row.isEmpty()) return false;
 
+	// Строка выравнивания должна содержать только : - и пробелы
+   // и хотя бы один символ '-' в каждой ячейке
+	for (const QString &cell : row) {
+		if (cell.isEmpty()) return false;
+
+		bool hasDash = false;
+		for (int i = 0; i < cell.size(); ++i) {
+			QChar ch = cell[i];
+			if (ch == '-') {
+				hasDash = true;
+			}
+			else if (ch != ':' && ch != ' ') {
+				return false;
+			}
+		}
+		if (!hasDash) {
+			return false; // В каждой ячейке должен быть хотя бы один '-'
+		}
+	}
+	return true;
+/*
     for (const QString &cell : row) {
         for (int i = 0; i < cell.size(); ++i) {
             QChar ch = cell[i];
@@ -315,7 +353,7 @@ bool MarkdownParser::isAlignmentRow(const QStringList &row)
             }
         }
     }
-    return true;
+    return true;*/
 }
 
 QStringList MarkdownParser::parseTableRowCells(const QString &row)
@@ -330,7 +368,10 @@ QStringList MarkdownParser::parseTableRowCells(const QString &row)
         trimmed = trimmed.left(trimmed.length() - 1);
     }
 
+	// Разбиваем по |
     QStringList cells = trimmed.split('|');
+
+	// Очищаем пробелы по краям каждой ячейки
     for (QString &cell : cells) {
         cell = cell.trimmed();
     }
@@ -342,10 +383,29 @@ QString MarkdownParser::convertTableToHtml()
 {
     if (m_tableContext.rows.isEmpty()) return "";
 
+	// Первая строка всегда заголовки
     QStringList headers = m_tableContext.rows[0];
-    int dataStartIndex = m_tableContext.hasAlignRow ? 2 : 1;
+
+    int dataStartIndex = 1;
+
+	// Если данные начинаются с индекса, который больше размера rows,
+	// значит данных нет
+	if (dataStartIndex >= m_tableContext.rows.size()) {
+		// Только заголовки без данных
+		QString html = "<table>\n";
+		html += "    <tr>\n";
+		for (const QString &header : headers) {
+			html += QString("      <th>%1</th>\n").arg(header);
+		}
+		html += "    </tr>\n";
+		html += "</table>\n";
+		return html;
+	}
+
 
     QString html = "<table>\n  <tr>\n";
+
+	// Заголовок таблицы (thead)
     for (const QString &header : headers) {
         html += QString("    <th>%1</th>\n").arg(header);
     }
@@ -411,4 +471,26 @@ void MarkdownParser::closeCurrentTable()
         m_tableContext.rows.clear();
     }
     m_state = State::Normal;
+}
+
+// Добавляем вспомогательный метод для форматирования текста
+QString MarkdownParser::formatInlineElements(const QString &text)
+{
+	QString result = text;
+
+	// Жирный текст
+	result = result.replace(QRegularExpression("\\*\\*(.*?)\\*\\*"), "<strong>\\1</strong>");
+	result = result.replace(QRegularExpression("__(.*?)__"), "<strong>\\1</strong>");
+
+	// Курсив
+	result = result.replace(QRegularExpression("\\*(.*?)\\*"), "<em>\\1</em>");
+	result = result.replace(QRegularExpression("_(.*?)_"), "<em>\\1</em>");
+
+	// Inline код
+	result = result.replace(QRegularExpression("`([^`]+)`"), "<code>\\1</code>");
+
+	// Ссылки
+	result = result.replace(QRegularExpression("\\[(.*?)\\]\\((.*?)\\)"), "<a href=\"$2\">$1</a>");
+
+	return result;
 }

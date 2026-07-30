@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1337</width>
-     <height>22</height>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="helpMenu">
@@ -426,6 +426,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionParaMode"/>
    <addaction name="actionParaClear"/>
    <addaction name="actionParaMark0"/>
    <addaction name="actionParaMark1"/>
@@ -1971,6 +1972,15 @@
   <action name="actionWindowRestore">
    <property name="text">
     <string>Restore</string>
+   </property>
+  </action>
+  <action name="actionParaMode">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/para/images/para-mode.png</normaloff>:/para/images/para-mode.png</iconset>
+   </property>
+   <property name="text">
+    <string>Mode</string>
    </property>
   </action>
  </widget>

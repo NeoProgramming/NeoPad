@@ -51,6 +51,7 @@ private:
     void closeCurrentList();
     void closeCurrentBlockquote();
     void closeCurrentTable();
+	QString formatInlineElements(const QString &text);
 
     // Состояние парсера
     State m_state;

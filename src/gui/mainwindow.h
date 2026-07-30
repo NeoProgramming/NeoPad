@@ -86,6 +86,8 @@ private slots:
 
 	void onZoomChange(int);
 
+	void onParaMode();
+
 	void onInsertTableChanged(int cols, int rows);
 		    
 	void onAppAbout();
