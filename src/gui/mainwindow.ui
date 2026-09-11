@@ -437,6 +437,19 @@
    <addaction name="actionParaMark6"/>
    <addaction name="actionParaMark7"/>
   </widget>
+  <widget class="QToolBar" name="toolBarFind">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionFindPrev"/>
+   <addaction name="actionFindNext"/>
+  </widget>
   <action name="actionAppExit">
    <property name="icon">
     <iconset>
@@ -1981,6 +1994,24 @@
    </property>
    <property name="text">
     <string>Mode</string>
+   </property>
+  </action>
+  <action name="actionFindNext">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/msc/images/search-next.png</normaloff>:/msc/images/search-next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find Next</string>
+   </property>
+  </action>
+  <action name="actionFindPrev">
+   <property name="icon">
+    <iconset resource="../neopad.qrc">
+     <normaloff>:/msc/images/search-prev.png</normaloff>:/msc/images/search-prev.png</iconset>
+   </property>
+   <property name="text">
+    <string>Find Previous</string>
    </property>
   </action>
  </widget>

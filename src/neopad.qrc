@@ -61,8 +61,8 @@
     </qresource>
     <qresource prefix="/msc">
         <file>images/close.png</file>
-        <file>images/searchnext.png</file>
-        <file>images/searchprevious.png</file>
+        <file>images/search-next.png</file>
+        <file>images/search-prev.png</file>
     </qresource>
     <qresource prefix="/project">
         <file>images/prj-options.png</file>

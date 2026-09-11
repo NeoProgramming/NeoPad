@@ -77,6 +77,7 @@ MainWindow::MainWindow()
 	ui.toolBarTable->setIconSize( tbSize );
 	ui.toolBarMark->setIconSize(tbSize);
 	ui.toolBarParaMark->setIconSize(tbSize);
+	ui.toolBarFind->setIconSize(tbSize);
 		
 	m_wArea = new QMdiArea;
 	m_wArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
@@ -137,6 +138,7 @@ MainWindow::MainWindow()
 	SetAutoRaiseToolBar(ui.toolBarTable, false);
 	SetAutoRaiseToolBar(ui.toolBarMark, false);
 	SetAutoRaiseToolBar(ui.toolBarParaMark, false);
+	SetAutoRaiseToolBar(ui.toolBarFind, false);
 	
 	// read script
 	loadScripts();
@@ -265,6 +267,9 @@ MainWindow::MainWindow()
 	CONN_CHILD(ui.actionToolsLink,      onToolsLink);
 	CONN_CHILD(ui.actionToolsSearch,    onToolsSearch);
 	CONN_CHILD(ui.actionToolsTranslate, onToolsTranslate);
+
+	CONN_CHILD(ui.actionFindPrev,		onFindPrev);
+	CONN_CHILD(ui.actionFindNext,		onFindNext);
 
 #undef CONN_CHILD
 

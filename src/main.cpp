@@ -25,6 +25,44 @@ int main( int argc, char ** argv )
     a.setApplicationName("NeoPad");
     a.setWindowIcon(QIcon(":/app/images/app-about.png"));
 
+	// Задаем стиль прямо в коде
+	/*
+	a.setStyleSheet(
+		"QToolButton {"
+		"    background-color: #d4d0c8;"
+		"    border: 2px solid #d4d0c8;"
+		"    border-top-color: #ffffff;"
+		"    border-left-color: #ffffff;"
+		"    border-bottom-color: #404040;"
+		"    border-right-color: #404040;"
+		"    border-radius: 0px;"
+		"    color: #000000;"
+		"    font-weight: bold;"
+		"}"
+		"QToolButton:checked {"
+		"    border-top-color: #404040;"
+		"    border-left-color: #404040;"
+		"    border-bottom-color: #ffffff;"
+		"    border-right-color: #ffffff;"
+		"    background-color: #b0aca4;"
+		"    transform: translate(1px, 1px);"
+		"}"
+		"QToolButton:hover {"
+		"    border-top-color: #f0f0f0;"
+		"    border-left-color: #f0f0f0;"
+		"    border-bottom-color: #404040;"
+		"    border-right-color: #404040;"
+		"}"
+		"QToolButton:hover:checked {"
+		"    border-top-color: #404040;"
+		"    border-left-color: #404040;"
+		"    border-bottom-color: #f0f0f0;"
+		"    border-right-color: #f0f0f0;"
+		"    background-color: #a09c94;"
+		"}"
+	);
+	*/
+
     QStringList paths = QCoreApplication::libraryPaths();
     paths.append(".");
     paths.append("imageformats");

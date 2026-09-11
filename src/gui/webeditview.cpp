@@ -1524,6 +1524,15 @@ void WebEditView::onEditClearDoc()
 	execScript("clearDoc()");	
 }
 
+void WebEditView::FindSelected(bool backward)
+{
+	QWebPage *page = this->page();
+	QString text = page->selectedText();
+	if (text.isEmpty())
+		return;
+	Find(text, backward);
+}
+
 void WebEditView::Find(const QString &text, bool backward)
 {
 	if(backward)
@@ -1582,6 +1591,16 @@ void WebEditView::onToolsTranslate()
 		QMessageBox::warning(this, "Error", "BrowserPath is not set!");
 	else
         OpenInExternalApplication(this, INI.BrowserPath, "http://translate.google.com/#auto/en/" + sel);
+}
+
+void WebEditView::onFindPrev()
+{
+	FindSelected(true);
+}
+
+void WebEditView::onFindNext()
+{
+	FindSelected(false);
 }
 
 void WebEditView::onTableAppendData()

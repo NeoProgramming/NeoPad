@@ -126,7 +126,6 @@ public slots:
 	void onZoomOut();
 	void onZoomIn();
 	void onZoomNormal();
-
 	void onZoomChange(int);
 
 	void onAdjustSource();
@@ -163,11 +162,15 @@ public slots:
 	void onToolsLink();
 	void onToolsSearch();
 	void onToolsTranslate();	
+
+	void onFindPrev();
+	void onFindNext();
     
 public:
 	bool LoadHtml(DocItem* tpos, int di);
 	bool SaveHtml(bool update_tree);
 	void Find(const QString &text, bool backward);
+	void FindSelected(bool backward);
 	void InsertSymbol(QString html);
 protected:
 	virtual void keyPressEvent(QKeyEvent * event);
