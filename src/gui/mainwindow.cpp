@@ -378,10 +378,12 @@ void MainWindow::OpenTabs()
 	// open tabs
 	for(auto s : theSln.WS.Curr.TabItems) {
 		QStringList parts = s.split(":");
-		if (parts.count() == 2) {
-			DocItem* pos = theSln.Locate(parts.front());
-            if (pos)
-                OpenDoc(pos, parts.back().toInt());
+		int cnt = parts.count();
+		double percent = (cnt == 3) ? parts[2].toDouble() : 0;
+		if (cnt >= 2) {
+			DocItem* pos = theSln.Locate(parts[0]);
+			if (pos)
+                OpenDoc(pos, parts[1].toInt(), percent);
 		}
 		else {
 			DocItem* pos = theSln.Locate(s);
@@ -389,18 +391,22 @@ void MainWindow::OpenTabs()
                 OpenDoc(pos, 0);
 		}
 	}
+
 	// active tab
 	QStringList parts = theSln.WS.Curr.TabActive.split(":");
-	if (parts.count() == 2) {
-		DocItem* pos = theSln.Locate(parts.front());
+	int cnt = parts.count();
+	double percent = (cnt == 3) ? parts[2].toDouble() : 0;
+	if (cnt >= 2) {
+		DocItem* pos = theSln.Locate(parts[0]);
         if (pos)
-            OpenDoc(pos, parts.back().toInt());
+            OpenDoc(pos, parts[1].toInt(), percent);
 	}
-	else {
+	else if(cnt==1) {
 		DocItem* pos = theSln.Locate(theSln.WS.Curr.TabActive);
         if (pos)
             OpenDoc(pos, 0);
 	}
+
 	// autoload 
     OpenSpecial(false);
 }
@@ -423,15 +429,35 @@ void MainWindow::SaveTabs()
 	while (i != e) {
 		QMdiSubWindow *subwnd = *i;
 		WebEditView *view = qobject_cast<WebEditView *>(subwnd->widget());
-		if(view)
-			theSln.WS.Curr.TabItems.push_back(view->m_Item->guid + ":" + QString::number(view->m_di));
+		if (view) {
+
+			QWebFrame *frame = view->page()->mainFrame();
+			
+			QPoint scrollPos = frame->scrollPosition();
+
+			int value = frame->scrollBarValue(Qt::Vertical);
+			int maximum = frame->scrollBarMaximum(Qt::Vertical);
+			double percent = maximum > 0 ? (double)value / maximum : 0.0;
+			
+			QString tabdata = view->m_Item->guid + ":" + QString::number(view->m_di) + ":" + QString::number(percent);
+			theSln.WS.Curr.TabItems.push_back(tabdata);
+		}
 		++i;
 	}
 	QMdiSubWindow *active = m_wArea->activeSubWindow();
 	if (active) {
 		WebEditView *view = qobject_cast<WebEditView *>(active->widget());
-		if (view)
-			theSln.WS.Curr.TabActive = view->m_Item->guid + ":" + QString::number(view->m_di);
+		if (view) {
+
+			QWebFrame *frame = view->page()->mainFrame();
+			int value = frame->scrollBarValue(Qt::Vertical);
+			int maximum = frame->scrollBarMaximum(Qt::Vertical);
+			double percent = maximum > 0 ? (double)value / maximum : 0.0;
+					   			 
+			theSln.WS.Curr.TabActive = view->m_Item->guid 
+				+ ":" + QString::number(view->m_di)
+				+ ":" + QString::number(percent);
+		}
 	}
 	else {
 		theSln.WS.Curr.TabActive = "";
@@ -886,12 +912,12 @@ bool MainWindow::DoSelectDoc(DocItem* tpos, int bi)
 	return true;
 }
 
-void MainWindow::OpenDoc(DocItem* mtPos, int bi)
+void MainWindow::OpenDoc(DocItem* mtPos, int bi, double scrollPercent)
 {
 	if(!OpenExistingDoc(mtPos, bi))
 	{
 		if(!INI.OutlinerMode)
-			CreateNewDoc(mtPos, bi);
+			CreateNewDoc(mtPos, bi, scrollPercent);
 		else
 			LoadToCurrentDoc(mtPos, bi);
 	}
@@ -928,10 +954,10 @@ void MainWindow::onAboutToHideTabMenu()
 	});	
 }
 
-void MainWindow::CreateNewDoc(DocItem* mtPos, int di)
+void MainWindow::CreateNewDoc(DocItem* mtPos, int di, double srcollPercent)
 {
-	WebEditView *child = new WebEditView(this, mtPos, di);
-	QMdiSubWindow *subWindow = m_wArea->addSubWindow(child);
+	WebEditView *view = new WebEditView(this, mtPos, di);
+	QMdiSubWindow *subWindow = m_wArea->addSubWindow(view);
 
 	// modify system menu
 	QMenu *menu = subWindow->systemMenu();
@@ -940,8 +966,14 @@ void MainWindow::CreateNewDoc(DocItem* mtPos, int di)
 
 	menu->addMenu(getSln()->getMenu());
 				
-	child->LoadHtml(mtPos, di);
-	child->show();
+	view->LoadHtml(mtPos, di);
+	view->show();
+
+	// scroll pos
+	QWebFrame *frame = view->page()->mainFrame();
+	int newMaximum = frame->scrollBarMaximum(Qt::Vertical);
+	int newValue = qRound(srcollPercent * newMaximum);
+	frame->setScrollBarValue(Qt::Vertical, newValue);
 }
 
 QMdiSubWindow * MainWindow::FindTab(DocItem* mtPos, int di)

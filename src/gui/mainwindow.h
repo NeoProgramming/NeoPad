@@ -116,9 +116,9 @@ private:
 	void DoOpenDoc(DocItem* mtPos, int di);
 	void DoCloseDocs(DocItem* mtPos, bool recursive, bool invert);
 	bool DoSelectDoc(DocItem* tpos, int di);
-	void OpenDoc(DocItem* mtPos, int di);
+	void OpenDoc(DocItem* mtPos, int di, double scrollPercent = 0.0);
 	void LoadToCurrentDoc(DocItem* mtPos, int di);
-	void CreateNewDoc(DocItem* mtPos, int di);
+	void CreateNewDoc(DocItem* mtPos, int di, double srcollPercent);
 	bool OpenExistingDoc(DocItem* mtPos, int di);
 	QMdiSubWindow * FindTab(DocItem* mtPos, int di);
 	void MakePagesListForPdfPrinting(DocItem* mtPos, int level, int &page, QStringList &args, QString &toc);
