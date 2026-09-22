@@ -109,6 +109,9 @@ MainWindow::MainWindow()
 
 	createSpecialToolWidgets();
 
+    actionViewInfo = new QAction(tr("View info"), 0);
+    connect(actionViewInfo, &QAction::triggered, this, &MainWindow::onViewInfo);
+
     m_wDock = new QDockWidget(this);
     m_wDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     m_wDock->setWindowTitle(tr("Outline Explorer"));
@@ -379,11 +382,11 @@ void MainWindow::OpenTabs()
 	for(auto s : theSln.WS.Curr.TabItems) {
 		QStringList parts = s.split(":");
 		int cnt = parts.count();
-		double percent = (cnt == 3) ? parts[2].toDouble() : 0;
+        int scroll = (cnt == 3) ? parts[2].toInt() : 0;
 		if (cnt >= 2) {
 			DocItem* pos = theSln.Locate(parts[0]);
 			if (pos)
-                OpenDoc(pos, parts[1].toInt(), percent);
+                OpenDoc(pos, parts[1].toInt(), scroll);
 		}
 		else {
 			DocItem* pos = theSln.Locate(s);
@@ -395,11 +398,11 @@ void MainWindow::OpenTabs()
 	// active tab
 	QStringList parts = theSln.WS.Curr.TabActive.split(":");
 	int cnt = parts.count();
-	double percent = (cnt == 3) ? parts[2].toDouble() : 0;
+    int scroll = (cnt == 3) ? parts[2].toInt() : 0;
 	if (cnt >= 2) {
 		DocItem* pos = theSln.Locate(parts[0]);
         if (pos)
-            OpenDoc(pos, parts[1].toInt(), percent);
+            OpenDoc(pos, parts[1].toInt(), scroll);
 	}
 	else if(cnt==1) {
 		DocItem* pos = theSln.Locate(theSln.WS.Curr.TabActive);
@@ -430,16 +433,9 @@ void MainWindow::SaveTabs()
 		QMdiSubWindow *subwnd = *i;
 		WebEditView *view = qobject_cast<WebEditView *>(subwnd->widget());
 		if (view) {
-
 			QWebFrame *frame = view->page()->mainFrame();
-			
-			QPoint scrollPos = frame->scrollPosition();
-
 			int value = frame->scrollBarValue(Qt::Vertical);
-			int maximum = frame->scrollBarMaximum(Qt::Vertical);
-			double percent = maximum > 0 ? (double)value / maximum : 0.0;
-			
-			QString tabdata = view->m_Item->guid + ":" + QString::number(view->m_di) + ":" + QString::number(percent);
+            QString tabdata = view->m_Item->guid + ":" + QString::number(view->m_di) + ":" + QString::number(value);
 			theSln.WS.Curr.TabItems.push_back(tabdata);
 		}
 		++i;
@@ -451,12 +447,10 @@ void MainWindow::SaveTabs()
 
 			QWebFrame *frame = view->page()->mainFrame();
 			int value = frame->scrollBarValue(Qt::Vertical);
-			int maximum = frame->scrollBarMaximum(Qt::Vertical);
-			double percent = maximum > 0 ? (double)value / maximum : 0.0;
-					   			 
+
 			theSln.WS.Curr.TabActive = view->m_Item->guid 
 				+ ":" + QString::number(view->m_di)
-				+ ":" + QString::number(percent);
+                + ":" + QString::number(value);
 		}
 	}
 	else {
@@ -912,12 +906,12 @@ bool MainWindow::DoSelectDoc(DocItem* tpos, int bi)
 	return true;
 }
 
-void MainWindow::OpenDoc(DocItem* mtPos, int bi, double scrollPercent)
+void MainWindow::OpenDoc(DocItem* mtPos, int bi, int scrollValue)
 {
 	if(!OpenExistingDoc(mtPos, bi))
 	{
 		if(!INI.OutlinerMode)
-			CreateNewDoc(mtPos, bi, scrollPercent);
+            CreateNewDoc(mtPos, bi, scrollValue);
 		else
 			LoadToCurrentDoc(mtPos, bi);
 	}
@@ -928,21 +922,27 @@ void MainWindow::LoadToCurrentDoc(DocItem* mtPos, int di)
 
 }
 
+WebEditView* MainWindow::getTabView()
+{
+    QPoint globalPos = QCursor::pos();
+    QPoint tabPos = m_tabBar->mapFromGlobal(globalPos);
+    int tabIndex = m_tabBar->tabAt(tabPos);
+    if (tabIndex >= 0) {
+        QList<QMdiSubWindow*> windows = m_wArea->subWindowList();
+        QMdiSubWindow* subWindow = windows.at(tabIndex);
+        WebEditView *view = qobject_cast<WebEditView *>(subWindow->widget());
+        return view;
+    }
+    return nullptr;
+}
+
 void MainWindow::onAboutToShowTabMenu()
 {
 	qDebug() << "onAboutToShowTabMenu";
 	m_wSln->setTabDoc(nullptr);
-
-	QPoint globalPos = QCursor::pos();
-	QPoint tabPos = m_tabBar->mapFromGlobal(globalPos);
-	int tabIndex = m_tabBar->tabAt(tabPos);
-	if (tabIndex >= 0) {
-		QList<QMdiSubWindow*> windows = m_wArea->subWindowList();
-		QMdiSubWindow* subWindow = windows.at(tabIndex);
-		WebEditView *view = qobject_cast<WebEditView *>(subWindow->widget());
-		if (view) {
-			m_wSln->setTabDoc(view->m_Item);
-		}
+    m_tabView = getTabView();
+    if (m_tabView) {
+        m_wSln->setTabDoc(m_tabView->m_Item);
 	}	
 }
 
@@ -954,7 +954,7 @@ void MainWindow::onAboutToHideTabMenu()
 	});	
 }
 
-void MainWindow::CreateNewDoc(DocItem* mtPos, int di, double srcollPercent)
+void MainWindow::CreateNewDoc(DocItem* mtPos, int di, int srcollValue)
 {
 	WebEditView *view = new WebEditView(this, mtPos, di);
 	QMdiSubWindow *subWindow = m_wArea->addSubWindow(view);
@@ -964,16 +964,15 @@ void MainWindow::CreateNewDoc(DocItem* mtPos, int di, double srcollPercent)
 	connect(menu, &QMenu::aboutToShow, this, &MainWindow::onAboutToShowTabMenu);
 	connect(menu, &QMenu::aboutToHide, this, &MainWindow::onAboutToHideTabMenu);
 
-	menu->addMenu(getSln()->getMenu());
+    menu->addMenu(getSln()->getMenu());
+    menu->addAction(actionViewInfo);
 				
 	view->LoadHtml(mtPos, di);
 	view->show();
 
 	// scroll pos
 	QWebFrame *frame = view->page()->mainFrame();
-	int newMaximum = frame->scrollBarMaximum(Qt::Vertical);
-	int newValue = qRound(srcollPercent * newMaximum);
-	frame->setScrollBarValue(Qt::Vertical, newValue);
+    frame->setScrollBarValue(Qt::Vertical, srcollValue);
 }
 
 QMdiSubWindow * MainWindow::FindTab(DocItem* mtPos, int di)
@@ -1365,4 +1364,32 @@ void MainWindow::setStatus(const QString &str)
 void MainWindow::onWindowRestore()
 {
     this->showNormal();
+}
+
+void MainWindow::onViewInfo()
+{
+    QString str = m_tabView ? m_tabView->windowTitle() : "---";
+
+    QWebFrame *frame = m_tabView->page()->mainFrame();
+    int value = frame->scrollBarValue(Qt::Vertical);
+    int maximum = frame->scrollBarMaximum(Qt::Vertical);
+    double percent = maximum > 0 ? (double)value / maximum : 0.0;
+
+    str += "\r\n";
+    str += "v=" + QString::number(value)+ " m=" + QString::number(maximum) + " p=" + QString::number(percent);
+
+    // Получаем позицию и максимальную высоту через JS
+    QVariant scrollY = frame->evaluateJavaScript("window.scrollY");
+    QVariant maxScroll = frame->evaluateJavaScript(
+        "document.documentElement.scrollHeight - window.innerHeight"
+    );
+    int y = scrollY.toInt();
+    int max = maxScroll.toInt();
+
+    double percent2 = max > 0 ? (double)y / max : 0.0;
+
+    str += "\r\n";
+    str += "v=" + QString::number(y)+ " m=" + QString::number(max) + " p=" + QString::number(percent2);
+
+    QMessageBox::information(this, "info", str);
 }

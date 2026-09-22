@@ -51,6 +51,7 @@ public:
     void Search(const QString &text);
 	MainWindow *newWindow();
     void setStatus(const QString &str);
+    WebEditView* getTabView();
 public:
 	void* FindOpenedDoc(DocItem* pos, int di) override;
 	void  GetDocData(void* wnd, QString &html) override;
@@ -98,6 +99,8 @@ private slots:
     void onTreeSync();
 	void onAboutToShowTabMenu();
 	void onAboutToHideTabMenu();
+
+    void onViewInfo();
 protected:
     void closeEvent(QCloseEvent *);
     
@@ -116,9 +119,9 @@ private:
 	void DoOpenDoc(DocItem* mtPos, int di);
 	void DoCloseDocs(DocItem* mtPos, bool recursive, bool invert);
 	bool DoSelectDoc(DocItem* tpos, int di);
-	void OpenDoc(DocItem* mtPos, int di, double scrollPercent = 0.0);
+    void OpenDoc(DocItem* mtPos, int di, int scrollValue = 0);
 	void LoadToCurrentDoc(DocItem* mtPos, int di);
-	void CreateNewDoc(DocItem* mtPos, int di, double srcollPercent);
+    void CreateNewDoc(DocItem* mtPos, int di, int srcollValue);
 	bool OpenExistingDoc(DocItem* mtPos, int di);
 	QMdiSubWindow * FindTab(DocItem* mtPos, int di);
 	void MakePagesListForPdfPrinting(DocItem* mtPos, int level, int &page, QStringList &args, QString &toc);
@@ -134,6 +137,9 @@ private:
 	QTabBar       *m_tabBar;			// extract from m_wArea
 	QDockWidget   *m_wDock;
 	QToolButton	  *tbtnInsertTable;	// table picker
+
+    QAction *actionViewInfo;
+    WebEditView *m_tabView = nullptr; // mouse context active
 };
 
 #endif // MAINWINDOW_H
