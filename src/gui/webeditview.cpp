@@ -316,7 +316,7 @@ void WebEditView::keyPressEvent(QKeyEvent * e)
 				QEvent::KeyPress,
                 Qt::Key_unknown,  // Unknown key
 				Qt::NoModifier,
-                QString(QChar(0x2014)) //QString("—")      // The text itself is an em dash
+                QString(QChar(0x2014)) // The text itself is an em dash
 			);
 
             // Sending a new event
